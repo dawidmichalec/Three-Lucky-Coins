@@ -1,4 +1,6 @@
 import { Application, Sprite, Assets} from 'pixi.js';
+import { GameScene } from './game/GameScene';
+import { PopupManager } from './ui/popups/PopupManager';
 
 (async () => {
   const app = new Application();
@@ -20,5 +22,18 @@ import { Application, Sprite, Assets} from 'pixi.js';
     background.width = app.screen.width;
     background.height = app.screen.height;
     app.stage.addChild(background);
+
+    // PopupManager
+
+    const popupManager = new PopupManager(app.screen.width, app.screen.height);
+
+    // GameScene
+
+    const gameScene = new GameScene(app, popupManager);
+
+    app.stage.sortableChildren = true;
+
+    app.stage.addChild(gameScene);
+    app.stage.addChild(popupManager);
 
 })();
