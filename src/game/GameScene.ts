@@ -1,4 +1,4 @@
-import { Container, Application, Assets } from 'pixi.js';
+import { Container, Application, Assets, Sprite } from 'pixi.js';
 import { Player } from './Player';
 import { BET_LEVELS } from './BetLevels';
 import { GameUI } from '../ui/GameUI';
@@ -6,6 +6,8 @@ import { GameUI } from '../ui/GameUI';
 import { GameController } from './GameController';
 import { TriangleButton } from '../ui/buttons/TriangleButton';
 import { TossButton } from '../ui/buttons/TossButton';
+
+import { CoinRow } from '../ui/CoinRow';
 
 export class GameScene extends Container {
     private gameUI: GameUI;
@@ -19,6 +21,8 @@ export class GameScene extends Container {
     private betUp!: TriangleButton;
 
     private tossButton!: TossButton;
+
+    private coinRow!: CoinRow;
 
     constructor (
         private app: Application,
@@ -55,6 +59,7 @@ export class GameScene extends Container {
 
         this.createBetButtons();
         this.createTossButton();
+        this.createCoinRow();
 
     }
 
@@ -96,5 +101,17 @@ export class GameScene extends Container {
         this.tossButton.position.set(1370, 500);
 
         this.addChild(this.tossButton);
+    }
+
+    // COIN ROW
+
+    private async createCoinRow() {
+        this.coinRow = new CoinRow();
+
+        await this.coinRow.init();
+
+        this.coinRow.position.set(530, 330);
+
+        this.addChild(this.coinRow);
     }
 }
