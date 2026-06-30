@@ -79,7 +79,7 @@ export class TossButton extends Container {
 
   setDisabled(value: boolean) {
     this.eventMode = value ? 'none' : 'static';
-    this.alpha = value ? 0.5 : 1;
+    this.alpha = value ? 0.85 : 1;
   }
 
   startAnimation() {

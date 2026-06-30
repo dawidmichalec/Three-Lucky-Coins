@@ -35,4 +35,25 @@ export class CoinRow extends Container {
     toggleCoin(index: number) {
         this.coins[index].toggle();
     }
+
+    async spin(result: CoinSide[]) {
+        this.coins.forEach(c => c.startSpin());
+
+        result.forEach((side, i) => {
+            setTimeout(() => {
+                this.coins[i].reveal(side);
+            }, i * 500);
+        });
+
+        // ważne: daj czas na animację
+        await new Promise(res => setTimeout(res, 1500));
+    }
+
+    private delay(ms: number) {
+        return new Promise(res => setTimeout(res, ms));
+    }
+
+    update(delta: number) {
+        this.coins.forEach(c => c.update(delta));
+    }
 }

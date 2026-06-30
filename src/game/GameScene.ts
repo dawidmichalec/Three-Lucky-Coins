@@ -9,11 +9,11 @@ import { TossButton } from '../ui/buttons/TossButton';
 
 import { CoinRow } from '../ui/CoinRow';
 
+import { CoinSide } from '../ui/Coin';
+
 export class GameScene extends Container {
     private gameUI: GameUI;
     private player: Player;
-    private currentBetIndex = 3;
-    private currentBet = 0;
 
     private controller: GameController;
 
@@ -26,6 +26,9 @@ export class GameScene extends Container {
     private tossButton!: TossButton;
 
     private coinRow!: CoinRow;
+    private streakMultiplier = 1;
+
+    private roundState: 'ready' | 'spinning' | 'result' = 'ready';
 
     constructor (
         private app: Application,
@@ -35,6 +38,8 @@ export class GameScene extends Container {
 
         this.sortableChildren = true;
 
+        this.setupTicker();
+
         // Player
         this.player = new Player(10000);
 
@@ -43,14 +48,12 @@ export class GameScene extends Container {
         this.addChild(this.gameUI);
 
         this.gameUI.updateBalance(this.player.balance);
-        this.gameUI.updateBet(BET_LEVELS[this.currentBetIndex]);
-
-        this.currentBet = BET_LEVELS[this.currentBetIndex];
+        this.gameUI.updateMultiplier(this.streakMultiplier);
+        
 
         // CONTROLLER
         this.controller = new GameController({
             onBetChange: (bet) => {
-                this.currentBet = bet;
                 this.gameUI.updateBet(bet);
             },
 
@@ -64,10 +67,12 @@ export class GameScene extends Container {
             },
         });
 
+        this.gameUI.updateBet(this.controller.getBet());
+
         this.createBetButtons();
-        this.createTossButton();
-        this.createCoinRow();
         this.createCombinationsButtons();
+        this.createCoinRow();
+        this.createTossButton();
 
     }
 
@@ -137,12 +142,8 @@ export class GameScene extends Container {
 
         this.addChild(this.tossButton);
 
-        this.app.ticker.add((ticker) => {
-            this.tossButton.update(ticker.deltaTime);
-        });
-
         this.tossButton.on("toss", () => {
-            this.tossButton.startAnimation();
+            this.startRound();
         });
     }
 
@@ -156,5 +157,102 @@ export class GameScene extends Container {
         this.coinRow.position.set(590, 330);
 
         this.addChild(this.coinRow);
+    }
+
+    private async startRound() {
+        if (this.roundState !== 'ready') return;
+
+        this.roundState = 'spinning';
+        console.log('BET USED:', this.controller.getBet());
+
+        this.lockControls();
+        this.gameUI.updateWon(0);
+
+        const bet = this.controller.getBet();
+
+        this.player.balance -= bet;
+        this.gameUI.updateBalance(this.player.balance);
+
+        this.tossButton.startAnimation();
+
+        const result = this.generateResult();
+
+        await this.coinRow.spin(result);
+
+        const selected = this.controller.getCurrentCombo();
+        const win = this.isWin(selected, result);
+
+        
+
+        if (win) {
+            const winAmount = bet * 6 * this.streakMultiplier;
+
+            this.player.addWin(winAmount);
+
+            this.streakMultiplier++;
+            this.gameUI.updateWon(winAmount);
+        } else {
+            this.streakMultiplier = 1;
+            this.gameUI.updateWon(0);
+        }
+
+        
+        this.gameUI.updateMultiplier(this.streakMultiplier);
+
+        this.unlockControls();
+        this.roundState = 'ready';
+    }
+
+    private isWin(selected: CoinSide[], result: CoinSide[]) {
+        return selected.every((v, i) => v === result[i]);
+    }
+
+    private generateResult(): CoinSide[] {
+
+        const sides = [CoinSide.Heads, CoinSide.Tails];
+
+        return [
+            sides[Math.floor(Math.random() * 2)],
+            sides[Math.floor(Math.random() * 2)],
+            sides[Math.floor(Math.random() * 2)],
+        ];
+    }
+
+    private lockControls() {
+
+        this.betDown.setDisabled(true);
+        this.betUp.setDisabled(true);
+
+        this.prevCombo.setDisabled(true);
+        this.nextCombo.setDisabled(true);
+
+        this.tossButton.setDisabled(true);
+    }
+
+    private unlockControls() {
+
+        this.betDown.setDisabled(false);
+        this.betUp.setDisabled(false);
+
+        this.prevCombo.setDisabled(false);
+        this.nextCombo.setDisabled(false);
+
+        this.tossButton.setDisabled(false);
+    }
+
+    // TICKER
+
+    private setupTicker() {
+        this.app.ticker.add((ticker) => {
+            const delta = ticker.deltaTime;
+
+            if (this.tossButton) {
+                this.tossButton.update(delta);
+            }
+
+            if (this.coinRow) {
+                this.coinRow.update(delta);
+            }
+        });
     }
 }

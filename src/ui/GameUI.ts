@@ -5,6 +5,7 @@ export class GameUI extends Container {
     private betValue: Text;
     private combinationValue: Text;
     private wonAmount: Text;
+    private multiplierValue: Text;
 
     constructor () {
         super();
@@ -131,6 +132,20 @@ export class GameUI extends Container {
 
         multiplierLabel.position.set(290, 280);
 
+        // MULTIPLIER VALUE
+
+        this.multiplierValue = new Text({
+            text: 'x1',
+            style: {
+                font: 'Open Sans',
+                fontSize: 104,
+                fontWeight: 'bold',
+                fill: 0xffffff,
+            },
+        });
+
+        this.multiplierValue.position.set(300, 310);
+
         // ADD
 
         this.addChild(
@@ -143,6 +158,7 @@ export class GameUI extends Container {
             wonLabel,
             this.wonAmount,
             multiplierLabel,
+            this.multiplierValue,
         );
     }
 
@@ -159,6 +175,10 @@ export class GameUI extends Container {
     }
 
     updateWon(value: number) {
-        this.wonValue.text = value.toFixed(2);
+        this.wonAmount.text = value.toFixed(2);
+    }
+
+    updateMultiplier(multiplier: number) {
+        this.multiplierValue.text = `x${multiplier}`;
     }
 }

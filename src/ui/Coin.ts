@@ -13,6 +13,9 @@ export class Coin extends Container {
 
     private currentSide: CoinSide = 'H';
 
+    private phase: 'idle' | 'spinning' | 'reveal' = 'idle';
+    private speed = 0.2;
+
     async init() {
         this.headsTexture = await Assets.load('/assets/main/heads.png');
         this.tailsTexture = await Assets.load('/assets/main/tails.png');
@@ -46,5 +49,29 @@ export class Coin extends Container {
 
     getSide(): CoinSide {
         return this.currentSide;
+    }
+
+    startSpin() {
+        this.phase = 'spinning';
+        this.sprite.rotation = 0;
+    }
+
+    reveal(side: CoinSide) {
+        this.setSide(side);
+        this.phase = 'idle';
+    }
+
+    update(delta: number) {
+        if (this.phase === 'idle') return;
+
+        if (this.phase === 'spinning') {
+            this.sprite.rotation += 0.5 * delta;
+        }
+
+        if (this.phase === 'reveal') {
+            this.sprite.rotation += 0.3 * delta;
+
+            // “snap” do przodu (opcjonalnie później easing)
+        }
     }
 }
