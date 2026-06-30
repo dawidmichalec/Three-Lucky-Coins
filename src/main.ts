@@ -23,6 +23,21 @@ import { PopupManager } from './ui/popups/PopupManager';
     background.height = app.screen.height;
     app.stage.addChild(background);
 
+    const logoImage = await Assets.load('/assets/main/logo.png');
+
+    const logoSprite = new Sprite(logoImage);
+    logoSprite.width = 700;
+    logoSprite.height = 300;
+
+    app.stage.addChild(logoSprite);
+
+    logoSprite.position.set(420, 30);
+
+    app.ticker.add(() => {
+      logoSprite.alpha =
+          0.85 + Math.sin(performance.now() * 0.006) * 0.30;
+     });
+
     // PopupManager
 
     const popupManager = new PopupManager(app.screen.width, app.screen.height);

@@ -2,7 +2,7 @@ import { Container } from 'pixi.js';
 import { Coin, CoinSide } from './Coin';
 
 export class CoinRow extends Container {
-    private readonly spacing = 240;
+    private readonly spacing = 180;
     private coins: Coin[] = [];
 
     async init() {

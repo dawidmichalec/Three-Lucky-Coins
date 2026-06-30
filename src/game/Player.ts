@@ -2,6 +2,7 @@ export class Player {
     balance: number;
     wins: number;
     losses: number;
+    private totalWon = 0;
 
     constructor(startBalance: number) {
         this.balance = startBalance;
@@ -11,6 +12,7 @@ export class Player {
 
     addWin(amount: number) {
         this.balance += amount;
+        this.totalWon += amount;
         this.wins++;
     }
 

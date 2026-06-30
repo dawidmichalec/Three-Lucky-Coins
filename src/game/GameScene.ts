@@ -153,7 +153,7 @@ export class GameScene extends Container {
 
         await this.coinRow.init();
 
-        this.coinRow.position.set(530, 330);
+        this.coinRow.position.set(590, 330);
 
         this.addChild(this.coinRow);
     }

@@ -19,6 +19,9 @@ export class Coin extends Container {
 
         this.sprite = new Sprite(this.headsTexture);
 
+        this.sprite.width = 100;
+        this.sprite.height = 100;
+
         this.sprite.anchor.set(0.5);
 
         this.addChild(this.sprite);

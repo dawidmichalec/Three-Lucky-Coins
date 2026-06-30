@@ -4,6 +4,7 @@ export class GameUI extends Container {
     private balanceValue: Text;
     private betValue: Text;
     private combinationValue: Text;
+    private wonAmount: Text;
 
     constructor () {
         super();
@@ -90,6 +91,46 @@ export class GameUI extends Container {
 
         this.combinationValue.position.set(1195, 665);
 
+        // WON TEXT
+
+        const wonLabel = new Text({
+            text: 'WIN:',
+            style: {
+                font: 'Open Sans',
+                fontSize: 34,
+                fontWeight: 'bold',
+                fill: 0xffffff,
+            },
+        });
+
+        wonLabel.position.set(690, 500);
+
+        this.wonAmount = new Text({
+            text: '0.00',
+            style: {
+                font: 'Open Sans',
+                fontSize: 34,
+                fontWeight: 'bold',
+                fill: 0xffffff,
+            },
+        });
+
+        this.wonAmount.position.set(770, 500);
+
+        // MULTIPLIER TEXT
+
+        const multiplierLabel = new Text({
+            text: 'Multiplier',
+            style: {
+                font: 'Open Sans',
+                fontSize: 34,
+                fontWeight: 'bold',
+                fill: 0xffffff,
+            },
+        });
+
+        multiplierLabel.position.set(290, 280);
+
         // ADD
 
         this.addChild(
@@ -99,6 +140,9 @@ export class GameUI extends Container {
             this.betValue,
             combinationLabel,
             this.combinationValue,
+            wonLabel,
+            this.wonAmount,
+            multiplierLabel,
         );
     }
 
@@ -112,5 +156,9 @@ export class GameUI extends Container {
 
     updateCombination(combination: string) {
         this.combinationValue.text = combination;
+    }
+
+    updateWon(value: number) {
+        this.wonValue.text = value.toFixed(2);
     }
 }
