@@ -1,12 +1,15 @@
 import { BET_LEVELS } from './BetLevels';
+import { COMBINATIONS } from './CoinCombinations';
 
 type ControllerConfig = {
   onBetChange: (bet: number) => void;
   onPopup: (msg: string) => void;
+  onComboChange: (combo: string) => void;
 };
 
 export class GameController {
   private betIndex = 3;
+  private comboIndex = 0;
 
   constructor(private config: ControllerConfig) {}
 
@@ -41,4 +44,27 @@ export class GameController {
   getBet() {
     return BET_LEVELS[this.betIndex];
   }
+
+  private formatCombo(index: number): string {
+    return COMBINATIONS[index].join(' - ');
+  }
+
+  prevCombo() {
+    this.comboIndex =
+      (this.comboIndex - 1 + COMBINATIONS.length) % COMBINATIONS.length;
+
+    this.config.onComboChange(this.formatCombo(this.comboIndex));
+  }
+
+  nextCombo() {
+    this.comboIndex =
+      (this.comboIndex + 1) % COMBINATIONS.length;
+
+    this.config.onComboChange(this.formatCombo(this.comboIndex));
+  }
+
+  getCurrentCombo() {
+    return COMBINATIONS[this.comboIndex];
+  }
+
 }

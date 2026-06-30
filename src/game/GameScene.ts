@@ -20,6 +20,9 @@ export class GameScene extends Container {
     private betDown!: TriangleButton;
     private betUp!: TriangleButton;
 
+    private prevCombo!: TriangleButton;
+    private nextCombo!: TriangleButton;
+
     private tossButton!: TossButton;
 
     private coinRow!: CoinRow;
@@ -51,6 +54,10 @@ export class GameScene extends Container {
                 this.gameUI.updateBet(bet);
             },
 
+            onComboChange: (combo) => {
+                this.gameUI.updateCombination(combo);
+            },
+
             onPopup: (msg) => {
                 console.log('POPUP TRIGGER:', msg);
                 this.popupManager.show(msg);
@@ -60,6 +67,7 @@ export class GameScene extends Container {
         this.createBetButtons();
         this.createTossButton();
         this.createCoinRow();
+        this.createCombinationsButtons();
 
     }
 
@@ -91,6 +99,33 @@ export class GameScene extends Container {
         this.addChild(betDown, betUp);
     }
 
+    private createCombinationsButtons() {
+
+        const prevCombo = new TriangleButton({
+            direction: 'left',
+            label: '-',
+            onClick: () => {
+            this.controller.prevCombo();
+            },
+        });
+
+        const nextCombo = new TriangleButton({
+            direction: 'right',
+            label: '+',
+            onClick: () => {
+            this.controller.nextCombo();
+            },
+        });
+
+        prevCombo.position.set(960, 660);
+        nextCombo.position.set(1300, 660);
+
+        this.prevCombo = prevCombo;
+        this.nextCombo = nextCombo;
+
+        this.addChild(prevCombo, nextCombo);
+    }
+
     // TOSS BUTTON
 
     private async createTossButton() {
@@ -101,6 +136,14 @@ export class GameScene extends Container {
         this.tossButton.position.set(1370, 500);
 
         this.addChild(this.tossButton);
+
+        this.app.ticker.add((ticker) => {
+            this.tossButton.update(ticker.deltaTime);
+        });
+
+        this.tossButton.on("toss", () => {
+            this.tossButton.startAnimation();
+        });
     }
 
     // COIN ROW

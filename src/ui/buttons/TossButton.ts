@@ -6,6 +6,13 @@ export class TossButton extends Container {
   private buttonWidth: number;
   private buttonHeight: number;
 
+  private phase: 'idle' | 'kickback' | 'spin' = 'idle';
+  private startRotation = 0;
+  private targetRotation = 0;
+
+  private isAnimating!: boolean;
+  private speed = 0.2;
+
   constructor(
     public label: string,
   ) {
@@ -57,6 +64,7 @@ export class TossButton extends Container {
     hit.cursor = 'pointer';
 
     hit.on('pointertap', () => {
+      this.startAnimation();
       this.emit('toss');
     });
 
@@ -72,5 +80,47 @@ export class TossButton extends Container {
   setDisabled(value: boolean) {
     this.eventMode = value ? 'none' : 'static';
     this.alpha = value ? 0.5 : 1;
+  }
+
+  startAnimation() {
+    if (this.phase !== 'idle') return;
+
+    this.startRotation = this.bg.rotation;
+
+    this.targetRotation = this.startRotation - 0.3;
+
+    this.phase = 'kickback';
+  }
+
+  update(delta: number) {
+
+    if (this.phase === 'idle')
+        return;
+
+    if (this.phase === 'kickback') {
+
+      this.bg.rotation += (-0.15 * this.speed) * delta;
+
+      if (this.bg.rotation <= this.targetRotation) {
+
+          this.phase = 'spin';
+
+          this.targetRotation = this.startRotation + Math.PI * 4;
+      }
+
+      return;
+    }
+
+    if (this.phase === 'spin') {
+
+      this.bg.rotation += (1 * this.speed) * delta;
+
+      if (this.bg.rotation >= this.targetRotation) {
+
+          this.bg.rotation = this.targetRotation;
+          this.phase = 'idle';
+          this.isAnimating = false;
+      }
+    }
   }
 }

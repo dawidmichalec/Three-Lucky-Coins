@@ -3,6 +3,7 @@ import { Container, Text } from "pixi.js";
 export class GameUI extends Container {
     private balanceValue: Text;
     private betValue: Text;
+    private combinationValue: Text;
 
     constructor () {
         super();
@@ -20,6 +21,8 @@ export class GameUI extends Container {
         });
 
         balanceLabel.position.set(290, 665);
+
+        // BALANCE VALUE TEXT
 
         this.balanceValue = new Text({
             text: '0.00',
@@ -71,8 +74,21 @@ export class GameUI extends Container {
             },
         });
 
-        combinationLabel.position.set(1000, 665);
+        combinationLabel.position.set(1020, 665);
 
+        // COMBINATIONS TEXT
+
+        this.combinationValue = new Text({
+            text: 'H - H - H',
+            style: {
+                font: 'Open Sans',
+                fontSize: 24,
+                fontWeight: 'bold',
+                fill: 0xffffff,
+            },
+        });
+
+        this.combinationValue.position.set(1195, 665);
 
         // ADD
 
@@ -82,6 +98,7 @@ export class GameUI extends Container {
             betLabel,
             this.betValue,
             combinationLabel,
+            this.combinationValue,
         );
     }
 
@@ -91,5 +108,9 @@ export class GameUI extends Container {
 
     updateBet(bet: number) {
         this.betValue.text = bet.toFixed(2);
+    }
+
+    updateCombination(combination: string) {
+        this.combinationValue.text = combination;
     }
 }

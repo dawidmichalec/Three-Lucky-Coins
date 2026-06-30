@@ -1,8 +1,8 @@
 import { Assets, Container, Sprite, Texture } from 'pixi.js';
 
 export enum CoinSide {
-    Heads = 'heads',
-    Tails = 'tails',
+    Heads = 'H',
+    Tails = 'T',
 }
 
 export class Coin extends Container {
@@ -11,7 +11,7 @@ export class Coin extends Container {
     private headsTexture!: Texture;
     private tailsTexture!: Texture;
 
-    private currentSide: CoinSide = 'heads';
+    private currentSide: CoinSide = 'H';
 
     async init() {
         this.headsTexture = await Assets.load('/assets/main/heads.png');
@@ -28,16 +28,16 @@ export class Coin extends Container {
         this.currentSide = side;
 
         this.sprite.texture =
-            side === 'heads'
+            side === 'H'
                 ? this.headsTexture
                 : this.tailsTexture;
     }
 
     toggle() {
         this.setSide(
-            this.currentSide === 'heads'
-                ? 'tails'
-                : 'heads'
+            this.currentSide === 'H'
+                ? 'T'
+                : 'H'
         );
     }
 
