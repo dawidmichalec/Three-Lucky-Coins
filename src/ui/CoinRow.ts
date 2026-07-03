@@ -42,11 +42,10 @@ export class CoinRow extends Container {
         result.forEach((side, i) => {
             setTimeout(() => {
                 this.coins[i].reveal(side);
-            }, i * 500);
+            }, (i + 1) * 500);
         });
 
-        // ważne: daj czas na animację
-        await new Promise(res => setTimeout(res, 1500));
+        await new Promise(res => setTimeout(res, 2000));
     }
 
     private delay(ms: number) {

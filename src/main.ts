@@ -31,6 +31,11 @@ import { PopupManager } from './ui/popups/PopupManager';
 
     app.stage.addChild(logoSprite);
 
+    const font = new FontFace( 'Oswald-Bold', 'url(/assets/main/fonts/Oswald/static/Oswald-Bold.ttf)' ); 
+    await font.load(); 
+    document.fonts.add(font); 
+    await document.fonts.ready;
+
     logoSprite.position.set(420, 30);
 
     app.ticker.add(() => {

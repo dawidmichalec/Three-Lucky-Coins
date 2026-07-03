@@ -101,6 +101,13 @@ export class GameUI extends Container {
                 fontSize: 34,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+
+                dropShadow: {
+                    alpha: 0.8,
+                    blur: 8,
+                    color: '#00ffcc',
+                    distance: 0,
+                }
             },
         });
 
@@ -113,6 +120,14 @@ export class GameUI extends Container {
                 fontSize: 34,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+
+                dropShadow: {
+                    alpha: 1,
+                    blur: 15,
+                    color: '#00ffcc', 
+                    distance: 0,
+                },
+                
             },
         });
 
@@ -123,10 +138,16 @@ export class GameUI extends Container {
         const multiplierLabel = new Text({
             text: 'Multiplier',
             style: {
-                font: 'Open Sans',
+                fontFamily: 'Oswald-Bold',
                 fontSize: 34,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+                dropShadow: {
+                    alpha: 0.8,
+                    blur: 8,
+                    color: '#ffaa00',
+                    distance: 0,
+                }
             },
         });
 
@@ -141,6 +162,18 @@ export class GameUI extends Container {
                 fontSize: 104,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+
+                dropShadow: {
+                    alpha: 1,
+                    blur: 15,
+                    color: '#ffaa00',
+                    distance: 0,
+                },
+   
+                stroke: {
+                    color: '#331100',
+                    width: 3,
+                }
             },
         });
 

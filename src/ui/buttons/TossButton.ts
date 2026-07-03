@@ -52,7 +52,7 @@ export class TossButton extends Container {
 
     text.anchor.set(0.5);
 
-    this.bg.anchor?.set?.(0.5);
+    this.bg.anchor.set(0.513, 0.497);
     this.bg.position.set(this.buttonWidth / 2, this.buttonHeight / 2);
 
     const hit = new Graphics()
