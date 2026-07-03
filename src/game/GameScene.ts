@@ -1,6 +1,7 @@
 import { Container, Application, Assets, Sprite } from 'pixi.js';
 import { Player } from './Player';
 import { BET_LEVELS } from './BetLevels';
+import { BetConfig, BETS_CONFIG } from './BetsConfig';
 import { GameUI } from '../ui/GameUI';
 
 import { GameController } from './GameController';
@@ -10,6 +11,7 @@ import { TossButton } from '../ui/buttons/TossButton';
 import { CoinRow } from '../ui/CoinRow';
 
 import { CoinSide } from '../ui/Coin';
+import { COMBINATIONS } from './CoinCombinations';
 
 export class GameScene extends Container {
     private gameUI: GameUI;
@@ -185,12 +187,21 @@ export class GameScene extends Container {
         
 
         if (win) {
-            const winAmount = bet * 6 * this.streakMultiplier;
+            if ((selected === COMBINATIONS[0]) || (selected === COMBINATIONS[4])) {
+                const winAmount = bet * BETS_CONFIG['bets'][0]['multiplier'] * this.streakMultiplier;
 
-            this.player.addWin(winAmount);
+                this.player.addWin(winAmount);
 
-            this.streakMultiplier++;
-            this.gameUI.updateWon(winAmount);
+                this.streakMultiplier++;
+                this.gameUI.updateWon(winAmount);
+            } else {
+                const winAmount = bet * BETS_CONFIG['bets'][1]['multiplier'] * this.streakMultiplier;
+
+                this.player.addWin(winAmount);
+
+                this.streakMultiplier++;
+                this.gameUI.updateWon(winAmount);
+            }
         } else {
             this.streakMultiplier = 1;
             this.gameUI.updateWon(0);
