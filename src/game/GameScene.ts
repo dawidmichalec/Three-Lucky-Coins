@@ -93,7 +93,14 @@ export class GameScene extends Container {
             direction: 'right',
             label: '+',
             onClick: () => {
-            this.controller.increaseBet();
+                const nextBet = this.controller.getNextBet();
+
+                if (nextBet !== null && nextBet > this.player.balance) {
+                    this.popupManager.show("Insufficient balance");
+                    return;
+                }
+
+                this.controller.increaseBet();
             },
         });
 
@@ -162,6 +169,14 @@ export class GameScene extends Container {
     }
 
     private async startRound() {
+        const bet = this.controller.getBet();
+        if (this.player.balance < bet) {
+
+            this.popupManager.show("Insufficient balance.");
+
+            return;
+        }
+
         if (this.roundState !== 'ready') return;
 
         this.roundState = 'spinning';
@@ -170,8 +185,7 @@ export class GameScene extends Container {
         this.lockControls();
         this.gameUI.updateWon(0);
 
-        const bet = this.controller.getBet();
-
+        
         this.player.balance -= bet;
         this.gameUI.updateBalance(this.player.balance);
 
@@ -184,13 +198,12 @@ export class GameScene extends Container {
         const selected = this.controller.getCurrentCombo();
         const win = this.isWin(selected, result);
 
-        
-
         if (win) {
             if ((selected === COMBINATIONS[0]) || (selected === COMBINATIONS[4])) {
                 const winAmount = bet * BETS_CONFIG['bets'][0]['multiplier'] * this.streakMultiplier;
 
                 this.player.addWin(winAmount);
+                this.gameUI.updateBalance(this.player.balance);
 
                 this.streakMultiplier++;
                 this.gameUI.updateWon(winAmount);
@@ -198,6 +211,7 @@ export class GameScene extends Container {
                 const winAmount = bet * BETS_CONFIG['bets'][1]['multiplier'] * this.streakMultiplier;
 
                 this.player.addWin(winAmount);
+                this.gameUI.updateBalance(this.player.balance);
 
                 this.streakMultiplier++;
                 this.gameUI.updateWon(winAmount);
@@ -266,4 +280,5 @@ export class GameScene extends Container {
             }
         });
     }
+
 }

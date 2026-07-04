@@ -1,4 +1,5 @@
 import { Assets, Container, Sprite, Texture } from 'pixi.js';
+import { sound, Sound } from '@pixi/sound';
 
 export enum CoinSide {
     Heads = 'H',
@@ -22,9 +23,17 @@ export class Coin extends Container {
     private frameTimer = 0;
     private frameSpeed = 2;
 
+    private spinSound!: Sound;
+
     async init() {
         this.headsTexture = await Assets.load('/assets/main/heads.png');
         this.tailsTexture = await Assets.load('/assets/main/tails.png');
+
+        // Zamiast Assets.load, używamy bezpośrednio sound.add
+        this.spinSound = sound.add('coin_spin', {
+            url: '/assets/main/sounds/coin_roll_sound.mp3',
+            preload: true // od razu zacznie pobierać plik
+        });
 
         for (let i = 1; i <= 16; i++) {
             this.animationTextures.push(
@@ -70,11 +79,24 @@ export class Coin extends Container {
 
         this.currentFrame = 0;
         this.frameTimer = 0;
+
+        if (this.spinSound) {
+            this.spinSound.play({ 
+                loop: false, 
+                volume: 0.5,
+                start: 0.9
+            });
+        }
     }
 
     reveal(side: CoinSide) {
         this.setSide(side);
         this.phase = 'idle';
+
+        // ZATRZYMANIE DŹWIĘKU po zakończeniu kręcenia
+        if (this.spinSound) {
+            this.spinSound.stop();
+        }
     }
 
     update(delta: number) {

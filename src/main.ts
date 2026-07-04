@@ -1,6 +1,7 @@
 import { Application, Sprite, Assets} from 'pixi.js';
 import { GameScene } from './game/GameScene';
 import { PopupManager } from './ui/popups/PopupManager';
+import '@pixi/sound';
 
 (async () => {
   const app = new Application();

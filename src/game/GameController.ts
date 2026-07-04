@@ -45,6 +45,14 @@ export class GameController {
     return BET_LEVELS[this.betIndex];
   }
 
+  getNextBet() {
+    if (this.betIndex >= BET_LEVELS.length - 1) {
+        return null;
+    }
+
+    return BET_LEVELS[this.betIndex + 1];
+  }
+
   private formatCombo(index: number): string {
     return COMBINATIONS[index].join(' - ');
   }
