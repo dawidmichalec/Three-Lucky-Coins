@@ -53,6 +53,10 @@ export class GameController {
     return BET_LEVELS[this.betIndex + 1];
   }
 
+  getMinBet(): number {
+      return BET_LEVELS[0]; // albo jak masz strukturę
+  }
+
   private formatCombo(index: number): string {
     return COMBINATIONS[index].join(' - ');
   }

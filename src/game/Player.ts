@@ -2,7 +2,9 @@ export class Player {
     balance: number;
     wins: number;
     losses: number;
-    private totalWon = 0;
+    
+    totalWon: number = 0;
+    totalLost: number = 0;
 
     constructor(startBalance: number) {
         this.balance = startBalance;
@@ -18,6 +20,7 @@ export class Player {
 
     addLoss(amount: number) {
         this.balance -= amount;
+        this.totalLost += amount;
         this.losses++;
     }
 }

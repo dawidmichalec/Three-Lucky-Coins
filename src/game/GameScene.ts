@@ -13,6 +13,8 @@ import { CoinRow } from '../ui/CoinRow';
 import { CoinSide } from '../ui/Coin';
 import { COMBINATIONS } from './CoinCombinations';
 
+import { RunStats } from './RunStats';
+
 export class GameScene extends Container {
     private gameUI: GameUI;
     private player: Player;
@@ -32,6 +34,8 @@ export class GameScene extends Container {
 
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
 
+    private runStats = new RunStats();
+
     constructor (
         private app: Application,
         private popupManager: { show: (msg: string) => void }
@@ -43,7 +47,7 @@ export class GameScene extends Container {
         this.setupTicker();
 
         // Player
-        this.player = new Player(10000);
+        this.player = new Player(10);
 
         // UI
         this.gameUI = new GameUI();
@@ -169,6 +173,7 @@ export class GameScene extends Container {
     }
 
     private async startRound() {
+
         const bet = this.controller.getBet();
         if (this.player.balance < bet) {
 
@@ -197,10 +202,11 @@ export class GameScene extends Container {
 
         const selected = this.controller.getCurrentCombo();
         const win = this.isWin(selected, result);
+        let winAmount: number | undefined = undefined;
 
         if (win) {
             if ((selected === COMBINATIONS[0]) || (selected === COMBINATIONS[4])) {
-                const winAmount = bet * BETS_CONFIG['bets'][0]['multiplier'] * this.streakMultiplier;
+                winAmount = bet * BETS_CONFIG['bets'][0]['multiplier'] * this.streakMultiplier;
 
                 this.player.addWin(winAmount);
                 this.gameUI.updateBalance(this.player.balance);
@@ -208,7 +214,7 @@ export class GameScene extends Container {
                 this.streakMultiplier++;
                 this.gameUI.updateWon(winAmount);
             } else {
-                const winAmount = bet * BETS_CONFIG['bets'][1]['multiplier'] * this.streakMultiplier;
+                winAmount = bet * BETS_CONFIG['bets'][1]['multiplier'] * this.streakMultiplier;
 
                 this.player.addWin(winAmount);
                 this.gameUI.updateBalance(this.player.balance);
@@ -220,12 +226,17 @@ export class GameScene extends Container {
             this.streakMultiplier = 1;
             this.gameUI.updateWon(0);
         }
+        this.updateRunStats(selected, win, winAmount);
 
-        
+        console.log(this.runStats.getMostUsedCombination());
+
         this.gameUI.updateMultiplier(this.streakMultiplier);
 
         this.unlockControls();
         this.roundState = 'ready';
+
+        this.checkGameOver();
+        
     }
 
     private isWin(selected: CoinSide[], result: CoinSide[]) {
@@ -279,6 +290,54 @@ export class GameScene extends Container {
                 this.coinRow.update(delta);
             }
         });
+    }
+
+    // IS PLAYER ABLE TO PLAY?
+
+    canPlay(): boolean {
+        return this.player.balance >= this.controller.getMinBet();
+    }
+
+    // GAME OVER
+
+    private checkGameOver() {
+        if (!this.canPlay()) {
+            this.triggerGameOver();
+        }
+    }
+
+    // TRIGGER GAME OVER
+
+    private triggerGameOver() {
+        this.lockControls();
+        this.popupManager.show("GAME OVER");
+    }
+
+    // UPDATE RUN STATS
+
+    private updateRunStats(
+        selected: CoinSide[],
+        win: boolean,
+        winAmount?: number
+    ) {
+
+        this.runStats.totalBets++;
+
+        const combo = selected.join('-');
+
+        this.runStats.recordCombination(combo);
+
+        if (win) {
+
+            this.runStats.recordWinningCombination(combo);
+
+            if (winAmount !== undefined) {
+                this.runStats.recordWin(winAmount);
+            }
+
+            this.runStats.recordStreak(this.streakMultiplier);
+        }
+
     }
 
 }
