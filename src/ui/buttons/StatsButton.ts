@@ -14,6 +14,7 @@ export class StatsButton extends Container{
 
         this.eventMode = 'static';
         this.cursor = 'pointer';
+        this.visible = false;
     }
 
     async init() {
@@ -34,5 +35,13 @@ export class StatsButton extends Container{
     setDisabled(value: boolean) {
         this.eventMode = value ? 'none' : 'static';
         this.alpha = value ? 0.85 : 1;
+    }
+
+    hide(){
+        this.visible = false;
+    }
+
+    show() {
+        this.visible = true;
     }
 }

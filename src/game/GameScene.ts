@@ -270,7 +270,7 @@ export class GameScene extends Container {
 
         this.tossButton.setDisabled(true);
 
-        this.hamburgerMenuButton.setDisabled(true);
+        this.hamburgerMenu.setDisabled(true);
     }
 
     private unlockControls() {
@@ -282,6 +282,8 @@ export class GameScene extends Container {
         this.nextCombo.setDisabled(false);
 
         this.tossButton.setDisabled(false);
+
+        this.hamburgerMenu.setDisabled(false);
     }
 
     // TICKER

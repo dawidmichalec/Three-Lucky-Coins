@@ -11,6 +11,7 @@ export class RestartRunButton extends Container{
 
         this.buttonHeight = 80;
         this.buttonWidth = 80;
+        this.visible = false;
 
         this.eventMode = 'static';
         this.cursor = 'pointer';
@@ -34,5 +35,13 @@ export class RestartRunButton extends Container{
     setDisabled(value: boolean) {
         this.eventMode = value ? 'none' : 'static';
         this.alpha = value ? 0.85 : 1;
+    }
+
+    hide(){
+        this.visible = false;
+    }
+
+    show() {
+        this.visible = true;
     }
 }

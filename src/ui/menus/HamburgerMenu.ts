@@ -78,4 +78,39 @@ export class HamburgerMenu extends Container{
 
         this.addChild(this.restartRunButton);
     }
+
+    setDisabled(value: boolean){
+        if (value === true) {
+            this.hamburgerMenuButton.setDisabled(true);
+            this.statsButton.setDisabled(true);
+            this.soundButton.setDisabled(true);
+            this.helpButton.setDisabled(true);
+            this.restartRunButton.setDisabled(true);
+        } else {
+            this.hamburgerMenuButton.setDisabled(false);
+            this.statsButton.setDisabled(false);
+            this.soundButton.setDisabled(false);
+            this.helpButton.setDisabled(false);
+            this.restartRunButton.setDisabled(false);
+        }
+        
+    }
+
+    toggle() {
+        if (
+            (this.statsButton.visible === false) && 
+            (this.soundButton.visible === false) && 
+            (this.helpButton.visible === false) &&
+            (this.restartRunButton.visible === false)){
+                this.statsButton.visible = true;
+                this.soundButton.visible = true;
+                this.helpButton.visible = true;
+                this.restartRunButton.visible = true;
+            } else {
+                this.statsButton.visible = false;
+                this.soundButton.visible = false;
+                this.helpButton.visible = false;
+                this.restartRunButton.visible = false;
+            }
+    }
 }
