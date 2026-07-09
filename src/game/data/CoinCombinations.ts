@@ -1,4 +1,4 @@
-import { CoinSide } from '../ui/Coin';
+import { CoinSide } from "../../ui/Coin";
 
 export const COMBINATIONS: CoinSide[][] = [
   [CoinSide.Heads, CoinSide.Heads, CoinSide.Heads],

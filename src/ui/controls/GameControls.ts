@@ -1,4 +1,4 @@
-import { Container, Sprite, Assets } from "pixi.js";
+import { Container } from "pixi.js";
 import { TriangleButton } from "../buttons/TriangleButton";
 import { TossButton } from "../buttons/TossButton";
 

@@ -1,15 +1,19 @@
 import { Container, Application, Assets, Sprite } from 'pixi.js';
 import { Player } from './Player';
-import { BET_LEVELS } from './BetLevels';
-import { BetConfig, BETS_CONFIG } from './BetsConfig';
+import { BET_LEVELS } from './data/BetLevels';
+import { BetConfig, BETS_CONFIG } from './data/BetsConfig';
 import { GameUI } from '../ui/GameUI';
 import { GameController } from './GameController';
 import { CoinRow } from '../ui/CoinRow';
 import { CoinSide } from '../ui/Coin';
-import { COMBINATIONS } from './CoinCombinations';
+import { COMBINATIONS } from './data/CoinCombinations';
 import { RunStats } from './RunStats';
 import { HamburgerMenu } from '../ui/menus/HamburgerMenu';
 import { GameControls } from '../ui/controls/GameControls';
+import { CheatPanel } from '../dev/CheatPanel';
+import { CheatManager } from '../dev/CheatManager';
+import { CheatActions } from '../dev/CheatActions';
+import { CheatCode } from '../dev/CheatCodes';
 
 export class GameScene extends Container {
     private gameUI: GameUI;
@@ -27,6 +31,12 @@ export class GameScene extends Container {
     private runStats = new RunStats();
 
     private hamburgerMenu!: HamburgerMenu;
+
+    private cheatPanel: CheatPanel;
+
+    private cheatManager = new CheatManager();
+
+    private forcedResult?: CoinSide[];
 
     constructor (
         private app: Application,
@@ -82,6 +92,10 @@ export class GameScene extends Container {
         this.addChild(this.hamburgerMenu);
 
         this.createCoinRow();
+        this.cheatManager = new CheatManager();
+        this.cheatPanel = new CheatPanel(this.cheatManager);
+        this.addChild(this.cheatPanel);
+        this.registerCheats();
         
     }
 
@@ -189,7 +203,20 @@ export class GameScene extends Container {
 
     private generateResult(): CoinSide[] {
 
-        const sides = [CoinSide.Heads, CoinSide.Tails];
+        if (this.forcedResult) {
+
+            const result = this.forcedResult;
+
+            this.forcedResult = undefined;
+
+            return result;
+        }
+
+
+        const sides = [
+            CoinSide.Heads,
+            CoinSide.Tails
+        ];
 
         return [
             sides[Math.floor(Math.random() * 2)],
@@ -270,5 +297,52 @@ export class GameScene extends Container {
             this.runStats.recordStreak(this.streakMultiplier);
         }
 
+    }
+
+    // REGISTER CHEATS
+
+    private registerCheats() {
+
+        this.cheatManager.register(
+            CheatCode.ALL_HEADS_WIN,
+            () => {
+                this.forceResult(
+                    CheatActions.allHeadsWin()
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.ALL_TAILS_WIN,
+            () => {
+                this.forceResult(
+                    CheatActions.allTailsWin()
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.NOT_ALL_SAME_WIN,
+            () => {
+                this.forceResult(
+                    CheatActions.notAllSameWin()
+                );
+            }
+        );
+
+    }
+
+    // FORCED RESULT
+
+    private forceResult(result: CoinSide[]) {
+
+        this.forcedResult = result;
+
+        console.log(
+            "FORCED RESULT:",
+            result.join("-")
+        );
     }
 }

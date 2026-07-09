@@ -1,5 +1,5 @@
-import { BET_LEVELS } from './BetLevels';
-import { COMBINATIONS } from './CoinCombinations';
+import { BET_LEVELS } from './data/BetLevels';
+import { COMBINATIONS } from './data/CoinCombinations';
 
 type ControllerConfig = {
   onBetChange: (bet: number) => void;
