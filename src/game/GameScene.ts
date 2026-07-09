@@ -15,6 +15,8 @@ import { COMBINATIONS } from './CoinCombinations';
 
 import { RunStats } from './RunStats';
 
+import { HamburgerMenu } from '../ui/menus/HamburgerMenu';
+
 export class GameScene extends Container {
     private gameUI: GameUI;
     private player: Player;
@@ -35,6 +37,8 @@ export class GameScene extends Container {
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
 
     private runStats = new RunStats();
+
+    private hamburgerMenu!: HamburgerMenu;
 
     constructor (
         private app: Application,
@@ -75,11 +79,13 @@ export class GameScene extends Container {
 
         this.gameUI.updateBet(this.controller.getBet());
 
+        this.hamburgerMenu = new HamburgerMenu();
+        this.addChild(this.hamburgerMenu);
+
         this.createBetButtons();
         this.createCombinationsButtons();
         this.createCoinRow();
         this.createTossButton();
-
     }
 
     // BET BUTTONS
@@ -263,6 +269,8 @@ export class GameScene extends Container {
         this.nextCombo.setDisabled(true);
 
         this.tossButton.setDisabled(true);
+
+        this.hamburgerMenuButton.setDisabled(true);
     }
 
     private unlockControls() {
@@ -339,5 +347,4 @@ export class GameScene extends Container {
         }
 
     }
-
 }
