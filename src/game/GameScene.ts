@@ -3,19 +3,13 @@ import { Player } from './Player';
 import { BET_LEVELS } from './BetLevels';
 import { BetConfig, BETS_CONFIG } from './BetsConfig';
 import { GameUI } from '../ui/GameUI';
-
 import { GameController } from './GameController';
-import { TriangleButton } from '../ui/buttons/TriangleButton';
-import { TossButton } from '../ui/buttons/TossButton';
-
 import { CoinRow } from '../ui/CoinRow';
-
 import { CoinSide } from '../ui/Coin';
 import { COMBINATIONS } from './CoinCombinations';
-
 import { RunStats } from './RunStats';
-
 import { HamburgerMenu } from '../ui/menus/HamburgerMenu';
+import { GameControls } from '../ui/controls/GameControls';
 
 export class GameScene extends Container {
     private gameUI: GameUI;
@@ -23,13 +17,7 @@ export class GameScene extends Container {
 
     private controller: GameController;
 
-    private betDown!: TriangleButton;
-    private betUp!: TriangleButton;
-
-    private prevCombo!: TriangleButton;
-    private nextCombo!: TriangleButton;
-
-    private tossButton!: TossButton;
+    private controls!: GameControls;
 
     private coinRow!: CoinRow;
     private streakMultiplier = 1;
@@ -77,93 +65,43 @@ export class GameScene extends Container {
             },
         });
 
+
         this.gameUI.updateBet(this.controller.getBet());
+
+        this.controls = new GameControls({
+            onBetDown: () => this.handleBetDown(),
+            onBetUp: () => this.handleBetUp(),
+            onPrevCombo: () => this.controller.prevCombo(),
+            onNextCombo: () => this.controller.nextCombo(),
+            onToss: () => this.handleToss()
+        });
+
+        this.addChild(this.controls);
 
         this.hamburgerMenu = new HamburgerMenu();
         this.addChild(this.hamburgerMenu);
 
-        this.createBetButtons();
-        this.createCombinationsButtons();
         this.createCoinRow();
-        this.createTossButton();
+        
     }
 
-    // BET BUTTONS
-
-    private createBetButtons() {
-        const betDown = new TriangleButton({
-            direction: 'left',
-            label: '-',
-            onClick: () => {
-            this.controller.decreaseBet();
-            },
-        });
-
-        const betUp = new TriangleButton({
-            direction: 'right',
-            label: '+',
-            onClick: () => {
-                const nextBet = this.controller.getNextBet();
-
-                if (nextBet !== null && nextBet > this.player.balance) {
-                    this.popupManager.show("Insufficient balance");
-                    return;
-                }
-
-                this.controller.increaseBet();
-            },
-        });
-
-        betDown.position.set(645, 660);
-        betUp.position.set(845, 660);
-
-        this.betDown = betDown;
-        this.betUp = betUp;
-
-        this.addChild(betDown, betUp);
+    private handleBetDown() {
+        this.controller.decreaseBet();
     }
 
-    private createCombinationsButtons() {
+    private handleBetUp() {
+        const nextBet = this.controller.getNextBet();
 
-        const prevCombo = new TriangleButton({
-            direction: 'left',
-            label: '-',
-            onClick: () => {
-            this.controller.prevCombo();
-            },
-        });
+        if (nextBet !== null && nextBet > this.player.balance) {
+            this.popupManager.show("Insufficient balance");
+            return;
+        }
 
-        const nextCombo = new TriangleButton({
-            direction: 'right',
-            label: '+',
-            onClick: () => {
-            this.controller.nextCombo();
-            },
-        });
-
-        prevCombo.position.set(960, 660);
-        nextCombo.position.set(1300, 660);
-
-        this.prevCombo = prevCombo;
-        this.nextCombo = nextCombo;
-
-        this.addChild(prevCombo, nextCombo);
+        this.controller.increaseBet();
     }
 
-    // TOSS BUTTON
-
-    private async createTossButton() {
-        this.tossButton = new TossButton('BET');
-
-        await this.tossButton.init();
-
-        this.tossButton.position.set(1370, 500);
-
-        this.addChild(this.tossButton);
-
-        this.tossButton.on("toss", () => {
-            this.startRound();
-        });
+    private handleToss() {
+        this.startRound();
     }
 
     // COIN ROW
@@ -200,7 +138,7 @@ export class GameScene extends Container {
         this.player.balance -= bet;
         this.gameUI.updateBalance(this.player.balance);
 
-        this.tossButton.startAnimation();
+        this.controls.startTossAnimation();
 
         const result = this.generateResult();
 
@@ -262,27 +200,13 @@ export class GameScene extends Container {
 
     private lockControls() {
 
-        this.betDown.setDisabled(true);
-        this.betUp.setDisabled(true);
-
-        this.prevCombo.setDisabled(true);
-        this.nextCombo.setDisabled(true);
-
-        this.tossButton.setDisabled(true);
-
+        this.controls.setDisabled(true);
         this.hamburgerMenu.setDisabled(true);
     }
 
     private unlockControls() {
 
-        this.betDown.setDisabled(false);
-        this.betUp.setDisabled(false);
-
-        this.prevCombo.setDisabled(false);
-        this.nextCombo.setDisabled(false);
-
-        this.tossButton.setDisabled(false);
-
+        this.controls.setDisabled(false);
         this.hamburgerMenu.setDisabled(false);
     }
 
@@ -292,9 +216,7 @@ export class GameScene extends Container {
         this.app.ticker.add((ticker) => {
             const delta = ticker.deltaTime;
 
-            if (this.tossButton) {
-                this.tossButton.update(delta);
-            }
+            this.controls.update(delta);
 
             if (this.coinRow) {
                 this.coinRow.update(delta);
