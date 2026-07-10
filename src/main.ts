@@ -1,5 +1,5 @@
 import { Application, Sprite, Assets} from 'pixi.js';
-import { GameScene } from './game/GameScene';
+import { GameScene } from './game/scenes/GameScene';
 import { PopupManager } from './ui/popups/PopupManager';
 import '@pixi/sound';
 

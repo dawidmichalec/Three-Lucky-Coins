@@ -1,21 +1,22 @@
 import { Container, Application, Assets, Sprite } from 'pixi.js';
-import { Player } from './Player';
-import { BET_LEVELS } from './data/BetLevels';
-import { BetConfig, BETS_CONFIG } from './data/BetsConfig';
-import { GameUI } from '../ui/GameUI';
-import { GameController } from './GameController';
-import { CoinRow } from '../ui/CoinRow';
-import { CoinSide } from '../ui/Coin';
-import { COMBINATIONS } from './data/CoinCombinations';
-import { RunStats } from './RunStats';
-import { HamburgerMenu } from '../ui/menus/HamburgerMenu';
-import { GameControls } from '../ui/controls/GameControls';
-import { CheatPanel } from '../dev/CheatPanel';
-import { CheatManager } from '../dev/CheatManager';
-import { CheatActions } from '../dev/CheatActions';
-import { CheatCode } from '../dev/CheatCodes';
+import { Player } from '../Player';
+import { BET_LEVELS } from '../data/BetLevels';
+import { BetConfig, BETS_CONFIG } from '../data/BetsConfig';
+import { GameUI } from '../../ui/GameUI';
+import { GameController } from '../GameController';
+import { CoinRow } from '../../ui/CoinRow';
+import { CoinSide } from '../../ui/Coin';
+import { COMBINATIONS } from '../data/CoinCombinations';
+import { RunStats } from '../RunStats';
+import { HamburgerMenu } from '../../ui/menus/HamburgerMenu';
+import { GameControls } from '../../ui/controls/GameControls';
+import { CheatPanel } from '../../dev/CheatPanel';
+import { CheatManager } from '../../dev/CheatManager';
+import { CheatActions } from '../../dev/CheatActions';
+import { CheatCode } from '../../dev/CheatCodes';
+import { BaseScene } from './BaseScene';
 
-export class GameScene extends Container {
+export class GameScene extends BaseScene {
     private gameUI: GameUI;
     private player: Player;
 
@@ -344,5 +345,15 @@ export class GameScene extends Container {
             "FORCED RESULT:",
             result.join("-")
         );
+    }
+
+    // CLEANUP
+
+    cleanup() {
+
+        this.app.ticker.remove(this.updateTicker);
+
+        this.cheatPanel.destroy();
+
     }
 }
