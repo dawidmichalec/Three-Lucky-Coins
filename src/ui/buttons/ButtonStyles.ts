@@ -42,6 +42,13 @@ export const BUTTON_STYLES: Record<ButtonTheme, ButtonStyle> = {
         fill: 0xcb6ce6,
         hoverFill: 0x8f1eae,
         textColor: 0xffffff,
+    },
+
+    [ButtonTheme.BLACK]: {
+        fill: 0x000000,
+        hoverFill: 0x000000,
+        textColor: 0xffffff,
     }
+
 
 };

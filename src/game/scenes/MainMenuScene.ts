@@ -2,13 +2,19 @@ import { BaseScene } from "./BaseScene";
 import { SceneManager } from "../SceneManager";
 import { RoundedButton } from "../../ui/buttons/RoundedButton";
 import { ButtonTheme } from "../../ui/buttons/ButtonTheme";
+import { CreditsPanel } from "../../ui/panels/CreditsPanel";
 
 export class MainMenuScene extends BaseScene {
+
+    private creditsPanel!: CreditsPanel;
 
     constructor(
         private sceneManager: SceneManager
     ) {
+
         super();
+
+        this.createCreditsPanel();
 
         const playButton = new RoundedButton({
 
@@ -58,7 +64,7 @@ export class MainMenuScene extends BaseScene {
             text: 'CREDITS',
             theme: ButtonTheme.MAGENTA,
             onClick:() => {
-
+                this.creditsPanel.show();
             }
         })
 
@@ -88,5 +94,22 @@ export class MainMenuScene extends BaseScene {
     cleanup() {
 
     }
-    
+
+    private createCreditsPanel() {
+
+        this.creditsPanel = new CreditsPanel(
+            window.innerWidth,
+            window.innerHeight,
+            () => {
+                this.creditsPanel.hide();
+            }
+        );
+
+        this.creditsPanel.visible = false;
+        this.creditsPanel.zIndex = 100;
+
+        this.addChild(this.creditsPanel);
+
+    }
+        
 }
