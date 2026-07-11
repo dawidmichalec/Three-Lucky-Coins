@@ -5,6 +5,8 @@ import { SoundButton } from "../buttons/SoundButton";
 import { HelpButton } from "../buttons/HelpButton";
 import { RestartRunButton } from "../buttons/RestartRunButton";
 import { HomeButton } from "../buttons/HomeButton";
+import { SceneManager } from "../../game/SceneManager";
+import { PopupManager } from "../popups/PopupManager";
 
 export class HamburgerMenu extends Container{
 
@@ -15,7 +17,10 @@ export class HamburgerMenu extends Container{
     private restartRunButton!: RestartRunButton;
     private homeButton!: HomeButton;
 
-    constructor(){
+    constructor(
+        private sceneManager: SceneManager,
+        private popupManager: PopupManager
+    ){
         super();
 
         this.createHamburgerMenuButton();
@@ -88,6 +93,22 @@ export class HamburgerMenu extends Container{
         await this.homeButton.init();
 
         this.homeButton.position.set(50, 145);
+
+        this.homeButton.on("click",()=>{
+
+            this.popupManager.showConfirmation(
+
+                    "Are you sure you want to exit to main menu? All current progress will be lost.",
+
+                    ()=>{
+
+                        this.sceneManager.showMainMenu();
+
+                    }
+
+                );
+
+        });
 
         this.addChild(this.homeButton);
     }

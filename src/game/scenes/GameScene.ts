@@ -15,6 +15,8 @@ import { CheatManager } from '../../dev/CheatManager';
 import { CheatActions } from '../../dev/CheatActions';
 import { CheatCode } from '../../dev/CheatCodes';
 import { BaseScene } from './BaseScene';
+import { SceneManager } from '../SceneManager';
+import { PopupManager } from '../../ui/popups/PopupManager';
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -41,7 +43,8 @@ export class GameScene extends BaseScene {
 
     constructor (
         private app: Application,
-        private popupManager: { show: (msg: string) => void }
+        private popupManager: PopupManager,
+        private sceneManager: SceneManager
     ) {
         super();
 
@@ -89,7 +92,7 @@ export class GameScene extends BaseScene {
 
         this.addChild(this.controls);
 
-        this.hamburgerMenu = new HamburgerMenu();
+        this.hamburgerMenu = new HamburgerMenu(this.sceneManager, this.popupManager);
         this.addChild(this.hamburgerMenu);
 
         this.createCoinRow();

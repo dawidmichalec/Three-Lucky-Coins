@@ -1,6 +1,7 @@
 import { Application, Sprite, Assets} from 'pixi.js';
-import { GameScene } from './game/scenes/GameScene';
 import { PopupManager } from './ui/popups/PopupManager';
+import { SceneManager } from './game/SceneManager';
+import { MainMenuScene } from './game/scenes/MainMenuScene';
 import '@pixi/sound';
 
 (async () => {
@@ -48,13 +49,21 @@ import '@pixi/sound';
 
     const popupManager = new PopupManager(app.screen.width, app.screen.height);
 
-    // GameScene
+    popupManager.zIndex = 1000;
 
-    const gameScene = new GameScene(app, popupManager);
+    // SceneManager
+
+    const sceneManager = new SceneManager(app, popupManager);
+
+    const mainMenu = new MainMenuScene(
+        sceneManager
+    );
+
+
+    sceneManager.changeScene(mainMenu);
 
     app.stage.sortableChildren = true;
 
-    app.stage.addChild(gameScene);
     app.stage.addChild(popupManager);
 
 })();
