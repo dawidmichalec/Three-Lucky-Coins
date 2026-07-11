@@ -2,6 +2,7 @@ import { Application, Container } from "pixi.js";
 import { PopupManager } from "../ui/popups/PopupManager";
 import { GameScene } from "./scenes/GameScene";
 import { MainMenuScene } from "./scenes/MainMenuScene";
+import { BaseScene } from "./scenes/BaseScene";
 
 export class SceneManager {
 
@@ -17,6 +18,10 @@ export class SceneManager {
         if (this.currentScene) {
 
             await this.fadeOut(this.currentScene);
+
+            if (this.currentScene instanceof BaseScene) {
+                this.currentScene.cleanup();
+            }
 
             this.app.stage.removeChild(this.currentScene);
 

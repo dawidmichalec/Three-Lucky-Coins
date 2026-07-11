@@ -1,4 +1,4 @@
-import { Container, Application, Assets, Sprite } from 'pixi.js';
+import { Container, Application, Assets, Sprite, Ticker } from 'pixi.js';
 import { Player } from '../Player';
 import { BET_LEVELS } from '../data/BetLevels';
 import { BetConfig, BETS_CONFIG } from '../data/BetsConfig';
@@ -40,6 +40,8 @@ export class GameScene extends BaseScene {
     private cheatManager = new CheatManager();
 
     private forcedResult?: CoinSide[];
+
+    private updateTicker!: (ticker: Ticker) => void;
 
     constructor (
         private app: Application,
@@ -244,7 +246,9 @@ export class GameScene extends BaseScene {
     // TICKER
 
     private setupTicker() {
-        this.app.ticker.add((ticker) => {
+
+        this.updateTicker = (ticker: Ticker) => {
+
             const delta = ticker.deltaTime;
 
             this.controls.update(delta);
@@ -252,7 +256,10 @@ export class GameScene extends BaseScene {
             if (this.coinRow) {
                 this.coinRow.update(delta);
             }
-        });
+
+        };
+
+        this.app.ticker.add(this.updateTicker);
     }
 
     // IS PLAYER ABLE TO PLAY?
@@ -354,9 +361,19 @@ export class GameScene extends BaseScene {
 
     cleanup() {
 
+        console.log("GAME SCENE CLEANUP");
+
         this.app.ticker.remove(this.updateTicker);
 
-        this.cheatPanel.destroy();
+        if (this.cheatPanel) {
+
+            this.removeChild(this.cheatPanel);
+
+            this.cheatPanel.destroy({
+                children:true
+            });
+
+        }
 
     }
 }

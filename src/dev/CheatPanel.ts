@@ -46,4 +46,14 @@ export class CheatPanel extends Container {
         document.body.appendChild(this.input);
     }
 
+    destroy(options?: any) {
+
+        if (this.input) {
+            this.input.remove();
+        }
+
+        super.destroy(options);
+
+    }
+
 }
