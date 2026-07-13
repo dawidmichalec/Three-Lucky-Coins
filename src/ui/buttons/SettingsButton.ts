@@ -1,33 +1,26 @@
 import { Container, Sprite, Assets } from "pixi.js";
 
-export class SoundButton extends Container{
+export class SettingsButton extends Container {
 
     private bg!: Sprite;
     private buttonWidth: number;
     private buttonHeight: number;
-    private isMuted: boolean;
 
     constructor(){
         super();
 
-        this.buttonWidth = 80;
-        this.buttonHeight = 80;
-        this.isMuted = false;
+        this.buttonWidth = 65;
+        this.buttonHeight = 65;
         this.visible = false;
 
         this.eventMode = 'static';
         this.cursor = 'pointer';
 
-        this.on("click", () => {
-
-            this.toggle();
-
-        });
     }
 
     async init() {
         const texture = await Assets.load(
-            '/assets/main/icons/sound_on_icon.png'
+            '/assets/main/icons/settings_button_icon.png'
         );
     
         this.bg = new Sprite(texture);
@@ -50,24 +43,6 @@ export class SoundButton extends Container{
     }
 
     show() {
-        this.visible = true;
-    }
-
-    async toggle() {
-        if (this.isMuted === false){
-            this.isMuted = true;
-            const sound_off = await Assets.load(
-            '/assets/main/icons/sound_off_icon.png'
-            );
-    
-            this.bg.texture = sound_off;
-        } else {
-            this.isMuted = false;
-            const sound_on = await Assets.load(
-            '/assets/main/icons/sound_on_icon.png'
-            );
-
-            this.bg.texture = sound_on;
-        }
+      
     }
 }

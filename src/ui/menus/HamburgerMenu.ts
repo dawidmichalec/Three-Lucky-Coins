@@ -1,7 +1,7 @@
 import { Container, Sprite, Assets } from "pixi.js";
 import { HamburgerMenuButton } from "../buttons/HamburgerMenuButton";
 import { StatsButton } from "../buttons/StatsButton";
-import { SoundButton } from "../buttons/SoundButton";
+import { SettingsButton } from "../buttons/SettingsButton";
 import { HelpButton } from "../buttons/HelpButton";
 import { RestartRunButton } from "../buttons/RestartRunButton";
 import { HomeButton } from "../buttons/HomeButton";
@@ -12,7 +12,7 @@ export class HamburgerMenu extends Container{
 
     private hamburgerMenuButton!: HamburgerMenuButton;
     private statsButton!: StatsButton;
-    private soundButton!: SoundButton;
+    private settingsButton!: SettingsButton;
     private helpButton!: HelpButton;
     private restartRunButton!: RestartRunButton;
     private homeButton!: HomeButton;
@@ -25,7 +25,7 @@ export class HamburgerMenu extends Container{
 
         this.createHamburgerMenuButton();
         this.createStatsButton();
-        this.createSoundButton();
+        this.createSettingsButton();
         this.createHelpButton();
         this.createRestartRunButton();
         this.createHomeButton();
@@ -57,14 +57,14 @@ export class HamburgerMenu extends Container{
         this.addChild(this.statsButton);
     }
 
-    private async createSoundButton(){
-        this.soundButton = new SoundButton();
+    private async createSettingsButton(){
+        this.settingsButton = new SettingsButton();
 
-        await this.soundButton.init();
+        await this.settingsButton.init();
 
-        this.soundButton.position.set(45, 400);
+        this.settingsButton.position.set(55, 405);
 
-        this.addChild(this.soundButton);
+        this.addChild(this.settingsButton);
     }
 
     private async createHelpButton(){
@@ -116,7 +116,7 @@ export class HamburgerMenu extends Container{
     setDisabled(value: boolean){
         this.hamburgerMenuButton.setDisabled(value);
         this.statsButton.setDisabled(value);
-        this.soundButton.setDisabled(value);
+        this.settingsButton.setDisabled(value);
         this.helpButton.setDisabled(value);
         this.restartRunButton.setDisabled(value);
         this.homeButton.setDisabled(value);
@@ -126,17 +126,17 @@ export class HamburgerMenu extends Container{
     toggle() {
         if (
             (this.statsButton.visible === false) && 
-            (this.soundButton.visible === false) && 
+            (this.settingsButton.visible === false) && 
             (this.helpButton.visible === false) &&
             (this.restartRunButton.visible === false)){
                 this.statsButton.visible = true;
-                this.soundButton.visible = true;
+                this.settingsButton.visible = true;
                 this.helpButton.visible = true;
                 this.restartRunButton.visible = true;
                 this.homeButton.visible = true;
             } else {
                 this.statsButton.visible = false;
-                this.soundButton.visible = false;
+                this.settingsButton.visible = false;
                 this.helpButton.visible = false;
                 this.restartRunButton.visible = false;
                 this.homeButton.visible = false;
