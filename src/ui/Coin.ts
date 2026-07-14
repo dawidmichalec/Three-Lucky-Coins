@@ -1,5 +1,6 @@
 import { Assets, Container, Sprite, Texture } from 'pixi.js';
-import { sound, Sound } from '@pixi/sound';
+import { AudioManager } from '../core/AudioManager';
+import { SoundId } from '../audio/SoundId';
 
 export enum CoinSide {
     Heads = 'H',
@@ -23,17 +24,23 @@ export class Coin extends Container {
     private frameTimer = 0;
     private frameSpeed = 2;
 
-    private spinSound!: Sound;
+    private audioManager!: AudioManager;
+
+    private static counter = 0;
+
+    private id: number;
+
+    constructor() {
+        super();
+
+        this.id = Coin.counter++;
+    }
 
     async init() {
         this.headsTexture = await Assets.load('/assets/main/heads.png');
         this.tailsTexture = await Assets.load('/assets/main/tails.png');
 
-        // Zamiast Assets.load, używamy bezpośrednio sound.add
-        this.spinSound = sound.add('coin_spin', {
-            url: '/assets/main/sounds/coin_roll_sound.mp3',
-            preload: true // od razu zacznie pobierać plik
-        });
+        this.audioManager = AudioManager.getInstance();
 
         for (let i = 1; i <= 16; i++) {
             this.animationTextures.push(
@@ -51,6 +58,7 @@ export class Coin extends Container {
         this.sprite.anchor.set(0.5);
 
         this.addChild(this.sprite);
+       
     }
 
     setSide(side: CoinSide) {
@@ -75,28 +83,43 @@ export class Coin extends Container {
     }
 
     startSpin() {
+
+        console.log(
+            `COIN ${this.id}: START SPIN`,
+            performance.now()
+        );
+
         this.phase = "spinning";
 
         this.currentFrame = 0;
         this.frameTimer = 0;
 
-        if (this.spinSound) {
-            this.spinSound.play({ 
-                loop: false, 
-                volume: 0.5,
-                start: 0.9
-            });
-        }
+        console.log(
+            `COIN ${this.id}: PLAY SOUND`,
+            performance.now()
+        );
+
+        this.audioManager.play(
+            SoundId.COIN_SPIN,
+                {
+                    loop: false,
+                    volume: 0.5,
+                    start: 1.11
+                }
+        );
     }
 
     reveal(side: CoinSide) {
+
+        console.log(
+            `COIN ${this.id}: REVEAL`,
+            side,
+            performance.now()
+        );
+
         this.setSide(side);
         this.phase = 'idle';
 
-        // ZATRZYMANIE DŹWIĘKU po zakończeniu kręcenia
-        if (this.spinSound) {
-            this.spinSound.stop();
-        }
     }
 
     update(delta: number) {

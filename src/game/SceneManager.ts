@@ -93,7 +93,6 @@ export class SceneManager {
 
     showGame() {
 
-        console.log("SHOW GAME");
         this.changeScene(
             new GameScene(
                 this.app,

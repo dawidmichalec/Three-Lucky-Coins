@@ -3,10 +3,12 @@ import { SceneManager } from "../SceneManager";
 import { RoundedButton } from "../../ui/buttons/RoundedButton";
 import { ButtonTheme } from "../../ui/buttons/ButtonTheme";
 import { CreditsPanel } from "../../ui/panels/CreditsPanel";
+import { OptionsPanel } from "../../ui/panels/OptionsPanel";
 
 export class MainMenuScene extends BaseScene {
 
     private creditsPanel!: CreditsPanel;
+    private optionsPanel!: OptionsPanel;
 
     constructor(
         private sceneManager: SceneManager
@@ -15,14 +17,13 @@ export class MainMenuScene extends BaseScene {
         super();
 
         this.createCreditsPanel();
+        this.createOptionsPanel();
 
         const playButton = new RoundedButton({
 
             text: 'PLAY',
             theme: ButtonTheme.GREEN,
             onClick:() => {
-
-                console.log("PLAY");
 
                 this.sceneManager.showGame();
             
@@ -34,6 +35,8 @@ export class MainMenuScene extends BaseScene {
 
         playButton.position.set(300, 350);
 
+        // COLLECTIONS BUTTON
+
         const collectionsButton = new RoundedButton({
             text: 'COLLECTIONS',
             theme: ButtonTheme.YELLOW,
@@ -42,19 +45,19 @@ export class MainMenuScene extends BaseScene {
             },
         });
 
-        // COLLECTIONS BUTTON
-
         collectionsButton.position.set(650, 350);
+
+        // OPTIONS BUTTON
 
         const optionsButton = new RoundedButton({
             text: 'OPTIONS',
             theme: ButtonTheme.BLUE,
             onClick:() => {
-
+                this.optionsPanel.show();
             }
         })
 
-        // OPTIONS BUTTON
+
 
         optionsButton.position.set(1000, 350);
 
@@ -109,6 +112,23 @@ export class MainMenuScene extends BaseScene {
         this.creditsPanel.zIndex = 100;
 
         this.addChild(this.creditsPanel);
+
+    }
+
+    private createOptionsPanel() {
+
+        this.optionsPanel = new OptionsPanel(
+            window.innerWidth,
+            window.innerHeight,
+            () => {
+                this.optionsPanel.hide();
+            }
+        );
+
+        this.optionsPanel.visible = false;
+        this.optionsPanel.zIndex = 100;
+
+        this.addChild(this.optionsPanel);
 
     }
         

@@ -17,6 +17,7 @@ import { CheatCode } from '../../dev/CheatCodes';
 import { BaseScene } from './BaseScene';
 import { SceneManager } from '../SceneManager';
 import { PopupManager } from '../../ui/popups/PopupManager';
+import { OptionsPanel } from '../../ui/panels/OptionsPanel';
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -42,6 +43,8 @@ export class GameScene extends BaseScene {
     private forcedResult?: CoinSide[];
 
     private updateTicker!: (ticker: Ticker) => void;
+
+    private optionsPanel!: OptionsPanel;
 
     constructor (
         private app: Application,
@@ -94,7 +97,26 @@ export class GameScene extends BaseScene {
 
         this.addChild(this.controls);
 
-        this.hamburgerMenu = new HamburgerMenu(this.sceneManager, this.popupManager);
+        this.optionsPanel = new OptionsPanel(
+            window.innerWidth,
+            window.innerHeight,
+            ()=>{
+                this.optionsPanel.hide();
+            }
+        );
+
+        this.optionsPanel.visible = false;
+        this.optionsPanel.zIndex = 1000;
+
+        this.addChild(this.optionsPanel);
+
+        this.hamburgerMenu = new HamburgerMenu(
+            this.sceneManager, 
+            this.popupManager,
+            ()=>{
+                this.optionsPanel.show();
+            }
+        );
         this.addChild(this.hamburgerMenu);
 
         this.createCoinRow();

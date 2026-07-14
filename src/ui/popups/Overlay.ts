@@ -12,7 +12,7 @@ export class Overlay extends Container {
 
     this.addChild(this.bg);
 
-    this.eventMode = 'none';
-    this.cursor = 'default';
+    this.eventMode = "static";
+    this.cursor = "default";
   }
 }

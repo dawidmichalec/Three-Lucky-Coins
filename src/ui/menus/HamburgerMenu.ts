@@ -19,16 +19,25 @@ export class HamburgerMenu extends Container{
 
     constructor(
         private sceneManager: SceneManager,
-        private popupManager: PopupManager
+        private popupManager: PopupManager,
+        private onOpenOptions: ()=>void
     ){
         super();
 
-        this.createHamburgerMenuButton();
-        this.createStatsButton();
-        this.createSettingsButton();
-        this.createHelpButton();
-        this.createRestartRunButton();
-        this.createHomeButton();
+        this.init();
+
+        this.sortableChildren = true;
+    }
+
+    private async init(){
+
+        await this.createHamburgerMenuButton();
+        await this.createStatsButton();
+        await this.createSettingsButton();
+        await this.createHelpButton();
+        await this.createRestartRunButton();
+        await this.createHomeButton();
+
     }
 
     private async createHamburgerMenuButton() {
@@ -63,6 +72,10 @@ export class HamburgerMenu extends Container{
         await this.settingsButton.init();
 
         this.settingsButton.position.set(55, 405);
+
+        this.settingsButton.on("click",()=>{
+            this.onOpenOptions();
+        });
 
         this.addChild(this.settingsButton);
     }
@@ -142,4 +155,5 @@ export class HamburgerMenu extends Container{
                 this.homeButton.visible = false;
             }
     }
+       
 }

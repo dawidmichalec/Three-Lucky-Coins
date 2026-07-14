@@ -48,6 +48,12 @@ export const BUTTON_STYLES: Record<ButtonTheme, ButtonStyle> = {
         fill: 0x000000,
         hoverFill: 0x000000,
         textColor: 0xffffff,
+    },
+
+    [ButtonTheme.GREY]: {
+        fill: 0xb4b4b4,
+        hoverFill: 0xb4b4b4,
+        textColor: 0xffffff,
     }
 
 
