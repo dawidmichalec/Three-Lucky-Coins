@@ -6,6 +6,7 @@ import { AudioManager } from './core/AudioManager';
 import { SettingsManager } from './core/SettingsManager';
 import { SoundId } from './audio/SoundId';
 import { DisplayManager } from './core/DisplayManager';
+import { StatsManager } from './core/StatsManager';
 
 (async () => {
   const app = new Application();
@@ -49,6 +50,13 @@ import { DisplayManager } from './core/DisplayManager';
       logoSprite.alpha =
           0.85 + Math.sin(performance.now() * 0.006) * 0.30;
      });
+
+    // STATS MANAGER
+
+    const statsManager =
+        StatsManager.getInstance();
+
+    statsManager.startSession();
 
     // SETTINGS
 

@@ -37,10 +37,8 @@ export class DisplayManager {
         private stage: Container
     ){
 
-        this.brightnessOverlay =
-            new Graphics();
+        this.brightnessOverlay = new Graphics();
 
-        
         this.brightnessOverlay
             .rect(
                 0,
@@ -48,8 +46,10 @@ export class DisplayManager {
                 window.innerWidth,
                 window.innerHeight
             )
-            .fill(0x000000);
-
+            .fill({
+                color: 0x000000,
+                alpha: 1
+            });
 
         this.brightnessOverlay.alpha = 0;
 
@@ -63,6 +63,8 @@ export class DisplayManager {
         this.stage.addChild(
             this.brightnessOverlay
         );
+
+        this.stage.sortChildren();
 
     }
 

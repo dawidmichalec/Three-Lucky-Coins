@@ -84,20 +84,10 @@ export class Coin extends Container {
 
     startSpin() {
 
-        console.log(
-            `COIN ${this.id}: START SPIN`,
-            performance.now()
-        );
-
         this.phase = "spinning";
 
         this.currentFrame = 0;
         this.frameTimer = 0;
-
-        console.log(
-            `COIN ${this.id}: PLAY SOUND`,
-            performance.now()
-        );
 
         this.audioManager.play(
             SoundId.COIN_SPIN,

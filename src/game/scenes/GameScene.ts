@@ -1,13 +1,11 @@
 import { Container, Application, Assets, Sprite, Ticker } from 'pixi.js';
 import { Player } from '../Player';
-import { BET_LEVELS } from '../data/BetLevels';
 import { BetConfig, BETS_CONFIG } from '../data/BetsConfig';
 import { GameUI } from '../../ui/GameUI';
 import { GameController } from '../GameController';
 import { CoinRow } from '../../ui/CoinRow';
 import { CoinSide } from '../../ui/Coin';
 import { COMBINATIONS } from '../data/CoinCombinations';
-import { RunStats } from '../RunStats';
 import { HamburgerMenu } from '../../ui/menus/HamburgerMenu';
 import { GameControls } from '../../ui/controls/GameControls';
 import { CheatPanel } from '../../dev/CheatPanel';
@@ -18,6 +16,8 @@ import { BaseScene } from './BaseScene';
 import { SceneManager } from '../SceneManager';
 import { PopupManager } from '../../ui/popups/PopupManager';
 import { OptionsPanel } from '../../ui/panels/OptionsPanel';
+import { StatsManager } from '../../core/StatsManager';
+import { RunSummaryPanel } from '../../ui/panels/RunSummaryPanel';
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -28,11 +28,10 @@ export class GameScene extends BaseScene {
     private controls!: GameControls;
 
     private coinRow!: CoinRow;
+    private losingStreak = 0;
     private streakMultiplier = 1;
 
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
-
-    private runStats = new RunStats();
 
     private hamburgerMenu!: HamburgerMenu;
 
@@ -46,6 +45,10 @@ export class GameScene extends BaseScene {
 
     private optionsPanel!: OptionsPanel;
 
+    private statsManager!: StatsManager;
+
+    private runSummaryPanel!: RunSummaryPanel;
+
     constructor (
         private app: Application,
         private popupManager: PopupManager,
@@ -56,6 +59,10 @@ export class GameScene extends BaseScene {
         this.sortableChildren = true;
 
         this.setupTicker();
+
+        // StatsManager
+
+        this.statsManager = StatsManager.getInstance();
 
         // Player
         this.player = new Player(10);
@@ -110,6 +117,38 @@ export class GameScene extends BaseScene {
 
         this.addChild(this.optionsPanel);
 
+        this.runSummaryPanel =
+            new RunSummaryPanel(
+
+                window.innerWidth,
+                window.innerHeight,
+
+                ()=>{
+
+                    this.statsManager.finishRun();
+
+                    this.sceneManager.showGame();
+
+                },
+
+                ()=>{
+
+                    this.statsManager.finishRun();
+
+                    this.sceneManager.showMainMenu();
+
+                }
+
+            );
+
+
+        this.runSummaryPanel.visible = false;
+
+        this.runSummaryPanel.zIndex = 2000;
+
+
+        this.addChild(this.runSummaryPanel);
+
         this.hamburgerMenu = new HamburgerMenu(
             this.sceneManager, 
             this.popupManager,
@@ -161,6 +200,7 @@ export class GameScene extends BaseScene {
     private async startRound() {
 
         const bet = this.controller.getBet();
+
         if (this.player.balance < bet) {
 
             this.popupManager.show("Insufficient balance.");
@@ -185,6 +225,8 @@ export class GameScene extends BaseScene {
         const result = this.generateResult();
 
         await this.coinRow.spin(result);
+
+        this.statsManager.recordCoinsTossed(result.length);
 
         const selected = this.controller.getCurrentCombo();
         const win = this.isWin(selected, result);
@@ -212,9 +254,15 @@ export class GameScene extends BaseScene {
             this.streakMultiplier = 1;
             this.gameUI.updateWon(0);
         }
-        this.updateRunStats(selected, win, winAmount);
 
-        console.log(this.runStats.getMostUsedCombination());
+        this.updateRunStats(
+            selected,
+            win,
+            winAmount,
+            bet
+        );
+
+        console.log(this.statsManager.recordCombination);
 
         this.gameUI.updateMultiplier(this.streakMultiplier);
 
@@ -301,8 +349,33 @@ export class GameScene extends BaseScene {
     // TRIGGER GAME OVER
 
     private triggerGameOver() {
+
+        this.statsManager.getRunStats().won = false;
+
         this.lockControls();
-        this.popupManager.show("GAME OVER");
+        this.popupManager.show(
+            "GAME OVER",
+            400,
+            220,
+            ()=>{
+
+                this.showRunSummary();
+
+            }
+        );
+    }
+
+    // RUN SUMMARY
+
+    private showRunSummary(){
+
+        console.log(
+            "RUN STATS:",
+            this.statsManager.getRunStats()
+        );
+        this.runSummaryPanel.refresh();
+        this.runSummaryPanel.visible = true;
+
     }
 
     // UPDATE RUN STATS
@@ -310,24 +383,79 @@ export class GameScene extends BaseScene {
     private updateRunStats(
         selected: CoinSide[],
         win: boolean,
-        winAmount?: number
+        winAmount?: number,
+        bet?: number
     ) {
-
-        this.runStats.totalBets++;
+        console.log(
+            "UPDATE RUN STATS"
+        );
 
         const combo = selected.join('-');
 
-        this.runStats.recordCombination(combo);
+
+        // =====================
+        // BET
+        // =====================
+
+        if (bet !== undefined) {
+
+            this.statsManager.recordBet(bet);
+
+        }
+
+
+        // =====================
+        // COMBINATION USAGE
+        // =====================
+
+        this.statsManager.recordCombination(combo);
+
+
+
+        // =====================
+        // WIN
+        // =====================
 
         if (win) {
 
-            this.runStats.recordWinningCombination(combo);
 
-            if (winAmount !== undefined) {
-                this.runStats.recordWin(winAmount);
+            this.losingStreak = 0;
+
+
+            this.statsManager.recordSuccessfulBet();
+
+
+            this.statsManager.recordWinningCombination(combo);
+
+
+            if(winAmount !== undefined){
+
+                this.statsManager.recordWin(winAmount);
+
             }
 
-            this.runStats.recordStreak(this.streakMultiplier);
+
+            this.statsManager.recordWinStreak(
+                this.streakMultiplier
+            );
+
+
+        }
+        else {
+
+
+            this.losingStreak++;
+
+
+            this.statsManager.recordLoss(
+                bet ?? 0
+            );
+
+
+            this.statsManager.recordLoseStreak(
+                this.losingStreak
+            );
+
         }
 
     }

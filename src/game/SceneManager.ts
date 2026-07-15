@@ -3,6 +3,7 @@ import { PopupManager } from "../ui/popups/PopupManager";
 import { GameScene } from "./scenes/GameScene";
 import { MainMenuScene } from "./scenes/MainMenuScene";
 import { BaseScene } from "./scenes/BaseScene";
+import { StatsManager } from "../core/StatsManager";
 
 export class SceneManager {
 
@@ -92,6 +93,10 @@ export class SceneManager {
     }
 
     showGame() {
+
+        const statsManager = StatsManager.getInstance();
+
+        statsManager.startRun();
 
         this.changeScene(
             new GameScene(
