@@ -18,6 +18,7 @@ import { PopupManager } from '../../ui/popups/PopupManager';
 import { OptionsPanel } from '../../ui/panels/OptionsPanel';
 import { StatsManager } from '../../core/StatsManager';
 import { RunSummaryPanel } from '../../ui/panels/RunSummaryPanel';
+import { StatsPanel } from '../../ui/panels/StatsPanel';
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -48,6 +49,8 @@ export class GameScene extends BaseScene {
     private statsManager!: StatsManager;
 
     private runSummaryPanel!: RunSummaryPanel;
+
+    private statsPanel!: StatsPanel;
 
     constructor (
         private app: Application,
@@ -117,6 +120,19 @@ export class GameScene extends BaseScene {
 
         this.addChild(this.optionsPanel);
 
+        this.statsPanel = new StatsPanel(
+            window.innerWidth, 
+            window.innerHeight, 
+            () => {
+                this.statsPanel.hide()
+            }
+        );
+
+        this.statsPanel.visible = false;
+        this.statsPanel.zIndex = 1000;
+
+        this.addChild(this.statsPanel);
+
         this.runSummaryPanel =
             new RunSummaryPanel(
 
@@ -154,6 +170,10 @@ export class GameScene extends BaseScene {
             this.popupManager,
             ()=>{
                 this.optionsPanel.show();
+                
+            },
+            () => {
+                this.statsPanel.show();
             }
         );
         this.addChild(this.hamburgerMenu);

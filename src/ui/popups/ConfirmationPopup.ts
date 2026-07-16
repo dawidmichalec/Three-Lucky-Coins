@@ -98,9 +98,9 @@ export class ConfirmationPopup extends Container {
 
             theme:ButtonTheme.GREEN,
 
-            width:180,
+            buttonWidth:180,
 
-            height:60,
+            buttonHeight:60,
 
             onClick:()=>{
                 this.options.onConfirm();
@@ -123,9 +123,9 @@ export class ConfirmationPopup extends Container {
 
             theme:ButtonTheme.RED,
 
-            width:180,
+            buttonWidth:180,
 
-            height:60,
+            buttonHeight:60,
 
             onClick:()=>{
                 this.options.onCancel();

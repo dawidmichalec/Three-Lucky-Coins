@@ -20,7 +20,8 @@ export class HamburgerMenu extends Container{
     constructor(
         private sceneManager: SceneManager,
         private popupManager: PopupManager,
-        private onOpenOptions: ()=>void
+        private onOpenOptions: ()=>void,
+        private onOpenStats: ()=>void
     ){
         super();
 
@@ -62,6 +63,10 @@ export class HamburgerMenu extends Container{
         await this.statsButton.init();
 
         this.statsButton.position.set(55, 490);
+
+        this.statsButton.on("click",()=>{
+            this.onOpenStats();
+        });
 
         this.addChild(this.statsButton);
     }

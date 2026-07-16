@@ -6,8 +6,8 @@ interface RoundedButtonOptions {
 
     text: string;
 
-    width?: number;
-    height?: number;
+    buttonWidth?: number;
+    buttonHeight?: number;
 
     theme?: ButtonTheme;
 
@@ -16,8 +16,12 @@ interface RoundedButtonOptions {
 
 export class RoundedButton extends Container {
 
-    private style: ButtonStyle;
-    private background: Graphics;
+    private style!: ButtonStyle;
+    private background!: Graphics;
+    private text!: Text;
+
+    private buttonWidth!: number;
+    private buttonHeight!: number;
 
     constructor(
         private options: RoundedButtonOptions
@@ -32,8 +36,8 @@ export class RoundedButton extends Container {
 
     private createButton() {
 
-        const width = this.options.width ?? 240;
-        const height = this.options.height ?? 80;
+        this.buttonWidth = this.options.buttonWidth ?? 240;
+        this.buttonHeight = this.options.buttonHeight ?? 80;
 
 
         this.style = BUTTON_STYLES[
@@ -46,8 +50,8 @@ export class RoundedButton extends Container {
         this.background.roundRect(
             0,
             0,
-            width,
-            height,
+            this.buttonWidth,
+            this.buttonHeight,
             30
         );
 
@@ -56,38 +60,14 @@ export class RoundedButton extends Container {
 
         this.on("pointerover", () => {
 
-            this.background.clear();
-
-            this.background.roundRect(
-                0,
-                0,
-                width,
-                height,
-                30
-            );
-
-            this.background.fill(
-                this.style.hoverFill
-            );
+            this.redraw(this.style.hoverFill);
 
         });
 
 
         this.on("pointerout", () => {
 
-            this.background.clear();
-
-            this.background.roundRect(
-                0,
-                0,
-                width,
-                height,
-                30
-            );
-
-            this.background.fill(
-                this.style.fill
-            );
+            this.redraw(this.style.fill);
 
         });
 
@@ -100,7 +80,7 @@ export class RoundedButton extends Container {
 
 
 
-        const text = new Text({
+        this.text = new Text({
             text: this.options.text,
             style:{
                 fill: this.style.textColor,
@@ -110,14 +90,38 @@ export class RoundedButton extends Container {
         });
 
 
-        text.anchor.set(0.5);
+        this.text.anchor.set(0.5);
 
-        text.position.set(
-            width / 2,
-            height / 2
+        this.text.position.set(
+            this.buttonWidth / 2,
+            this.buttonHeight / 2
         );
 
 
-        this.addChild(text);
+        this.addChild(this.text);
+    }
+
+    private redraw(fill: number) {
+
+        this.background.clear();
+
+        this.background
+            .roundRect(
+                0,
+                0,
+                this.buttonWidth,
+                this.buttonHeight,
+                30
+            )
+            .fill(fill);
+    }
+
+    setTheme(theme: ButtonTheme) {
+
+        this.style = BUTTON_STYLES[theme];
+
+        this.redraw(this.style.fill);
+
+        this.text.style.fill = this.style.textColor;
     }
 }

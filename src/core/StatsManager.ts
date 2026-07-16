@@ -68,8 +68,17 @@ export class StatsManager {
 
         this.playerStats.runs++;
 
+        const duration =
+            this.runStats.finishedAt -
+            this.runStats.startedAt;
 
         if(this.runStats.won){
+
+            if(duration < this.playerStats.fastestRun){
+
+                this.playerStats.fastestRun = duration;
+
+            }
 
             this.playerStats.runsWon++;
 
@@ -80,20 +89,7 @@ export class StatsManager {
 
         }
 
-
-        const duration =
-            this.runStats.finishedAt -
-            this.runStats.startedAt;
-
-
         this.playerStats.totalPlayTime += duration;
-
-
-        if(duration < this.playerStats.fastestRun){
-
-            this.playerStats.fastestRun = duration;
-
-        }
 
     }
 
@@ -518,6 +514,47 @@ export class StatsManager {
 
         return `${minutes}m ${seconds}s`;
 
+    }
+
+    getFormattedFastestRun(): string {
+
+        if(this.playerStats.fastestRun === Number.MAX_SAFE_INTEGER){
+            return "-";
+        }
+
+        const totalSeconds = Math.floor(this.playerStats.fastestRun / 1000);
+
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        return `${minutes}m ${seconds}s`;
+    }
+
+
+
+    getFormattedTotalPlayTime(): string {
+
+        const totalSeconds =
+            Math.floor(this.playerStats.totalPlayTime / 1000);
+
+        const hours =
+            Math.floor(totalSeconds / 3600);
+
+        const minutes =
+            Math.floor((totalSeconds % 3600) / 60);
+
+        const seconds =
+            totalSeconds % 60;
+
+        if(hours > 0){
+            return `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        if(minutes > 0){
+            return `${minutes}m ${seconds}s`;
+        }
+
+        return `${seconds}s`;
     }
 
 

@@ -142,5 +142,16 @@ export class ScrollableContainer extends Container {
 
     }
 
+    clearContent(){
+
+        this.content.removeChildren();
+
+        this.scrollY = 0;
+        this.maxScroll = 0;
+
+        this.content.y = 0;
+
+    }
+
 
 }
