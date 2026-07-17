@@ -5,11 +5,13 @@ import { ButtonTheme } from "../../ui/buttons/ButtonTheme";
 import { CreditsPanel } from "../../ui/panels/CreditsPanel";
 import { OptionsPanel } from "../../ui/panels/OptionsPanel";
 import { StatsManager } from "../../core/StatsManager";
+import { ColletionsPanel } from "../../ui/panels/CollectionsPanel";
 
 export class MainMenuScene extends BaseScene {
 
     private creditsPanel!: CreditsPanel;
     private optionsPanel!: OptionsPanel;
+    private collectionsPanel!: ColletionsPanel;
 
     constructor(
         private sceneManager: SceneManager
@@ -19,6 +21,7 @@ export class MainMenuScene extends BaseScene {
 
         this.createCreditsPanel();
         this.createOptionsPanel();
+        this.createCollectionPanel();
 
         const playButton = new RoundedButton({
 
@@ -42,7 +45,7 @@ export class MainMenuScene extends BaseScene {
             text: 'COLLECTIONS',
             theme: ButtonTheme.YELLOW,
             onClick:() => {
-                
+                this.collectionsPanel.show();
             },
         });
 
@@ -98,6 +101,27 @@ export class MainMenuScene extends BaseScene {
     cleanup() {
 
     }
+
+
+    private createCollectionPanel() {
+
+        this.collectionsPanel = new ColletionsPanel(
+            window.innerWidth,
+            window.innerHeight,
+
+            () => {
+                this.collectionsPanel.hide();
+            }
+        );
+
+        this.collectionsPanel.visible = false;
+        this.collectionsPanel.zIndex = 100;
+
+        this.addChild(this.collectionsPanel);
+
+    }
+
+
 
     private createCreditsPanel() {
 

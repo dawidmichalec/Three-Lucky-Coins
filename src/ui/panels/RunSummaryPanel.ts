@@ -11,6 +11,7 @@ export class RunSummaryPanel extends Container {
 
     private statsManager: StatsManager;
     private statsScroll!: ScrollableContainer;
+    private statsContent!: Container;
     private statsLabels!: Text;
     private statsValues!: Text;
 

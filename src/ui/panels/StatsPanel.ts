@@ -553,8 +553,8 @@ export class StatsPanel extends Container {
 
             theme:ButtonTheme.BLACK,
 
-            width:70,
-            height:70,
+            buttonWidth:70,
+            buttonHeight:70,
 
             onClick:()=>{
 

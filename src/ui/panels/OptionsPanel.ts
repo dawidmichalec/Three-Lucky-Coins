@@ -279,7 +279,7 @@ export class OptionsPanel extends Container {
 
 
         audioToggle.position.set(
-            1085,
+            1110,
             160
         );
 
@@ -307,7 +307,7 @@ export class OptionsPanel extends Container {
         });
 
         left.position.set(1000, 520);
-        right.position.set(1200, 520);
+        right.position.set(1270, 520);
 
         this.left = left;
         this.right = right;
