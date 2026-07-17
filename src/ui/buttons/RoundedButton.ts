@@ -85,7 +85,8 @@ export class RoundedButton extends Container {
             style:{
                 fill: this.style.textColor,
                 font: 'Open Sans',
-                fontSize: 28
+                fontSize: 24,
+                fontWeight: 'bold'
             }
         });
 

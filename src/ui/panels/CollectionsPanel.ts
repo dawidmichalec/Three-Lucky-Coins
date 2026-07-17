@@ -62,7 +62,7 @@ export class ColletionsPanel extends Container {
 
         });
 
-        this.addOnsButton.position.set(750,70);
+        this.addOnsButton.position.set(650,70);
 
 
         this.achievementsButton = new RoundedButton({
@@ -78,7 +78,7 @@ export class ColletionsPanel extends Container {
         })
 
 
-        this.achievementsButton.position.set(1200, 70);
+        this.achievementsButton.position.set(1000, 70);
 
         this.addChild(
             this.playerButton,
