@@ -302,14 +302,14 @@ export class StatsPanel extends Container {
     ${this.statsManager.getWinRateAllTime()}    
     ${stats.bestWinStreak}
     ${stats.biggestLoseStreak}
-    ${stats.totalWon}
-    ${stats.totalLost}
+    ${stats.totalWon.toFixed(2)}
+    ${stats.totalLost.toFixed(2)}
     ${stats.highestWin.toFixed(2)}
     ${this.statsManager.getAverageWinAllTime()}
     ${this.statsManager.getAccuracyAllTime().toFixed(2)}%
     ${stats.totalBets}
     ${this.statsManager.getFavoriteBetAllTime()}.00
-    ${this.statsManager.getAverageBetValueAllTime()}
+    ${this.statsManager.getAverageBetValueAllTime().toFixed(2)}
     ${this.statsManager.getFormattedFastestRun()}
     ${stats.totalCoinsTossed}
     ${this.statsManager.getFormattedTotalPlayTime()}
