@@ -102,6 +102,22 @@ export class HamburgerMenu extends Container{
 
         this.restartRunButton.position.set(45, 225);
 
+        this.restartRunButton.on("click", ()=>{
+
+            this.popupManager.showConfirmation(
+
+                "Are you sure you want to restart run?\n\nAll current progress will be lost.",
+
+                ()=> {
+
+                    this.sceneManager.showGame();
+
+                }
+
+            );
+
+        });
+
         this.addChild(this.restartRunButton);
     }
 
@@ -116,7 +132,7 @@ export class HamburgerMenu extends Container{
 
             this.popupManager.showConfirmation(
 
-                    "Are you sure you want to exit to main menu? All current progress will be lost.",
+                    "Are you sure you want to exit to main menu?\nAll current progress will be lost.",
 
                     ()=>{
 
