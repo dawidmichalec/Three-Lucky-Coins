@@ -5,13 +5,13 @@ import { ButtonTheme } from "../../ui/buttons/ButtonTheme";
 import { CreditsPanel } from "../../ui/panels/CreditsPanel";
 import { OptionsPanel } from "../../ui/panels/OptionsPanel";
 import { StatsManager } from "../../core/StatsManager";
-import { ColletionsPanel } from "../../ui/panels/CollectionsPanel";
+import { CollectionsPanel } from "../../ui/panels/CollectionsPanel";
 
 export class MainMenuScene extends BaseScene {
 
     private creditsPanel!: CreditsPanel;
     private optionsPanel!: OptionsPanel;
-    private collectionsPanel!: ColletionsPanel;
+    private collectionsPanel!: CollectionsPanel;
 
     constructor(
         private sceneManager: SceneManager
@@ -105,7 +105,7 @@ export class MainMenuScene extends BaseScene {
 
     private createCollectionPanel() {
 
-        this.collectionsPanel = new ColletionsPanel(
+        this.collectionsPanel = new CollectionsPanel(
             window.innerWidth,
             window.innerHeight,
 

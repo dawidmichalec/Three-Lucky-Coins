@@ -4,9 +4,9 @@ import { ButtonTheme } from "../buttons/ButtonTheme";
 import { StatsManager } from "../../core/StatsManager";
 import { Overlay } from "../popups/Overlay";
 import { ScrollableContainer } from "../components/ScrollableContainer";
-import { Button } from "@pixi/ui";
 
-export class ColletionsPanel extends Container {
+
+export class CollectionsPanel extends Container {
 
     private currentTab: "player" | "add-ons" | "achievements" = "player";
     private statsManager: StatsManager;
@@ -440,6 +440,9 @@ export class ColletionsPanel extends Container {
         this.playerButton.setTheme(ButtonTheme.DARKGREEN);
         this.addOnsButton.setTheme(ButtonTheme.GREEN);
         this.achievementsButton.setTheme(ButtonTheme.GREEN);
+
+        this.refresh();
+
 
         this.visible = true;
 
