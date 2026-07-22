@@ -68,7 +68,7 @@ export class ConfirmationPopup extends Container {
                 fontSize:26,
                 align:"center",
                 wordWrap:true,
-                wordWrapWidth:500
+                wordWrapWidth:550
             }
 
         });

@@ -8,8 +8,8 @@ export class HamburgerMenuButton extends Container{
     constructor(){
         super();
 
-        this.buttonWidth = 100;
-        this.buttonHeight = 100;
+        this.buttonWidth = 110;
+        this.buttonHeight = 110;
 
         this.eventMode = 'static';
         this.cursor = 'pointer';

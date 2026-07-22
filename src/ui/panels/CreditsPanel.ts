@@ -69,7 +69,7 @@ export class CreditsPanel extends Container {
 
         title.position.set(
             width/2,
-            60
+            108
         );
 
 
@@ -98,7 +98,7 @@ export class CreditsPanel extends Container {
 
         mask.rect(
             0,
-            130,
+            150,
             width,
             height - 130
         );
@@ -259,8 +259,8 @@ export class CreditsPanel extends Container {
 
             theme:ButtonTheme.BLACK,
 
-            width:70,
-            height:70,
+            buttonWidth:70,
+            buttonHeight:70,
 
             onClick:()=>{
 

@@ -19,6 +19,7 @@ import { OptionsPanel } from '../../ui/panels/OptionsPanel';
 import { StatsManager } from '../../core/StatsManager';
 import { RunSummaryPanel } from '../../ui/panels/RunSummaryPanel';
 import { StatsPanel } from '../../ui/panels/StatsPanel';
+import { LayoutManager } from '../../core/LayoutManager';
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -63,12 +64,14 @@ export class GameScene extends BaseScene {
 
         this.setupTicker();
 
+        const layout = LayoutManager.getInstance();
+
         // StatsManager
 
         this.statsManager = StatsManager.getInstance();
 
         // Player
-        this.player = new Player(10);
+        this.player = new Player(100);
 
         // UI
         this.gameUI = new GameUI();
@@ -108,8 +111,8 @@ export class GameScene extends BaseScene {
         this.addChild(this.controls);
 
         this.optionsPanel = new OptionsPanel(
-            window.innerWidth,
-            window.innerHeight,
+            layout.DESIGN_WIDTH,
+            layout.DESIGN_HEIGHT,
             ()=>{
                 this.optionsPanel.hide();
             }
@@ -121,8 +124,8 @@ export class GameScene extends BaseScene {
         this.addChild(this.optionsPanel);
 
         this.statsPanel = new StatsPanel(
-            window.innerWidth, 
-            window.innerHeight, 
+            layout.DESIGN_WIDTH, 
+            layout.DESIGN_HEIGHT, 
             () => {
                 this.statsPanel.hide()
             }
@@ -136,8 +139,8 @@ export class GameScene extends BaseScene {
         this.runSummaryPanel =
             new RunSummaryPanel(
 
-                window.innerWidth,
-                window.innerHeight,
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT,
 
                 ()=>{
 
@@ -212,7 +215,7 @@ export class GameScene extends BaseScene {
 
         await this.coinRow.init();
 
-        this.coinRow.position.set(590, 330);
+        this.coinRow.position.set(740, 470);
 
         this.addChild(this.coinRow);
     }

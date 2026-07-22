@@ -22,7 +22,7 @@ export class GameUI extends Container {
             },
         });
 
-        balanceLabel.position.set(290, 665);
+        balanceLabel.position.set(367.9, 1043.5);
 
         // BALANCE VALUE TEXT
 
@@ -36,7 +36,7 @@ export class GameUI extends Container {
             },
         });
 
-        this.balanceValue.position.set(420, 665);
+        this.balanceValue.position.set(497.9, 1043.5);
 
         // BET LABEL
 
@@ -49,7 +49,7 @@ export class GameUI extends Container {
                 fill: 0x4ca626,
             },
         });
-        betLabel.position.set(785, 665);
+        betLabel.position.set(985, 1043.5);
 
         // BET VALUE
 
@@ -62,7 +62,7 @@ export class GameUI extends Container {
                 fill: 0xffffff,
             },
         });
-        this.betValue.position.set(705, 665);
+        this.betValue.position.set(900, 1043.5);
 
         // COMBINATION
 
@@ -76,7 +76,7 @@ export class GameUI extends Container {
             },
         });
 
-        combinationLabel.position.set(1020, 665);
+        combinationLabel.position.set(1345, 1043.5);
 
         // COMBINATIONS TEXT
 
@@ -90,7 +90,7 @@ export class GameUI extends Container {
             },
         });
 
-        this.combinationValue.position.set(1195, 665);
+        this.combinationValue.position.set(1525, 1043.5);
 
         // WON TEXT
 
@@ -111,7 +111,7 @@ export class GameUI extends Container {
             },
         });
 
-        wonLabel.position.set(690, 500);
+        wonLabel.position.set(890, 720);
 
         this.wonAmount = new Text({
             text: '0.00',
@@ -131,7 +131,7 @@ export class GameUI extends Container {
             },
         });
 
-        this.wonAmount.position.set(770, 500);
+        this.wonAmount.position.set(970, 720);
 
         // MULTIPLIER TEXT
 
@@ -139,7 +139,7 @@ export class GameUI extends Container {
             text: 'Multiplier',
             style: {
                 fontFamily: 'Oswald-Bold',
-                fontSize: 34,
+                fontSize: 38,
                 fontWeight: 'bold',
                 fill: 0xffffff,
                 dropShadow: {
@@ -151,7 +151,7 @@ export class GameUI extends Container {
             },
         });
 
-        multiplierLabel.position.set(290, 280);
+        multiplierLabel.position.set(329.9, 437.5);
 
         // MULTIPLIER VALUE
 
@@ -159,7 +159,7 @@ export class GameUI extends Container {
             text: 'x1',
             style: {
                 font: 'Open Sans',
-                fontSize: 104,
+                fontSize: 124,
                 fontWeight: 'bold',
                 fill: 0xffffff,
 
@@ -177,7 +177,7 @@ export class GameUI extends Container {
             },
         });
 
-        this.multiplierValue.position.set(300, 310);
+        this.multiplierValue.position.set(350, 492.9);
 
         // ADD
 

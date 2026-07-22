@@ -6,18 +6,22 @@ import { CreditsPanel } from "../../ui/panels/CreditsPanel";
 import { OptionsPanel } from "../../ui/panels/OptionsPanel";
 import { StatsManager } from "../../core/StatsManager";
 import { CollectionsPanel } from "../../ui/panels/CollectionsPanel";
+import { LayoutManager } from "../../core/LayoutManager";
 
 export class MainMenuScene extends BaseScene {
 
     private creditsPanel!: CreditsPanel;
     private optionsPanel!: OptionsPanel;
     private collectionsPanel!: CollectionsPanel;
+    private layout!: LayoutManager;
 
     constructor(
         private sceneManager: SceneManager
     ) {
 
         super();
+
+        this.layout = LayoutManager.getInstance();
 
         this.createCreditsPanel();
         this.createOptionsPanel();
@@ -37,7 +41,7 @@ export class MainMenuScene extends BaseScene {
 
         // PLAY BUTTON
 
-        playButton.position.set(300, 350);
+        playButton.position.set(340.4, 566.1);
 
         // COLLECTIONS BUTTON
 
@@ -49,7 +53,7 @@ export class MainMenuScene extends BaseScene {
             },
         });
 
-        collectionsButton.position.set(650, 350);
+        collectionsButton.position.set(798, 566.1);
 
         // OPTIONS BUTTON
 
@@ -63,7 +67,7 @@ export class MainMenuScene extends BaseScene {
 
 
 
-        optionsButton.position.set(1000, 350);
+        optionsButton.position.set(1256, 566.1);
 
         // CREDITS BUTTON
 
@@ -75,7 +79,7 @@ export class MainMenuScene extends BaseScene {
             }
         })
 
-        creditsButton.position.set(470, 480);
+        creditsButton.position.set(555.4, 751);
 
         // QUIT BUTTON
 
@@ -87,7 +91,7 @@ export class MainMenuScene extends BaseScene {
             }
         });
 
-        quitButton.position.set(830, 480);
+        quitButton.position.set(1043, 751);
 
         this.addChild(
             playButton,
@@ -106,8 +110,8 @@ export class MainMenuScene extends BaseScene {
     private createCollectionPanel() {
 
         this.collectionsPanel = new CollectionsPanel(
-            window.innerWidth,
-            window.innerHeight,
+            this.layout.DESIGN_WIDTH,
+            this.layout.DESIGN_HEIGHT,
 
             () => {
                 this.collectionsPanel.hide();
@@ -126,8 +130,8 @@ export class MainMenuScene extends BaseScene {
     private createCreditsPanel() {
 
         this.creditsPanel = new CreditsPanel(
-            window.innerWidth,
-            window.innerHeight,
+            this.layout.DESIGN_WIDTH,
+            this.layout.DESIGN_HEIGHT,
             () => {
                 this.creditsPanel.hide();
             }
@@ -143,8 +147,8 @@ export class MainMenuScene extends BaseScene {
     private createOptionsPanel() {
 
         this.optionsPanel = new OptionsPanel(
-            window.innerWidth,
-            window.innerHeight,
+            this.layout.DESIGN_WIDTH,
+            this.layout.DESIGN_HEIGHT,
             () => {
                 this.optionsPanel.hide();
             }

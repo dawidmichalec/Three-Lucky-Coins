@@ -56,7 +56,7 @@ export class CollectionsPanel extends Container {
 
         });
 
-        this.playerButton.position.set(300, 70);
+        this.playerButton.position.set(333.6, 108);
 
 
         this.addOnsButton = new RoundedButton({
@@ -71,7 +71,7 @@ export class CollectionsPanel extends Container {
 
         });
 
-        this.addOnsButton.position.set(650,70);
+        this.addOnsButton.position.set(798, 108);
 
 
         this.achievementsButton = new RoundedButton({
@@ -87,7 +87,7 @@ export class CollectionsPanel extends Container {
         })
 
 
-        this.achievementsButton.position.set(1000, 70);
+        this.achievementsButton.position.set(1290.5, 108);
 
         this.addChild(
             this.playerButton,
@@ -109,7 +109,7 @@ export class CollectionsPanel extends Container {
         );
 
 
-        this.scrollableContainer.position.set(300, 180);
+        this.scrollableContainer.position.set(312, 293);
 
         this.addChild(this.scrollableContainer);
 
@@ -266,7 +266,7 @@ export class CollectionsPanel extends Container {
 
 
         this.playerStatsValues.position.set(
-            600,
+            760,
             0
         );
 
@@ -317,7 +317,7 @@ export class CollectionsPanel extends Container {
 
 
         this.combinationLabels.position.set(
-            25,
+            785,
             y + 40
         );
 
@@ -415,8 +415,8 @@ export class CollectionsPanel extends Container {
         });
 
         close.position.set(
-            1400,
-            40
+            1812,
+            108
         );
 
         this.addChild(close);

@@ -11,7 +11,8 @@ export class SceneManager {
 
     constructor(
         private app: Application,
-        private popupManager: PopupManager
+        private popupManager: PopupManager,
+        private sceneContainer: Container
     ) {}
 
     async changeScene(scene: Container) {
@@ -24,18 +25,18 @@ export class SceneManager {
                 this.currentScene.cleanup();
             }
 
-            this.app.stage.removeChild(this.currentScene);
+            this.sceneContainer.removeChild(this.currentScene);
 
             this.currentScene.destroy();
         }
 
         this.currentScene = scene;
 
-        this.app.stage.addChild(scene);
+        this.sceneContainer.addChild(scene);
 
         await this.fadeIn(scene);
 
-        this.app.stage.addChild(this.popupManager);
+        this.sceneContainer.addChild(this.popupManager);
     }
 
     private fadeOut(scene: Container): Promise<void> {

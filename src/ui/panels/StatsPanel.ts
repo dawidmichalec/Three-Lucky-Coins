@@ -54,7 +54,7 @@ export class StatsPanel extends Container {
             }
         });
 
-        this.runButton.position.set(450, 70);
+        this.runButton.position.set(508.6, 108);
 
         this.playerButton = new RoundedButton({
             text: "Player Stats",
@@ -64,7 +64,7 @@ export class StatsPanel extends Container {
             }
         })
 
-        this.playerButton.position.set(900, 70);
+        this.playerButton.position.set(1097.9, 108);
 
         this.addChild(
             this.runButton,
@@ -204,7 +204,7 @@ export class StatsPanel extends Container {
 
 
         this.runStatsValues.position.set(
-            600,
+            760,
             0
         );
 
@@ -273,7 +273,7 @@ export class StatsPanel extends Container {
 
 
         this.combinationValues.position.set(
-            625,
+            785,
             410
         );
 
@@ -415,7 +415,7 @@ export class StatsPanel extends Container {
 
 
         this.playerStatsValues.position.set(
-            600,
+            760,
             0
         );
 
@@ -489,7 +489,7 @@ export class StatsPanel extends Container {
 
 
         this.combinationValues.position.set(
-            625,
+            785,
             y + 40
         );
 
@@ -515,8 +515,8 @@ export class StatsPanel extends Container {
 
 
         this.statsScroll.position.set(
-            300,
-            180
+            312,
+            283
         );
 
 
@@ -565,8 +565,8 @@ export class StatsPanel extends Container {
         });
 
         close.position.set(
-            1400,
-            40
+            1812,
+            108
         );
 
         this.addChild(close);

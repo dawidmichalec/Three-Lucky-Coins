@@ -36,8 +36,8 @@ export class RoundedButton extends Container {
 
     private createButton() {
 
-        this.buttonWidth = this.options.buttonWidth ?? 240;
-        this.buttonHeight = this.options.buttonHeight ?? 80;
+        this.buttonWidth = this.options.buttonWidth ?? 324;
+        this.buttonHeight = this.options.buttonHeight ?? 121;
 
 
         this.style = BUTTON_STYLES[
@@ -52,7 +52,7 @@ export class RoundedButton extends Container {
             0,
             this.buttonWidth,
             this.buttonHeight,
-            30
+            50
         );
 
         this.background.fill(this.style.fill);
@@ -85,7 +85,7 @@ export class RoundedButton extends Container {
             style:{
                 fill: this.style.textColor,
                 font: 'Open Sans',
-                fontSize: 24,
+                fontSize: 30,
                 fontWeight: 'bold'
             }
         });
@@ -112,7 +112,7 @@ export class RoundedButton extends Container {
                 0,
                 this.buttonWidth,
                 this.buttonHeight,
-                30
+                50
             )
             .fill(fill);
     }

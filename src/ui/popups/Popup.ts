@@ -13,7 +13,7 @@ export class Popup extends Container {
 
     // BACKGROUND
     const bg = new Graphics()
-      .roundRect(0, 0, width, height, 20)
+      .roundRect(0, 0, width, height, 50)
       .fill(0x4ca626);
 
     this.addChild(bg);
@@ -23,7 +23,7 @@ export class Popup extends Container {
       text: message,
       style: {
         font: 'Open Sans',
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: 'bold',
         fill: 0xffffff,
         align: 'center',
@@ -49,7 +49,7 @@ export class Popup extends Container {
       text: 'OK',
       style: {
         font: 'Open Sans',
-        fontSize: 18,
+        fontSize: 24,
         fill: 0xffffff,
         fontWeight: 'bold',
       }

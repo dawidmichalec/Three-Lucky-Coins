@@ -1,4 +1,4 @@
-import { Application, Sprite, Assets} from 'pixi.js';
+import { Application, Sprite, Assets, Container} from 'pixi.js';
 import { PopupManager } from './ui/popups/PopupManager';
 import { SceneManager } from './game/SceneManager';
 import { MainMenuScene } from './game/scenes/MainMenuScene';
@@ -7,14 +7,16 @@ import { SettingsManager } from './core/SettingsManager';
 import { SoundId } from './audio/SoundId';
 import { DisplayManager } from './core/DisplayManager';
 import { StatsManager } from './core/StatsManager';
+import { LayoutManager } from './core/LayoutManager';
 
 (async () => {
   const app = new Application();
 
     await app.init({
         background: '#0f0f0f',
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: 1920,
+        height: 1080,
+        resizeTo: window
     });
 
     app.stage.sortableChildren = true;
@@ -24,27 +26,77 @@ import { StatsManager } from './core/StatsManager';
     app.canvas.style.position = 'fixed';
     app.canvas.style.top = '0';
     app.canvas.style.left = '0';
+    app.canvas.style.width = "100%";
+    app.canvas.style.height = "100%";
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+
+    // LAYOUT MANAGER
+
+    const layout = LayoutManager.getInstance();
+    layout.initialize(app);
+
+    // GAME ROOT
+
+    const gameRoot = new Container();
+
+    app.stage.addChild(gameRoot);
+
+    // BACKGROUND
 
     const backgroundImage = await Assets.load('/assets/main/background image.png');
     const background = new Sprite(backgroundImage);
-    background.width = app.screen.width;
-    background.height = app.screen.height;
-    app.stage.addChild(background);
+    background.width = layout.DESIGN_WIDTH;
+    background.height = layout.DESIGN_HEIGHT;
+
+    // LOGO
 
     const logoImage = await Assets.load('/assets/main/logo.png');
 
     const logoSprite = new Sprite(logoImage);
-    logoSprite.width = 700;
-    logoSprite.height = 300;
+    logoSprite.width = 900;
+    logoSprite.height = 212;
+    logoSprite.position.set(495.6, 154.5);
 
-    app.stage.addChild(logoSprite);
+    gameRoot.addChild(
+        background,
+        logoSprite
+    );
+
+    const updateLayout = () => {
+
+    gameRoot.scale.set(
+            layout.scale
+        );
+
+
+        gameRoot.position.set(
+            layout.offsetX,
+            layout.offsetY
+        );
+
+    };
+
+
+    layout.register({
+
+        onLayoutChanged(){
+
+            updateLayout();
+
+        }
+
+    });
+
+
+    updateLayout();
+
+
 
     const font = new FontFace( 'Oswald-Bold', 'url(/assets/main/fonts/Oswald/static/Oswald-Bold.ttf)' ); 
     await font.load(); 
     document.fonts.add(font); 
     await document.fonts.ready;
-
-    logoSprite.position.set(420, 30);
 
     app.ticker.add(() => {
       logoSprite.alpha =
@@ -76,13 +128,13 @@ import { StatsManager } from './core/StatsManager';
     
     // PopupManager
 
-    const popupManager = new PopupManager(app.screen.width, app.screen.height);
+    const popupManager = new PopupManager(layout.DESIGN_WIDTH, layout.DESIGN_HEIGHT);
 
     popupManager.zIndex = 1000;
 
     app.stage.addChild(popupManager);
 
-    const sceneManager = new SceneManager(app, popupManager);
+    const sceneManager = new SceneManager(app, popupManager, gameRoot);
 
     const mainMenu = new MainMenuScene(
         sceneManager

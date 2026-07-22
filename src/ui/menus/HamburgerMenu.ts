@@ -46,7 +46,7 @@ export class HamburgerMenu extends Container{
 
         await this.hamburgerMenuButton.init();
 
-        this.hamburgerMenuButton.position.set(40, 560);
+        this.hamburgerMenuButton.position.set(108, 905);
         
         this.hamburgerMenuButton.on("click", () => {
 
@@ -62,7 +62,7 @@ export class HamburgerMenu extends Container{
 
         await this.statsButton.init();
 
-        this.statsButton.position.set(55, 490);
+        this.statsButton.position.set(128, 830);
 
         this.statsButton.on("click",()=>{
             this.onOpenStats();
@@ -76,7 +76,7 @@ export class HamburgerMenu extends Container{
 
         await this.settingsButton.init();
 
-        this.settingsButton.position.set(55, 405);
+        this.settingsButton.position.set(128, 740);
 
         this.settingsButton.on("click",()=>{
             this.onOpenOptions();
@@ -90,7 +90,7 @@ export class HamburgerMenu extends Container{
 
         await this.helpButton.init();
 
-        this.helpButton.position.set(50, 320);
+        this.helpButton.position.set(124, 645);
 
         this.addChild(this.helpButton);
     }
@@ -100,7 +100,7 @@ export class HamburgerMenu extends Container{
 
         await this.restartRunButton.init();
 
-        this.restartRunButton.position.set(45, 225);
+        this.restartRunButton.position.set(118, 545);
 
         this.restartRunButton.on("click", ()=>{
 
@@ -126,13 +126,13 @@ export class HamburgerMenu extends Container{
 
         await this.homeButton.init();
 
-        this.homeButton.position.set(50, 145);
+        this.homeButton.position.set(124, 460);
 
         this.homeButton.on("click",()=>{
 
             this.popupManager.showConfirmation(
 
-                    "Are you sure you want to exit to main menu?\nAll current progress will be lost.",
+                    "Are you sure you want to exit to main menu?\n\nAll current progress will be lost.",
 
                     ()=>{
 

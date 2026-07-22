@@ -4,6 +4,7 @@ import { ButtonTheme } from "../buttons/ButtonTheme";
 import { StatsManager } from "../../core/StatsManager";
 import { Overlay } from "../popups/Overlay";
 import { ScrollableContainer } from "../components/ScrollableContainer";
+import { LayoutManager } from "../../core/LayoutManager";
 
 
 export class RunSummaryPanel extends Container {
@@ -28,7 +29,6 @@ export class RunSummaryPanel extends Container {
     ){
 
         super();
-
 
         this.statsManager =
             StatsManager.getInstance();
@@ -65,8 +65,10 @@ export class RunSummaryPanel extends Container {
 
         title.anchor.set(0.5);
 
+        const layout = LayoutManager.getInstance();
+
         title.position.set(
-            window.innerWidth/2,
+            layout.DESIGN_WIDTH/2,
             80
         );
 
@@ -157,8 +159,8 @@ export class RunSummaryPanel extends Container {
 
 
         this.statsScroll.position.set(
-            300,
-            150
+            312,
+            283
         );
 
 
@@ -216,7 +218,7 @@ export class RunSummaryPanel extends Container {
 
 
         this.statsValues.position.set(
-            600,
+            760,
             0
         );
 
@@ -287,7 +289,7 @@ export class RunSummaryPanel extends Container {
 
 
         this.combinationValues.position.set(
-            600,
+            785,
             390
         );
 
@@ -346,8 +348,8 @@ export class RunSummaryPanel extends Container {
 
 
         playAgain.position.set(
-            300,
-            560
+            333.6,
+            884.4
         );
 
 
@@ -370,8 +372,8 @@ export class RunSummaryPanel extends Container {
 
 
         quit.position.set(
-            970,
-            560
+            1262.4,
+            884.4
         );
 
 

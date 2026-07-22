@@ -47,8 +47,8 @@ export class GameControls extends Container {
             },
         });
 
-        betDown.position.set(645, 660);
-        betUp.position.set(845, 660);
+        betDown.position.set(835, 1038.4);
+        betUp.position.set(1050, 1038.4);
 
         this.betDown = betDown;
         this.betUp = betUp;
@@ -76,8 +76,8 @@ export class GameControls extends Container {
             },
         });
 
-        prevCombo.position.set(960, 660);
-        nextCombo.position.set(1300, 660);
+        prevCombo.position.set(1280.1, 1038.4);
+        nextCombo.position.set(1637.3, 1038.4);
 
         this.prevCombo = prevCombo;
         this.nextCombo = nextCombo;
@@ -92,7 +92,7 @@ export class GameControls extends Container {
 
         await this.tossButton.init();
 
-        this.tossButton.position.set(1370, 500);
+        this.tossButton.position.set(1704.7, 861.8);
 
         this.addChild(this.tossButton);
 

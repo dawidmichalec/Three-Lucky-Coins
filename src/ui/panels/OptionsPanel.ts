@@ -88,7 +88,7 @@ export class OptionsPanel extends Container {
 
         title.position.set(
             width/2,
-            60
+            108
         );
 
 
@@ -116,8 +116,8 @@ export class OptionsPanel extends Container {
 
 
         slider.position.set(
-            1000,
-            250
+            1235.7,
+            380.1
         );
 
 
@@ -145,8 +145,8 @@ export class OptionsPanel extends Container {
 
 
         slider.position.set(
-            1000,
-            340
+            1235.7,
+            499.6
         );
 
 
@@ -178,8 +178,8 @@ export class OptionsPanel extends Container {
 
 
         slider.position.set(
-            1000,
-            430
+            1235.7,
+            622
         );
 
 
@@ -199,7 +199,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        audioLabel.position.set(350, 160);
+        audioLabel.position.set(434.2, 260.3);
 
 
         const musicLabel = new Text({
@@ -212,7 +212,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        musicLabel.position.set(350, 250);
+        musicLabel.position.set(434.2, 383.4);
 
 
         const soundEffectsLabel = new Text({
@@ -225,7 +225,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        soundEffectsLabel.position.set(350, 340);
+        soundEffectsLabel.position.set(434.2, 506.5);
 
 
         const brightnessLabel = new Text({
@@ -238,7 +238,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        brightnessLabel.position.set(350, 430);
+        brightnessLabel.position.set(434.2, 621);
 
         const languageLabel = new Text({
             text: "Language",
@@ -250,7 +250,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        languageLabel.position.set(350, 520);
+        languageLabel.position.set(434.2, 756.9);
 
         this.addChild(
             audioLabel,
@@ -279,8 +279,8 @@ export class OptionsPanel extends Container {
 
 
         audioToggle.position.set(
-            1110,
-            160
+            1327.4,
+            248.2
         );
 
 
@@ -306,8 +306,8 @@ export class OptionsPanel extends Container {
             },
         });
 
-        left.position.set(1000, 520);
-        right.position.set(1270, 520);
+        left.position.set(1259.3, 764.2);
+        right.position.set(1489.5, 764.2);
 
         this.left = left;
         this.right = right;
@@ -324,8 +324,8 @@ export class OptionsPanel extends Container {
 
             theme:ButtonTheme.BLACK,
 
-            width:70,
-            height:70,
+            buttonWidth:70,
+            buttonHeight:70,
 
             onClick:()=>{
 
@@ -336,8 +336,8 @@ export class OptionsPanel extends Container {
         });
 
         close.position.set(
-            1400,
-            40
+            1812,
+            108
         );
 
         this.addChild(close);
@@ -353,7 +353,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        saveButton.position.set(650, 600);
+        saveButton.position.set(792.8, 887.9);
 
         this.addChild(saveButton);
 

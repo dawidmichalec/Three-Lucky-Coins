@@ -19,8 +19,8 @@ export class PopupManager extends Container {
 
   show(
       message: string,
-      width = 400,
-      height = 220,
+      width = 690,
+      height = 266,
       onClose?: () => void
   ) {
 
