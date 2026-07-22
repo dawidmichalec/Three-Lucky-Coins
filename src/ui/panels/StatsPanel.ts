@@ -308,7 +308,7 @@ export class StatsPanel extends Container {
     ${this.statsManager.getAverageWinAllTime()}
     ${this.statsManager.getAccuracyAllTime().toFixed(2)}%
     ${stats.totalBets}
-    ${this.statsManager.getFavoriteBetAllTime()}.00
+    ${this.statsManager.getFavoriteBetAllTime() ?? "-"}
     ${this.statsManager.getAverageBetValueAllTime().toFixed(2)}
     ${this.statsManager.getFormattedFastestRun()}
     ${stats.totalCoinsTossed}

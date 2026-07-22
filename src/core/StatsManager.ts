@@ -399,8 +399,8 @@ export class StatsManager {
 
     getFavoriteBetCurrentRun(){
         
-        return this.getMostUsed(
-            this.runStats.betUsage
+        return this.formatBet(
+            this.getMostUsed(this.runStats.betUsage)
         );
 
     }
@@ -410,9 +410,8 @@ export class StatsManager {
 
     getFavoriteBetAllTime(){
 
-
-        return this.getMostUsed(
-            this.playerStats.betUsage
+        return this.formatBet(
+            this.getMostUsed(this.playerStats.betUsage)
         );
 
     }
@@ -653,6 +652,15 @@ export class StatsManager {
         )
         .sort((a, b) => b[1] - a[1]);
 
+    }
+
+    private formatBet(value: string | null): string | null {
+
+        if (value === null) {
+            return null;
+        }
+
+        return Number(value).toFixed(2);
     }
 
 }
