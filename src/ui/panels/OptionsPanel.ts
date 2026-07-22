@@ -9,6 +9,7 @@ import { ToggleButton } from "../buttons/ToggleButton";
 import {Slider} from "../controls/Slider"
 import { ConfirmationPopup } from "../popups/ConfirmationPopup";
 import { DisplayManager } from "../../core/DisplayManager";
+import { ClosePanelButton } from "../buttons/ClosePanelButton";
 
 export class OptionsPanel extends Container {
 
@@ -317,31 +318,23 @@ export class OptionsPanel extends Container {
     }
 
 
-    createCloseButton() {
-        const close = new RoundedButton({
+    async createCloseButton() {
+        const close = new ClosePanelButton();
 
-            text:"X",
+        await close.init();
 
-            theme:ButtonTheme.BLACK,
-
-            buttonWidth:70,
-            buttonHeight:70,
-
-            onClick:()=>{
-
-                this.hide();
-
-            }
-
+        close.on("click", () => {
+            this.hide();
         });
 
         close.position.set(
-            1812,
+            1750,
             108
         );
 
         this.addChild(close);
     }
+
 
     private createSaveButton() {
 

@@ -4,6 +4,7 @@ import { ButtonTheme } from "../buttons/ButtonTheme";
 import { StatsManager } from "../../core/StatsManager";
 import { Overlay } from "../popups/Overlay";
 import { ScrollableContainer } from "../components/ScrollableContainer";
+import { ClosePanelButton } from "../buttons/ClosePanelButton";
 
 export class StatsPanel extends Container {
 
@@ -546,26 +547,17 @@ export class StatsPanel extends Container {
         this.refresh();
     }
 
-    createCloseButton() {
-        const close = new RoundedButton({
+    async createCloseButton() {
+        const close = new ClosePanelButton();
 
-            text:"X",
+        await close.init();
 
-            theme:ButtonTheme.BLACK,
-
-            buttonWidth:70,
-            buttonHeight:70,
-
-            onClick:()=>{
-
-                this.hide();
-
-            }
-
+        close.on("click", () => {
+            this.hide();
         });
 
         close.position.set(
-            1812,
+            1750,
             108
         );
 

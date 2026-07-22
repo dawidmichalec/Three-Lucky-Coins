@@ -2,6 +2,7 @@ import { Container, Text, Ticker, Graphics } from "pixi.js";
 import { Overlay } from "../popups/Overlay";
 import { ButtonTheme } from "../buttons/ButtonTheme";
 import { RoundedButton } from "../buttons/RoundedButton";
+import { ClosePanelButton } from "../buttons/ClosePanelButton";
 
 export class CreditsPanel extends Container {
 
@@ -252,27 +253,18 @@ export class CreditsPanel extends Container {
 
     }
 
-    createCloseButton() {
-        const close = new RoundedButton({
+    async createCloseButton() {
+        const close = new ClosePanelButton();
 
-            text:"X",
+        await close.init();
 
-            theme:ButtonTheme.BLACK,
-
-            buttonWidth:70,
-            buttonHeight:70,
-
-            onClick:()=>{
-
-                this.hide();
-
-            }
-
+        close.on("click", () => {
+            this.hide();
         });
 
         close.position.set(
-            1400,
-            40
+            1750,
+            108
         );
 
         this.addChild(close);
