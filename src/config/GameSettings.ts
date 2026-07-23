@@ -12,4 +12,6 @@ export interface GameSettings {
 
     spaceToSpin: boolean;
 
+    fullScreen: boolean;
+
 }

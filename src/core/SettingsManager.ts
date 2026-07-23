@@ -28,7 +28,7 @@ export class SettingsManager {
 
     private settings: GameSettings = {
 
-        audioEnabled:true,
+        audioEnabled:false,
 
         musicVolume:0.8,
 
@@ -38,7 +38,9 @@ export class SettingsManager {
 
         language:"en",
 
-        spaceToSpin:true
+        spaceToSpin:true,
+
+        fullScreen: false
 
     };
 
@@ -90,6 +92,12 @@ export class SettingsManager {
     setSpaceToSpin(enabled:boolean){
 
         this.settings.spaceToSpin=enabled;
+
+    }
+
+    setFullScreen(enabled:boolean){
+
+        this.settings.fullScreen=enabled;
 
     }
 

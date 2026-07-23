@@ -55,7 +55,11 @@ export class OptionsPanel extends Container {
 
         this.createSaveButton();
 
+        this.createFullScreenToggleButton();
+
     }
+
+    // OVERLAY
 
     private createOverlay(width:number,height:number){
 
@@ -67,6 +71,8 @@ export class OptionsPanel extends Container {
         this.addChild(overlay);
 
     }
+
+    // TITLE
 
     private createTitle(width: number){
 
@@ -97,6 +103,8 @@ export class OptionsPanel extends Container {
 
     }
 
+    // MUSIC SLIDER
+
     private createMusicSlider() {
 
         const slider = new Slider({
@@ -118,13 +126,15 @@ export class OptionsPanel extends Container {
 
         slider.position.set(
             1235.7,
-            380.1
+            350.1
         );
 
 
         this.addChild(slider);
 
     }
+
+    // SFX SLIDER
 
     private createSfxSlider() {
 
@@ -147,13 +157,15 @@ export class OptionsPanel extends Container {
 
         slider.position.set(
             1235.7,
-            499.6
+            440.3
         );
 
 
         this.addChild(slider);
 
     }
+
+    // BRIGHTNESS SLIDER
 
     private createBrightnessSlider() {
 
@@ -163,7 +175,6 @@ export class OptionsPanel extends Container {
                 this.settingsManager.get().brightness,
 
             onChange:(value)=>{
-                console.log("BRIGHTNESS:", value);
 
                 this.settingsManager
                     .setBrightness(value);
@@ -180,13 +191,16 @@ export class OptionsPanel extends Container {
 
         slider.position.set(
             1235.7,
-            622
+            530.3
         );
 
 
         this.addChild(slider);
 
     }
+
+
+    // LABELS CREATION
 
     private createLabelsForOptions() {
 
@@ -213,7 +227,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        musicLabel.position.set(434.2, 383.4);
+        musicLabel.position.set(434.2, 350.3);
 
 
         const soundEffectsLabel = new Text({
@@ -226,7 +240,7 @@ export class OptionsPanel extends Container {
             }
         });
 
-        soundEffectsLabel.position.set(434.2, 506.5);
+        soundEffectsLabel.position.set(434.2, 440.3);
 
 
         const brightnessLabel = new Text({
@@ -239,7 +253,22 @@ export class OptionsPanel extends Container {
             }
         });
 
-        brightnessLabel.position.set(434.2, 621);
+        brightnessLabel.position.set(434.2, 530.3);
+
+
+        const fullScreenLabel = new Text({
+            text: "Fullscreen",
+            style: {
+                fill:0xffffff,
+                font: 'Open Sans',
+                fontSize:32,
+                fontWeight:"bold"
+            }
+        });
+
+        fullScreenLabel.position.set(434.2, 620.2);
+
+
 
         const languageLabel = new Text({
             text: "Language",
@@ -251,17 +280,20 @@ export class OptionsPanel extends Container {
             }
         });
 
-        languageLabel.position.set(434.2, 756.9);
+        languageLabel.position.set(434.2, 710.2);
 
         this.addChild(
             audioLabel,
             musicLabel,
             soundEffectsLabel,
             brightnessLabel,
+            fullScreenLabel,
             languageLabel
         );
 
     }
+
+    // AUDIO TOGGLE BUTTON
 
     createAudioToggleButton() {
 
@@ -289,6 +321,34 @@ export class OptionsPanel extends Container {
 
     }
 
+    // FULLSCREEN TOGGLE BUTTON
+
+    createFullScreenToggleButton(){
+
+        const settings = this.settingsManager.get();
+
+        const fullScreenToggle = new ToggleButton({
+
+            initialState: settings.fullScreen,
+
+            onChange: (enabled) => {
+
+                this.settingsManager.setFullScreen(enabled);
+
+                this.displayManager.toggleFullscreen();
+
+            }
+
+        });
+
+        fullScreenToggle.position.set(1327.4, 610.2)
+
+        this.addChild(fullScreenToggle);
+
+    }
+
+    // TRIANGLE BUTTONS
+
     createTriangleButtons() {
 
         const left = new TriangleButton({
@@ -307,8 +367,8 @@ export class OptionsPanel extends Container {
             },
         });
 
-        left.position.set(1259.3, 764.2);
-        right.position.set(1489.5, 764.2);
+        left.position.set(1259.3, 714.2);
+        right.position.set(1489.5, 714.2);
 
         this.left = left;
         this.right = right;
@@ -316,6 +376,8 @@ export class OptionsPanel extends Container {
         this.addChild(left, right);
 
     }
+
+    // CLOSE BUTTON
 
 
     async createCloseButton() {
@@ -335,6 +397,7 @@ export class OptionsPanel extends Container {
         this.addChild(close);
     }
 
+    // SAVE BUTTON
 
     private createSaveButton() {
 

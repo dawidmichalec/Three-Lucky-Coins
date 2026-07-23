@@ -78,4 +78,20 @@ export class DisplayManager {
 
     }
 
+
+
+    async toggleFullscreen() {
+
+        if (!document.fullscreenElement) {
+
+            await document.documentElement.requestFullscreen();
+
+        } else {
+
+            await document.exitFullscreen();
+
+        }
+
+    }
+
 }
