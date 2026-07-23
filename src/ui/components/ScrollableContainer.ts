@@ -1,4 +1,4 @@
-import { Container, Graphics } from "pixi.js";
+import { Container, Graphics, FederatedPointerEvent, FederatedWheelEvent } from "pixi.js";
 
 
 export class ScrollableContainer extends Container {
@@ -11,6 +11,10 @@ export class ScrollableContainer extends Container {
     private scrollY = 0;
 
     private viewportHeight: number;
+
+    private dragging = false;
+
+    private lastPointerY = 0;
 
 
 
@@ -60,7 +64,7 @@ export class ScrollableContainer extends Container {
 
         this.on(
             "wheel",
-            (event:any)=>{
+            (event:FederatedWheelEvent)=>{
 
                 this.scroll(
                     event.deltaY
@@ -68,6 +72,28 @@ export class ScrollableContainer extends Container {
 
             }
         );
+
+        this.on("pointerdown", (e: FederatedPointerEvent) => {
+            this.dragging = true;
+            this.lastPointerY = e.global.y;
+        });
+
+        this.on("pointermove", (e: FederatedPointerEvent) => {
+            if (!this.dragging) return;
+
+            const delta = this.lastPointerY - e.global.y;
+            this.lastPointerY = e.global.y;
+
+            this.scroll(delta);
+        });
+
+        this.on("pointerup", () => {
+            this.dragging = false;
+        });
+
+        this.on("pointerupoutside", () => {
+            this.dragging = false;
+        });
 
     }
 

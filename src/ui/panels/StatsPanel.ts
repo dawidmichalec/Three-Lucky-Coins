@@ -552,7 +552,19 @@ export class StatsPanel extends Container {
 
         await close.init();
 
-        close.on("click", () => {
+        close.on("pointerdown", () => {
+            close.scale.set(0.95);
+        });
+
+        close.on("pointerup", () => {
+            close.scale.set(1);
+        });
+
+        close.on("pointerupoutside", () => {
+            close.scale.set(1);
+        });
+
+        close.on("pointertap", () => {
             this.hide();
         });
 

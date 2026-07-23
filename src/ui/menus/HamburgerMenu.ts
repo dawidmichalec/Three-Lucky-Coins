@@ -47,11 +47,21 @@ export class HamburgerMenu extends Container{
         await this.hamburgerMenuButton.init();
 
         this.hamburgerMenuButton.position.set(108, 905);
-        
-        this.hamburgerMenuButton.on("click", () => {
 
+        this.hamburgerMenuButton.on("pointerdown", () => {
+            this.hamburgerMenuButton.scale.set(0.95);
+        });
+
+        this.hamburgerMenuButton.on("pointerup", () => {
+            this.hamburgerMenuButton.scale.set(1);
+        });
+
+        this.hamburgerMenuButton.on("pointerupoutside", () => {
+            this.hamburgerMenuButton.scale.set(1);
+        });
+
+        this.hamburgerMenuButton.on("pointertap", () => {
             this.toggle();
-
         });
 
         this.addChild(this.hamburgerMenuButton);
@@ -64,7 +74,19 @@ export class HamburgerMenu extends Container{
 
         this.statsButton.position.set(128, 830);
 
-        this.statsButton.on("click",()=>{
+        this.statsButton.on("pointerdown", () => {
+            this.statsButton.scale.set(0.95);
+        });
+
+        this.statsButton.on("pointerup", () => {
+            this.statsButton.scale.set(1);
+        });
+
+        this.statsButton.on("pointerupoutside", () => {
+            this.statsButton.scale.set(1);
+        });
+
+        this.statsButton.on("pointertap", () => {
             this.onOpenStats();
         });
 
@@ -78,7 +100,19 @@ export class HamburgerMenu extends Container{
 
         this.settingsButton.position.set(128, 740);
 
-        this.settingsButton.on("click",()=>{
+        this.settingsButton.on("pointerdown", () => {
+            this.settingsButton.scale.set(0.95);
+        });
+
+        this.settingsButton.on("pointerup", () => {
+            this.settingsButton.scale.set(1);
+        });
+
+        this.settingsButton.on("pointerupoutside", () => {
+            this.settingsButton.scale.set(1);
+        });
+
+        this.settingsButton.on("pointertap", () => {
             this.onOpenOptions();
         });
 
@@ -102,7 +136,19 @@ export class HamburgerMenu extends Container{
 
         this.restartRunButton.position.set(118, 545);
 
-        this.restartRunButton.on("click", ()=>{
+        this.restartRunButton.on("pointerdown", () => {
+            this.restartRunButton.scale.set(0.95);
+        });
+
+        this.restartRunButton.on("pointerup", () => {
+            this.restartRunButton.scale.set(1);
+        });
+
+        this.restartRunButton.on("pointerupoutside", () => {
+            this.restartRunButton.scale.set(1);
+        });
+
+        this.restartRunButton.on("pointertap", ()=>{
 
             this.popupManager.showConfirmation(
 
@@ -128,7 +174,19 @@ export class HamburgerMenu extends Container{
 
         this.homeButton.position.set(124, 460);
 
-        this.homeButton.on("click",()=>{
+        this.homeButton.on("pointerdown", () => {
+            this.homeButton.scale.set(0.95);
+        });
+
+        this.homeButton.on("pointerup", () => {
+            this.homeButton.scale.set(1);
+        });
+
+        this.homeButton.on("pointerupoutside", () => {
+            this.homeButton.scale.set(1);
+        });
+
+        this.homeButton.on("pointertap",()=>{
 
             this.popupManager.showConfirmation(
 
