@@ -8,6 +8,7 @@ import { SoundId } from './audio/SoundId';
 import { DisplayManager } from './core/DisplayManager';
 import { StatsManager } from './core/StatsManager';
 import { LayoutManager } from './core/LayoutManager';
+import { RotateDeviceOverlay } from './ui/overlays/RotateDeviceOverlay';
 
 (async () => {
   const app = new Application();
@@ -58,9 +59,20 @@ import { LayoutManager } from './core/LayoutManager';
     logoSprite.height = 212;
     logoSprite.position.set(495.6, 154.5);
 
+    // ORIENTATION OVERLAY
+
+    const orientationOverlay = new RotateDeviceOverlay();
+
+    orientationOverlay.zIndex = 9999;
+
+    app.stage.addChild(
+        orientationOverlay
+    );
+
     gameRoot.addChild(
         background,
-        logoSprite
+        logoSprite,
+        orientationOverlay
     );
 
     const updateLayout = () => {
@@ -91,7 +103,7 @@ import { LayoutManager } from './core/LayoutManager';
 
     updateLayout();
 
-
+    // FONT
 
     const font = new FontFace( 'Oswald-Bold', 'url(/assets/main/fonts/Oswald/static/Oswald-Bold.ttf)' ); 
     await font.load(); 

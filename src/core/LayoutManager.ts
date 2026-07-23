@@ -109,13 +109,6 @@ export class LayoutManager {
         this.screenWidth = width;
         this.screenHeight = height;
 
-        console.log(
-            "LAYOUT UPDATE",
-            width,
-            height
-        );
-
-
         const scaleX =
             width / this.DESIGN_WIDTH;
 
