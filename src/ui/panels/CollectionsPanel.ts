@@ -170,7 +170,9 @@ export class CollectionsPanel extends Container {
     ${stats.totalCoinsTossed}
     ${this.statsManager.getFormattedTotalPlayTime()}
     ${stats.sessionsPlayed}
-    ${this.statsManager.getAddictionRank()}
+    ${this.localization.t(
+        this.statsManager.getAddictionRank()
+    )}
     ${this.statsManager.getFavoriteCombinationAllTime() ?? "-"}
     ${this.statsManager.getLuckiestCombinationAllTime() ?? "-"}
     `;

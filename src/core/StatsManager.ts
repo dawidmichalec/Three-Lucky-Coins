@@ -1,5 +1,6 @@
 import { PlayerStats } from "../stats/PlayerStats";
 import { RunStats } from "../stats/RunStats";
+import { TranslationKey } from "./LocalizationManager";
 
 
 export class StatsManager {
@@ -565,7 +566,7 @@ export class StatsManager {
     // =========================
 
 
-    getAddictionRank(){
+    getAddictionRank(): TranslationKey{
 
 
         const hours =
@@ -577,33 +578,33 @@ export class StatsManager {
 
 
         if(hours < 1)
-            return "Curious Visitor";
+            return "curiousVisitor";
 
 
         if(hours < 5)
-            return "Coin Flipper";
+            return "coinFlipper";
 
         if(hours < 15)
-            return "Lucky Beginner";
+            return "luckyBeginner";
 
         if (hours < 35)
-            return "Regular Gambler";
+            return "regularGambler";
 
         if (hours < 75)
-            return "High Roller";
+            return "highRoller";
 
         if (hours < 150)
-            return "Casino Veteran";
+            return "casinoVeteran";
 
         if (hours < 300)
-            return "Coin Master";
+            return "coinMaster";
 
 
         if(hours < 500)
-            return "Casino Legend";
+            return "casinoLegend";
 
 
-        return "Three Lucky Coins Myth";
+        return "threeLuckyCoinsMyth";
 
     }
 
