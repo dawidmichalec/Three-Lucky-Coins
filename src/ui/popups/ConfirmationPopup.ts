@@ -1,11 +1,13 @@
 import { Container, Text, Graphics } from "pixi.js";
 import { RoundedButton } from "../buttons/RoundedButton";
 import { ButtonTheme } from "../buttons/ButtonTheme";
+import { TranslationKey } from "../../core/LocalizationManager";
+import { LocalizedText } from "../../localization/LocalizedText";
 
 
 interface ConfirmationPopupOptions {
 
-    message: string;
+    message: TranslationKey;
 
     onConfirm: () => void;
 
@@ -16,7 +18,7 @@ interface ConfirmationPopupOptions {
 export class ConfirmationPopup extends Container {
 
 
-    private readonly popupWidth = 600;
+    private readonly popupWidth = 750;
     private readonly popupHeight = 300;
 
 
@@ -59,19 +61,19 @@ export class ConfirmationPopup extends Container {
 
     private createMessage(){
 
-        const text = new Text({
+        const text = new LocalizedText(
 
-            text:this.options.message,
+            this.options.message,
 
-            style:{
+            {
                 fill:0xffffff,
                 fontSize:26,
                 align:"center",
                 wordWrap:true,
-                wordWrapWidth:550
+                wordWrapWidth:650
             }
 
-        });
+        );
 
 
         text.anchor.set(0.5);
@@ -94,7 +96,7 @@ export class ConfirmationPopup extends Container {
 
         const yesButton = new RoundedButton({
 
-            text:"YES",
+            text: "yesButtonText",
 
             theme:ButtonTheme.GREEN,
 
@@ -111,7 +113,7 @@ export class ConfirmationPopup extends Container {
 
 
         yesButton.position.set(
-            100,
+            190,
             200
         );
 
@@ -119,7 +121,7 @@ export class ConfirmationPopup extends Container {
 
         const noButton = new RoundedButton({
 
-            text:"NO",
+            text:"noButtonText",
 
             theme:ButtonTheme.RED,
 
@@ -136,7 +138,7 @@ export class ConfirmationPopup extends Container {
 
 
         noButton.position.set(
-            320,
+            400,
             200
         );
 

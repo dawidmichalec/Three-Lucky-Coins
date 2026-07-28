@@ -1,4 +1,5 @@
 import { Container, Sprite, Text, Texture, Assets, Graphics, Rectangle } from 'pixi.js';
+import { LocalizedText } from '../../localization/LocalizedText';
 
 export class TossButton extends Container {
   private bg!: Sprite;
@@ -14,12 +15,11 @@ export class TossButton extends Container {
   private speed = 0.2;
 
   constructor(
-    public label: string,
   ) {
     super();
 
-    this.buttonWidth = 140;
-    this.buttonHeight = 140;
+    this.buttonWidth = 160;
+    this.buttonHeight = 160;
 
     this.eventMode = 'static';
     this.cursor = 'pointer';
@@ -27,7 +27,7 @@ export class TossButton extends Container {
 
   async init() {
     const texture = await Assets.load(
-        '/assets/main/icons/toss_button_graphic.png'
+        '/assets/main/icons/new_toss_button_icon.png'
     );
 
     this.bg = new Sprite(texture);
@@ -39,20 +39,8 @@ export class TossButton extends Container {
 
     this.addChild(this.bg);
 
-    const text = new Text({
-        text: this.label,
-        style: {
-        font: 'Open Sans',
-        fontSize: 36,
-        fontWeight: 'bold',
-        fill: 0xffffff,
-        align: 'center',
-        },
-    });
 
-    text.anchor.set(0.5);
-
-    this.bg.anchor.set(0.513, 0.497);
+    this.bg.anchor.set(0.5, 0.5);
     this.bg.position.set(this.buttonWidth / 2, this.buttonHeight / 2);
 
     const hit = new Graphics()
@@ -68,12 +56,7 @@ export class TossButton extends Container {
       this.emit('toss');
     });
 
-    text.position.set(
-        this.buttonWidth / 2,
-        this.buttonHeight / 2
-    );
-
-    this.addChild(text);
+    
     this.addChild(hit);
   }
 

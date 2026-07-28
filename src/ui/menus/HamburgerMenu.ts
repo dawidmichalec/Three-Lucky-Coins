@@ -7,6 +7,7 @@ import { RestartRunButton } from "../buttons/RestartRunButton";
 import { HomeButton } from "../buttons/HomeButton";
 import { SceneManager } from "../../game/SceneManager";
 import { PopupManager } from "../popups/PopupManager";
+import { LocalizedText } from "../../localization/LocalizedText";
 
 export class HamburgerMenu extends Container{
 
@@ -152,7 +153,7 @@ export class HamburgerMenu extends Container{
 
             this.popupManager.showConfirmation(
 
-                "Are you sure you want to restart run?\n\nAll current progress will be lost.",
+                "restartRunButtonText",
 
                 ()=> {
 
@@ -190,7 +191,7 @@ export class HamburgerMenu extends Container{
 
             this.popupManager.showConfirmation(
 
-                    "Are you sure you want to exit to main menu?\n\nAll current progress will be lost.",
+                    "homeButtonText",
 
                     ()=>{
 

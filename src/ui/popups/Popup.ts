@@ -1,7 +1,9 @@
 import { Container, Graphics, Text } from 'pixi.js';
+import { LocalizedText } from '../../localization/LocalizedText';
+import { TranslationKey } from '../../core/LocalizationManager';
 
 type PopupProps = {
-  message: string;
+  message: TranslationKey;
   width: number;
   height: number;
   onClose: () => void;
@@ -19,19 +21,21 @@ export class Popup extends Container {
     this.addChild(bg);
 
     // TEXT
-    const text = new Text({
-      text: message,
-      style: {
-        font: 'Open Sans',
-        fontSize: 24,
-        fontWeight: 'bold',
-        fill: 0xffffff,
-        align: 'center',
-      }
-    });
+    const text = new LocalizedText(
+        message,
+        {
+            font: 'Open Sans',
+            fontSize: 24,
+            fontWeight: 'bold',
+            fill: 0xffffff,
+            align: 'center',
+        }
+    );
 
     text.anchor.set(0.5);
     text.position.set(width / 2, height / 2 - 30);
+
+    this.addChild(text);
 
     this.addChild(text);
 
@@ -45,15 +49,15 @@ export class Popup extends Container {
     button.eventMode = 'static';
     button.cursor = 'pointer';
 
-    const buttonText = new Text({
-      text: 'OK',
-      style: {
+    const buttonText = new LocalizedText(
+      "popUpButtonText",
+      {
         font: 'Open Sans',
         fontSize: 24,
         fill: 0xffffff,
         fontWeight: 'bold',
       }
-    });
+    );
 
     buttonText.anchor.set(0.5);
     buttonText.position.set(60, 20);

@@ -47,8 +47,8 @@ export class GameControls extends Container {
             },
         });
 
-        betDown.position.set(835, 1038.4);
-        betUp.position.set(1050, 1038.4);
+        betDown.position.set(805, 1038.4);
+        betUp.position.set(1080, 1038.4);
 
         this.betDown = betDown;
         this.betUp = betUp;
@@ -88,11 +88,11 @@ export class GameControls extends Container {
     // TOSS BUTTON
     
     private async createTossButton() {
-        this.tossButton = new TossButton('BET');
+        this.tossButton = new TossButton();
 
         await this.tossButton.init();
 
-        this.tossButton.position.set(1704.7, 861.8);
+        this.tossButton.position.set(1710, 861.8);
 
         this.addChild(this.tossButton);
 

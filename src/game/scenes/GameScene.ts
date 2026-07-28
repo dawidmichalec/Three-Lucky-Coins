@@ -20,6 +20,8 @@ import { StatsManager } from '../../core/StatsManager';
 import { RunSummaryPanel } from '../../ui/panels/RunSummaryPanel';
 import { StatsPanel } from '../../ui/panels/StatsPanel';
 import { LayoutManager } from '../../core/LayoutManager';
+import { LocalizedText } from '../../localization/LocalizedText';
+import { TranslationKey } from '../../core/LocalizationManager';
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -92,7 +94,6 @@ export class GameScene extends BaseScene {
             },
 
             onPopup: (msg) => {
-                console.log('POPUP TRIGGER:', msg);
                 this.popupManager.show(msg);
             },
         });
@@ -197,7 +198,7 @@ export class GameScene extends BaseScene {
         const nextBet = this.controller.getNextBet();
 
         if (nextBet !== null && nextBet > this.player.balance) {
-            this.popupManager.show("Insufficient balance");
+            this.popupManager.show("insufficientBalance");
             return;
         }
 
@@ -226,7 +227,7 @@ export class GameScene extends BaseScene {
 
         if (this.player.balance < bet) {
 
-            this.popupManager.show("Insufficient balance.");
+            this.popupManager.show("insufficientBalance");
 
             return;
         }
@@ -377,7 +378,7 @@ export class GameScene extends BaseScene {
 
         this.lockControls();
         this.popupManager.show(
-            "GAME OVER",
+            "gameOver",
             400,
             220,
             ()=>{
@@ -533,8 +534,6 @@ export class GameScene extends BaseScene {
     // CLEANUP
 
     cleanup() {
-
-        console.log("GAME SCENE CLEANUP");
 
         this.app.ticker.remove(this.updateTicker);
 

@@ -1,4 +1,5 @@
 import { Container, Text } from "pixi.js";
+import { LocalizedText } from "../localization/LocalizedText";
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -12,15 +13,16 @@ export class GameUI extends Container {
 
         // BALANCE TEXT
 
-        const balanceLabel = new Text({
-            text: 'BALANCE',
-            style: {
+        const balanceLabel = new LocalizedText(
+            "balance",
+            {
                 font: 'Open Sans',
                 fontSize: 24,
                 fontWeight: 'bold',
                 fill: 0x4ca626,
+                wordWrap: true,
             },
-        });
+        );
 
         balanceLabel.position.set(367.9, 1043.5);
 
@@ -40,15 +42,17 @@ export class GameUI extends Container {
 
         // BET LABEL
 
-        const betLabel = new Text({
-            text: 'BET',
-            style: {
+        const betLabel = new LocalizedText(
+            "betLabel",
+            {
                 font: 'Open Sans',
                 fontSize: 24,
                 fontWeight: 'bold',
                 fill: 0x4ca626,
+                wordWrap: true,
             },
-        });
+        );
+        betLabel.anchor.set(0.25, 0);
         betLabel.position.set(985, 1043.5);
 
         // BET VALUE
@@ -62,19 +66,21 @@ export class GameUI extends Container {
                 fill: 0xffffff,
             },
         });
-        this.betValue.position.set(900, 1043.5);
+
+        this.betValue.anchor.set(0.75, 0);
+        this.betValue.position.set(920, 1043.5);
 
         // COMBINATION
 
-        const combinationLabel = new Text({
-            text: 'COMBINATION',
-            style: {
+        const combinationLabel = new LocalizedText(
+            "combinationLabel",
+            {
                 font: 'Open Sans',
                 fontSize: 24,
                 fontWeight: 'bold',
                 fill: 0x4ca626,
             },
-        });
+        );
 
         combinationLabel.position.set(1345, 1043.5);
 
@@ -94,13 +100,14 @@ export class GameUI extends Container {
 
         // WON TEXT
 
-        const wonLabel = new Text({
-            text: 'WIN:',
-            style: {
+        const wonLabel = new LocalizedText(
+            "winLabel",
+            {
                 font: 'Open Sans',
                 fontSize: 34,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+                wordWrap: true,
 
                 dropShadow: {
                     alpha: 0.8,
@@ -109,9 +116,10 @@ export class GameUI extends Container {
                     distance: 0,
                 }
             },
-        });
+        );
 
-        wonLabel.position.set(890, 720);
+        wonLabel.anchor.set(1,0.5);
+        wonLabel.position.set(950, 720);
 
         this.wonAmount = new Text({
             text: '0.00',
@@ -131,17 +139,20 @@ export class GameUI extends Container {
             },
         });
 
-        this.wonAmount.position.set(970, 720);
+        this.wonAmount.anchor.set(0, 0.5);
+        this.wonAmount.position.set(980, 720);
+
 
         // MULTIPLIER TEXT
 
-        const multiplierLabel = new Text({
-            text: 'Multiplier',
-            style: {
+        const multiplierLabel = new LocalizedText(
+            "multiplier",
+            {
                 fontFamily: 'Oswald-Bold',
                 fontSize: 38,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+                wordWrap: true,
                 dropShadow: {
                     alpha: 0.8,
                     blur: 8,
@@ -149,9 +160,10 @@ export class GameUI extends Container {
                     distance: 0,
                 }
             },
-        });
+        );
 
-        multiplierLabel.position.set(329.9, 437.5);
+        multiplierLabel.anchor.set(0, 0);
+        multiplierLabel.position.set(342, 437.5);
 
         // MULTIPLIER VALUE
 
@@ -162,6 +174,7 @@ export class GameUI extends Container {
                 fontSize: 124,
                 fontWeight: 'bold',
                 fill: 0xffffff,
+                wordWrap: true,
 
                 dropShadow: {
                     alpha: 1,

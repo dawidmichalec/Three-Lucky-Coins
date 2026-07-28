@@ -5,6 +5,9 @@ import { StatsManager } from "../../core/StatsManager";
 import { Overlay } from "../popups/Overlay";
 import { ScrollableContainer } from "../components/ScrollableContainer";
 import { LayoutManager } from "../../core/LayoutManager";
+import { LocalizationManager } from "../../core/LocalizationManager";
+import { LocalizedText } from "../../localization/LocalizedText";
+import { LocalizedTextList } from "../../localization/LocalizedTextList";
 
 
 export class RunSummaryPanel extends Container {
@@ -19,6 +22,8 @@ export class RunSummaryPanel extends Container {
     private combinationTitle!: Text;
     private combinationLabels!: Text;
     private combinationValues!: Text;
+
+    private localization = LocalizationManager.getInstance();
 
 
     constructor(
@@ -49,18 +54,18 @@ export class RunSummaryPanel extends Container {
 
     private createTitle(){
 
-        const title = new Text({
+        const title = new LocalizedText(
 
-            text:"Run Summary",
+            "runSummaryTitle",
 
-            style:{
+            {
                 fill:0xffffff,
                 font:'Open Sans',
                 fontSize:52,
                 fontWeight:"bold"
             }
 
-        });
+        );
 
 
         title.anchor.set(0.5);
@@ -88,8 +93,7 @@ export class RunSummaryPanel extends Container {
 
 
         this.statsValues.text =
-    `
-    ${stats.bestWinStreak}
+    `    ${stats.bestWinStreak}
     ${stats.biggestLoseStreak}
     ${stats.highestWin.toFixed(2)}
     ${this.statsManager.getAccuracyCurrentRun().toFixed(2)}%
@@ -166,30 +170,26 @@ export class RunSummaryPanel extends Container {
 
 
         this.statsLabels =
-            new Text({
-
-                text:
-    `
-    Best Streak
-    Biggest Losing Streak
-    Highest Win
-    Accuracy
-    Total Bets
-    Favorite Bet
-    Run Duration
-    Favorite Combination
-    Luckiest Combination
-    `,
-
-                style:{
+            new LocalizedTextList(
+                [
+                    "bestStreak",
+                    "biggestLosingStreakCurrentRun",
+                    "highestWin",
+                    "accuracy",
+                    "totalBets",
+                    "favoriteBet",
+                    "runDurationCurrentRun",
+                    "favoriteCombination",
+                    "luckiestCombination"
+                ],
+                {
                     fill:0xffffff,
                     font:'Open Sans',
                     fontSize:24,
                     fontWeight:'bold',
                     lineHeight:36
                 }
-
-            });
+            );
 
 
 
@@ -225,11 +225,11 @@ export class RunSummaryPanel extends Container {
 
 
         this.combinationTitle =
-            new Text({
+            new LocalizedText(
 
-                text:"Combination Usage",
+                "combinationUsage",
 
-                style:{
+                {
                     fill:0xffffff,
                     font:'Open Sans',
                     fontSize:24,
@@ -237,12 +237,12 @@ export class RunSummaryPanel extends Container {
                     lineHeight:36
                 }
 
-            });
+            );
 
 
         this.combinationTitle.position.set(
-            25,
-            370
+            0,
+            340
         );
 
 
@@ -266,7 +266,7 @@ export class RunSummaryPanel extends Container {
 
         this.combinationLabels.position.set(
             0,
-            390
+            350
         );
 
 
@@ -289,8 +289,8 @@ export class RunSummaryPanel extends Container {
 
 
         this.combinationValues.position.set(
-            785,
-            390
+            760,
+            350
         );
 
 
@@ -333,7 +333,7 @@ export class RunSummaryPanel extends Container {
         const playAgain =
             new RoundedButton({
 
-                text:"Play Again",
+                text: "playAgainButtonLabel",
 
                 theme:ButtonTheme.GREEN,
 
@@ -357,7 +357,7 @@ export class RunSummaryPanel extends Container {
         const quit =
             new RoundedButton({
 
-                text:"Quit To Main Menu",
+                text:"quitButtonLabel",
 
                 theme:ButtonTheme.RED,
 

@@ -3,6 +3,8 @@ import { Overlay } from "../popups/Overlay";
 import { ButtonTheme } from "../buttons/ButtonTheme";
 import { RoundedButton } from "../buttons/RoundedButton";
 import { ClosePanelButton } from "../buttons/ClosePanelButton";
+import { LocalizedText } from "../../localization/LocalizedText";
+import { CREDITS_CONFIG } from "../../localization/CreditsConfig";
 
 export class CreditsPanel extends Container {
 
@@ -114,100 +116,49 @@ export class CreditsPanel extends Container {
 
         this.creditsContainer.mask = mask;
 
-
-        const lines = [
-
-            {text:"Created by", size:28},
-            {text:"Dawid Michalec", size:40, bold:true},
-
-            {text:"", size:28},
-
-            {text:"Game Design", size:28},
-            {text:"Dawid Michalec", size:40,bold:true},
-
-            {text:"Core gameplay mechanics", size:28},
-            {text:"Roguelite progression system", size:28},
-            {text:"Balance design", size:28},
-            {text:"Economy design", size:28},
-
-            {text:"", size:28},
-
-            {text:"Programming", size:28},
-            {text:"Dawid Michalec", size:40,bold:true},
-
-            {text:"Game systems", size:28},
-            {text:"User interface", size:28},
-            {text:"Animation systems", size:28},
-            {text:"Tools and developer features", size:28},
-
-            {text:"", size:28},
-
-            {text:"Art Direction", size:28},
-            {text:"Dawid Michalec", size:40,bold:true},
-
-            {text:"Visual concept", size:28},
-            {text:"UI design", size:28},
-            {text:"Game branding", size:28},
-
-
-            {text:"", size:28},
-
-            {text:"Sound Designer and Composer", size:28},
-            {text:"Dawid Michalec", size:40,bold:true},
-
-            {text:"Original soundtrack", size:28},
-            {text:"Sound effects", size:28},
-            {text:"Audio direction", size:28},
-
-            {text:"", size:28},
-
-
-            {text:"Special Thanks", size:40,bold:true},
-
-            {text:"", size:28},
-
-            {text:"Playtesters", size:40,bold:true},
-            {text:"Jan Kowalski", size:28},
-
-            {text:"", size:28},
-
-            {text:"My Girlfriend", size:40,bold:true},
-            {text:"and everyone who supported me", size:28},
-
-            {text:"",size:28},
-
-            {text:"Thank you for playing ❤️",size:40,bold:true},
-
-            {text:"",size:40},
-
-            {text:"Three Lucky Coins",size:16},
-            {text:"Version 0.1.0",size:16},
-            {text:"© 2026 Dawid Michalec",size:16},
-
-        ];
+        
 
 
         let y = 0;
 
 
-        lines.forEach(line=>{
+        CREDITS_CONFIG.forEach(line=>{
 
+            let text: Text;
 
-            const text = new Text({
+            if(line.key){
 
-                text:line.text,
+                text = new LocalizedText(
+                    line.key,
+                    {
+                        fill:0xffffff,
+                        fontSize:line.size,
+                        fontWeight:
+                            line.bold
+                            ? "bold"
+                            :"normal",
+                        align:"center",
+                        font:"Open Sans"
+                    }
+                );
 
-                style:{
-                    fill:0xffffff,
-                    fontSize:line.size,
-                    fontWeight:
-                        line.bold
-                        ? "bold"
-                        :"normal",
-                    align:"center"
-                }
+            } else {
 
-            });
+                text = new Text({
+                    text: line.text ?? "",
+                    style:{
+                        fill:0xffffff,
+                        fontSize:line.size,
+                        fontWeight:
+                            line.bold
+                            ? "bold"
+                            :"normal",
+                        align:"center",
+                        font:"Open Sans"
+                    }
+                });
+
+            }
 
 
             text.anchor.set(0.5);
@@ -222,7 +173,7 @@ export class CreditsPanel extends Container {
             this.creditsContainer.addChild(text);
 
 
-            y += line.size + 15;
+            y += text.height + 15;
 
 
         });

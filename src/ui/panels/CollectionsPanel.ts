@@ -1,10 +1,13 @@
-import { Container, Text } from "pixi.js";
+import { Container, Text} from "pixi.js";
 import { RoundedButton } from "../buttons/RoundedButton";
 import { ButtonTheme } from "../buttons/ButtonTheme";
 import { StatsManager } from "../../core/StatsManager";
 import { Overlay } from "../popups/Overlay";
 import { ScrollableContainer } from "../components/ScrollableContainer";
 import { ClosePanelButton } from "../buttons/ClosePanelButton";
+import { LocalizedText } from "../../localization/LocalizedText";
+import { LocalizationManager } from "../../core/LocalizationManager";
+import { TranslationKey } from "../../core/LocalizationManager";
 
 
 export class CollectionsPanel extends Container {
@@ -19,6 +22,8 @@ export class CollectionsPanel extends Container {
     private playerStatsValues!: Text;
     private combinationLabels!: Text;
     private combinationValues!: Text;
+
+    private localization = LocalizationManager.getInstance();
 
     constructor(
         width: number,
@@ -47,7 +52,7 @@ export class CollectionsPanel extends Container {
         
         this.playerButton = new RoundedButton({
 
-            text: "Player Stats",
+            text: "playerStats",
 
             theme:ButtonTheme.GREEN,
 
@@ -62,7 +67,7 @@ export class CollectionsPanel extends Container {
 
         this.addOnsButton = new RoundedButton({
 
-            text: "Add-Ons Unlocked",
+            text: "addOnsUnlocked",
 
             theme: ButtonTheme.GREEN,
 
@@ -77,7 +82,7 @@ export class CollectionsPanel extends Container {
 
         this.achievementsButton = new RoundedButton({
 
-            text: "Achievements",
+            text: "achievements",
 
             theme: ButtonTheme.GREEN,
 
@@ -147,8 +152,7 @@ export class CollectionsPanel extends Container {
             this.statsManager.getPlayerStats();
 
         this.playerStatsValues.text =
-    `
-    ${stats.runs}
+    `    ${stats.runs}
     ${stats.runsWon}
     ${stats.runsLost}
     ${this.statsManager.getWinRateAllTime()}    
@@ -211,29 +215,31 @@ export class CollectionsPanel extends Container {
         const labels = new Text({
 
             text:
-    `
-    Number of runs
-    Runs Won
-    Runs Lost
-    Win Rate
-    Best Streak
-    Biggest Losing Streak All Time
-    Total Won
-    Total Lost
-    Highest Win
-    Average Win
-    Accuracy
-    Total Bets
-    Favorite Bet
-    Average Bet Value
-    Fastest Run
-    Total Coins Tossed
-    Total Play Time
-    Sessions Played
-    Addiction Rank
-    Favorite Combination
-    Luckiest Combination
-    `,
+            this.localization.tList([
+
+                "numberOfRuns",
+                "runsWon",
+                "runsLost",
+                "winRate",
+                "bestStreak",
+                "biggestLosingStreakAllTime",
+                "totalWonAllTime",
+                "totalLostAllTime",
+                "highestWin",
+                "averageWinAllTime",
+                "accuracy",
+                "totalBets",
+                "favoriteBet",
+                "averageBetValueAllTime",
+                "fastestRun",
+                "totalCoinsTossed",
+                "totalPlayTime",
+                "sessionsPlayed",
+                "addictionRank",
+                "favoriteCombination",
+                "luckiestCombination"
+
+            ]),
 
             style:{
                 fill:0xffffff,
@@ -274,15 +280,15 @@ export class CollectionsPanel extends Container {
 
         const statsCount = 21;
 
-        const y = statsCount * 36 + 45;
+        const y = statsCount * 36 + 15;
 
 
         const combinationTitle =
-            new Text({
+            new LocalizedText(
 
-                text:"Combination Usage",
+                "combinationUsage",
 
-                style:{
+                {
                     fill:0xffffff,
                     font:'Open Sans',
                     fontSize:24,
@@ -290,12 +296,12 @@ export class CollectionsPanel extends Container {
                     lineHeight:36
                 }
 
-            });
+            );
 
 
 
         combinationTitle.position.set(
-            25,
+            0,
             y
         );
 

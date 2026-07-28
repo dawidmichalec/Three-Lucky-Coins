@@ -2,6 +2,7 @@ import { Container } from 'pixi.js';
 import { Popup } from './Popup';
 import { Overlay } from './Overlay';
 import { ConfirmationPopup } from './ConfirmationPopup';
+import { TranslationKey } from '../../core/LocalizationManager';
 
 export class PopupManager extends Container {
   private overlay: Overlay;
@@ -18,7 +19,7 @@ export class PopupManager extends Container {
   }
 
   show(
-      message: string,
+      message: TranslationKey,
       width = 690,
       height = 266,
       onClose?: () => void
@@ -84,7 +85,7 @@ export class PopupManager extends Container {
   }
 
   showConfirmation(
-      message: string,
+      message: TranslationKey,
       onConfirm: () => void
   ) {
 

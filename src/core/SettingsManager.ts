@@ -1,4 +1,7 @@
 import { GameSettings } from "../config/GameSettings";
+import { Language } from "../localization/Language";
+import { LocalizationManager } from "./LocalizationManager";
+
 
 export class SettingsManager {
 
@@ -36,7 +39,7 @@ export class SettingsManager {
 
         brightness:1,
 
-        language:"en",
+        language: Language.EN,
 
         spaceToSpin:true,
 
@@ -82,9 +85,13 @@ export class SettingsManager {
     }
 
 
-    setLanguage(language:string){
+    setLanguage(language: Language){
 
-        this.settings.language=language;
+        this.settings.language = language;
+
+        LocalizationManager
+            .getInstance()
+            .setLanguage(language);
 
     }
 

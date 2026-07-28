@@ -5,6 +5,8 @@ import { StatsManager } from "../../core/StatsManager";
 import { Overlay } from "../popups/Overlay";
 import { ScrollableContainer } from "../components/ScrollableContainer";
 import { ClosePanelButton } from "../buttons/ClosePanelButton";
+import { LocalizationManager } from "../../core/LocalizationManager";
+import { LocalizedText } from "../../localization/LocalizedText";
 
 export class StatsPanel extends Container {
 
@@ -19,6 +21,8 @@ export class StatsPanel extends Container {
 
     private combinationLabels!: Text;
     private combinationValues!: Text;
+
+    private localization = LocalizationManager.getInstance();
 
 
     constructor(
@@ -48,7 +52,7 @@ export class StatsPanel extends Container {
     private createButtons() {
 
         this.runButton = new RoundedButton({
-            text: "Run Stats",
+            text: "runStatsLabel",
             theme: ButtonTheme.DARKGREEN,
             onClick: () => {
                 this.showRunStats();
@@ -58,7 +62,7 @@ export class StatsPanel extends Container {
         this.runButton.position.set(508.6, 108);
 
         this.playerButton = new RoundedButton({
-            text: "Player Stats",
+            text: "playerStats",
             theme: ButtonTheme.GREEN,
             onClick: () => {
                 this.showPlayerStats();
@@ -161,17 +165,17 @@ export class StatsPanel extends Container {
         const labels = new Text({
 
             text:
-    `
-    Best Streak
-    Biggest Losing Streak
-    Highest Win
-    Accuracy
-    Total Bets
-    Favorite Bet
-    Run Duration
-    Favorite Combination
-    Luckiest Combination
-    `,
+            this.localization.tList([
+                "bestStreak",
+                "biggestLosingStreakCurrentRun",
+                "highestWin",
+                "accuracy",
+                "totalBets",
+                "favoriteBet",
+                "runDurationCurrentRun",
+                "favoriteCombination",
+                "luckiestCombination"
+            ]),
 
             style:{
                 fill:0xffffff,
@@ -212,11 +216,11 @@ export class StatsPanel extends Container {
 
 
         const combinationTitle =
-            new Text({
+            new LocalizedText(
 
-                text:"Combination Usage",
+                "combinationUsage",
 
-                style:{
+                {
                     fill:0xffffff,
                     font:'Open Sans',
                     fontSize:24,
@@ -224,12 +228,12 @@ export class StatsPanel extends Container {
                     lineHeight:36
                 }
 
-            });
+            );
 
 
         combinationTitle.position.set(
-            25,
-            370
+            0,
+            340
         );
 
 
@@ -252,7 +256,7 @@ export class StatsPanel extends Container {
 
         this.combinationLabels.position.set(
             25,
-            410
+            380
         );
 
 
@@ -275,7 +279,7 @@ export class StatsPanel extends Container {
 
         this.combinationValues.position.set(
             785,
-            410
+            380
         );
 
 
@@ -296,8 +300,7 @@ export class StatsPanel extends Container {
             this.statsManager.getPlayerStats();
 
         this.playerStatsValues.text =
-    `
-    ${stats.runs}
+    `    ${stats.runs}
     ${stats.runsWon}
     ${stats.runsLost}
     ${this.statsManager.getWinRateAllTime()}    
@@ -360,29 +363,31 @@ export class StatsPanel extends Container {
         const labels = new Text({
 
             text:
-    `
-    Number of runs
-    Runs Won
-    Runs Lost
-    Win Rate
-    Best Streak
-    Biggest Losing Streak All Time
-    Total Won
-    Total Lost
-    Highest Win
-    Average Win
-    Accuracy
-    Total Bets
-    Favorite Bet
-    Average Bet Value
-    Fastest Run
-    Total Coins Tossed
-    Total Play Time
-    Sessions Played
-    Addiction Rank
-    Favorite Combination
-    Luckiest Combination
-    `,
+            this.localization.tList([
+
+                "numberOfRuns",
+                "runsWon",
+                "runsLost",
+                "winRate",
+                "bestStreak",
+                "biggestLosingStreakAllTime",
+                "totalWonAllTime",
+                "totalLostAllTime",
+                "highestWin",
+                "averageWinAllTime",
+                "accuracy",
+                "totalBets",
+                "favoriteBet",
+                "averageBetValueAllTime",
+                "fastestRun",
+                "totalCoinsTossed",
+                "totalPlayTime",
+                "sessionsPlayed",
+                "addictionRank",
+                "favoriteCombination",
+                "luckiestCombination"
+
+            ]),
 
             style:{
                 fill:0xffffff,
@@ -423,15 +428,15 @@ export class StatsPanel extends Container {
 
         const statsCount = 21;
 
-        const y = statsCount * 36 + 45;
+        const y = statsCount * 36 + 15;
 
 
         const combinationTitle =
-            new Text({
+            new LocalizedText(
 
-                text:"Combination Usage",
+                "combinationUsage",
 
-                style:{
+                {
                     fill:0xffffff,
                     font:'Open Sans',
                     fontSize:24,
@@ -439,12 +444,12 @@ export class StatsPanel extends Container {
                     lineHeight:36
                 }
 
-            });
+            );
 
 
 
         combinationTitle.position.set(
-            25,
+            0,
             y
         );
 

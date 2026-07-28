@@ -9,6 +9,7 @@ import { DisplayManager } from './core/DisplayManager';
 import { StatsManager } from './core/StatsManager';
 import { LayoutManager } from './core/LayoutManager';
 import { RotateDeviceOverlay } from './ui/overlays/RotateDeviceOverlay';
+import { LocalizationManager } from './core/LocalizationManager';
 
 (async () => {
   const app = new Application();
@@ -125,6 +126,15 @@ import { RotateDeviceOverlay } from './ui/overlays/RotateDeviceOverlay';
     // SETTINGS
 
     const settingsManager = SettingsManager.getInstance();
+
+    // LOCALIZATION
+
+    const localization =
+        LocalizationManager.getInstance();
+
+    localization.setLanguage(
+        settingsManager.get().language
+    );
 
     // DISPLAY
 

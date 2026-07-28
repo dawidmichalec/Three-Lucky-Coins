@@ -10,15 +10,23 @@ import {Slider} from "../controls/Slider"
 import { ConfirmationPopup } from "../popups/ConfirmationPopup";
 import { DisplayManager } from "../../core/DisplayManager";
 import { ClosePanelButton } from "../buttons/ClosePanelButton";
+import { LocalizedText } from "../../localization/LocalizedText";
+import { LANGUAGE_CONFIG } from "../../localization/LanguageConfig";
 
 export class OptionsPanel extends Container {
 
     private left!: TriangleButton;
     private right!: TriangleButton;
 
+    private saveButton!: RoundedButton;
+
     private settingsManager: SettingsManager;
     private audioManager: AudioManager;
     private displayManager: DisplayManager;
+
+    private languageLabel!: Text;
+
+    private currentLanguageIndex = 0;
 
     constructor(
         width: number,
@@ -44,6 +52,8 @@ export class OptionsPanel extends Container {
         this.createCloseButton();
 
         this.createTriangleButtons();
+
+        this.createLanguageSelector();
 
         this.createAudioToggleButton();
 
@@ -76,18 +86,17 @@ export class OptionsPanel extends Container {
 
     private createTitle(width: number){
 
-        const title = new Text({
+        const title = new LocalizedText(
 
-            text:"OPTIONS",
+            "options",
 
-            style:{
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:52,
                 fontWeight:"bold"
             }
-
-        });
+        );
 
 
         title.anchor.set(0.5);
@@ -204,81 +213,81 @@ export class OptionsPanel extends Container {
 
     private createLabelsForOptions() {
 
-        const audioLabel = new Text({
-            text: "Audio",
-            style: {
+        const audioLabel = new LocalizedText(
+            "audio",
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:32,
                 fontWeight:"bold"
             }
-        });
+        );
 
         audioLabel.position.set(434.2, 260.3);
 
 
-        const musicLabel = new Text({
-            text: "Music",
-            style: {
+        const musicLabel = new LocalizedText(
+            "music",
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:32,
                 fontWeight:"bold"
             }
-        });
+        );
 
         musicLabel.position.set(434.2, 350.3);
 
 
-        const soundEffectsLabel = new Text({
-            text: "Sound Effects",
-            style: {
+        const soundEffectsLabel = new LocalizedText(
+            "soundEffects",
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:32,
                 fontWeight:"bold"
             }
-        });
+        );
 
         soundEffectsLabel.position.set(434.2, 440.3);
 
 
-        const brightnessLabel = new Text({
-            text: "Brightness",
-            style: {
+        const brightnessLabel = new LocalizedText(
+            "brightness",
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:32,
                 fontWeight:"bold"
             }
-        });
+        );
 
         brightnessLabel.position.set(434.2, 530.3);
 
 
-        const fullScreenLabel = new Text({
-            text: "Fullscreen",
-            style: {
+        const fullScreenLabel = new LocalizedText(
+            "fullscreen",
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:32,
                 fontWeight:"bold"
             }
-        });
+        );
 
         fullScreenLabel.position.set(434.2, 620.2);
 
 
 
-        const languageLabel = new Text({
-            text: "Language",
-            style: {
+        const languageLabel = new LocalizedText(
+            "language",
+            {
                 fill:0xffffff,
                 font: 'Open Sans',
                 fontSize:32,
                 fontWeight:"bold"
             }
-        });
+        );
 
         languageLabel.position.set(434.2, 710.2);
 
@@ -347,6 +356,52 @@ export class OptionsPanel extends Container {
 
     }
 
+    //
+
+    private updateLanguageLabel(){
+
+        this.languageLabel.text =
+            LANGUAGE_CONFIG[
+                this.currentLanguageIndex
+            ].name;
+
+    }
+
+
+    private createLanguageSelector(){
+
+        this.languageLabel = new Text({
+
+            text:
+                LANGUAGE_CONFIG[
+                    this.currentLanguageIndex
+                ].name,
+
+            style:{
+                fill:0xffffff,
+                font:'Open Sans',
+                fontSize:32,
+                fontWeight:"bold"
+            }
+
+        });
+
+
+        this.languageLabel.anchor.set(0.5);
+
+
+        this.languageLabel.position.set(
+            1385,
+            735.2
+        );
+
+
+        this.addChild(
+            this.languageLabel
+        );
+
+    }
+
     // TRIANGLE BUTTONS
 
     createTriangleButtons() {
@@ -356,6 +411,19 @@ export class OptionsPanel extends Container {
             label: '',
             onClick: () => {
 
+                this.currentLanguageIndex--;
+
+                if(this.currentLanguageIndex < 0){
+
+                    this.currentLanguageIndex =
+                        LANGUAGE_CONFIG.length - 1;
+
+                }
+
+                this.updateLanguageLabel();
+
+                this.saveButton.visible = true;
+
             },
         });
 
@@ -364,11 +432,23 @@ export class OptionsPanel extends Container {
             label: '',
             onClick: () => {
 
+                this.currentLanguageIndex++;
+
+                if(this.currentLanguageIndex >= LANGUAGE_CONFIG.length){
+
+                    this.currentLanguageIndex = 0;
+
+                }
+
+                this.updateLanguageLabel();
+
+                this.saveButton.visible = true;
+
             },
         });
 
-        left.position.set(1259.3, 714.2);
-        right.position.set(1489.5, 714.2);
+        left.position.set(1239.3, 714.2);
+        right.position.set(1499.5, 714.2);
 
         this.left = left;
         this.right = right;
@@ -413,22 +493,50 @@ export class OptionsPanel extends Container {
 
     private createSaveButton() {
 
-        const saveButton = new RoundedButton({
-            text: 'SAVE',
-            theme: ButtonTheme.GREY,
+        this.saveButton = new RoundedButton({
+            text: "save",
+            theme: ButtonTheme.GREEN,
             onClick:() => {
+
+                const selectedLanguage =
+                LANGUAGE_CONFIG[
+                    this.currentLanguageIndex
+                ].id;
+
+
+                this.settingsManager
+                    .setLanguage(selectedLanguage);
+
+                this.saveButton.visible = false;
 
             }
         });
 
-        saveButton.position.set(792.8, 887.9);
+        this.saveButton.position.set(792.8, 887.9);
 
-        this.addChild(saveButton);
+        this.saveButton.visible = false;
+
+        this.addChild(this.saveButton);
 
 
     }
 
     show(){
+
+        const currentLanguage =
+        this.settingsManager.get().language;
+
+
+        this.currentLanguageIndex =
+            LANGUAGE_CONFIG.findIndex(
+                lang => lang.id === currentLanguage
+            );
+
+
+        this.updateLanguageLabel();
+
+        this.saveButton.visible = false;
+
 
         this.visible = true;
 

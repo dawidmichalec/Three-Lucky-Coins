@@ -7,6 +7,7 @@ import { OptionsPanel } from "../../ui/panels/OptionsPanel";
 import { StatsManager } from "../../core/StatsManager";
 import { CollectionsPanel } from "../../ui/panels/CollectionsPanel";
 import { LayoutManager } from "../../core/LayoutManager";
+import { LocalizedText } from "../../localization/LocalizedText";
 
 export class MainMenuScene extends BaseScene {
 
@@ -29,7 +30,7 @@ export class MainMenuScene extends BaseScene {
 
         const playButton = new RoundedButton({
 
-            text: 'PLAY',
+            text: "play",
             theme: ButtonTheme.GREEN,
             onClick:() => {
 
@@ -46,7 +47,7 @@ export class MainMenuScene extends BaseScene {
         // COLLECTIONS BUTTON
 
         const collectionsButton = new RoundedButton({
-            text: 'COLLECTIONS',
+            text: "collections",
             theme: ButtonTheme.YELLOW,
             onClick:() => {
                 this.collectionsPanel.show();
@@ -58,7 +59,7 @@ export class MainMenuScene extends BaseScene {
         // OPTIONS BUTTON
 
         const optionsButton = new RoundedButton({
-            text: 'OPTIONS',
+            text: "options",
             theme: ButtonTheme.BLUE,
             onClick:() => {
                 this.optionsPanel.show();
@@ -72,7 +73,7 @@ export class MainMenuScene extends BaseScene {
         // CREDITS BUTTON
 
         const creditsButton = new RoundedButton({
-            text: 'CREDITS',
+            text: "credits",
             theme: ButtonTheme.MAGENTA,
             onClick:() => {
                 this.creditsPanel.show();
@@ -84,7 +85,7 @@ export class MainMenuScene extends BaseScene {
         // QUIT BUTTON
 
         const quitButton = new RoundedButton({
-            text: 'QUIT',
+            text: "quit",
             theme: ButtonTheme.RED,
             onClick:() => {
 

@@ -1,9 +1,10 @@
 import { BET_LEVELS } from './data/BetLevels';
 import { COMBINATIONS } from './data/CoinCombinations';
+import { TranslationKey } from '../core/LocalizationManager';
 
 type ControllerConfig = {
   onBetChange: (bet: number) => void;
-  onPopup: (msg: string) => void;
+  onPopup: (msg: TranslationKey) => void;
   onComboChange: (combo: string) => void;
 };
 
@@ -33,11 +34,11 @@ export class GameController {
     this.config.onBetChange(bet);
 
     if (this.betIndex === 0) {
-      this.config.onPopup('The minimum bet has been set');
+      this.config.onPopup("minimumBet");
     }
 
     if (this.betIndex === BET_LEVELS.length - 1) {
-      this.config.onPopup('The maximum bet has been set');
+      this.config.onPopup("maximumBet");
     }
   }
 

@@ -1,3 +1,5 @@
+import { Language } from "../localization/Language";
+
 export interface GameSettings {
 
     audioEnabled: boolean;
@@ -8,7 +10,7 @@ export interface GameSettings {
 
     brightness: number;
 
-    language: string;
+    language: Language;
 
     spaceToSpin: boolean;
 

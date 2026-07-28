@@ -1,10 +1,13 @@
 import { Container, Text, Graphics } from "pixi.js";
 import { ButtonTheme } from "./ButtonTheme";
 import { BUTTON_STYLES, ButtonStyle } from "./ButtonStyles";
+import { LocalizedText } from "../../localization/LocalizedText";
+import { TranslationKey } from "../../core/LocalizationManager";
+
 
 interface RoundedButtonOptions {
 
-    text: string;
+    text: TranslationKey;
 
     buttonWidth?: number;
     buttonHeight?: number;
@@ -18,7 +21,7 @@ export class RoundedButton extends Container {
 
     private style!: ButtonStyle;
     private background!: Graphics;
-    private text!: Text;
+    private text!: LocalizedText;
 
     private buttonWidth!: number;
     private buttonHeight!: number;
@@ -79,16 +82,19 @@ export class RoundedButton extends Container {
         this.addChild(this.background);
 
 
-
-        this.text = new Text({
-            text: this.options.text,
-            style:{
+        this.text = new LocalizedText(
+            this.options.text,
+            {
                 fill: this.style.textColor,
-                font: 'Open Sans',
-                fontSize: 30,
-                fontWeight: 'bold'
+                font:"Open Sans",
+                fontSize:30,
+                fontWeight:"bold",
+                wordWrap: true,
+                wordWrapWidth: 250,
+                align: "center"
             }
-        });
+
+        );
 
 
         this.text.anchor.set(0.5);
@@ -98,9 +104,12 @@ export class RoundedButton extends Container {
             this.buttonHeight / 2
         );
 
+    
 
         this.addChild(this.text);
     }
+
+
 
     private redraw(fill: number) {
 
