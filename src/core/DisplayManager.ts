@@ -9,6 +9,8 @@ export class DisplayManager {
 
     private brightnessOverlay: Graphics;
 
+    private onFullscreenChange?: (enabled:boolean)=>void;
+
 
 
     static getInstance(
@@ -66,6 +68,21 @@ export class DisplayManager {
 
         this.stage.sortChildren();
 
+        document.addEventListener(
+            "fullscreenchange",
+            () => {
+
+                const isFullscreen =
+                    !!document.fullscreenElement;
+
+
+                this.onFullscreenChange?.(
+                    isFullscreen
+                );
+
+            }
+        );
+
     }
 
 
@@ -91,6 +108,15 @@ export class DisplayManager {
             await document.exitFullscreen();
 
         }
+
+    }
+
+
+    setFullscreenListener(
+        callback:(enabled:boolean)=>void
+    ){
+
+        this.onFullscreenChange = callback;
 
     }
 

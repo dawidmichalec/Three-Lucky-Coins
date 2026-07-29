@@ -32,6 +32,8 @@ export class OptionsPanel extends Container {
     private musicSlider!: Slider;
     private sfxSlider!: Slider;
 
+    private fullScreenToggle!: ToggleButton;
+
     constructor(
         width: number,
         height: number,
@@ -346,7 +348,7 @@ export class OptionsPanel extends Container {
 
         const settings = this.settingsManager.get();
 
-        const fullScreenToggle = new ToggleButton({
+        this.fullScreenToggle = new ToggleButton({
 
             initialState: settings.fullScreen,
 
@@ -360,9 +362,20 @@ export class OptionsPanel extends Container {
 
         });
 
-        fullScreenToggle.position.set(1327.4, 610.2)
+        this.displayManager.setFullscreenListener(
+            (enabled)=>{
 
-        this.addChild(fullScreenToggle);
+                this.fullScreenToggle.setState(enabled);
+
+                this.settingsManager
+                    .setFullScreen(enabled);
+
+            }
+        );
+
+        this.fullScreenToggle.position.set(1327.4, 610.2)
+
+        this.addChild(this.fullScreenToggle);
 
     }
 

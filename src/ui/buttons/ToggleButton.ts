@@ -126,4 +126,12 @@ export class ToggleButton extends Container {
 
     }
 
+    setState(state:boolean){
+
+        this.state = state;
+
+        this.updateVisual();
+
+    }
+
 }
