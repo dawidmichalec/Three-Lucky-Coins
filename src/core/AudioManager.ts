@@ -13,6 +13,8 @@ export class AudioManager {
 
     private static instance: AudioManager;
 
+    private currentMusic?: SoundId;
+
 
     static getInstance(
         settingsManager?: SettingsManager
@@ -86,16 +88,32 @@ export class AudioManager {
         options?: PlayOptions
     ){
 
+        
+        const category =
+            AUDIO_REGISTRY[id];
+
+
+        if(category === AudioCategory.MUSIC){
+
+            console.log("SETTING CURRENT MUSIC", id);
+            this.currentMusic = id;
+        }
+
+
         const settings =
             this.settingsManager.get();
 
+        console.log(
+            "PLAY",
+            id,
+            category,
+            settings.audioEnabled
+        );
 
-        if(!settings.audioEnabled)
+
+        if(!settings.audioEnabled){
             return;
-
-
-        const category =
-            AUDIO_REGISTRY[id];
+        }
 
 
         const volume =
@@ -105,12 +123,12 @@ export class AudioManager {
 
 
         sound.play(id,{
+            ...options,
             volume,
-            ...options
+            loop: category === AudioCategory.MUSIC
         });
 
     }
-
 
 
     stop(id: SoundId){
@@ -135,15 +153,21 @@ export class AudioManager {
             this.settingsManager.get();
 
 
+        if(!settings.audioEnabled){
 
-        if(settings.audioEnabled){
+            sound.stopAll();
 
-            sound.resumeAll();
+            return;
 
         }
-        else{
 
-            sound.pauseAll();
+
+        this.updateVolumes();
+
+
+        if(this.currentMusic){
+
+            this.play(this.currentMusic);
 
         }
 

@@ -32,6 +32,8 @@ export class Slider extends Container {
 
     private sliderHeight:number;
 
+    private enabled = true;
+
 
 
     constructor(
@@ -229,6 +231,10 @@ export class Slider extends Container {
 
     private updateFromPointer(globalX:number){
 
+        if(!this.enabled){
+            return;
+        }
+
 
         const local =
             this.toLocal({
@@ -272,6 +278,18 @@ export class Slider extends Container {
     getValue(){
 
         return this.value;
+
+    }
+
+
+    setEnabled(enabled: boolean){
+
+        this.enabled = enabled;
+
+        this.eventMode = enabled ? "static" : "none";
+        this.cursor = enabled ? "pointer" : "default";
+
+        this.alpha = enabled ? 1 : 0.5;
 
     }
 

@@ -28,6 +28,10 @@ export class OptionsPanel extends Container {
 
     private currentLanguageIndex = 0;
 
+    private audioToggle!: ToggleButton;
+    private musicSlider!: Slider;
+    private sfxSlider!: Slider;
+
     constructor(
         width: number,
         height: number,
@@ -66,6 +70,8 @@ export class OptionsPanel extends Container {
         this.createSaveButton();
 
         this.createFullScreenToggleButton();
+
+        this.syncAudioState();
 
     }
 
@@ -116,7 +122,7 @@ export class OptionsPanel extends Container {
 
     private createMusicSlider() {
 
-        const slider = new Slider({
+        this.musicSlider = new Slider({
 
             initialValue:
                 this.settingsManager.get().musicVolume,
@@ -133,13 +139,13 @@ export class OptionsPanel extends Container {
         });
 
 
-        slider.position.set(
+        this.musicSlider.position.set(
             1235.7,
             350.1
         );
 
 
-        this.addChild(slider);
+        this.addChild(this.musicSlider);
 
     }
 
@@ -147,7 +153,7 @@ export class OptionsPanel extends Container {
 
     private createSfxSlider() {
 
-        const slider = new Slider({
+        this.sfxSlider = new Slider({
 
             initialValue:
                 this.settingsManager.get().sfxVolume,
@@ -164,13 +170,13 @@ export class OptionsPanel extends Container {
         });
 
 
-        slider.position.set(
+        this.sfxSlider.position.set(
             1235.7,
             440.3
         );
 
 
-        this.addChild(slider);
+        this.addChild(this.sfxSlider);
 
     }
 
@@ -308,25 +314,29 @@ export class OptionsPanel extends Container {
 
         const settings = this.settingsManager.get();
 
-        const audioToggle = new ToggleButton({
+        this.audioToggle = new ToggleButton({
+
             initialState: settings.audioEnabled,
 
             onChange: (enabled) => {
 
                 this.settingsManager.setAudio(enabled);
 
+                this.musicSlider.setEnabled(enabled);
+                this.sfxSlider.setEnabled(enabled);
+
                 this.audioManager.refresh();
             }
         });
 
 
-        audioToggle.position.set(
+        this.audioToggle.position.set(
             1327.4,
             248.2
         );
 
 
-        this.addChild(audioToggle);
+        this.addChild(this.audioToggle);
 
     }
 
@@ -520,6 +530,19 @@ export class OptionsPanel extends Container {
 
 
     }
+
+
+    private syncAudioState() {
+
+        const enabled =
+            this.settingsManager.get().audioEnabled;
+
+        this.musicSlider.setEnabled(enabled);
+        this.sfxSlider.setEnabled(enabled);
+
+    }
+
+
 
     show(){
 
