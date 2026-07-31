@@ -8,6 +8,7 @@ import { StatsManager } from "../../core/StatsManager";
 import { CollectionsPanel } from "../../ui/panels/CollectionsPanel";
 import { LayoutManager } from "../../core/LayoutManager";
 import { LocalizedText } from "../../localization/LocalizedText";
+import { Assets, Sprite } from "pixi.js";
 
 export class MainMenuScene extends BaseScene {
 
@@ -15,6 +16,7 @@ export class MainMenuScene extends BaseScene {
     private optionsPanel!: OptionsPanel;
     private collectionsPanel!: CollectionsPanel;
     private layout!: LayoutManager;
+    private logoSprite!: Sprite;
 
     constructor(
         private sceneManager: SceneManager
@@ -24,6 +26,7 @@ export class MainMenuScene extends BaseScene {
 
         this.layout = LayoutManager.getInstance();
 
+        this.createLogo();
         this.createCreditsPanel();
         this.createOptionsPanel();
         this.createCollectionPanel();
@@ -159,6 +162,30 @@ export class MainMenuScene extends BaseScene {
         this.optionsPanel.zIndex = 100;
 
         this.addChild(this.optionsPanel);
+
+    }
+
+    // LOGO
+
+    private async createLogo() {
+
+        const texture = await Assets.load("/assets/main/logo.png");
+
+        this.logoSprite = new Sprite(texture);
+
+        this.logoSprite.width = 900;
+        this.logoSprite.height = 212;
+        this.logoSprite.position.set(495.6, 154.5);
+
+        this.addChild(this.logoSprite);
+    }
+
+    override update(delta: number) {
+
+        if (!this.logoSprite) return;
+
+        this.logoSprite.alpha =
+            0.85 + Math.sin(performance.now() * 0.006) * 0.30;
 
     }
         

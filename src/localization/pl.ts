@@ -68,6 +68,16 @@ export default {
     gameOver: "KONIEC GRY",
 
 
+    // PROBABILITY DISPLAY TEXTS
+    
+    probability:"Prawdopodobieństwo",
+    coinOne: "Moneta 1",
+    coinTwo: "Moneta 2",
+    coinThree: "Moneta 3",
+    heads: "Orzeł:",
+    tails: "Reszka:",
+
+
     // GAME CONTROLLER
 
     minimumBet: "Ustawiono minimalny zakład",

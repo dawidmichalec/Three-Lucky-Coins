@@ -51,15 +51,6 @@ import { LocalizationManager } from './core/LocalizationManager';
     background.width = layout.DESIGN_WIDTH;
     background.height = layout.DESIGN_HEIGHT;
 
-    // LOGO
-
-    const logoImage = await Assets.load('/assets/main/logo.png');
-
-    const logoSprite = new Sprite(logoImage);
-    logoSprite.width = 900;
-    logoSprite.height = 212;
-    logoSprite.position.set(495.6, 154.5);
-
     // ORIENTATION OVERLAY
 
     const orientationOverlay = new RotateDeviceOverlay();
@@ -72,7 +63,6 @@ import { LocalizationManager } from './core/LocalizationManager';
 
     gameRoot.addChild(
         background,
-        logoSprite,
         orientationOverlay
     );
 
@@ -110,11 +100,6 @@ import { LocalizationManager } from './core/LocalizationManager';
     await font.load(); 
     document.fonts.add(font); 
     await document.fonts.ready;
-
-    app.ticker.add(() => {
-      logoSprite.alpha =
-          0.85 + Math.sin(performance.now() * 0.006) * 0.30;
-     });
 
     // STATS MANAGER
 

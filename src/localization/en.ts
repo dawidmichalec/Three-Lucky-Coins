@@ -67,6 +67,19 @@ export default {
     insufficientBalance: "Insufficient balance",
     gameOver: "GAME OVER",
 
+    
+
+    // PROBABILITY DISPLAY TEXTS
+
+    probability: "Probability",
+    coinOne: "Coin 1",
+    coinTwo: "Coin 2",
+    coinThree: "Coin 3",
+    heads: "Heads:",
+    tails: "Tails:",
+
+
+
     // GAME CONTROLLER
 
     minimumBet: "The minimum bet has been set",

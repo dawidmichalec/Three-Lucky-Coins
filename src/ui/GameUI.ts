@@ -1,5 +1,6 @@
 import { Container, Text } from "pixi.js";
 import { LocalizedText } from "../localization/LocalizedText";
+import { ProbabilityDisplay } from "./ProbabilityDisplay";
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -7,6 +8,7 @@ export class GameUI extends Container {
     private combinationValue: Text;
     private wonAmount: Text;
     private multiplierValue: Text;
+    private probabilityDisplay!: ProbabilityDisplay;
 
     constructor () {
         super();
@@ -192,6 +194,11 @@ export class GameUI extends Container {
 
         this.multiplierValue.position.set(350, 492.9);
 
+        // PROBABILITY DISPLAY
+
+        this.probabilityDisplay = new ProbabilityDisplay(445, 600);
+        this.probabilityDisplay.position.set(1474.8, 201.6);
+
         // ADD
 
         this.addChild(
@@ -205,6 +212,7 @@ export class GameUI extends Container {
             this.wonAmount,
             multiplierLabel,
             this.multiplierValue,
+            this.probabilityDisplay
         );
     }
 

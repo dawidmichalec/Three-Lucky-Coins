@@ -7,15 +7,23 @@ import { StatsManager } from "../core/StatsManager";
 
 export class SceneManager {
 
-    private currentScene?: Container;
+    private currentScene?: BaseScene;
 
     constructor(
         private app: Application,
         private popupManager: PopupManager,
         private sceneContainer: Container
-    ) {}
+    ) {
 
-    async changeScene(scene: Container) {
+        this.app.ticker.add((ticker) => {
+
+            this.currentScene?.update(ticker.deltaTime);
+
+        });
+
+    }
+
+    async changeScene(scene: BaseScene) {
 
         if (this.currentScene) {
 
