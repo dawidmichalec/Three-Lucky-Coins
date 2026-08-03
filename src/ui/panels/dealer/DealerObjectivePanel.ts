@@ -17,7 +17,7 @@ export class DealerObjectivePanel extends Container {
         
         this.addChild(this.bg);
 
-        this.visible = true;
+        this.visible = false;
 
         this.eventMode = "static";
         this.cursor = "default";

@@ -5,6 +5,7 @@ import { DealerCard } from "./components/dealerCard/DealerCard";
 import { BEN_DATA } from "../game/dealers/DealerRegistry";
 import { DealerSkillsPanel } from "./panels/dealer/DealerSkillsPanel";
 import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
+import { PerkContainer } from "./components/PerkContainer";
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -16,6 +17,9 @@ export class GameUI extends Container {
     private dealerCard!: DealerCard;
     private dealerSkillsPanel!: DealerSkillsPanel;
     private dealerObjectivePanel!: DealerObjectivePanel;
+    private perksContainer!: PerkContainer;
+    private bonusesContainer!: PerkContainer;
+    private effectsContainer!: PerkContainer;
 
     constructor () {
         super();
@@ -132,7 +136,7 @@ export class GameUI extends Container {
         );
 
         wonLabel.anchor.set(1,0.5);
-        wonLabel.position.set(950, 720);
+        wonLabel.position.set(950, 571);
 
         this.wonAmount = new Text({
             text: '0.00',
@@ -153,7 +157,7 @@ export class GameUI extends Container {
         });
 
         this.wonAmount.anchor.set(0, 0.5);
-        this.wonAmount.position.set(980, 720);
+        this.wonAmount.position.set(980, 571);
 
 
         // MULTIPLIER TEXT
@@ -162,7 +166,7 @@ export class GameUI extends Container {
             "multiplier",
             {
                 fontFamily: 'Oswald-Bold',
-                fontSize: 38,
+                fontSize: 42,
                 fontWeight: 'bold',
                 fill: 0xffffff,
                 wordWrap: true,
@@ -176,14 +180,14 @@ export class GameUI extends Container {
         );
 
         multiplierLabel.anchor.set(0, 0);
-        multiplierLabel.position.set(342, 437.5);
+        multiplierLabel.position.set(329.9, 324.8);
 
         // MULTIPLIER VALUE
 
         this.multiplierValue = new Text({
             text: 'x1',
             style: {
-                font: 'Open Sans',
+                font: 'Oswald-Bold',
                 fontSize: 124,
                 fontWeight: 'bold',
                 fill: 0xffffff,
@@ -203,7 +207,7 @@ export class GameUI extends Container {
             },
         });
 
-        this.multiplierValue.position.set(350, 492.9);
+        this.multiplierValue.position.set(350, 384.7);
 
         // PROBABILITY DISPLAY
 
@@ -224,6 +228,73 @@ export class GameUI extends Container {
 
         this.sortableChildren = true;
 
+        // PERKS CONTAINER
+
+        this.perksContainer = new PerkContainer(300, 180);
+        this.perksContainer.position.set(477.9, 656.2);
+
+
+        // PERKS LABEL
+
+        const perksLabel = new LocalizedText(
+            "perks",
+            {
+                fontFamily: "EgyptianSlateBd",
+                fontSize: 28,
+                fontWeight: 'bold',
+                fill: 0xffffff
+            }
+        )
+
+        perksLabel.anchor.set(0,0);
+        perksLabel.position.set(579.8, 844.8);
+
+
+        // BONUSES CONTAINER
+
+        this.bonusesContainer = new PerkContainer(300, 180);
+        this.bonusesContainer.position.set(822.9, 656.2);
+
+
+        // BONUSES LABEL
+
+        const bonusesLabel = new LocalizedText(
+            "bonuses",
+            {
+                fontFamily: "EgyptianSlateBd",
+                fontSize: 28,
+                fontWeight: 'bold',
+                fill: 0xffffff
+            }
+        );
+
+        bonusesLabel.anchor.set(0,0);
+        bonusesLabel.position.set(917.3, 844.8);
+
+
+        // EFFECTS CONTAINER
+
+        this.effectsContainer = new PerkContainer(300, 180);
+        this.effectsContainer.position.set(1167.9, 656.2);
+
+        
+        // EFFECTS LABEL
+
+        const effectsLabel = new LocalizedText(
+            "effects",
+            {
+                fontFamily: "EgyptianSlateBd",
+                fontSize: 28,
+                fontWeight: 'bold',
+                fill: 0xffffff
+            }
+        )
+
+        effectsLabel.anchor.set(0, 0);
+        effectsLabel.position.set(1259.5, 844.8);
+
+
+
         // ADD
 
         this.addChild(
@@ -239,7 +310,13 @@ export class GameUI extends Container {
             this.multiplierValue,
             this.probabilityDisplay,
             this.dealerSkillsPanel,
-            this.dealerObjectivePanel
+            this.dealerObjectivePanel,
+            this.perksContainer,
+            perksLabel,
+            this.bonusesContainer,
+            bonusesLabel,
+            this.effectsContainer,
+            effectsLabel
         );
     }
 

@@ -217,7 +217,7 @@ export class GameScene extends BaseScene {
 
         await this.coinRow.init();
 
-        this.coinRow.position.set(740, 470);
+        this.coinRow.position.set(750, 424.7);
 
         this.addChild(this.coinRow);
     }

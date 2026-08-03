@@ -91,6 +91,13 @@ export default {
     objective: "Cel",
 
 
+    // PERKS GAME UI
+
+    perks: "Perki",
+    bonuses: "Bonusy",
+    effects: "Efekty",
+
+
     // GAME CONTROLLER
 
     minimumBet: "Ustawiono minimalny zakład",

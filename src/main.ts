@@ -99,6 +99,11 @@ import { LocalizationManager } from './core/LocalizationManager';
     const font = new FontFace( 'Oswald-Bold', 'url(/assets/main/fonts/Oswald/static/Oswald-Bold.ttf)' ); 
     await font.load(); 
     document.fonts.add(font); 
+
+    const fontEgyptianSlate = new FontFace('EgyptianSlateBd', 'url(/assets/main/fonts/egyptian-slate-pro/EgyptianSlateBd.TTF');
+    await fontEgyptianSlate.load();
+    document.fonts.add(fontEgyptianSlate);
+
     await document.fonts.ready;
 
     // STATS MANAGER

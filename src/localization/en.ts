@@ -92,6 +92,13 @@ export default {
     objective: "Objective",
 
 
+    // PERKS GAME UI
+
+    perks: "Perks",
+    bonuses: "Bonuses",
+    effects: "Effects",
+
+
 
     // GAME CONTROLLER
 
