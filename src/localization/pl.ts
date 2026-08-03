@@ -1,6 +1,7 @@
 export default {
 
-    play: "GRAJ",
+    play: "NOWY RUN",
+    continue: "KONTYNUUJ",
     collections: "KOLEKCJE",
 
 

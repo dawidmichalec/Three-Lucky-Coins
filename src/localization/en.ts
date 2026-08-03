@@ -1,6 +1,7 @@
 export default {
 
-    play: "PLAY",
+    newRun: "NEW RUN",
+    continue: "CONTINUE",
     collections: "COLLECTIONS",
 
 

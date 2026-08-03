@@ -1,5 +1,6 @@
 import { BaseScene } from "./BaseScene";
 import { SceneManager } from "../SceneManager";
+import { MenuButton } from "../../ui/buttons/MenuButton";
 import { RoundedButton } from "../../ui/buttons/RoundedButton";
 import { ButtonTheme } from "../../ui/buttons/ButtonTheme";
 import { CreditsPanel } from "../../ui/panels/CreditsPanel";
@@ -31,74 +32,85 @@ export class MainMenuScene extends BaseScene {
         this.createOptionsPanel();
         this.createCollectionPanel();
 
-        const playButton = new RoundedButton({
+        // CONTINUE BUTTON
 
-            text: "play",
-            theme: ButtonTheme.GREEN,
+        const continueButton = new MenuButton({
+            text: "continue",
+            onClick:() => {
+
+            }
+        });
+
+        continueButton.position.set(650, 413);
+
+        // NEW RUN
+
+        const newRunButton = new MenuButton({
+            text: "newRun",
             onClick:() => {
 
                 this.sceneManager.showGame();
-            
-            }
 
+            }
         });
 
-        // PLAY BUTTON
+        newRunButton.position.set(650, 493);
 
-        playButton.position.set(340.4, 566.1);
+        // COLLECTIONS 
 
-        // COLLECTIONS BUTTON
-
-        const collectionsButton = new RoundedButton({
+        const collectionsButton = new MenuButton({
             text: "collections",
-            theme: ButtonTheme.YELLOW,
             onClick:() => {
+
                 this.collectionsPanel.show();
-            },
+
+            }
         });
 
-        collectionsButton.position.set(798, 566.1);
+        collectionsButton.position.set(650, 573);
 
-        // OPTIONS BUTTON
+        // OPTIONS
 
-        const optionsButton = new RoundedButton({
+        const optionsButton = new MenuButton({
             text: "options",
-            theme: ButtonTheme.BLUE,
             onClick:() => {
+
                 this.optionsPanel.show();
+
             }
-        })
+        });
 
+        optionsButton.position.set(650, 653);
 
+        // CREDITS
 
-        optionsButton.position.set(1256, 566.1);
-
-        // CREDITS BUTTON
-
-        const creditsButton = new RoundedButton({
+        const creditsButton = new MenuButton({
             text: "credits",
-            theme: ButtonTheme.MAGENTA,
             onClick:() => {
-                this.creditsPanel.show();
-            }
-        })
 
-        creditsButton.position.set(555.4, 751);
+                this.creditsPanel.show();
+
+            }
+        });
+
+        creditsButton.position.set(650, 733);
 
         // QUIT BUTTON
 
-        const quitButton = new RoundedButton({
+        const quitButton = new MenuButton({
             text: "quit",
-            theme: ButtonTheme.RED,
             onClick:() => {
 
             }
+
         });
 
-        quitButton.position.set(1043, 751);
+        quitButton.position.set(650, 813);
+
 
         this.addChild(
-            playButton,
+            continueButton,
+            newRunButton,
             collectionsButton,
             optionsButton,
             creditsButton,

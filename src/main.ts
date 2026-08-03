@@ -94,15 +94,27 @@ import { LocalizationManager } from './core/LocalizationManager';
 
     updateLayout();
 
-    // FONT
+    // FONTS
 
     const font = new FontFace( 'Oswald-Bold', 'url(/assets/main/fonts/Oswald/static/Oswald-Bold.ttf)' ); 
     await font.load(); 
     document.fonts.add(font); 
 
-    const fontEgyptianSlate = new FontFace('EgyptianSlateBd', 'url(/assets/main/fonts/egyptian-slate-pro/EgyptianSlateBd.TTF');
+    const fontEgyptianSlate = new FontFace('EgyptianSlateBd', 'url(/assets/main/fonts/egyptian-slate-pro/EgyptianSlateBd.TTF)');
     await fontEgyptianSlate.load();
     document.fonts.add(fontEgyptianSlate);
+
+    const fontCrimsonProBold = new FontFace('CrimsonPro-Bold', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Bold.ttf)');
+    await fontCrimsonProBold.load();
+    document.fonts.add(fontCrimsonProBold);
+
+    const fontCrimsonProItalic = new FontFace('CrimsonPro-Italic', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Italic.ttf)');
+    await fontCrimsonProItalic.load();
+    document.fonts.add(fontCrimsonProItalic);
+
+    const fontCrimsonProRegular = new FontFace('CrimsonPro-Regular', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Regular.ttf)');
+    await fontCrimsonProRegular.load();
+    document.fonts.add(fontCrimsonProRegular);
 
     await document.fonts.ready;
 

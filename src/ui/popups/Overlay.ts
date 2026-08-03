@@ -8,7 +8,7 @@ export class Overlay extends Container {
 
     this.bg = new Graphics()
       .rect(0, 0, width, height)
-      .fill({ color: 0x000000, alpha: 0.5 });
+      .fill({ color: 0x000000, alpha: 0.7 });
 
     this.addChild(this.bg);
 
