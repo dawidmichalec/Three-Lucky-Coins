@@ -1,4 +1,4 @@
-import { LocalizedText } from "../localization/LocalizedText";
+import { LocalizedText } from "../../localization/LocalizedText";
 import { Container, Graphics, Text, wordWrap} from "pixi.js";
 
 export class ProbabilityDisplay extends Container {

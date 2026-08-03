@@ -77,6 +77,7 @@ export class GameScene extends BaseScene {
 
         // UI
         this.gameUI = new GameUI();
+        this.gameUI.zIndex = 1000;
         this.addChild(this.gameUI);
 
         this.gameUI.updateBalance(this.player.balance);

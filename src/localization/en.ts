@@ -79,6 +79,19 @@ export default {
     tails: "Tails:",
 
 
+    // DEALER CARD DISPLAY
+
+    juniorDealer: "Junior Dealer",
+    midDealer: "Mid Dealer",
+    seniorDealer: "Senior Dealer",
+    manager: "Manager",
+    vicePresident: "Vice President",
+    owner: "Owner",
+    casino: "Casino",
+    skills: "Skills",
+    objective: "Objective",
+
+
 
     // GAME CONTROLLER
 

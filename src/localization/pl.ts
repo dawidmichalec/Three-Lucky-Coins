@@ -78,6 +78,19 @@ export default {
     tails: "Reszka:",
 
 
+    // DEALER CARD DISPLAY
+
+    juniorDealer: "Młodszy Krupier",
+    midDealer: "Krupier",
+    seniorDealer: "Starszy Krupier",
+    manager: "Manager",
+    vicePresident: "Wiceprezes",
+    owner: "Właściciel",
+    casino: "Kasyno",
+    skills: "Umiejętności",
+    objective: "Cel",
+
+
     // GAME CONTROLLER
 
     minimumBet: "Ustawiono minimalny zakład",

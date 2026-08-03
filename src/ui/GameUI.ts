@@ -1,6 +1,10 @@
 import { Container, Text } from "pixi.js";
 import { LocalizedText } from "../localization/LocalizedText";
-import { ProbabilityDisplay } from "./ProbabilityDisplay";
+import { ProbabilityDisplay } from "./components/ProbabilityDisplay";
+import { DealerCard } from "./components/dealerCard/DealerCard";
+import { BEN_DATA } from "../game/dealers/DealerRegistry";
+import { DealerSkillsPanel } from "./panels/dealer/DealerSkillsPanel";
+import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -9,9 +13,16 @@ export class GameUI extends Container {
     private wonAmount: Text;
     private multiplierValue: Text;
     private probabilityDisplay!: ProbabilityDisplay;
+    private dealerCard!: DealerCard;
+    private dealerSkillsPanel!: DealerSkillsPanel;
+    private dealerObjectivePanel!: DealerObjectivePanel;
 
     constructor () {
         super();
+
+        // INIT FOR DEALER CARD
+
+        this.init();
 
         // BALANCE TEXT
 
@@ -199,6 +210,20 @@ export class GameUI extends Container {
         this.probabilityDisplay = new ProbabilityDisplay(445, 600);
         this.probabilityDisplay.position.set(1474.8, 201.6);
 
+        // SKILLS PANEL
+
+        this.dealerSkillsPanel = new DealerSkillsPanel(626, 600);
+        this.dealerSkillsPanel.position.set(1170, 188.4);
+        this.dealerSkillsPanel.zIndex = 500;
+
+        // OBJECTIVE PANEL
+
+        this.dealerObjectivePanel = new DealerObjectivePanel(626, 140.1);
+        this.dealerObjectivePanel.position.set(1170, 258.4);
+        this.dealerObjectivePanel.zIndex = 500;
+
+        this.sortableChildren = true;
+
         // ADD
 
         this.addChild(
@@ -212,8 +237,41 @@ export class GameUI extends Container {
             this.wonAmount,
             multiplierLabel,
             this.multiplierValue,
-            this.probabilityDisplay
+            this.probabilityDisplay,
+            this.dealerSkillsPanel,
+            this.dealerObjectivePanel
         );
+    }
+
+    async init(){
+
+        await this.createDealerCard();
+
+    }
+
+    private async createDealerCard(){
+
+        this.dealerCard = new DealerCard(
+            BEN_DATA,
+            () => {
+                this.dealerSkillsPanel.show();
+                this.dealerObjectivePanel.hide();
+            },
+
+            () => {
+                this.dealerObjectivePanel.show();
+                this.dealerSkillsPanel.hide();
+        });
+
+        await this.dealerCard.init();
+
+        this.dealerCard.position.set(
+            697.3,
+            108
+        );
+
+        this.addChild(this.dealerCard);
+
     }
 
     updateBalance(balance: number) {
