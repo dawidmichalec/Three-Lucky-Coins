@@ -1,8 +1,6 @@
 import { BaseScene } from "./BaseScene";
 import { SceneManager } from "../SceneManager";
 import { MenuButton } from "../../ui/buttons/MenuButton";
-import { RoundedButton } from "../../ui/buttons/RoundedButton";
-import { ButtonTheme } from "../../ui/buttons/ButtonTheme";
 import { CreditsPanel } from "../../ui/panels/CreditsPanel";
 import { OptionsPanel } from "../../ui/panels/OptionsPanel";
 import { StatsManager } from "../../core/StatsManager";
