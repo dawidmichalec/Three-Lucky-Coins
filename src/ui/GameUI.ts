@@ -6,6 +6,7 @@ import { BEN_DATA } from "../game/dealers/DealerRegistry";
 import { DealerSkillsPanel } from "./panels/dealer/DealerSkillsPanel";
 import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
 import { PerkContainer } from "./components/PerkContainer";
+import { OddsTable } from "../game/probability/OddsTypes";
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -369,5 +370,13 @@ export class GameUI extends Container {
 
     updateMultiplier(multiplier: number) {
         this.multiplierValue.text = `x${multiplier}`;
+    }
+
+    updateProbability(
+        odds: OddsTable
+    ) {
+
+        this.probabilityDisplay
+            .updateOdds(odds);
     }
 }

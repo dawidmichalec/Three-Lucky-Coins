@@ -1,9 +1,24 @@
+import {
+    Container,
+    Graphics,
+    Text
+} from "pixi.js";
+
 import { LocalizedText } from "../../localization/LocalizedText";
-import { Container, Graphics, Text, wordWrap} from "pixi.js";
+import { OddsTable } from "../../game/probability/OddsTypes";
 
 export class ProbabilityDisplay extends Container {
 
     private bg: Graphics;
+
+    private coinOneHeadsValue!: Text;
+    private coinOneTailsValue!: Text;
+
+    private coinTwoHeadsValue!: Text;
+    private coinTwoTailsValue!: Text;
+
+    private coinThreeHeadsValue!: Text;
+    private coinThreeTailsValue!: Text;
 
     constructor(width: number, height: number){
         super();
@@ -57,18 +72,21 @@ export class ProbabilityDisplay extends Container {
 
         coinOneHeadsLabel.position.set(35, 170);
 
-        const coinOneHeadsProbabilityValue = new Text({
-            text: '70%',
+
+        this.coinOneHeadsValue = new Text({
+            text: "—",
             style: {
                 font: "Open Sans",
                 fontSize: 22,
                 fontWeight: "bold",
-                fill: 0xffffff,
-                wordWrap: true,
-            },
+                fill: 0xffffff
+            }
         });
 
-        coinOneHeadsProbabilityValue.position.set(125, 170);
+        this.coinOneHeadsValue.position.set(
+            125,
+            170
+        );
 
 
         const coinOneTailsLabel = new LocalizedText(
@@ -85,8 +103,8 @@ export class ProbabilityDisplay extends Container {
         coinOneTailsLabel.position.set(35, 200);
 
 
-        const coinOneTailsProbabilityValue = new Text({
-            text: "30%",
+        this.coinOneTailsValue = new Text({
+            text: "-",
             style: {
                 font: "Open Sans",
                 fontSize: 22,
@@ -96,7 +114,7 @@ export class ProbabilityDisplay extends Container {
             },
         });
 
-        coinOneTailsProbabilityValue.position.set(125, 200);
+        this.coinOneTailsValue.position.set(125, 200);
 
 
         const coinTwoLabel = new LocalizedText(
@@ -128,8 +146,8 @@ export class ProbabilityDisplay extends Container {
         coinTwoHeadsLabel.position.set(35, 305);
 
 
-        const coinTwoHeadsProbabilityValue = new Text({
-            text: "60%",
+        this.coinTwoHeadsValue = new Text({
+            text: "-",
             style: {
                 font: "Open Sans",
                 fontSize: 22,
@@ -139,7 +157,7 @@ export class ProbabilityDisplay extends Container {
             }
         });
 
-        coinTwoHeadsProbabilityValue.position.set(125, 305);
+        this.coinTwoHeadsValue.position.set(125, 305);
 
 
         const coinTwoTailsLabel = new LocalizedText(
@@ -156,8 +174,8 @@ export class ProbabilityDisplay extends Container {
         coinTwoTailsLabel.position.set(35, 335);
 
 
-        const coinTwoTailsProbabilityValue = new Text({
-            text: "40%",
+        this.coinTwoTailsValue = new Text({
+            text: "-",
             style: {
                 font: "Open Sans",
                 fontSize: 22,
@@ -167,7 +185,7 @@ export class ProbabilityDisplay extends Container {
             }
         });
 
-        coinTwoTailsProbabilityValue.position.set(125, 335);
+        this.coinTwoTailsValue.position.set(125, 335);
 
 
         const coinThreeLabel = new LocalizedText(
@@ -199,8 +217,8 @@ export class ProbabilityDisplay extends Container {
         coinThreeHeadsLabel.position.set(35, 435);
 
 
-        const coinThreeHeadsProbabilityValue = new Text({
-            text: "60%",
+        this.coinThreeHeadsValue = new Text({
+            text: "-",
             style: {
                 font: "Open Sans",
                 fontSize: 22,
@@ -210,7 +228,7 @@ export class ProbabilityDisplay extends Container {
             }
         });
 
-        coinThreeHeadsProbabilityValue.position.set(125, 435);
+        this.coinThreeHeadsValue.position.set(125, 435);
 
 
         const coinThreeTailsLabel = new LocalizedText(
@@ -227,8 +245,8 @@ export class ProbabilityDisplay extends Container {
         coinThreeTailsLabel.position.set(35, 465);
 
 
-        const coinThreeTailsProbabilityValue = new Text({
-            text: "40%",
+        this.coinThreeTailsValue = new Text({
+            text: "-",
             style: {
                 font: "Open Sans",
                 fontSize: 22,
@@ -238,27 +256,74 @@ export class ProbabilityDisplay extends Container {
             }
         });
 
-        coinThreeTailsProbabilityValue.position.set(125, 465);
+        this.coinThreeTailsValue.position.set(125, 465);
 
 
         this.addChild(
-            probabilityLabel, 
+            probabilityLabel,
+
             coinOneLabel,
             coinOneHeadsLabel,
-            coinOneHeadsProbabilityValue,
+            this.coinOneHeadsValue,
             coinOneTailsLabel,
-            coinOneTailsProbabilityValue,
+            this.coinOneTailsValue,
+
             coinTwoLabel,
             coinTwoHeadsLabel,
-            coinTwoHeadsProbabilityValue,
+            this.coinTwoHeadsValue,
             coinTwoTailsLabel,
-            coinTwoTailsProbabilityValue,
+            this.coinTwoTailsValue,
+
             coinThreeLabel,
             coinThreeHeadsLabel,
-            coinThreeHeadsProbabilityValue,
+            this.coinThreeHeadsValue,
             coinThreeTailsLabel,
-            coinThreeTailsProbabilityValue
-        )
+            this.coinThreeTailsValue
+        );
 
+    }
+
+    updateOdds(
+        odds: OddsTable
+    ) {
+
+        this.coinOneHeadsValue.text =
+            this.formatPercentage(
+                odds.coin1.heads
+            );
+
+        this.coinOneTailsValue.text =
+            this.formatPercentage(
+                odds.coin1.tails
+            );
+
+        this.coinTwoHeadsValue.text =
+            this.formatPercentage(
+                odds.coin2.heads
+            );
+
+        this.coinTwoTailsValue.text =
+            this.formatPercentage(
+                odds.coin2.tails
+            );
+
+        this.coinThreeHeadsValue.text =
+            this.formatPercentage(
+                odds.coin3.heads
+            );
+
+        this.coinThreeTailsValue.text =
+            this.formatPercentage(
+                odds.coin3.tails
+            );
+    }
+
+    private formatPercentage(
+        probability: number
+    ): string {
+
+        return `${Math.round(
+            probability * 100
+        )}%`;
     }
 }

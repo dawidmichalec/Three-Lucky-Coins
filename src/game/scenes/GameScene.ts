@@ -1,6 +1,5 @@
 import { Container, Application, Assets, Sprite, Ticker } from 'pixi.js';
 import { Player } from '../Player';
-import { BetConfig, BETS_CONFIG } from '../data/BetsConfig';
 import { GameUI } from '../../ui/GameUI';
 import { GameController } from '../GameController';
 import { CoinRow } from '../../ui/CoinRow';
@@ -22,6 +21,9 @@ import { StatsPanel } from '../../ui/panels/StatsPanel';
 import { LayoutManager } from '../../core/LayoutManager';
 import { LocalizedText } from '../../localization/LocalizedText';
 import { TranslationKey } from '../../core/LocalizationManager';
+import { OddsManager } from "../probability/OddsManager";
+import { BEN_PROFILE } from "../probability/DealerOddsProfiles";
+import { getCombinationConfig } from "../data/CombinationUtils";
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -55,6 +57,8 @@ export class GameScene extends BaseScene {
 
     private statsPanel!: StatsPanel;
 
+    private oddsManager = OddsManager.getInstance();
+
     constructor (
         private app: Application,
         private popupManager: PopupManager,
@@ -82,6 +86,11 @@ export class GameScene extends BaseScene {
 
         this.gameUI.updateBalance(this.player.balance);
         this.gameUI.updateMultiplier(this.streakMultiplier);
+
+
+        // NEW ROUND
+
+        this.prepareNextRound();
         
 
         // CONTROLLER
@@ -191,6 +200,20 @@ export class GameScene extends BaseScene {
         
     }
 
+
+    private prepareNextRound() {
+
+        const odds =
+            this.oddsManager.rollOdds(
+                BEN_PROFILE
+            );
+
+        this.gameUI.updateProbability(
+            odds
+        );
+    }
+
+
     private handleBetDown() {
         this.controller.decreaseBet();
     }
@@ -222,6 +245,8 @@ export class GameScene extends BaseScene {
         this.addChild(this.coinRow);
     }
 
+    // START RUN - FUNCTION RESPONSIBLE FOR THE GAME LOOP
+
     private async startRound() {
 
         const bet = this.controller.getBet();
@@ -247,7 +272,21 @@ export class GameScene extends BaseScene {
 
         this.controls.startTossAnimation();
 
-        const result = this.generateResult();
+        const currentOdds =
+            this.oddsManager.getOdds();
+
+        const result =
+            this.generateResult();
+
+        console.log(
+            "ODDS USED:",
+            currentOdds
+        );
+
+        console.log(
+            "RESULT:",
+            result
+        );
 
         await this.coinRow.spin(result);
 
@@ -258,25 +297,29 @@ export class GameScene extends BaseScene {
         let winAmount: number | undefined = undefined;
 
         if (win) {
-            if ((selected === COMBINATIONS[0]) || (selected === COMBINATIONS[4])) {
-                winAmount = bet * BETS_CONFIG['bets'][0]['multiplier'] * this.streakMultiplier;
 
-                this.player.addWin(winAmount);
-                this.gameUI.updateBalance(this.player.balance);
+            const combinationConfig =
+                getCombinationConfig(selected);
 
-                this.streakMultiplier++;
-                this.gameUI.updateWon(winAmount);
-            } else {
-                winAmount = bet * BETS_CONFIG['bets'][1]['multiplier'] * this.streakMultiplier;
+            winAmount =
+                bet *
+                combinationConfig.baseMultiplier *
+                this.streakMultiplier;
 
-                this.player.addWin(winAmount);
-                this.gameUI.updateBalance(this.player.balance);
+            this.player.addWin(winAmount);
 
-                this.streakMultiplier++;
-                this.gameUI.updateWon(winAmount);
-            }
+            this.gameUI.updateBalance(
+                this.player.balance
+            );
+
+            this.streakMultiplier++;
+
+            this.gameUI.updateWon(winAmount);
+
         } else {
+
             this.streakMultiplier = 1;
+
             this.gameUI.updateWon(0);
         }
 
@@ -295,35 +338,42 @@ export class GameScene extends BaseScene {
         this.roundState = 'ready';
 
         this.checkGameOver();
+
+        // NEW ROUND
+
+        if (this.canPlay()) {
+
+            this.prepareNextRound();
+
+        }
         
     }
 
-    private isWin(selected: CoinSide[], result: CoinSide[]) {
-        return selected.every((v, i) => v === result[i]);
+    private isWin(
+        selected: readonly CoinSide[],
+        result: readonly CoinSide[]
+    ): boolean {
+
+        return selected.every(
+            (side, index) =>
+                side === result[index]
+        );
     }
 
     private generateResult(): CoinSide[] {
 
         if (this.forcedResult) {
 
-            const result = this.forcedResult;
+            const result =
+                this.forcedResult;
 
-            this.forcedResult = undefined;
+            this.forcedResult =
+                undefined;
 
             return result;
         }
 
-
-        const sides = [
-            CoinSide.Heads,
-            CoinSide.Tails
-        ];
-
-        return [
-            sides[Math.floor(Math.random() * 2)],
-            sides[Math.floor(Math.random() * 2)],
-            sides[Math.floor(Math.random() * 2)],
-        ];
+        return this.oddsManager.rollResult();
     }
 
     private lockControls() {
@@ -406,7 +456,7 @@ export class GameScene extends BaseScene {
     // UPDATE RUN STATS
 
     private updateRunStats(
-        selected: CoinSide[],
+        selected: readonly CoinSide[],
         win: boolean,
         winAmount?: number,
         bet?: number
