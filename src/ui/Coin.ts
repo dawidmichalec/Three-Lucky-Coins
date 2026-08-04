@@ -13,7 +13,10 @@ export class Coin extends Container {
     private headsTexture!: Texture;
     private tailsTexture!: Texture;
 
-    private currentSide: CoinSide = 'H';
+    private goldenHeadsTexture!: Texture;
+    private goldenTailsTexture!: Texture;
+
+    private currentSide: CoinSide = CoinSide.Heads;
 
     private phase: 'idle' | 'spinning' | 'reveal' = 'idle';
     private speed = 0.2;
@@ -40,6 +43,9 @@ export class Coin extends Container {
         this.headsTexture = await Assets.load('/assets/main/heads.png');
         this.tailsTexture = await Assets.load('/assets/main/tails.png');
 
+        this.goldenHeadsTexture = await Assets.load('/assets/main/golden_heads_icon.png');
+        this.goldenTailsTexture = await Assets.load('/assets/main/golden_tails_icon.png');
+
         this.audioManager = AudioManager.getInstance();
 
         for (let i = 1; i <= 16; i++) {
@@ -62,19 +68,21 @@ export class Coin extends Container {
     }
 
     setSide(side: CoinSide) {
+
         this.currentSide = side;
 
         this.sprite.texture =
-            side === 'H'
+            side === CoinSide.Heads
                 ? this.headsTexture
                 : this.tailsTexture;
     }
 
     toggle() {
+
         this.setSide(
-            this.currentSide === 'H'
-                ? 'T'
-                : 'H'
+            this.currentSide === CoinSide.Heads
+                ? CoinSide.Tails
+                : CoinSide.Heads
         );
     }
 
@@ -99,17 +107,29 @@ export class Coin extends Container {
         );
     }
 
-    reveal(side: CoinSide) {
+    reveal(
+        side: CoinSide,
+        isGolden: boolean = false
+    ) {
 
-        console.log(
-            `COIN ${this.id}: REVEAL`,
-            side,
-            performance.now()
-        );
+        this.currentSide = side;
 
-        this.setSide(side);
-        this.phase = 'idle';
+        if (isGolden) {
 
+            this.sprite.texture =
+                side === CoinSide.Heads
+                    ? this.goldenHeadsTexture
+                    : this.goldenTailsTexture;
+
+        } else {
+
+            this.sprite.texture =
+                side === CoinSide.Heads
+                    ? this.headsTexture
+                    : this.tailsTexture;
+        }
+
+        this.phase = "idle";
     }
 
     update(delta: number) {

@@ -24,6 +24,9 @@ import { TranslationKey } from '../../core/LocalizationManager';
 import { OddsManager } from "../probability/OddsManager";
 import { BEN_PROFILE } from "../probability/DealerOddsProfiles";
 import { getCombinationConfig } from "../data/CombinationUtils";
+import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
+import { CoinOutcome } from "../goldenCoins/GoldenCoinTypes";
+
 
 export class GameScene extends BaseScene {
     private gameUI: GameUI;
@@ -58,6 +61,8 @@ export class GameScene extends BaseScene {
     private statsPanel!: StatsPanel;
 
     private oddsManager = OddsManager.getInstance();
+
+    private goldenCoinManager = GoldenCoinManager.getInstance();
 
     constructor (
         private app: Application,
@@ -193,7 +198,6 @@ export class GameScene extends BaseScene {
         this.addChild(this.hamburgerMenu);
 
         this.createCoinRow();
-        this.cheatManager = new CheatManager();
         this.cheatPanel = new CheatPanel(this.cheatManager);
         this.addChild(this.cheatPanel);
         this.registerCheats();
@@ -275,25 +279,45 @@ export class GameScene extends BaseScene {
         const currentOdds =
             this.oddsManager.getOdds();
 
-        const result =
+        const baseResult =
             this.generateResult();
 
+        const goldenResult =
+            this.goldenCoinManager
+                .applyGoldenCoins(baseResult);
+
+        const resultSides =
+            goldenResult.map(
+                outcome => outcome.side
+            );
+
         console.log(
-            "ODDS USED:",
-            currentOdds
+            "BASE RESULT:",
+            baseResult
         );
 
         console.log(
-            "RESULT:",
-            result
+            "GOLDEN RESULT:",
+            goldenResult
         );
 
-        await this.coinRow.spin(result);
+        await this.coinRow.spin(
+            goldenResult
+        );
 
-        this.statsManager.recordCoinsTossed(result.length);
+        this.statsManager.recordCoinsTossed(
+            resultSides.length
+        );
 
-        const selected = this.controller.getCurrentCombo();
-        const win = this.isWin(selected, result);
+        const selected =
+            this.controller.getCurrentCombo();
+
+        const win =
+            this.isWin(
+                selected,
+                resultSides
+            );
+
         let winAmount: number | undefined = undefined;
 
         if (win) {
@@ -301,10 +325,17 @@ export class GameScene extends BaseScene {
             const combinationConfig =
                 getCombinationConfig(selected);
 
+            const goldenMultiplier =
+                this.goldenCoinManager
+                    .getGoldenMultiplier(
+                        goldenResult
+                    );
+
             winAmount =
                 bet *
                 combinationConfig.baseMultiplier *
-                this.streakMultiplier;
+                this.streakMultiplier *
+                goldenMultiplier;
 
             this.player.addWin(winAmount);
 
@@ -314,7 +345,9 @@ export class GameScene extends BaseScene {
 
             this.streakMultiplier++;
 
-            this.gameUI.updateWon(winAmount);
+            this.gameUI.updateWon(
+                winAmount
+            );
 
         } else {
 
@@ -548,7 +581,6 @@ export class GameScene extends BaseScene {
             }
         );
 
-
         this.cheatManager.register(
             CheatCode.ALL_TAILS_WIN,
             () => {
@@ -557,7 +589,6 @@ export class GameScene extends BaseScene {
                 );
             }
         );
-
 
         this.cheatManager.register(
             CheatCode.NOT_ALL_SAME_WIN,
@@ -568,6 +599,26 @@ export class GameScene extends BaseScene {
             }
         );
 
+        this.cheatManager.register(
+            CheatCode.GOLDEN_ONE,
+            () => {
+                this.forceGoldenWin(1);
+            }
+        );
+
+        this.cheatManager.register(
+            CheatCode.GOLDEN_TWO,
+            () => {
+                this.forceGoldenWin(2);
+            }
+        );
+
+        this.cheatManager.register(
+            CheatCode.GOLDEN_THREE,
+            () => {
+                this.forceGoldenWin(3);
+            }
+        );
     }
 
     // FORCED RESULT
@@ -579,6 +630,35 @@ export class GameScene extends BaseScene {
         console.log(
             "FORCED RESULT:",
             result.join("-")
+        );
+    }
+
+    private forceGoldenWin(
+        goldenCount: number
+    ) {
+
+        const selectedCombination =
+            this.controller.getCurrentCombo();
+
+        /*
+            getCurrentCombo() zwraca readonly tuple,
+            a forcedResult jest CoinSide[].
+            Dlatego tworzymy nową, zwykłą tablicę.
+        */
+        this.forcedResult = [
+            ...selectedCombination
+        ];
+
+        this.goldenCoinManager
+            .forceNextGoldenCount(
+                goldenCount
+            );
+
+        console.log(
+            [
+                `FORCED GOLDEN WIN: ${goldenCount}`,
+                `FORCED COMBINATION: ${this.forcedResult.join("-")}`
+            ].join("\n")
         );
     }
 

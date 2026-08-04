@@ -1,6 +1,5 @@
 import { CoinSide } from "../ui/Coin";
 
-
 export class CheatActions {
 
     static allHeadsWin(): CoinSide[] {
@@ -10,9 +9,7 @@ export class CheatActions {
             CoinSide.Heads,
             CoinSide.Heads
         ];
-
     }
-
 
     static allTailsWin(): CoinSide[] {
 
@@ -21,9 +18,7 @@ export class CheatActions {
             CoinSide.Tails,
             CoinSide.Tails
         ];
-
     }
-
 
     static notAllSameWin(): CoinSide[] {
 
@@ -32,7 +27,5 @@ export class CheatActions {
             CoinSide.Heads,
             CoinSide.Tails
         ];
-
     }
-
 }

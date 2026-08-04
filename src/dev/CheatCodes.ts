@@ -6,4 +6,10 @@ export enum CheatCode {
 
     NOT_ALL_SAME_WIN = "NOT_ALL_SAME_WIN",
 
+    GOLDEN_ONE = "gold1",
+
+    GOLDEN_TWO = "gold2",
+
+    GOLDEN_THREE = "gold3"
+
 }
