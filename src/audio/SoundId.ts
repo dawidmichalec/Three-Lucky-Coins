@@ -2,6 +2,12 @@ export enum SoundId {
 
     COIN_SPIN = "coin_spin",
 
+    SPIN_START = "spin_start",
+
+    SPIN_MIDDLE = "spin_middle",
+
+    COIN_LAND = "coin_land",
+
     BASIC_BUTTON_CLICK = "button_click",
 
     TOSS_BUTTON_CLICKED = "toss_button_click",

@@ -1,0 +1,13 @@
+export const AUDIO_TIMINGS = {
+
+    SPIN_START: 700,
+
+    SPIN_MIDDLE_START: 450,
+
+    COIN_REVEAL_INTERVAL: 500,
+
+    GOLDEN_CHARGE: 650,
+
+    GOLDEN_REVEAL: 350
+
+};

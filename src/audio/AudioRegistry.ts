@@ -1,9 +1,16 @@
+import { Sound } from "@pixi/sound";
 import { AudioCategory } from "./AudioCategory";
 import { SoundId } from "./SoundId";
 
 export const AUDIO_REGISTRY = {
 
     [SoundId.COIN_SPIN]: AudioCategory.SFX,
+
+    [SoundId.SPIN_START]: AudioCategory.SFX,
+
+    [SoundId.SPIN_MIDDLE]: AudioCategory.SFX,
+
+    [SoundId.COIN_LAND]: AudioCategory.SFX,
 
     [SoundId.BASIC_BUTTON_CLICK]: AudioCategory.SFX,
 
