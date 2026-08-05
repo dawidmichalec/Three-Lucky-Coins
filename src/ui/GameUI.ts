@@ -7,6 +7,7 @@ import { DealerSkillsPanel } from "./panels/dealer/DealerSkillsPanel";
 import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
 import { PerkContainer } from "./components/PerkContainer";
 import { OddsTable } from "../game/probability/OddsTypes";
+import { MultiplierEffect } from "./effects/MultiplierEffect";
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -14,6 +15,10 @@ export class GameUI extends Container {
     private combinationValue: Text;
     private wonAmount: Text;
     private multiplierValue: Text;
+    private multiplierContainer: Container;
+
+    private currentMultiplier = 1;
+    private multiplierAnimationId?: number;
     private probabilityDisplay!: ProbabilityDisplay;
     private dealerCard!: DealerCard;
     private dealerSkillsPanel!: DealerSkillsPanel;
@@ -21,6 +26,8 @@ export class GameUI extends Container {
     private perksContainer!: PerkContainer;
     private bonusesContainer!: PerkContainer;
     private effectsContainer!: PerkContainer;
+
+    private multiplierEffect:MultiplierEffect;
 
     constructor () {
         super();
@@ -185,30 +192,56 @@ export class GameUI extends Container {
 
         // MULTIPLIER VALUE
 
+        this.multiplierContainer = new Container();
+
+        this.multiplierContainer.position.set(
+            430,
+            455
+        );
+        
+
+        this.multiplierEffect = new MultiplierEffect();
+
+        /*
+            MultiplierEffect będzie dzieckiem tego samego
+            kontenera, więc punkt 0,0 jest środkiem mnożnika.
+        */
+
+        this.multiplierContainer.addChildAt(
+            this.multiplierEffect,
+            0
+        );
+
+
         this.multiplierValue = new Text({
-            text: 'x1',
+            text: "x1",
             style: {
-                font: 'Oswald-Bold',
+                font: "Oswald-Bold",
                 fontSize: 124,
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 fill: 0xffffff,
                 wordWrap: true,
 
                 dropShadow: {
                     alpha: 1,
                     blur: 15,
-                    color: '#ffaa00',
+                    color: "#ffaa00",
                     distance: 0,
                 },
-   
+
                 stroke: {
-                    color: '#331100',
+                    color: "#331100",
                     width: 3,
                 }
             },
         });
 
-        this.multiplierValue.position.set(350, 384.7);
+        this.multiplierValue.anchor.set(0.5);
+
+        this.multiplierContainer.addChild(
+            this.multiplierValue
+        );
+
 
         // PROBABILITY DISPLAY
 
@@ -308,7 +341,7 @@ export class GameUI extends Container {
             wonLabel,
             this.wonAmount,
             multiplierLabel,
-            this.multiplierValue,
+            this.multiplierContainer,
             this.probabilityDisplay,
             this.dealerSkillsPanel,
             this.dealerObjectivePanel,
@@ -368,8 +401,40 @@ export class GameUI extends Container {
         this.wonAmount.text = value.toFixed(2);
     }
 
-    updateMultiplier(multiplier: number) {
-        this.multiplierValue.text = `x${multiplier}`;
+    updateMultiplier(
+        multiplier: number
+    ) {
+
+        const previousMultiplier =
+            this.currentMultiplier;
+
+
+        this.currentMultiplier =
+            multiplier;
+
+
+        this.multiplierValue.text =
+            `x${multiplier}`;
+
+
+        if (
+            multiplier >
+            previousMultiplier
+        ) {
+
+            this.animateMultiplierIncrease();
+
+
+            /*
+                MultiplierEffect sam sprawdzi,
+                czy wartość jest wielokrotnością 5.
+            */
+
+            this.multiplierEffect.play(
+                multiplier
+            );
+
+        }
     }
 
     updateProbability(
@@ -378,5 +443,113 @@ export class GameUI extends Container {
 
         this.probabilityDisplay
             .updateOdds(odds);
+    }
+
+
+    private animateMultiplierIncrease() {
+
+        /*
+            Jeśli poprzednia animacja jeszcze trwa,
+            zatrzymujemy ją i zaczynamy od początku.
+        */
+        if (
+            this.multiplierAnimationId !==
+            undefined
+        ) {
+
+            cancelAnimationFrame(
+                this.multiplierAnimationId
+            );
+
+        }
+
+        const duration = 320;
+
+        const startTime =
+            performance.now();
+
+        const animate = (
+            currentTime: number
+        ) => {
+
+            const progress =
+                Math.min(
+                    1,
+                    (
+                        currentTime -
+                        startTime
+                    ) / duration
+                );
+
+            /*
+                Powiększenie:
+                1 → około 1.18 → 1
+            */
+            const punch =
+                Math.sin(
+                    progress * Math.PI
+                );
+
+            const scale =
+                1 + punch * 0.18;
+
+            this.multiplierContainer.scale.set(
+                scale
+            );
+
+            /*
+                Trzęsienie najmocniejsze na początku,
+                a później stopniowo zanika.
+            */
+            const shakeStrength =
+                (1 - progress) * 7;
+
+            const shakeX =
+                Math.sin(
+                    progress *
+                    Math.PI *
+                    12
+                ) * shakeStrength;
+
+            const shakeY =
+                Math.cos(
+                    progress *
+                    Math.PI *
+                    16
+                ) * shakeStrength * 0.35;
+
+            this.multiplierValue.position.set(
+                shakeX,
+                shakeY
+            );
+
+            if (progress < 1) {
+
+                this.multiplierAnimationId =
+                    requestAnimationFrame(
+                        animate
+                    );
+
+                return;
+            }
+
+            /*
+                Zawsze przywracamy stan bazowy.
+            */
+            this.multiplierContainer.scale.set(1);
+
+            this.multiplierValue.position.set(
+                0,
+                0
+            );
+
+            this.multiplierAnimationId =
+                undefined;
+        };
+
+        this.multiplierAnimationId =
+            requestAnimationFrame(
+                animate
+            );
     }
 }

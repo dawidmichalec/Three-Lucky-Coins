@@ -354,6 +354,7 @@ export class GameScene extends BaseScene {
             this.streakMultiplier = 1;
 
             this.gameUI.updateWon(0);
+
         }
 
         this.updateRunStats(
