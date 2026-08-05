@@ -91,6 +91,27 @@ export default {
     casino: "Casino",
     skills: "Skills",
     objective: "Objective",
+    achieveABalanceOf: "Achieve a balance of",
+    nextOpponent: "NEXT OPPONENT",
+    dealerDescription: "Description",
+    noSkills: "This opponent has no special skills.",
+    benDescription: "Ben is ",
+    benSaying: "Don't worry, I'm gonna go easy on you",
+    hillaryDescription: "Experienced dealer who has been working at a casino for a few years.",
+    hillarySaying: "No rush. Let's enjoy the game!",
+    timothyDescription: "Working at a casino is his second job. He needs to work here because he needs money for alimony.  That’ s why he’s eagerly forcing tips on the players.",
+    timothySaying: "How about a nice tip for a hard working man?",
+
+
+    // SKILLS
+
+    slowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
+
+    slowerMultiplierGrowthSkillDescription: "Every win increases the streak multiplier by 0.5.",
+
+    mandatoryTipSkillName: "Mandatory Tip",
+
+    mandatoryTipSkillDescription: "Every third winning round, Timothy takes 50% of that round's winnings.",
 
 
     // PERKS GAME UI

@@ -26,6 +26,8 @@ import { BEN_PROFILE } from "../probability/DealerOddsProfiles";
 import { getCombinationConfig } from "../data/CombinationUtils";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { CoinOutcome } from "../goldenCoins/GoldenCoinTypes";
+import { DealerData } from "../dealers/DealerData";
+import { BEN_DATA } from "../dealers/DealerRegistry";
 
 
 export class GameScene extends BaseScene {
@@ -64,6 +66,8 @@ export class GameScene extends BaseScene {
 
     private goldenCoinManager = GoldenCoinManager.getInstance();
 
+    private currentDealer: DealerData = BEN_DATA;
+
     constructor (
         private app: Application,
         private popupManager: PopupManager,
@@ -82,10 +86,10 @@ export class GameScene extends BaseScene {
         this.statsManager = StatsManager.getInstance();
 
         // Player
-        this.player = new Player(100);
+        this.player = new Player(10);
 
         // UI
-        this.gameUI = new GameUI();
+        this.gameUI = new GameUI(this.currentDealer);
         this.gameUI.zIndex = 1000;
         this.addChild(this.gameUI);
 

@@ -2,7 +2,7 @@ import { Container, Text } from "pixi.js";
 import { LocalizedText } from "../localization/LocalizedText";
 import { ProbabilityDisplay } from "./components/ProbabilityDisplay";
 import { DealerCard } from "./components/dealerCard/DealerCard";
-import { BEN_DATA } from "../game/dealers/DealerRegistry";
+import { DealerData } from "../game/dealers/DealerData";
 import { DealerSkillsPanel } from "./panels/dealer/DealerSkillsPanel";
 import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
 import { PerkContainer } from "./components/PerkContainer";
@@ -29,12 +29,10 @@ export class GameUI extends Container {
 
     private multiplierEffect:MultiplierEffect;
 
-    constructor () {
+    constructor (
+        private currentDealer: DealerData
+    ) {
         super();
-
-        // INIT FOR DEALER CARD
-
-        this.init();
 
         // BALANCE TEXT
 
@@ -253,12 +251,14 @@ export class GameUI extends Container {
         this.dealerSkillsPanel = new DealerSkillsPanel(626, 600);
         this.dealerSkillsPanel.position.set(1170, 188.4);
         this.dealerSkillsPanel.zIndex = 500;
+        this.dealerSkillsPanel.setDealer(this.currentDealer);
 
         // OBJECTIVE PANEL
 
         this.dealerObjectivePanel = new DealerObjectivePanel(626, 140.1);
         this.dealerObjectivePanel.position.set(1170, 258.4);
         this.dealerObjectivePanel.zIndex = 500;
+        this.dealerObjectivePanel.setDealer(this.currentDealer);
 
         this.sortableChildren = true;
 
@@ -352,6 +352,8 @@ export class GameUI extends Container {
             this.effectsContainer,
             effectsLabel
         );
+
+        void this.init();
     }
 
     async init(){
@@ -360,19 +362,26 @@ export class GameUI extends Container {
 
     }
 
-    private async createDealerCard(){
+    private async createDealerCard() {
 
-        this.dealerCard = new DealerCard(
-            BEN_DATA,
-            () => {
-                this.dealerSkillsPanel.show();
-                this.dealerObjectivePanel.hide();
-            },
+        this.dealerCard =
+            new DealerCard(
+                this.currentDealer,
 
-            () => {
-                this.dealerObjectivePanel.show();
-                this.dealerSkillsPanel.hide();
-        });
+                () => {
+
+                    this.dealerSkillsPanel.show();
+                    this.dealerObjectivePanel.hide();
+
+                },
+
+                () => {
+
+                    this.dealerObjectivePanel.show();
+                    this.dealerSkillsPanel.hide();
+
+                }
+            );
 
         await this.dealerCard.init();
 
@@ -381,8 +390,9 @@ export class GameUI extends Container {
             108
         );
 
-        this.addChild(this.dealerCard);
-
+        this.addChild(
+            this.dealerCard
+        );
     }
 
     updateBalance(balance: number) {

@@ -90,6 +90,27 @@ export default {
     casino: "Kasyno",
     skills: "Umiejętności",
     objective: "Cel",
+    achieveABalanceOf: "Saldo: ",
+    nextOpponent: "NEXT OPPONENT",
+    dealerDescription: "Opis",
+    noSkills: "Ten przeciwnik nie ma żadnych specjalnych umiejętności.",
+    benDescription: "Ben is ",
+    benSaying: "Nie martw się, dam Ci fory",
+    hillaryDescription: "Doświadczona krupierka, która pracuje w kasynie od kilku lat.",
+    hillarySaying: "Bez pośpiechu. Cieszmy się grą!",
+    timothyDescription: "Praca w kasynie to jego druga praca. Musi tu pracować, bo potrzebuje pieniędzy na alimenty. Dlatego tak chętnie wymusza na graczach napiwki.",
+    timothySaying: "Co powiesz na ładny napiwek dla ciężko pracującego człowieka?",
+
+    
+    // SKILL
+
+    slowerMultiplierGrowthSkillName: "Wolniejszy Wzrost Mnożnika",
+
+    slowerMultiplierGrowthSkillDescription: "Każda wygrana zwiększa mnożnik serii o 0,5.",
+
+    mandatoryTipSkillName: "Obowiązkowy napiwek",
+
+    mandatoryTipSkillDescription: "Co trzecią zwycięską rundę Timothy zgarnia połowę wygranej z tej rundy.",
 
 
     // PERKS GAME UI

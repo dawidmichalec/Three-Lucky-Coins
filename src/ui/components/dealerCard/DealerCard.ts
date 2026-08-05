@@ -68,7 +68,7 @@ export class DealerCard extends Container {
     private async createAvatar() {
 
         const texture = await Assets.load(
-            this.dealer.avatar
+            this.dealer.avatarSmall
         );
 
         this.avatar = new Sprite(texture);

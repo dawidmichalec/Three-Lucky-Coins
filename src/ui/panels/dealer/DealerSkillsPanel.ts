@@ -1,19 +1,53 @@
-import { Container, Graphics, Text } from "pixi.js";
-import { TooltipCloseButton } from "../../buttons/TooltipCloseButton";
-import { LocalizedText } from "../../../localization/LocalizedText";
-import { ScrollableContainer } from "../../components/ScrollableContainer";
+import {
+    Container,
+    Graphics
+} from "pixi.js";
+
+import {
+    TooltipCloseButton
+} from "../../buttons/TooltipCloseButton";
+
+import {
+    LocalizedText
+} from "../../../localization/LocalizedText";
+
+import {
+    ScrollableContainer
+} from "../../components/ScrollableContainer";
+
+import {
+    DealerData
+} from "../../../game/dealers/DealerData";
+
 
 export class DealerSkillsPanel extends Container {
 
     private bg: Graphics;
-    private skillsDescriptionContainer!: ScrollableContainer;
 
-    constructor(width: number, height: number) {
+    private skillsContent!: Container;
+
+    private skillsDescriptionContainer!:
+        ScrollableContainer;
+
+
+    constructor(
+        width: number,
+        height: number
+    ) {
+
         super();
 
         this.bg = new Graphics()
-            .roundRect(0, 0, width, height, 50)
-            .fill({ color: 0x000000 });
+            .roundRect(
+                0,
+                0,
+                width,
+                height,
+                50
+            )
+            .fill({
+                color: 0x000000
+            });
 
         this.visible = false;
 
@@ -22,103 +56,214 @@ export class DealerSkillsPanel extends Container {
 
         this.addChild(this.bg);
 
-        const skillsLabel = new LocalizedText(
-            "skills",
-            {
-                fontFamily: "Oswald-Bold",
-                fontSize: 38,
-                fontWeight: "bold",
-                fill: 0xffde59,
-                wordWrap: true,
-                wordWrapWidth: 200
-            }
+        const skillsLabel =
+            new LocalizedText(
+                "skills",
+                {
+                    fontFamily:
+                        "Oswald-Bold",
+
+                    fontSize: 38,
+
+                    fontWeight:
+                        "bold",
+
+                    fill:
+                        0xffde59
+                }
+            );
+
+        skillsLabel.position.set(
+            45,
+            15
         );
-
-        skillsLabel.position.set(45, 15);
-
-        // CREATED ONLY FOR TESTING PURPOSES
-
-        const skillName = new Text({
-            text: "Hint",
-            style: {
-                font: "Open Sans",
-                fill: 0xffffff,
-                fontWeight: "bold",
-                fontSize: 24
-            },
-        });
-
-        skillName.position.set(0,0);
 
         this.createSkillsDescriptionContainer();
 
-        this.skillsDescriptionContainer.addChild(skillName);
-
         this.createCloseButton();
 
-
         this.addChild(
-            skillsLabel,
-        )
-
+            skillsLabel
+        );
     }
 
-    private createSkillsDescriptionContainer(){
 
-        this.skillsDescriptionContainer =
-        new ScrollableContainer(
-            530,
-            433
+    setDealer(dealer: DealerData) {
+
+        this.skillsContent.removeChildren();
+
+        console.log(
+            "SETTING DEALER SKILLS:",
+            dealer.name,
+            dealer.skills
         );
 
+        if (dealer.skills.length === 0) {
+
+            const noSkillsText =
+                new LocalizedText(
+                    "noSkills",
+                    {
+                        font: "Open Sans",
+                        fontSize: 24,
+                        fill: 0xffffff,
+                        wordWrap: true,
+                        wordWrapWidth: 500
+                    }
+                );
+
+            noSkillsText.position.set(
+                0,
+                0
+            );
+
+            this.skillsContent.addChild(
+                noSkillsText
+            );
+
+            return;
+        }
+
+        this.createSkillRows(dealer);
+    }
+
+
+    private createSkillRows(
+        dealer: DealerData
+    ) {
+
+        let currentY = 0;
+
+        for (const skill of dealer.skills) {
+
+            const skillName =
+                new LocalizedText(
+                    skill.name,
+                    {
+                        font: "Open Sans",
+                        fontSize: 24,
+                        fontWeight: "bold",
+                        fill: 0xffffff,
+                        wordWrap: true,
+                        wordWrapWidth: 500
+                    }
+                );
+
+            skillName.position.set(
+                0,
+                currentY
+            );
+
+            const skillDescription =
+                new LocalizedText(
+                    skill.description,
+                    {
+                        font: "Open Sans",
+                        fontSize: 22,
+                        fill: 0xffffff,
+                        wordWrap: true,
+                        wordWrapWidth: 500
+                    }
+                );
+
+            skillDescription.position.set(
+                0,
+                currentY +
+                skillName.height +
+                6
+            );
+
+            this.skillsContent.addChild(
+                skillName,
+                skillDescription
+            );
+
+            currentY =
+                skillDescription.y +
+                skillDescription.height +
+                28;
+        }
+    }
+
+
+    private createSkillsDescriptionContainer() {
+
+        this.skillsDescriptionContainer =
+            new ScrollableContainer(
+                530,
+                433
+            );
 
         this.skillsDescriptionContainer.position.set(
             45,
             90
         );
 
+        this.skillsContent =
+            new Container();
+
+        this.skillsDescriptionContainer.addChild(
+            this.skillsContent
+        );
 
         this.addChild(
             this.skillsDescriptionContainer
         );
-
     }
 
-    async createCloseButton() {
-            const close = new TooltipCloseButton();
-    
-            await close.init();
-    
-            close.on("pointerdown", () => {
+
+    private async createCloseButton() {
+
+        const close =
+            new TooltipCloseButton();
+
+        await close.init();
+
+        close.on(
+            "pointerdown",
+            () => {
                 close.scale.set(0.95);
-            });
-    
-            close.on("pointerup", () => {
+            }
+        );
+
+        close.on(
+            "pointerup",
+            () => {
                 close.scale.set(1);
-            });
-    
-            close.on("pointerupoutside", () => {
+            }
+        );
+
+        close.on(
+            "pointerupoutside",
+            () => {
                 close.scale.set(1);
-            });
-    
-            close.on("pointertap", () => {
+            }
+        );
+
+        close.on(
+            "pointertap",
+            () => {
                 this.hide();
-            });
-    
-            close.position.set(
-                540,
-                25
-            );
-    
-            this.addChild(close);
-        }
+            }
+        );
+
+        close.position.set(
+            540,
+            25
+        );
+
+        this.addChild(close);
+    }
+
 
     show() {
+
         this.visible = true;
     }
 
+
     hide() {
+
         this.visible = false;
     }
-
 }

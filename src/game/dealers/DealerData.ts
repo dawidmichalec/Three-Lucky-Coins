@@ -1,15 +1,21 @@
 import { TranslationKey } from "../../core/LocalizationManager";
+import { DealerSkillData } from "./DealerSkill";
+import { ObjectiveType } from "../objectives/ObjectiveTypes";
 
 export interface DealerData {
+    id: string;
 
-    id:string;
+    name: string;
+    title: TranslationKey;
 
-    name:string;
+    avatarNormal: string;
+    avatarSmall: string;
 
-    title:TranslationKey;
+    objectiveType: ObjectiveType;
+    objectiveValue: number;
 
-    avatar:string;
+    skills: DealerSkillData[];
 
-    moneyToBeat:number;
-
+    dealerDescription: TranslationKey;
+    saying: TranslationKey;
 }
