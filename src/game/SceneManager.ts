@@ -23,28 +23,46 @@ export class SceneManager {
 
     }
 
-    async changeScene(scene: BaseScene) {
+    async changeScene(
+        scene: BaseScene
+    ) {
 
         if (this.currentScene) {
 
-            await this.fadeOut(this.currentScene);
+            await this.fadeOut(
+                this.currentScene
+            );
 
-            if (this.currentScene instanceof BaseScene) {
-                this.currentScene.cleanup();
-            }
+            this.currentScene.cleanup();
 
-            this.sceneContainer.removeChild(this.currentScene);
+            this.sceneContainer.removeChild(
+                this.currentScene
+            );
 
-            this.currentScene.destroy();
+            this.currentScene.destroy({
+                children: true
+            });
         }
+
+        /*
+            Scena nie znajduje się jeszcze na ekranie.
+            Czekamy na avatar, monety i overlay.
+        */
+        await scene.init();
 
         this.currentScene = scene;
 
-        this.sceneContainer.addChild(scene);
+        this.sceneContainer.addChild(
+            scene
+        );
 
-        await this.fadeIn(scene);
+        await this.fadeIn(
+            scene
+        );
 
-        this.sceneContainer.addChild(this.popupManager);
+        this.sceneContainer.addChild(
+            this.popupManager
+        );
     }
 
     private fadeOut(scene: Container): Promise<void> {

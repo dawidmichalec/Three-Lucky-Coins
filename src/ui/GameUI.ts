@@ -200,11 +200,6 @@ export class GameUI extends Container {
 
         this.multiplierEffect = new MultiplierEffect();
 
-        /*
-            MultiplierEffect będzie dzieckiem tego samego
-            kontenera, więc punkt 0,0 jest środkiem mnożnika.
-        */
-
         this.multiplierContainer.addChildAt(
             this.multiplierEffect,
             0
@@ -353,13 +348,11 @@ export class GameUI extends Container {
             effectsLabel
         );
 
-        void this.init();
     }
 
-    async init(){
+    async init(): Promise<void> {
 
         await this.createDealerCard();
-
     }
 
     private async createDealerCard() {
@@ -397,12 +390,17 @@ export class GameUI extends Container {
 
     setDisabled(value: boolean) {
 
-        this.dealerCard.setDisabled(value);
-        if (this.dealerSkillsPanel.visible === true || this.dealerObjectivePanel.visible === true) {
-            this.dealerSkillsPanel.visible = false;
-            this.dealerObjectivePanel.visible = false;
+        if (this.dealerCard) {
+            this.dealerCard.setDisabled(value);
         }
 
+        if (
+            this.dealerSkillsPanel.visible ||
+            this.dealerObjectivePanel.visible
+        ) {
+            this.dealerSkillsPanel.hide();
+            this.dealerObjectivePanel.hide();
+        }
     }
 
     updateBalance(balance: number) {

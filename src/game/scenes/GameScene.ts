@@ -29,6 +29,8 @@ import { CoinOutcome } from "../goldenCoins/GoldenCoinTypes";
 import { DealerData } from "../dealers/DealerData";
 import { BEN_DATA } from "../dealers/DealerRegistry";
 import { NextOpponentOverlay } from '../../ui/overlays/NextOpponentOverlay';
+import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
+import { GameOverOverlay } from '../../ui/overlays/GameOverlay';
 
 
 export class GameScene extends BaseScene {
@@ -71,6 +73,10 @@ export class GameScene extends BaseScene {
 
     private nextOpponentOverlay!: NextOpponentOverlay;
 
+    private dealerVictoryOverlay:DealerVictoryOverlay;
+
+    private gameOverOverlay:GameOverOverlay;
+
     constructor (
         private app: Application,
         private popupManager: PopupManager,
@@ -83,8 +89,6 @@ export class GameScene extends BaseScene {
         this.setupTicker();
 
         const layout = LayoutManager.getInstance();
-
-        void this.createNextOpponentOverlay();
 
         // StatsManager
 
@@ -206,15 +210,62 @@ export class GameScene extends BaseScene {
         );
         this.addChild(this.hamburgerMenu);
 
-        this.createCoinRow();
         this.cheatPanel = new CheatPanel(this.cheatManager);
         this.addChild(this.cheatPanel);
         this.registerCheats();
+
+        this.createNextOpponentOverlay();
+
+        // VICTORY SCREEN
+
+        this.dealerVictoryOverlay =
+            new DealerVictoryOverlay(
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT
+            );
+
+        this.dealerVictoryOverlay.zIndex = 5000;
+
+        this.addChild(
+            this.dealerVictoryOverlay
+        );
+
+        // GAME OVER SCREEN
+
+        this.gameOverOverlay =
+            new GameOverOverlay(
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT
+            );
+
+        this.gameOverOverlay.zIndex =
+            6000;
+
+        this.addChild(
+            this.gameOverOverlay
+        );
         
     }
 
+    override async init(): Promise<void> {
 
-    private async createNextOpponentOverlay() {
+        await Promise.all([
+            this.gameUI.init(),
+            this.nextOpponentOverlay.init(),
+            this.createCoinRow()
+        ]);
+
+        /*
+            Overlay był widoczny już wcześniej.
+            Tutaj jest już również załadowany avatar.
+        */
+        this.nextOpponentOverlay.show();
+
+        this.lockControls();
+    }
+
+
+    private createNextOpponentOverlay() {
 
         const layout =
             LayoutManager.getInstance();
@@ -229,8 +280,6 @@ export class GameScene extends BaseScene {
                 }
             );
 
-        await this.nextOpponentOverlay.init();
-
         this.nextOpponentOverlay.zIndex = 4000;
 
         this.addChild(
@@ -238,6 +287,8 @@ export class GameScene extends BaseScene {
         );
 
         this.nextOpponentOverlay.show();
+
+        this.sortChildren();
     }
 
 
@@ -497,32 +548,120 @@ export class GameScene extends BaseScene {
 
     private triggerGameOver() {
 
-        this.statsManager.getRunStats().won = false;
+        this.statsManager
+            .getRunStats()
+            .won = false;
 
         this.lockControls();
-        this.popupManager.show(
-            "gameOver",
-            400,
-            220,
-            ()=>{
 
-                this.showRunSummary();
+        void this.playGameOverSequence();
+    }
 
-            }
+
+    private async playGameOverSequence() {
+
+        /*
+            Krótka pauza po ostatnim przegranym rzucie,
+            żeby GAME OVER nie wskoczył w tej samej klatce.
+        */
+        await this.delay(
+            350
         );
+
+        await this.gameOverOverlay.play(
+            1300
+        );
+
+        await this.showRunSummaryWithFade();
+    }
+
+
+    private delay(
+        milliseconds: number
+    ): Promise<void> {
+
+        return new Promise(resolve => {
+
+            setTimeout(
+                resolve,
+                milliseconds
+            );
+
+        });
     }
 
     // RUN SUMMARY
 
-    private showRunSummary(){
+    private async showRunSummaryWithFade() {
 
-        console.log(
-            "RUN STATS:",
-            this.statsManager.getRunStats()
-        );
         this.runSummaryPanel.refresh();
-        this.runSummaryPanel.visible = true;
 
+        this.runSummaryPanel.visible = true;
+        this.runSummaryPanel.alpha = 0;
+
+        await this.fadeInContainer(
+            this.runSummaryPanel,
+            500
+        );
+    }
+
+    private fadeInContainer(
+        container: Container,
+        duration: number
+    ): Promise<void> {
+
+        return new Promise(resolve => {
+
+            const startTime =
+                performance.now();
+
+
+            const animate = (
+                currentTime: number
+            ) => {
+
+                const progress =
+                    Math.min(
+                        1,
+                        (
+                            currentTime -
+                            startTime
+                        ) / duration
+                    );
+
+
+                const easedProgress =
+                    1 -
+                    Math.pow(
+                        1 - progress,
+                        3
+                    );
+
+
+                container.alpha =
+                    easedProgress;
+
+
+                if (progress < 1) {
+
+                    requestAnimationFrame(
+                        animate
+                    );
+
+                    return;
+                }
+
+
+                container.alpha = 1;
+
+                resolve();
+            };
+
+
+            requestAnimationFrame(
+                animate
+            );
+        });
     }
 
     // UPDATE RUN STATS
@@ -607,6 +746,20 @@ export class GameScene extends BaseScene {
 
     }
 
+
+    // VICTORY
+
+    private async showDealerVictory() {
+
+        this.lockControls();
+
+        await this.dealerVictoryOverlay.play();
+
+
+        this.unlockControls();
+    }
+
+
     // REGISTER CHEATS
 
     private registerCheats() {
@@ -656,6 +809,24 @@ export class GameScene extends BaseScene {
             CheatCode.GOLDEN_THREE,
             () => {
                 this.forceGoldenWin(3);
+            }
+        );
+
+        this.cheatManager.register(
+            CheatCode.DEALER_WIN,
+            () => {
+
+                void this.showDealerVictory();
+
+            }
+        );
+
+        this.cheatManager.register(
+            CheatCode.GAME_OVER,
+            () => {
+
+                this.triggerGameOver();
+
             }
         );
     }

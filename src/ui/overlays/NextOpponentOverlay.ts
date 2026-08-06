@@ -40,7 +40,7 @@ export class NextOpponentOverlay extends Container {
     const nextOpponentLabel = new LocalizedText(
     "nextOpponent",
     {
-            fontFamily: "Anek-Kannada Bold",
+            fontFamily: "JackCondensed",
             fontWeight: "bold",
             fontSize: 50,
             fill: 0xffd21f

@@ -10,6 +10,10 @@ export enum CheatCode {
 
     GOLDEN_TWO = "gold2",
 
-    GOLDEN_THREE = "gold3"
+    GOLDEN_THREE = "gold3",
+
+    DEALER_WIN = "dealerwin",
+
+    GAME_OVER = "gameover"
 
 }
