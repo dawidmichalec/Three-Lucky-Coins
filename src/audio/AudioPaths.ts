@@ -19,6 +19,24 @@ export const AUDIO_PATHS = {
         "/assets/main/sounds/coin_spin_loop.wav",
     
     [SoundId.COIN_LAND]:
-        "/assets/main/sounds/coin_land.wav"
+        "/assets/main/sounds/coin_land.wav",
+
+    [SoundId.TOSS_BUTTON_CLICKED]:
+        "/assets/main/sounds/toss_button_clicked.wav",
+
+    [SoundId.MULTIPLIER_INCREASED]:
+        "/assets/main/sounds/multiplier_increased.wav",
+
+    [SoundId.WIN]:
+        "/assets/main/sounds/win.wav",
+
+    [SoundId.COIN_ONE_CORRECT]:
+        "/assets/main/sounds/coin_one_correct.wav",
+
+    [SoundId.COIN_TWO_CORRECT]:
+        "/assets/main/sounds/coin_two_correct.wav",
+
+    [SoundId.COIN_THREE_CORRECT]:
+        "/assets/main/sounds/coin_three_correct.wav"
 
 };

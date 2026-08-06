@@ -143,7 +143,7 @@ export class TriangleButton extends Container {
                     SoundId.BASIC_BUTTON_CLICK,
                     {
                         loop: false,
-                        volume: 0.6
+                        volume: 0.4
                     }
                 );
 

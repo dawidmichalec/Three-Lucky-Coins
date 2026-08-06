@@ -1,5 +1,8 @@
 import { Container, Sprite, Text, Texture, Assets, Graphics, Rectangle } from 'pixi.js';
 import { LocalizedText } from '../../localization/LocalizedText';
+import { AudioManager } from '../../core/AudioManager';
+import { SoundId } from '../../audio/SoundId';
+
 
 export class TossButton extends Container {
   private bg!: Sprite;
@@ -13,6 +16,8 @@ export class TossButton extends Container {
 
   private isAnimating!: boolean;
   private speed = 0.2;
+
+  private audioManager = AudioManager.getInstance();
 
   constructor(
   ) {
@@ -54,6 +59,13 @@ export class TossButton extends Container {
     hit.on('pointertap', () => {
       this.startAnimation();
       this.emit('toss');
+      this.audioManager.play(
+                    SoundId.TOSS_BUTTON_CLICKED,
+                    {
+                        loop: false,
+                        volume: 0.5
+                    }
+                );
     });
 
     

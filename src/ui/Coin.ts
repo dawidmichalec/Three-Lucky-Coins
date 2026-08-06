@@ -33,6 +33,10 @@ export class Coin extends Container {
 
     private readonly normalSize = 140;
 
+    private correctGuessGlow!: Graphics;
+
+    private correctEffectAnimationId?: number;
+
     constructor() {
         super();
 
@@ -68,6 +72,26 @@ export class Coin extends Container {
 
         this.addChild(this.goldenGlow);
 
+        this.correctGuessGlow = new Graphics();
+
+        this.correctGuessGlow
+            .circle(
+                0,
+                0,
+                100
+            )
+            .fill({
+                color: 0xfff2a8,
+                alpha: 1
+            });
+
+        this.correctGuessGlow.alpha = 0;
+        this.correctGuessGlow.scale.set(0.8);
+
+        this.addChild(
+            this.correctGuessGlow
+        );
+
         this.sprite = new Sprite(this.headsTexture);
 
         this.sprite.width = 140;
@@ -78,6 +102,120 @@ export class Coin extends Container {
         this.addChild(this.sprite);
        
     }
+
+
+    playCorrectGuessEffect(
+        intensity: number = 1
+    ): Promise<void> {
+
+        if (
+            this.correctEffectAnimationId !==
+            undefined
+        ) {
+
+            cancelAnimationFrame(
+                this.correctEffectAnimationId
+            );
+
+            this.correctEffectAnimationId =
+                undefined;
+        }
+
+        return new Promise(resolve => {
+
+            const duration =
+                260;
+
+            const startTime =
+                performance.now();
+
+            const animate = (
+                currentTime: number
+            ) => {
+
+                const progress =
+                    Math.min(
+                        1,
+                        (
+                            currentTime -
+                            startTime
+                        ) / duration
+                    );
+
+                /*
+                    Szybki błysk:
+                    0 → maksimum → 0
+                */
+                const flash =
+                    Math.sin(
+                        progress *
+                        Math.PI
+                    );
+
+                this.correctGuessGlow.alpha =
+                    flash *
+                    Math.min(
+                        0.85,
+                        0.5 +
+                        intensity * 0.1
+                    );
+
+                this.correctGuessGlow.scale.set(
+                    0.8 +
+                    progress * 0.55
+                );
+
+                /*
+                    Krótki bounce monety.
+                */
+                const bounce =
+                    Math.sin(
+                        progress *
+                        Math.PI
+                    );
+
+                const scale =
+                    1 +
+                    bounce *
+                    (
+                        0.06 +
+                        intensity * 0.015
+                    );
+
+                this.sprite.scale.set(
+                    scale
+                );
+
+                if (progress < 1) {
+
+                    this.correctEffectAnimationId =
+                        requestAnimationFrame(
+                            animate
+                        );
+
+                    return;
+                }
+
+                this.sprite.scale.set(1);
+
+                this.correctGuessGlow.alpha = 0;
+                this.correctGuessGlow.scale.set(0.8);
+
+                this.correctEffectAnimationId =
+                    undefined;
+
+                resolve();
+            };
+
+            this.correctEffectAnimationId =
+                requestAnimationFrame(
+                    animate
+                );
+        });
+    }
+
+
+
 
     setSide(side: CoinSide) {
 
@@ -109,6 +247,10 @@ export class Coin extends Container {
         this.currentFrame = 0;
         this.frameTimer = 0;
 
+        this.correctGuessGlow.alpha = 0;
+        this.correctGuessGlow.scale.set(0.8);
+
+        this.sprite.scale.set(1);
     }
 
     reveal(

@@ -65,7 +65,8 @@ export class CoinRow extends Container {
 
 
     async spin(
-        result: readonly CoinOutcome[]
+        result: readonly CoinOutcome[],
+        selectedCombination: readonly CoinSide[]
     ) {
 
         this.coins.forEach(
@@ -79,24 +80,18 @@ export class CoinRow extends Container {
             }
         );
 
-        /*
-            Uruchamiamy środkowy loop niezależnie.
-            Nie zatrzymujemy przez to animacji.
-        */
         const middleStartPromise =
             this.startMiddleLoop();
 
         try {
 
-            await this.revealResult(result);
+            await this.revealResult(
+                result,
+                selectedCombination
+            );
 
         } finally {
 
-            /*
-                Czekamy, aż ewentualne opóźnione
-                uruchomienie loopa się wykona,
-                żeby nie wystartował po stop().
-            */
             await middleStartPromise;
 
             this.audioManager.stop(
@@ -123,7 +118,8 @@ export class CoinRow extends Container {
 
 
     private async revealResult(
-        result: readonly CoinOutcome[]
+        result: readonly CoinOutcome[],
+        selectedCombination: readonly CoinSide[]
     ) {
 
         const goldenCount =
@@ -133,6 +129,8 @@ export class CoinRow extends Container {
             ).length;
 
         let revealedGoldenCoins = 0;
+
+        let correctGuessCount = 0;
 
         for (
             let index = 0;
@@ -144,9 +142,16 @@ export class CoinRow extends Container {
                 result[index];
 
             const isLastCoin =
-                index === result.length - 1;
+                index ===
+                result.length - 1;
 
-            await this.delay(500);
+            const isCorrectGuess =
+                outcome.side ===
+                selectedCombination[index];
+
+            await this.delay(
+                500
+            );
 
             if (!outcome.isGolden) {
 
@@ -155,7 +160,6 @@ export class CoinRow extends Container {
                     this.audioManager.stop(
                         SoundId.SPIN_MIDDLE
                     );
-
                 }
 
                 this.audioManager.play(
@@ -169,6 +173,31 @@ export class CoinRow extends Container {
                     outcome.side
                 );
 
+                /*
+                    Feedback za poprawnie
+                    przewidzianą monetę.
+                */
+                if (isCorrectGuess) {
+
+                    correctGuessCount++;
+
+                    this.playCorrectGuessSound(
+                        correctGuessCount
+                    );
+
+                    /*
+                        Nie używamy await.
+
+                        Efekt wizualny działa równolegle
+                        i nie blokuje odsłaniania
+                        następnej monety.
+                    */
+                    void this.coins[index]
+                        .playCorrectGuessEffect(
+                            correctGuessCount
+                        );
+                }
+
                 continue;
             }
 
@@ -181,6 +210,7 @@ export class CoinRow extends Container {
                 goldenCount === 3 &&
                 revealedGoldenCoins === 3
             ) {
+
                 intensity = 4;
             }
 
@@ -200,7 +230,6 @@ export class CoinRow extends Container {
                             this.audioManager.stop(
                                 SoundId.SPIN_MIDDLE
                             );
-
                         }
 
                         this.audioManager.play(
@@ -214,7 +243,6 @@ export class CoinRow extends Container {
                                     )
                             }
                         );
-
                     }
                 );
         }
@@ -223,6 +251,55 @@ export class CoinRow extends Container {
             goldenCount > 0
                 ? 450
                 : 250
+        );
+    }
+
+
+    private playCorrectGuessSound(
+        correctGuessCount: number
+    ) {
+
+        let soundId:
+            SoundId;
+
+        switch (correctGuessCount) {
+
+            case 1:
+
+                soundId =
+                    SoundId.COIN_ONE_CORRECT;
+
+                break;
+
+            case 2:
+
+                soundId =
+                    SoundId.COIN_TWO_CORRECT;
+
+                break;
+
+            case 3:
+
+                soundId =
+                    SoundId.COIN_THREE_CORRECT;
+
+                break;
+
+            default:
+
+                return;
+        }
+
+        this.audioManager.play(
+            soundId,
+            {
+                volume:
+                    Math.min(
+                        1,
+                        0.65 +
+                        correctGuessCount * 0.08
+                    )
+            }
         );
     }
 

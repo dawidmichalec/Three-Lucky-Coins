@@ -22,6 +22,12 @@ export const AUDIO_REGISTRY = {
 
     [SoundId.LOSE]: AudioCategory.SFX,
 
-    [SoundId.MAIN_THEME]: AudioCategory.MUSIC
+    [SoundId.MAIN_THEME]: AudioCategory.MUSIC,
+
+    [SoundId.COIN_ONE_CORRECT]: AudioCategory.SFX,
+
+    [SoundId.COIN_TWO_CORRECT]: AudioCategory.SFX,
+
+    [SoundId.COIN_THREE_CORRECT]: AudioCategory.SFX
 
 };

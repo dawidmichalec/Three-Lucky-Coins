@@ -8,6 +8,9 @@ import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
 import { PerkContainer } from "./components/PerkContainer";
 import { OddsTable } from "../game/probability/OddsTypes";
 import { MultiplierEffect } from "./effects/MultiplierEffect";
+import { AudioManager } from "../core/AudioManager";
+import { SoundId } from "../audio/SoundId";
+
 
 export class GameUI extends Container {
     private balanceValue: Text;
@@ -30,6 +33,9 @@ export class GameUI extends Container {
     private multiplierEffect:MultiplierEffect;
 
     private currentFightTargetBalance = 0;
+
+    private audioManager = AudioManager.getInstance();
+
 
     constructor (
         private currentDealer: DealerData
@@ -509,12 +515,14 @@ export class GameUI extends Container {
         ) {
 
             this.animateMultiplierIncrease();
+            this.audioManager.play(
+                SoundId.MULTIPLIER_INCREASED,
+                {
+                    loop: false,
+                    volume:0.5
+                }
+            );
 
-
-            /*
-                MultiplierEffect sam sprawdzi,
-                czy wartość jest wielokrotnością 5.
-            */
 
             this.multiplierEffect.play(
                 multiplier
@@ -534,10 +542,6 @@ export class GameUI extends Container {
 
     private animateMultiplierIncrease() {
 
-        /*
-            Jeśli poprzednia animacja jeszcze trwa,
-            zatrzymujemy ją i zaczynamy od początku.
-        */
         if (
             this.multiplierAnimationId !==
             undefined

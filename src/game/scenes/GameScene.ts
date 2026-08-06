@@ -34,6 +34,8 @@ import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles"
 import { DealerSkillId } from "../dealers/DealerSkill";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerOddsProfile } from "../probability/OddsTypes";
+import { AudioManager } from '../../core/AudioManager';
+import { SoundId } from '../../audio/SoundId';
 
 
 export class GameScene extends BaseScene {
@@ -92,6 +94,9 @@ export class GameScene extends BaseScene {
 
     private fightStartingBalance = 0;
     private fightTargetBalance = 0;
+
+    private audioManager = AudioManager.getInstance();
+
 
     constructor (
         private app: Application,
@@ -667,16 +672,18 @@ export class GameScene extends BaseScene {
             goldenResult
         );
 
+        const selected =
+            this.controller.getCurrentCombo();
+
         await this.coinRow.spin(
-            goldenResult
+            goldenResult,
+            selected
         );
 
         this.statsManager.recordCoinsTossed(
             resultSides.length
         );
 
-        const selected =
-            this.controller.getCurrentCombo();
 
         const win =
             this.isWin(
@@ -711,6 +718,14 @@ export class GameScene extends BaseScene {
 
             this.streakMultiplier += this.getStreakMultiplierGrowth();
 
+            this.audioManager.play(
+                SoundId.WIN,
+                {
+                    loop: false,
+                    volume: 0.7
+                }
+            );
+            
             this.gameUI.updateWon(
                 winAmount
             );

@@ -10,14 +10,20 @@ export enum SoundId {
 
     BASIC_BUTTON_CLICK = "button_click",
 
-    TOSS_BUTTON_CLICKED = "toss_button_click",
+    TOSS_BUTTON_CLICKED = "toss_button_clicked",
 
-    MULTIPLIER_INCREASED = "menu_open",
+    MULTIPLIER_INCREASED = "multiplier_increased",
 
     WIN = "win",
 
     LOSE = "lose",
 
-    MAIN_THEME = "main_theme"
+    MAIN_THEME = "main_theme",
+
+    COIN_ONE_CORRECT = "coin_one_correct",
+
+    COIN_TWO_CORRECT = "coin_two_correct",
+
+    COIN_THREE_CORRECT = "coin_three_correct"
 
 }
