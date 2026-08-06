@@ -34,7 +34,7 @@ export class ProbabilityDisplay extends Container {
         const probabilityLabel = new LocalizedText(
             "probability",
             {
-                fontFamily: 'Oswald-Bold',
+                fontFamily: 'Anek-Kannada Bold',
                 fontSize: 38,
                 fontWeight: 'bold',
                 fill:0xffde59,

@@ -67,6 +67,8 @@ export default {
     popUpButtonText: "OK",
     insufficientBalance: "Insufficient balance",
     gameOver: "GAME OVER",
+    youWon: "YOU WON",
+    start: "START",
 
     
 
@@ -95,11 +97,11 @@ export default {
     nextOpponent: "NEXT OPPONENT",
     dealerDescription: "Description",
     noSkills: "This opponent has no special skills.",
-    benDescription: "Ben is ",
+    benDescription: "Ben is a friendly junior dealer who's always happy to welcome new players.\n\nHe won't make things too difficult, making him the perfect opponent to learn the ropes.",
     benSaying: "Don't worry, I'm gonna go easy on you",
     hillaryDescription: "Experienced dealer who has been working at a casino for a few years.",
     hillarySaying: "No rush. Let's enjoy the game!",
-    timothyDescription: "Working at a casino is his second job. He needs to work here because he needs money for alimony.  That’ s why he’s eagerly forcing tips on the players.",
+    timothyDescription: "Working at a casino is his second job. He needs to work here because he needs money for alimony. \n\nThat’ s why he’s eagerly forcing tips on the players.",
     timothySaying: "How about a nice tip for a hard working man?",
 
 

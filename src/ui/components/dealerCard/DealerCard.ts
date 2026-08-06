@@ -115,4 +115,9 @@ export class DealerCard extends Container {
         this.addChild(this.objectiveButton);
     }
 
+    setDisabled(value: boolean){
+        this.skillsButton.setDisabled(value);
+        this.objectiveButton.setDisabled(value);
+    }
+
 }

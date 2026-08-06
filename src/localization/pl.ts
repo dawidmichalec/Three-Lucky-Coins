@@ -67,6 +67,8 @@ export default {
     popUpButtonText: "OK",
     insufficientBalance: "Niewystarczające saldo",
     gameOver: "KONIEC GRY",
+    youWon: "WYGRAŁEŚ",
+    start: "START",
 
 
     // PROBABILITY DISPLAY TEXTS
@@ -91,14 +93,14 @@ export default {
     skills: "Umiejętności",
     objective: "Cel",
     achieveABalanceOf: "Saldo: ",
-    nextOpponent: "NEXT OPPONENT",
+    nextOpponent: "NASTĘPNY PRZECIWNIK",
     dealerDescription: "Opis",
     noSkills: "Ten przeciwnik nie ma żadnych specjalnych umiejętności.",
-    benDescription: "Ben is ",
+    benDescription: "Ben to przyjazny młodszy krupier, który zawsze chętnie wita nowych graczy.\n\nNie będzie zbytnio utrudniał rozgrywki, dzięki czemu świetnie nadaje się do nauki podstaw. ",
     benSaying: "Nie martw się, dam Ci fory",
     hillaryDescription: "Doświadczona krupierka, która pracuje w kasynie od kilku lat.",
     hillarySaying: "Bez pośpiechu. Cieszmy się grą!",
-    timothyDescription: "Praca w kasynie to jego druga praca. Musi tu pracować, bo potrzebuje pieniędzy na alimenty. Dlatego tak chętnie wymusza na graczach napiwki.",
+    timothyDescription: "Praca w kasynie to jego druga praca. Musi tu pracować, bo potrzebuje pieniędzy na alimenty.\n\nDlatego tak chętnie wymusza na graczach napiwki.",
     timothySaying: "Co powiesz na ładny napiwek dla ciężko pracującego człowieka?",
 
     

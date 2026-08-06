@@ -112,6 +112,22 @@ import { LocalizationManager } from './core/LocalizationManager';
     await fontCrimsonProItalic.load();
     document.fonts.add(fontCrimsonProItalic);
 
+    const fontJackCondensed = new FontFace('JackCondensed', 'url(/assets/main/fonts/JackCondensed/JackCondensed.ttf)');
+    await fontJackCondensed.load();
+    document.fonts.add(fontJackCondensed);
+
+    const fontAnekKannadaSemiCondensed = new FontFace('Anek-Kannada SemiCondensed', 'url(/assets/main/fonts/anek-kannada.semicondensed-extrabold.ttf)');
+    await fontAnekKannadaSemiCondensed.load();
+    document.fonts.add(fontAnekKannadaSemiCondensed);
+
+    const fontAnekKannadaCondensed = new FontFace('Anek-Kannada Condensed', 'url(/assets/main/fonts/anek-kannada.condensed-extrabold.ttf)');
+    await fontAnekKannadaCondensed.load();
+    document.fonts.add(fontAnekKannadaCondensed);
+
+    const fontAnekKannadaBold = new FontFace('Anek-Kannada Bold', 'url(/assets/main/fonts/anek-kannada.bold.ttf)');
+    await fontAnekKannadaBold.load();
+    document.fonts.add(fontAnekKannadaBold);
+
     const fontCrimsonProRegular = new FontFace('CrimsonPro-Regular', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Regular.ttf)');
     await fontCrimsonProRegular.load();
     document.fonts.add(fontCrimsonProRegular);

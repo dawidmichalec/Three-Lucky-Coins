@@ -127,7 +127,7 @@ export class GameUI extends Container {
             "winLabel",
             {
                 font: 'Open Sans',
-                fontSize: 34,
+                fontSize: 38,
                 fontWeight: 'bold',
                 fill: 0xffffff,
                 wordWrap: true,
@@ -148,7 +148,7 @@ export class GameUI extends Container {
             text: '0.00',
             style: {
                 font: 'Open Sans',
-                fontSize: 34,
+                fontSize: 38,
                 fontWeight: 'bold',
                 fill: 0xffffff,
 
@@ -171,8 +171,8 @@ export class GameUI extends Container {
         const multiplierLabel = new LocalizedText(
             "multiplier",
             {
-                fontFamily: 'Oswald-Bold',
-                fontSize: 42,
+                fontFamily: 'Anek-Kannada Bold',
+                fontSize: 46,
                 fontWeight: 'bold',
                 fill: 0xffffff,
                 wordWrap: true,
@@ -214,8 +214,8 @@ export class GameUI extends Container {
         this.multiplierValue = new Text({
             text: "x1",
             style: {
-                font: "Oswald-Bold",
-                fontSize: 124,
+                fontFamily: "JackCondensed",
+                fontSize: 128,
                 fontWeight: "bold",
                 fill: 0xffffff,
                 wordWrap: true,
@@ -393,6 +393,16 @@ export class GameUI extends Container {
         this.addChild(
             this.dealerCard
         );
+    }
+
+    setDisabled(value: boolean) {
+
+        this.dealerCard.setDisabled(value);
+        if (this.dealerSkillsPanel.visible === true || this.dealerObjectivePanel.visible === true) {
+            this.dealerSkillsPanel.visible = false;
+            this.dealerObjectivePanel.visible = false;
+        }
+
     }
 
     updateBalance(balance: number) {

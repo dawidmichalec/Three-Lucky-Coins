@@ -28,6 +28,7 @@ import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { CoinOutcome } from "../goldenCoins/GoldenCoinTypes";
 import { DealerData } from "../dealers/DealerData";
 import { BEN_DATA } from "../dealers/DealerRegistry";
+import { NextOpponentOverlay } from '../../ui/overlays/NextOpponentOverlay';
 
 
 export class GameScene extends BaseScene {
@@ -68,6 +69,8 @@ export class GameScene extends BaseScene {
 
     private currentDealer: DealerData = BEN_DATA;
 
+    private nextOpponentOverlay!: NextOpponentOverlay;
+
     constructor (
         private app: Application,
         private popupManager: PopupManager,
@@ -80,6 +83,8 @@ export class GameScene extends BaseScene {
         this.setupTicker();
 
         const layout = LayoutManager.getInstance();
+
+        void this.createNextOpponentOverlay();
 
         // StatsManager
 
@@ -206,6 +211,33 @@ export class GameScene extends BaseScene {
         this.addChild(this.cheatPanel);
         this.registerCheats();
         
+    }
+
+
+    private async createNextOpponentOverlay() {
+
+        const layout =
+            LayoutManager.getInstance();
+
+        this.nextOpponentOverlay =
+            new NextOpponentOverlay(
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT,
+                this.currentDealer,
+                () => {
+                    this.unlockControls();
+                }
+            );
+
+        await this.nextOpponentOverlay.init();
+
+        this.nextOpponentOverlay.zIndex = 4000;
+
+        this.addChild(
+            this.nextOpponentOverlay
+        );
+
+        this.nextOpponentOverlay.show();
     }
 
 
@@ -418,12 +450,14 @@ export class GameScene extends BaseScene {
 
         this.controls.setDisabled(true);
         this.hamburgerMenu.setDisabled(true);
+        this.gameUI.setDisabled(true);
     }
 
     private unlockControls() {
 
         this.controls.setDisabled(false);
         this.hamburgerMenu.setDisabled(false);
+        this.gameUI.setDisabled(false);
     }
 
     // TICKER
