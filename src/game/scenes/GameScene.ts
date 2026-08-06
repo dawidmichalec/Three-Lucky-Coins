@@ -22,15 +22,18 @@ import { LayoutManager } from '../../core/LayoutManager';
 import { LocalizedText } from '../../localization/LocalizedText';
 import { TranslationKey } from '../../core/LocalizationManager';
 import { OddsManager } from "../probability/OddsManager";
-import { BEN_PROFILE } from "../probability/DealerOddsProfiles";
 import { getCombinationConfig } from "../data/CombinationUtils";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { CoinOutcome } from "../goldenCoins/GoldenCoinTypes";
 import { DealerData } from "../dealers/DealerData";
-import { BEN_DATA } from "../dealers/DealerRegistry";
+import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
 import { NextOpponentOverlay } from '../../ui/overlays/NextOpponentOverlay';
 import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
 import { GameOverOverlay } from '../../ui/overlays/GameOverlay';
+import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
+import { DealerSkillId } from "../dealers/DealerSkill";
+import { ObjectiveType } from "../objectives/ObjectiveTypes";
+import { DealerOddsProfile } from "../probability/OddsTypes";
 
 
 export class GameScene extends BaseScene {
@@ -69,13 +72,23 @@ export class GameScene extends BaseScene {
 
     private goldenCoinManager = GoldenCoinManager.getInstance();
 
-    private currentDealer: DealerData = BEN_DATA;
-
     private nextOpponentOverlay!: NextOpponentOverlay;
 
     private dealerVictoryOverlay:DealerVictoryOverlay;
 
     private gameOverOverlay:GameOverOverlay;
+
+    private readonly dealerOrder:
+        readonly DealerData[] = [
+            BEN_DATA,
+            HILLARY_DATA
+        ];
+
+    private currentDealerIndex = 0;
+
+    private isChangingDealer = false;
+
+    private currentDealer: DealerData = this.dealerOrder[0];
 
     constructor (
         private app: Application,
@@ -95,7 +108,7 @@ export class GameScene extends BaseScene {
         this.statsManager = StatsManager.getInstance();
 
         // Player
-        this.player = new Player(10);
+        this.player = new Player(25);
 
         // UI
         this.gameUI = new GameUI(this.currentDealer);
@@ -276,6 +289,9 @@ export class GameScene extends BaseScene {
                 layout.DESIGN_HEIGHT,
                 this.currentDealer,
                 () => {
+
+                    this.roundState = "ready";
+
                     this.unlockControls();
                 }
             );
@@ -294,14 +310,253 @@ export class GameScene extends BaseScene {
 
     private prepareNextRound() {
 
+        const profile =
+            this.getCurrentDealerOddsProfile();
+
         const odds =
             this.oddsManager.rollOdds(
-                BEN_PROFILE
+                profile
             );
 
         this.gameUI.updateProbability(
             odds
         );
+    }
+
+
+    private getCurrentDealerOddsProfile():
+        DealerOddsProfile {
+
+        switch (this.currentDealer.id) {
+
+            case HILLARY_DATA.id:
+                return HILLARY_PROFILE;
+
+            case BEN_DATA.id:
+            default:
+                return BEN_PROFILE;
+        }
+    }
+
+
+    private isCurrentDealerDefeated():
+        boolean {
+
+        switch (
+            this.currentDealer.objectiveType
+        ) {
+
+            case ObjectiveType.REACH_BALANCE:
+
+                return (
+                    this.player.balance >=
+                    this.currentDealer.objectiveValue
+                );
+
+            default:
+
+                console.warn(
+                    "Unsupported objective type:",
+                    this.currentDealer.objectiveType
+                );
+
+                return false;
+        }
+    }
+
+
+    private async handleDealerDefeated():
+        Promise<void> {
+
+        if (this.isChangingDealer) {
+            return;
+        }
+
+        this.isChangingDealer = true;
+
+        this.lockControls();
+
+        /*
+            Gracz ma chwilę na zobaczenie:
+            - wyniku monet,
+            - wygranej,
+            - nowego salda,
+            - animacji multipliera.
+        */
+        await this.delay(400);
+
+        await this.dealerVictoryOverlay.play();
+
+        const nextDealer =
+            this.getNextDealer();
+
+        if (!nextDealer) {
+
+            console.log(
+                "All currently available dealers defeated."
+            );
+
+            /*
+                Tymczasowo pokazujemy podsumowanie runu.
+                Później tutaj znajdzie się końcowe zwycięstwo.
+            */
+
+            this.statsManager
+                .getRunStats()
+                .won = true;
+
+            await this.showRunSummaryWithFade();
+
+            return;
+        }
+
+        await this.loadDealer(
+            nextDealer
+        );
+
+        this.isChangingDealer = false;
+    }
+
+
+    private getNextDealer():
+        DealerData | null {
+
+        const nextIndex =
+            this.currentDealerIndex + 1;
+
+        if (
+            nextIndex >=
+            this.dealerOrder.length
+        ) {
+            return null;
+        }
+
+        this.currentDealerIndex =
+            nextIndex;
+
+        return this.dealerOrder[nextIndex];
+    }
+
+
+    private async loadDealer(
+        dealer: DealerData
+    ): Promise<void> {
+
+        this.currentDealer =
+            dealer;
+
+        /*
+            Nowa walka zaczyna się od x1.
+            Dzięki temu passa nie przechodzi
+            automatycznie między dealerami.
+        */
+
+        this.streakMultiplier = 1;
+
+        this.gameUI.updateMultiplier(
+            this.streakMultiplier
+        );
+
+        this.gameUI.updateWon(0);
+
+        /*
+            Aktualizacja małej karty i paneli.
+        */
+
+        await this.gameUI.setDealer(
+            dealer
+        );
+
+        /*
+            Nowe prawdopodobieństwa dealera
+            przygotowujemy przed startem walki.
+        */
+
+        this.prepareNextRound();
+
+        /*
+            Tworzymy nowy ekran prezentacji.
+        */
+
+        await this.replaceNextOpponentOverlay(
+            dealer
+        );
+    }
+
+
+    private async replaceNextOpponentOverlay(
+        dealer: DealerData
+    ): Promise<void> {
+
+        const layout =
+            LayoutManager.getInstance();
+
+        if (this.nextOpponentOverlay) {
+
+            this.removeChild(
+                this.nextOpponentOverlay
+            );
+
+            this.nextOpponentOverlay.destroy({
+                children: true
+            });
+        }
+
+        this.nextOpponentOverlay =
+            new NextOpponentOverlay(
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT,
+                dealer,
+                () => {
+
+                    this.roundState = "ready";
+
+                    this.isChangingDealer =
+                        false;
+
+                    this.unlockControls();
+                }
+            );
+
+        this.nextOpponentOverlay.zIndex =
+            4000;
+
+        this.addChild(
+            this.nextOpponentOverlay
+        );
+
+        this.sortChildren();
+
+        /*
+            Czarny ekran pojawia się od razu.
+        */
+
+        this.nextOpponentOverlay.show();
+
+        /*
+            Ładujemy duży avatar Hillary.
+        */
+
+        await this.nextOpponentOverlay.init();
+    }
+
+
+    private getStreakMultiplierGrowth():
+        number {
+
+        const hasSlowerMultiplierGrowth =
+            this.currentDealer.skills.some(
+                skill =>
+                    skill.id ===
+                    DealerSkillId
+                        .SLOWER_MULTIPLIER_GROWTH
+            );
+
+        if (hasSlowerMultiplierGrowth) {
+            return 0.5;
+        }
+
+        return 1;
     }
 
 
@@ -430,7 +685,7 @@ export class GameScene extends BaseScene {
                 this.player.balance
             );
 
-            this.streakMultiplier++;
+            this.streakMultiplier += this.getStreakMultiplierGrowth();
 
             this.gameUI.updateWon(
                 winAmount
@@ -453,20 +708,44 @@ export class GameScene extends BaseScene {
 
         console.log(this.statsManager.recordCombination);
 
-        this.gameUI.updateMultiplier(this.streakMultiplier);
+        this.gameUI.updateMultiplier(
+            this.streakMultiplier
+        );
+
+        /*
+            Najpierw sprawdzamy zwycięstwo nad dealerem.
+        */
+        if (
+            this.isCurrentDealerDefeated()
+        ) {
+
+            this.roundState = "result";
+
+            await this.handleDealerDefeated();
+
+            return;
+        }
+
+        /*
+            Dopiero później Game Over.
+        */
+        if (!this.canPlay()) {
+
+            this.roundState = "result";
+
+            this.triggerGameOver();
+
+            return;
+        }
+
+        /*
+            Normalne przygotowanie kolejnej rundy.
+        */
+        this.prepareNextRound();
+
+        this.roundState = "ready";
 
         this.unlockControls();
-        this.roundState = 'ready';
-
-        this.checkGameOver();
-
-        // NEW ROUND
-
-        if (this.canPlay()) {
-
-            this.prepareNextRound();
-
-        }
         
     }
 

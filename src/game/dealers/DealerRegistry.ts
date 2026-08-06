@@ -17,7 +17,7 @@ export const BEN_DATA: DealerData = {
     objectiveType:
         ObjectiveType.REACH_BALANCE,
 
-    objectiveValue: 100,
+    objectiveValue: 50,
 
     skills: [],
 
@@ -43,7 +43,7 @@ export const HILLARY_DATA: DealerData = {
     objectiveType:
         ObjectiveType.REACH_BALANCE,
 
-    objectiveValue: 300,
+    objectiveValue: 100,
 
     skills: [
         {
@@ -81,7 +81,7 @@ export const TIMOTHY_DATA: DealerData = {
     objectiveType:
         ObjectiveType.REACH_BALANCE,
 
-    objectiveValue: 500,
+    objectiveValue: 200,
 
     skills: [
         {

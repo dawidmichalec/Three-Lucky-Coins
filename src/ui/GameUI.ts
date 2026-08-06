@@ -388,6 +388,47 @@ export class GameUI extends Container {
         );
     }
 
+
+    async setDealer(
+        dealer: DealerData
+    ): Promise<void> {
+
+        this.currentDealer =
+            dealer;
+
+        /*
+            Aktualizujemy panele.
+        */
+
+        this.dealerSkillsPanel
+            .setDealer(dealer);
+
+        this.dealerObjectivePanel
+            .setDealer(dealer);
+
+        /*
+            Usuwamy starą kartę.
+        */
+
+        if (this.dealerCard) {
+
+            this.removeChild(
+                this.dealerCard
+            );
+
+            this.dealerCard.destroy({
+                children: true
+            });
+        }
+
+        /*
+            createDealerCard() korzysta już
+            z this.currentDealer.
+        */
+
+        await this.createDealerCard();
+    }
+
     setDisabled(value: boolean) {
 
         if (this.dealerCard) {

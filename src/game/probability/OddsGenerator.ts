@@ -50,12 +50,12 @@ export class OddsGenerator {
         */
 
         const possibleHeadsProbabilities = [
+            0.02,
+            0.05,
             0.10,
-            0.20,
-            0.30,
-            0.70,
-            0.80,
-            0.90
+            0.90,
+            0.95,
+            0.98
         ];
 
         const randomIndex =
@@ -76,12 +76,10 @@ export class OddsGenerator {
     private static generateMediumCoinOdds(): CoinOdds {
 
         const possibleHeadsProbabilities = [
-            0.35,
-            0.40,
-            0.45,
-            0.55,
-            0.60,
-            0.65
+            0.10,
+            0.25,
+            0.75,
+            0.90
         ];
 
         const randomIndex =

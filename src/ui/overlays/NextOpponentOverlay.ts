@@ -59,8 +59,6 @@ export class NextOpponentOverlay extends Container {
     // Container for opponent's photo
 
     this.photoContainer = new Container();
-    this.photoContainer.width = 643.4;
-    this.photoContainer.height = 643.4;
 
     this.photoContainer.position.set(284.6, 180);
 
@@ -70,8 +68,6 @@ export class NextOpponentOverlay extends Container {
     this.scrollableContainer.position.set(1060.2, 221.1);
 
     this.scrollContent = new Container();
-    this.scrollContent.width = 520;
-    this.scrollContent.height = 1230;
     this.scrollContent.position.set(0,0);
 
     this.scrollableContainer.addChild(this.scrollContent);
@@ -154,82 +150,122 @@ export class NextOpponentOverlay extends Container {
   
     }
 
-    private createScrollContent(dealer: DealerData){
+    private createScrollContent(
+        dealer: DealerData
+    ) {
+
         let currentY = 0;
 
-        const nameLabel = new Text({
-            text: dealer.name,
-            style: {
-                font: 'Open Sans',
-                fontWeight: "bold",
-                fontSize: 38,
-                fill: 0xffd21f
-            }
-        });
+        const nameLabel =
+            new Text({
+                text: dealer.name,
+                style: {
+                    font: "Open Sans",
+                    fontWeight: "bold",
+                    fontSize: 38,
+                    fill: 0xffd21f
+                }
+            });
 
-        nameLabel.position.set(0,currentY);
+        nameLabel.position.set(
+            0,
+            currentY
+        );
 
-        const titleLabel = new LocalizedText(
-            dealer.title,
-            {
-                font: 'Open Sans',
-                fontWeight: "bold",
-                fontSize: 24,
-                fill: 0xffd21f
-            }
-        )
-
-        currentY = 0 + nameLabel.height + 6;
-
-        titleLabel.position.set(0, currentY);
+        currentY =
+            nameLabel.y +
+            nameLabel.height +
+            6;
 
 
-        const descriptionLabel = new LocalizedText(
-            "dealerDescription",
-            {
-                font: 'Open Sans',
-                fontWeight: "bold",
-                fontSize: 38,
-                fill: 0xffd21f
-            }
-        )
+        const titleLabel =
+            new LocalizedText(
+                dealer.title,
+                {
+                    font: "Open Sans",
+                    fontWeight: "bold",
+                    fontSize: 24,
+                    fill: 0xffd21f
+                }
+            );
 
-        currentY = currentY + titleLabel.height + 24;
+        titleLabel.position.set(
+            0,
+            currentY
+        );
+
+        currentY =
+            titleLabel.y +
+            titleLabel.height +
+            24;
+
+
+        const descriptionLabel =
+            new LocalizedText(
+                "dealerDescription",
+                {
+                    font: "Open Sans",
+                    fontWeight: "bold",
+                    fontSize: 38,
+                    fill: 0xffd21f
+                }
+            );
 
         descriptionLabel.position.set(
             0,
             currentY
-        )
+        );
 
-        const dealerDescription = new LocalizedText(
-            dealer.dealerDescription,
-            {
-                font: 'Open Sans',
-                fontSize: 24,
-                fill: 0xffffff,
-                wordWrap: true,
-                wordWrapWidth: 520
-            }
-        )
-
-        currentY = currentY + descriptionLabel.height + 24;
-
-        dealerDescription.position.set(0, currentY);
+        currentY =
+            descriptionLabel.y +
+            descriptionLabel.height +
+            12;
 
 
-        const skillsLabel = new LocalizedText(
-            "skills",
-            {
-                font: 'Open Sans',
-                fontWeight: "bold",
-                fontSize: 38,
-                fill: 0xffd21f
-            }
-        )
+        const dealerDescription =
+            new LocalizedText(
+                dealer.dealerDescription,
+                {
+                    font: "Open Sans",
+                    fontSize: 24,
+                    fill: 0xffffff,
+                    wordWrap: true,
+                    wordWrapWidth: 520
+                }
+            );
 
-        currentY = currentY + dealerDescription.height + 24;
+        dealerDescription.position.set(
+            0,
+            currentY
+        );
 
-        skillsLabel.position.set(0, currentY);
+        currentY =
+            dealerDescription.y +
+            dealerDescription.height +
+            24;
+
+
+        const skillsLabel =
+            new LocalizedText(
+                "skills",
+                {
+                    font: "Open Sans",
+                    fontWeight: "bold",
+                    fontSize: 38,
+                    fill: 0xffd21f
+                }
+            );
+
+        skillsLabel.position.set(
+            0,
+            currentY
+        );
+
+        currentY =
+            skillsLabel.y +
+            skillsLabel.height +
+            12;
+
 
         this.scrollContent.addChild(
             nameLabel,
@@ -238,6 +274,7 @@ export class NextOpponentOverlay extends Container {
             dealerDescription,
             skillsLabel
         );
+
 
         if (dealer.skills.length === 0) {
 
@@ -255,7 +292,7 @@ export class NextOpponentOverlay extends Container {
 
             noSkillsText.position.set(
                 0,
-                currentY + skillsLabel.height + 6
+                currentY
             );
 
             this.scrollContent.addChild(
@@ -264,6 +301,7 @@ export class NextOpponentOverlay extends Container {
 
             return;
         }
+
 
         for (const skill of dealer.skills) {
 
@@ -280,12 +318,11 @@ export class NextOpponentOverlay extends Container {
                     }
                 );
 
-            currentY + skillsLabel.height + 6;
-
             skillName.position.set(
                 0,
                 currentY
             );
+
 
             const skillDescription =
                 new LocalizedText(
@@ -301,23 +338,25 @@ export class NextOpponentOverlay extends Container {
 
             skillDescription.position.set(
                 0,
-                currentY +
+                skillName.y +
                 skillName.height +
                 6
             );
+
 
             this.scrollContent.addChild(
                 skillName,
                 skillDescription
             );
 
+
             currentY =
                 skillDescription.y +
                 skillDescription.height +
                 24;
         }
-        
     }
+
 
   show() {
 
