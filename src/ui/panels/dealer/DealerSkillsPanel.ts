@@ -22,54 +22,46 @@ import {
 
 export class DealerSkillsPanel extends Container {
 
+    private readonly headerHeight = 90;
+    private readonly bottomPadding = 30;
+    private readonly minHeight = 180;
+
     private bg: Graphics;
 
     private skillsContent!: Container;
 
-    private skillsDescriptionContainer!:
+    private skillsDescriptionContainer?:
         ScrollableContainer;
 
 
     constructor(
-        width: number,
-        height: number
+        private panelWidth: number,
+        private maxHeight: number
     ) {
 
         super();
 
-        this.bg = new Graphics()
-            .roundRect(
-                0,
-                0,
-                width,
-                height,
-                50
-            )
-            .fill({
-                color: 0x000000
-            });
+        this.bg =
+            new Graphics();
 
         this.visible = false;
 
         this.eventMode = "static";
         this.cursor = "default";
 
-        this.addChild(this.bg);
+        this.addChild(
+            this.bg
+        );
+
 
         const skillsLabel =
             new LocalizedText(
                 "skills",
                 {
-                    fontFamily:
-                        "Oswald-Bold",
-
+                    fontFamily: "Oswald-Bold",
                     fontSize: 38,
-
-                    fontWeight:
-                        "bold",
-
-                    fill:
-                        0xffde59
+                    fontWeight: "bold",
+                    fill: 0xffde59
                 }
             );
 
@@ -78,19 +70,17 @@ export class DealerSkillsPanel extends Container {
             15
         );
 
-        this.createSkillsDescriptionContainer();
-
-        this.createCloseButton();
-
         this.addChild(
             skillsLabel
         );
+
+        void this.createCloseButton();
     }
 
 
-    setDealer(dealer: DealerData) {
-
-        this.skillsContent.removeChildren();
+    setDealer(
+        dealer: DealerData
+    ) {
 
         console.log(
             "SETTING DEALER SKILLS:",
@@ -98,7 +88,56 @@ export class DealerSkillsPanel extends Container {
             dealer.skills
         );
 
-        if (dealer.skills.length === 0) {
+        this.skillsContent =
+            new Container();
+
+        const contentHeight =
+            this.createSkillsContent(
+                dealer
+            );
+
+
+        const requiredPanelHeight =
+            this.headerHeight +
+            contentHeight +
+            this.bottomPadding;
+
+        const panelHeight =
+            Math.min(
+                this.maxHeight,
+                Math.max(
+                    this.minHeight,
+                    requiredPanelHeight
+                )
+            );
+
+        this.redrawBackground(
+            panelHeight
+        );
+
+        const viewportHeight =
+            panelHeight -
+            this.headerHeight -
+            this.bottomPadding;
+
+        this.rebuildScrollableContainer(
+            viewportHeight
+        );
+    }
+
+
+    private createSkillsContent(
+        dealer: DealerData
+    ): number {
+
+        let currentY = 0;
+
+
+        // NO SKILLS
+
+        if (
+            dealer.skills.length === 0
+        ) {
 
             const noSkillsText =
                 new LocalizedText(
@@ -121,20 +160,15 @@ export class DealerSkillsPanel extends Container {
                 noSkillsText
             );
 
-            return;
+            return noSkillsText.height;
         }
 
-        this.createSkillRows(dealer);
-    }
 
+        // SKILLS
 
-    private createSkillRows(
-        dealer: DealerData
-    ) {
-
-        let currentY = 0;
-
-        for (const skill of dealer.skills) {
+        for (
+            const skill of dealer.skills
+        ) {
 
             const skillName =
                 new LocalizedText(
@@ -154,6 +188,7 @@ export class DealerSkillsPanel extends Container {
                 currentY
             );
 
+
             const skillDescription =
                 new LocalizedText(
                     skill.description,
@@ -168,39 +203,63 @@ export class DealerSkillsPanel extends Container {
 
             skillDescription.position.set(
                 0,
-                currentY +
+                skillName.y +
                 skillName.height +
                 6
             );
+
 
             this.skillsContent.addChild(
                 skillName,
                 skillDescription
             );
 
+
             currentY =
                 skillDescription.y +
                 skillDescription.height +
                 28;
         }
+
+
+        return Math.max(
+            0,
+            currentY - 28
+        );
     }
 
 
-    private createSkillsDescriptionContainer() {
+    private rebuildScrollableContainer(
+        viewportHeight: number
+    ) {
+
+        if (
+            this.skillsDescriptionContainer
+        ) {
+
+            this.removeChild(
+                this.skillsDescriptionContainer
+            );
+
+            this.skillsDescriptionContainer.destroy({
+                children: false
+            });
+        }
+
 
         this.skillsDescriptionContainer =
             new ScrollableContainer(
                 530,
-                433
+                Math.max(
+                    1,
+                    viewportHeight
+                )
             );
 
         this.skillsDescriptionContainer.position.set(
             45,
-            90
+            this.headerHeight
         );
-
-        this.skillsContent =
-            new Container();
 
         this.skillsDescriptionContainer.addChild(
             this.skillsContent
@@ -212,6 +271,26 @@ export class DealerSkillsPanel extends Container {
     }
 
 
+    private redrawBackground(
+        panelHeight: number
+    ) {
+
+        this.bg.clear();
+
+        this.bg
+            .roundRect(
+                0,
+                0,
+                this.panelWidth,
+                panelHeight,
+                50
+            )
+            .fill({
+                color: 0x000000
+            });
+    }
+
+
     private async createCloseButton() {
 
         const close =
@@ -219,40 +298,57 @@ export class DealerSkillsPanel extends Container {
 
         await close.init();
 
+
         close.on(
             "pointerdown",
             () => {
-                close.scale.set(0.95);
+
+                close.scale.set(
+                    0.95
+                );
             }
         );
+
 
         close.on(
             "pointerup",
             () => {
-                close.scale.set(1);
+
+                close.scale.set(
+                    1
+                );
             }
         );
+
 
         close.on(
             "pointerupoutside",
             () => {
-                close.scale.set(1);
+
+                close.scale.set(
+                    1
+                );
             }
         );
+
 
         close.on(
             "pointertap",
             () => {
+
                 this.hide();
             }
         );
 
+
         close.position.set(
-            540,
+            this.panelWidth - 86,
             25
         );
 
-        this.addChild(close);
+        this.addChild(
+            close
+        );
     }
 
 

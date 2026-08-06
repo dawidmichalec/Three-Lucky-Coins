@@ -15,7 +15,7 @@ export const BEN_DATA: DealerData = {
         "/assets/main/icons/casino_staff_icons/ben_icon_small.png",
 
     objectiveType:
-        ObjectiveType.REACH_BALANCE,
+        ObjectiveType.INCREASE_BALANCE,
 
     objectiveValue: 50,
 
@@ -41,7 +41,7 @@ export const HILLARY_DATA: DealerData = {
         "/assets/main/icons/casino_staff_icons/hillary_icon_small.png",
 
     objectiveType:
-        ObjectiveType.REACH_BALANCE,
+        ObjectiveType.INCREASE_BALANCE,
 
     objectiveValue: 100,
 
@@ -79,7 +79,7 @@ export const TIMOTHY_DATA: DealerData = {
         "/assets/main/icons/casino_staff_icons/timothy_icon_small.png",
 
     objectiveType:
-        ObjectiveType.REACH_BALANCE,
+        ObjectiveType.INCREASE_BALANCE,
 
     objectiveValue: 200,
 

@@ -1,6 +1,6 @@
 export const DEFAULT_GOLDEN_COIN_SETTINGS = {
     enabled: true,
-    baseChance: 0.025,
+    baseChance: 0.0075,
     chanceMultiplier: 1,
     maximumGoldenCoins: 3
 };

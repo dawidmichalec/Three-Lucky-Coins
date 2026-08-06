@@ -90,6 +90,9 @@ export class GameScene extends BaseScene {
 
     private currentDealer: DealerData = this.dealerOrder[0];
 
+    private fightStartingBalance = 0;
+    private fightTargetBalance = 0;
+
     constructor (
         private app: Application,
         private popupManager: PopupManager,
@@ -290,6 +293,8 @@ export class GameScene extends BaseScene {
                 this.currentDealer,
                 () => {
 
+                    this.startDealerFight();
+
                     this.roundState = "ready";
 
                     this.unlockControls();
@@ -339,6 +344,31 @@ export class GameScene extends BaseScene {
     }
 
 
+    private startDealerFight() {
+
+        this.fightStartingBalance =
+            this.player.balance;
+
+        this.fightTargetBalance =
+            this.fightStartingBalance +
+            this.currentDealer.objectiveValue;
+
+        this.gameUI.updateDealerObjective(
+            this.currentDealer,
+            this.fightTargetBalance
+        );
+
+        console.log(
+            [
+                `DEALER: ${this.currentDealer.name}`,
+                `STARTING BALANCE: ${this.fightStartingBalance}`,
+                `INCREASE BY: ${this.currentDealer.objectiveValue}`,
+                `TARGET BALANCE: ${this.fightTargetBalance}`
+            ].join("\n")
+        );
+    }
+
+
     private isCurrentDealerDefeated():
         boolean {
 
@@ -346,11 +376,11 @@ export class GameScene extends BaseScene {
             this.currentDealer.objectiveType
         ) {
 
-            case ObjectiveType.REACH_BALANCE:
+            case ObjectiveType.INCREASE_BALANCE:
 
                 return (
                     this.player.balance >=
-                    this.currentDealer.objectiveValue
+                    this.fightTargetBalance
                 );
 
             default:
@@ -509,6 +539,8 @@ export class GameScene extends BaseScene {
                 dealer,
                 () => {
 
+                    this.startDealerFight();
+
                     this.roundState = "ready";
 
                     this.isChangingDealer =
@@ -527,15 +559,7 @@ export class GameScene extends BaseScene {
 
         this.sortChildren();
 
-        /*
-            Czarny ekran pojawia się od razu.
-        */
-
         this.nextOpponentOverlay.show();
-
-        /*
-            Ładujemy duży avatar Hillary.
-        */
 
         await this.nextOpponentOverlay.init();
     }

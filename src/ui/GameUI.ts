@@ -29,6 +29,8 @@ export class GameUI extends Container {
 
     private multiplierEffect:MultiplierEffect;
 
+    private currentFightTargetBalance = 0;
+
     constructor (
         private currentDealer: DealerData
     ) {
@@ -243,17 +245,41 @@ export class GameUI extends Container {
 
         // SKILLS PANEL
 
-        this.dealerSkillsPanel = new DealerSkillsPanel(626, 600);
-        this.dealerSkillsPanel.position.set(1170, 188.4);
-        this.dealerSkillsPanel.zIndex = 500;
-        this.dealerSkillsPanel.setDealer(this.currentDealer);
+        this.dealerSkillsPanel =
+            new DealerSkillsPanel(
+                626,
+                600
+            );
+
+        this.dealerSkillsPanel.position.set(
+            1170,
+            188.4
+        );
+
+        this.dealerSkillsPanel.zIndex =
+            500;
+
+        this.dealerSkillsPanel.setDealer(
+            this.currentDealer
+        );
+
 
         // OBJECTIVE PANEL
 
-        this.dealerObjectivePanel = new DealerObjectivePanel(626, 140.1);
-        this.dealerObjectivePanel.position.set(1170, 258.4);
-        this.dealerObjectivePanel.zIndex = 500;
-        this.dealerObjectivePanel.setDealer(this.currentDealer);
+        this.dealerObjectivePanel =
+            new DealerObjectivePanel(
+                626,
+                180.1
+            );
+
+        this.dealerObjectivePanel.position.set(
+            1170,
+            258.4
+        );
+
+        this.dealerObjectivePanel.zIndex =
+            500;
+
 
         this.sortableChildren = true;
 
@@ -396,19 +422,9 @@ export class GameUI extends Container {
         this.currentDealer =
             dealer;
 
-        /*
-            Aktualizujemy panele.
-        */
-
-        this.dealerSkillsPanel
-            .setDealer(dealer);
-
-        this.dealerObjectivePanel
-            .setDealer(dealer);
-
-        /*
-            Usuwamy starą kartę.
-        */
+        this.dealerSkillsPanel.setDealer(
+            dealer
+        );
 
         if (this.dealerCard) {
 
@@ -421,13 +437,24 @@ export class GameUI extends Container {
             });
         }
 
-        /*
-            createDealerCard() korzysta już
-            z this.currentDealer.
-        */
-
         await this.createDealerCard();
     }
+
+
+    updateDealerObjective(
+        dealer: DealerData,
+        targetBalance: number
+    ) {
+
+        this.currentFightTargetBalance =
+            targetBalance;
+
+        this.dealerObjectivePanel.setDealer(
+            dealer,
+            targetBalance
+        );
+    }
+
 
     setDisabled(value: boolean) {
 
