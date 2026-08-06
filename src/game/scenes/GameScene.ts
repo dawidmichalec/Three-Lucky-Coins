@@ -751,6 +751,10 @@ export class GameScene extends BaseScene {
             this.streakMultiplier
         );
 
+        this.controller.adjustBetToBalance(
+            this.player.balance
+        );
+
         /*
             Najpierw sprawdzamy zwycięstwo nad dealerem.
         */

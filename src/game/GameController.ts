@@ -14,6 +14,61 @@ export class GameController {
 
   constructor(private config: ControllerConfig) {}
 
+  adjustBetToBalance(
+      balance: number
+  ): boolean {
+
+      /*
+          Jeżeli obecny bet nadal jest dostępny,
+          niczego nie zmieniamy.
+      */
+      if (this.getBet() <= balance) {
+          return false;
+      }
+
+      /*
+          Szukamy najwyższego betu,
+          który nie przekracza salda gracza.
+      */
+      let affordableBetIndex = -1;
+
+      for (
+          let index = BET_LEVELS.length - 1;
+          index >= 0;
+          index--
+      ) {
+
+          if (BET_LEVELS[index] <= balance) {
+
+              affordableBetIndex = index;
+
+              break;
+          }
+      }
+
+      /*
+          Gracza nie stać nawet na minimalny bet.
+          Nie zmieniamy indeksu — GameScene za chwilę
+          uruchomi Game Over.
+      */
+      if (affordableBetIndex === -1) {
+          return false;
+      }
+
+      this.betIndex =
+          affordableBetIndex;
+
+      /*
+          Aktualizujemy UI bez wyświetlania popupu
+          minimumBet / maximumBet.
+      */
+      this.config.onBetChange(
+          this.getBet()
+      );
+
+      return true;
+  }
+
   decreaseBet() {
     if (this.betIndex > 0) {
       this.betIndex--;
