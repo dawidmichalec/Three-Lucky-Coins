@@ -23,72 +23,48 @@ import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
 import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
 import { GameOverOverlay } from '../../ui/overlays/GameOverOverlay';
 import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
-import { DealerSkillId } from "../dealers/DealerSkill";
 import { DealerOddsProfile } from "../probability/OddsTypes";
-import { AudioManager } from '../../core/AudioManager';
-import { SoundId } from '../../audio/SoundId';
 import { GameCheatController } from '../../dev/GameCheatController';
 import { DealerFightManager } from "../dealers/DealerFightManager";
 import { RoundResolver } from "../round/RoundResolver";
 import { RunStatsRecorder } from "../../stats/RunStatsRecorder";
 import { RunEndController } from "../run/RunEndController";
 import { DealerPresentationController } from "../../ui/controllers/DealerPresentationController";
+import { RoundOutcomeHandler } from "../round/RoundOutcomeHandler";
 
 
 export class GameScene extends BaseScene {
+    
     private gameUI: GameUI;
     private player: Player;
-
     private controller: GameController;
-
     private controls!: GameControls;
-
     private coinRow!: CoinRow;
     private streakMultiplier = 1;
-
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
-
     private hamburgerMenu!: HamburgerMenu;
-
     private cheatPanel: CheatPanel;
-
     private cheatManager = new CheatManager();
-
     private updateTicker!: (ticker: Ticker) => void;
-
     private optionsPanel!: OptionsPanel;
-
     private statsManager!: StatsManager;
-
     private runSummaryPanel!: RunSummaryPanel;
-
     private statsPanel!: StatsPanel;
-
     private oddsManager = OddsManager.getInstance();
-
     private goldenCoinManager = GoldenCoinManager.getInstance();
-
     private dealerVictoryOverlay:DealerVictoryOverlay;
-
     private gameOverOverlay:GameOverOverlay;
-
     private isChangingDealer = false;
-
     private dealerFightManager =
         new DealerFightManager([
             BEN_DATA,
             HILLARY_DATA
         ]);
-
-    private audioManager = AudioManager.getInstance();
-
     private gameCheatController!: GameCheatController;
-
     private runStatsRecorder!: RunStatsRecorder;
-
     private runEndController!: RunEndController;
-
     private dealerPresentationController!: DealerPresentationController;
+    private roundOutcomeHandler =new RoundOutcomeHandler();
 
 
     constructor (
@@ -482,25 +458,6 @@ export class GameScene extends BaseScene {
     }
 
 
-    private getStreakMultiplierGrowth():
-        number {
-
-        const hasSlowerMultiplierGrowth =
-            this.currentDealer.skills.some(
-                skill =>
-                    skill.id ===
-                    DealerSkillId
-                        .SLOWER_MULTIPLIER_GROWTH
-            );
-
-        if (hasSlowerMultiplierGrowth) {
-            return 0.5;
-        }
-
-        return 1;
-    }
-
-
     private handleBetDown() {
         this.controller.decreaseBet();
     }
@@ -583,12 +540,7 @@ export class GameScene extends BaseScene {
         );
 
 
-       const goldenMultiplier =
-    this.goldenCoinManager
-        .getGoldenMultiplier(
-            goldenResult
-        );
-
+       const goldenMultiplier = this.goldenCoinManager.getGoldenMultiplier(goldenResult);
 
         const resolution =
             RoundResolver.resolve({
@@ -614,45 +566,27 @@ export class GameScene extends BaseScene {
         const winAmount =
             resolution.winAmount;
 
-        if (win) {
+        const outcome =
+            this.roundOutcomeHandler
+                .apply(
+                    this.player,
+                    {
+                        win,
+                        winAmount,
 
-            if (
-                winAmount === undefined
-            ) {
+                        currentDealer:
+                            this.currentDealer,
 
-                throw new Error(
-                    "Winning round has no win amount."
+                        currentStreakMultiplier:
+                            this.streakMultiplier
+                    }
                 );
-            }
 
+        this.streakMultiplier = outcome.newStreakMultiplier;
 
-            this.player.addWin(winAmount);
+        this.gameUI.updateBalance(this.player.balance);
 
-
-            this.gameUI.updateBalance(this.player.balance);
-
-
-            this.streakMultiplier +=
-                this.getStreakMultiplierGrowth();
-
-
-            this.audioManager.play(
-                SoundId.WIN,
-                {
-                    loop: false,
-                    volume: 0.7
-                }
-            );
-
-
-            this.gameUI.updateWon(winAmount);
-
-        } else {
-
-            this.streakMultiplier = 1;
-
-            this.gameUI.updateWon(0);
-        }
+        this.gameUI.updateWon(outcome.wonAmount);
 
         this.runStatsRecorder.recordRound({
                 selected,
