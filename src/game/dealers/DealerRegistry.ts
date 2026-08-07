@@ -1,104 +1,29 @@
 import { DealerData } from "./DealerData";
-import { DealerSkillId } from "./DealerSkill";
-import { ObjectiveType } from "../objectives/ObjectiveTypes";
 
-export const BEN_DATA: DealerData = {
-    id: "ben",
+import {
+    BEN_DATA
+} from "./data/Ben";
 
-    name: "Ben",
-    title: "juniorDealer",
+import {
+    HILLARY_DATA
+} from "./data/Hillary";
 
-    avatarNormal:
-        "/assets/main/icons/casino_staff_icons/ben_icon.png",
+import {
+    TIMOTHY_DATA
+} from "./data/Timothy";
 
-    avatarSmall:
-        "/assets/main/icons/casino_staff_icons/ben_icon_small.png",
 
-    objectiveType:
-        ObjectiveType.INCREASE_BALANCE,
+export const DEALERS:
+    readonly DealerData[] = [
 
-    objectiveValue: 50,
+        BEN_DATA,
+        HILLARY_DATA,
+        TIMOTHY_DATA
+    ];
 
-    skills: [],
 
-    dealerDescription:
-        "benDescription",
-
-    saying:
-        "benSaying"
-};
-
-export const HILLARY_DATA: DealerData = {
-    id: "hillary",
-
-    name: "Hillary",
-    title: "midDealer",
-
-    avatarNormal:
-        "/assets/main/icons/casino_staff_icons/hillary_icon.png",
-
-    avatarSmall:
-        "/assets/main/icons/casino_staff_icons/hillary_icon_small.png",
-
-    objectiveType:
-        ObjectiveType.INCREASE_BALANCE,
-
-    objectiveValue: 100,
-
-    skills: [
-        {
-            id:
-                DealerSkillId
-                    .SLOWER_MULTIPLIER_GROWTH,
-
-            name:
-                "slowerMultiplierGrowthSkillName",
-
-            description:
-                "slowerMultiplierGrowthSkillDescription"
-        }
-    ],
-
-    dealerDescription:
-        "hillaryDescription",
-
-    saying:
-        "hillarySaying"
-};
-
-export const TIMOTHY_DATA: DealerData = {
-    id: "timothy",
-
-    name: "Timothy",
-    title: "midDealer",
-
-    avatarNormal:
-        "/assets/main/icons/casino_staff_icons/timothy_icon.png",
-
-    avatarSmall:
-        "/assets/main/icons/casino_staff_icons/timothy_icon_small.png",
-
-    objectiveType:
-        ObjectiveType.INCREASE_BALANCE,
-
-    objectiveValue: 200,
-
-    skills: [
-        {
-            id:
-                DealerSkillId.MANDATORY_TIP,
-
-            name:
-                "mandatoryTipSkillName",
-
-            description:
-                "mandatoryTipSkillDescription"
-        }
-    ],
-
-    dealerDescription:
-        "timothyDescription",
-
-    saying:
-        "timothySaying"
+export {
+    BEN_DATA,
+    HILLARY_DATA,
+    TIMOTHY_DATA
 };
