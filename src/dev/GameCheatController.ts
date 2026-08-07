@@ -1,0 +1,216 @@
+import {
+    CoinSide
+} from "../ui/Coin";
+
+import {
+    CheatManager
+} from "./CheatManager";
+
+import {
+    CheatActions
+} from "./CheatActions";
+
+import {
+    CheatCode
+} from "./CheatCodes";
+
+import {
+    GameController
+} from "../game/GameController";
+
+import {
+    GoldenCoinManager
+} from "../game/goldenCoins/GoldenCoinManager";
+
+
+interface GameCheatControllerOptions {
+
+    onDealerWin:
+        () => void;
+
+    onGameOver:
+        () => void;
+}
+
+
+export class GameCheatController {
+
+    private forcedResult?:
+        CoinSide[];
+
+
+    constructor(
+        private cheatManager:
+            CheatManager,
+
+        private gameController:
+            GameController,
+
+        private goldenCoinManager:
+            GoldenCoinManager,
+
+        private options:
+            GameCheatControllerOptions
+    ) {
+
+        this.registerCheats();
+    }
+
+
+    private registerCheats() {
+
+        this.cheatManager.register(
+            CheatCode.ALL_HEADS_WIN,
+            () => {
+
+                this.forceResult(
+                    CheatActions.allHeadsWin()
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.ALL_TAILS_WIN,
+            () => {
+
+                this.forceResult(
+                    CheatActions.allTailsWin()
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.NOT_ALL_SAME_WIN,
+            () => {
+
+                this.forceResult(
+                    CheatActions.notAllSameWin()
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.GOLDEN_ONE,
+            () => {
+
+                this.forceGoldenWin(
+                    1
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.GOLDEN_TWO,
+            () => {
+
+                this.forceGoldenWin(
+                    2
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.GOLDEN_THREE,
+            () => {
+
+                this.forceGoldenWin(
+                    3
+                );
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.DEALER_WIN,
+            () => {
+
+                this.options
+                    .onDealerWin();
+            }
+        );
+
+
+        this.cheatManager.register(
+            CheatCode.GAME_OVER,
+            () => {
+
+                this.options
+                    .onGameOver();
+            }
+        );
+    }
+
+
+    consumeForcedResult():
+        CoinSide[] | undefined {
+
+        if (!this.forcedResult) {
+            return undefined;
+        }
+
+
+        const result =
+            this.forcedResult;
+
+
+        /*
+            Cheat działa tylko
+            dla jednego rzutu.
+        */
+        this.forcedResult =
+            undefined;
+
+
+        return result;
+    }
+
+
+    private forceResult(
+        result: CoinSide[]
+    ) {
+
+        this.forcedResult =
+            result;
+
+
+        console.log(
+            "FORCED RESULT:",
+            result.join("-")
+        );
+    }
+
+
+    private forceGoldenWin(
+        goldenCount: number
+    ) {
+
+        const selectedCombination =
+            this.gameController
+                .getCurrentCombo();
+
+
+        this.forcedResult = [
+            ...selectedCombination
+        ];
+
+
+        this.goldenCoinManager
+            .forceNextGoldenCount(
+                goldenCount
+            );
+
+
+        console.log(
+            [
+                `FORCED GOLDEN WIN: ${goldenCount}`,
+
+                `FORCED COMBINATION: ${this.forcedResult.join("-")}`
+            ].join("\n")
+        );
+    }
+}

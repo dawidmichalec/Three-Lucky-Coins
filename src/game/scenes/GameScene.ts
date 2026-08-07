@@ -9,8 +9,6 @@ import { HamburgerMenu } from '../../ui/menus/HamburgerMenu';
 import { GameControls } from '../../ui/controls/GameControls';
 import { CheatPanel } from '../../dev/CheatPanel';
 import { CheatManager } from '../../dev/CheatManager';
-import { CheatActions } from '../../dev/CheatActions';
-import { CheatCode } from '../../dev/CheatCodes';
 import { BaseScene } from './BaseScene';
 import { SceneManager } from '../SceneManager';
 import { PopupManager } from '../../ui/popups/PopupManager';
@@ -36,6 +34,7 @@ import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerOddsProfile } from "../probability/OddsTypes";
 import { AudioManager } from '../../core/AudioManager';
 import { SoundId } from '../../audio/SoundId';
+import { GameCheatController } from '../../dev/GameCheatController';
 
 
 export class GameScene extends BaseScene {
@@ -57,8 +56,6 @@ export class GameScene extends BaseScene {
     private cheatPanel: CheatPanel;
 
     private cheatManager = new CheatManager();
-
-    private forcedResult?: CoinSide[];
 
     private updateTicker!: (ticker: Ticker) => void;
 
@@ -96,6 +93,8 @@ export class GameScene extends BaseScene {
     private fightTargetBalance = 0;
 
     private audioManager = AudioManager.getInstance();
+
+    private gameCheatController!: GameCheatController;
 
 
     constructor (
@@ -231,9 +230,33 @@ export class GameScene extends BaseScene {
         );
         this.addChild(this.hamburgerMenu);
 
-        this.cheatPanel = new CheatPanel(this.cheatManager);
-        this.addChild(this.cheatPanel);
-        this.registerCheats();
+        this.gameCheatController =
+            new GameCheatController(
+                this.cheatManager,
+                this.controller,
+                this.goldenCoinManager,
+                {
+                    onDealerWin: () => {
+
+                        void this.showDealerVictory();
+                    },
+
+                    onGameOver: () => {
+
+                        this.triggerGameOver();
+                    }
+                }
+            );
+
+
+        this.cheatPanel =
+            new CheatPanel(
+                this.cheatManager
+            );
+
+        this.addChild(
+            this.cheatPanel
+        );
 
         this.createNextOpponentOverlay();
 
@@ -803,20 +826,22 @@ export class GameScene extends BaseScene {
         );
     }
 
-    private generateResult(): CoinSide[] {
+    private generateResult():
+        CoinSide[] {
 
-        if (this.forcedResult) {
+        const forcedResult =
+            this.gameCheatController
+                .consumeForcedResult();
 
-            const result =
-                this.forcedResult;
 
-            this.forcedResult =
-                undefined;
+        if (forcedResult) {
 
-            return result;
+            return forcedResult;
         }
 
-        return this.oddsManager.rollResult();
+
+        return this.oddsManager
+            .rollResult();
     }
 
     private lockControls() {
@@ -1081,118 +1106,6 @@ export class GameScene extends BaseScene {
         this.unlockControls();
     }
 
-
-    // REGISTER CHEATS
-
-    private registerCheats() {
-
-        this.cheatManager.register(
-            CheatCode.ALL_HEADS_WIN,
-            () => {
-                this.forceResult(
-                    CheatActions.allHeadsWin()
-                );
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.ALL_TAILS_WIN,
-            () => {
-                this.forceResult(
-                    CheatActions.allTailsWin()
-                );
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.NOT_ALL_SAME_WIN,
-            () => {
-                this.forceResult(
-                    CheatActions.notAllSameWin()
-                );
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.GOLDEN_ONE,
-            () => {
-                this.forceGoldenWin(1);
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.GOLDEN_TWO,
-            () => {
-                this.forceGoldenWin(2);
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.GOLDEN_THREE,
-            () => {
-                this.forceGoldenWin(3);
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.DEALER_WIN,
-            () => {
-
-                void this.showDealerVictory();
-
-            }
-        );
-
-        this.cheatManager.register(
-            CheatCode.GAME_OVER,
-            () => {
-
-                this.triggerGameOver();
-
-            }
-        );
-    }
-
-    // FORCED RESULT
-
-    private forceResult(result: CoinSide[]) {
-
-        this.forcedResult = result;
-
-        console.log(
-            "FORCED RESULT:",
-            result.join("-")
-        );
-    }
-
-    private forceGoldenWin(
-        goldenCount: number
-    ) {
-
-        const selectedCombination =
-            this.controller.getCurrentCombo();
-
-        /*
-            getCurrentCombo() zwraca readonly tuple,
-            a forcedResult jest CoinSide[].
-            Dlatego tworzymy nową, zwykłą tablicę.
-        */
-        this.forcedResult = [
-            ...selectedCombination
-        ];
-
-        this.goldenCoinManager
-            .forceNextGoldenCount(
-                goldenCount
-            );
-
-        console.log(
-            [
-                `FORCED GOLDEN WIN: ${goldenCount}`,
-                `FORCED COMBINATION: ${this.forcedResult.join("-")}`
-            ].join("\n")
-        );
-    }
 
     // CLEANUP
 
