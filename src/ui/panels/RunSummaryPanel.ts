@@ -93,7 +93,7 @@ export class RunSummaryPanel extends Container {
 
 
         this.statsValues.text =
-    `    ${stats.bestWinStreak}
+    `     ${stats.bestWinStreak}
     ${stats.biggestLoseStreak}
     ${stats.highestWin.toFixed(2)}
     ${this.statsManager.getAccuracyCurrentRun().toFixed(2)}%

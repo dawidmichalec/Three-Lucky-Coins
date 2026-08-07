@@ -110,8 +110,7 @@ export class StatsPanel extends Container {
 
 
         this.runStatsValues.text =
-    `
-    ${stats.bestWinStreak}
+    `    ${stats.bestWinStreak}
     ${stats.biggestLoseStreak}
     ${stats.highestWin.toFixed(2)}
     ${this.statsManager.getAccuracyCurrentRun().toFixed(2)}%
@@ -279,7 +278,7 @@ export class StatsPanel extends Container {
 
         this.combinationValues.position.set(
             785,
-            380
+            350
         );
 
 
@@ -613,6 +612,5 @@ export class StatsPanel extends Container {
         this.visible = false;
 
     }
-
 
 }

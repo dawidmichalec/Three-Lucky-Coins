@@ -1,27 +1,19 @@
-import { Container, Application, Assets, Sprite, Ticker } from 'pixi.js';
+import { Application, Ticker } from 'pixi.js';
 import { Player } from '../Player';
-import { GameUI } from '../../ui/GameUI';
 import { GameController } from '../GameController';
 import { CoinRow } from '../../ui/CoinRow';
 import { CoinSide } from '../../ui/Coin';
-import { HamburgerMenu } from '../../ui/menus/HamburgerMenu';
-import { GameControls } from '../../ui/controls/GameControls';
 import { CheatPanel } from '../../dev/CheatPanel';
 import { CheatManager } from '../../dev/CheatManager';
 import { BaseScene } from './BaseScene';
 import { SceneManager } from '../SceneManager';
 import { PopupManager } from '../../ui/popups/PopupManager';
-import { OptionsPanel } from '../../ui/panels/OptionsPanel';
 import { StatsManager } from '../../core/StatsManager';
-import { RunSummaryPanel } from '../../ui/panels/RunSummaryPanel';
-import { StatsPanel } from '../../ui/panels/StatsPanel';
 import { LayoutManager } from '../../core/LayoutManager';
 import { OddsManager } from "../probability/OddsManager";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { DealerData } from "../dealers/DealerData";
 import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
-import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
-import { GameOverOverlay } from '../../ui/overlays/GameOverOverlay';
 import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
 import { DealerOddsProfile } from "../probability/OddsTypes";
 import { GameCheatController } from '../../dev/GameCheatController';
@@ -31,29 +23,22 @@ import { RunStatsRecorder } from "../../stats/RunStatsRecorder";
 import { RunEndController } from "../run/RunEndController";
 import { DealerPresentationController } from "../../ui/controllers/DealerPresentationController";
 import { RoundOutcomeHandler } from "../round/RoundOutcomeHandler";
+import { GameSceneView } from "../../ui/GameSceneView";
 
 
 export class GameScene extends BaseScene {
     
-    private gameUI: GameUI;
     private player: Player;
     private controller: GameController;
-    private controls!: GameControls;
     private coinRow!: CoinRow;
     private streakMultiplier = 1;
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
-    private hamburgerMenu!: HamburgerMenu;
     private cheatPanel: CheatPanel;
     private cheatManager = new CheatManager();
     private updateTicker!: (ticker: Ticker) => void;
-    private optionsPanel!: OptionsPanel;
     private statsManager!: StatsManager;
-    private runSummaryPanel!: RunSummaryPanel;
-    private statsPanel!: StatsPanel;
     private oddsManager = OddsManager.getInstance();
     private goldenCoinManager = GoldenCoinManager.getInstance();
-    private dealerVictoryOverlay:DealerVictoryOverlay;
-    private gameOverOverlay:GameOverOverlay;
     private isChangingDealer = false;
     private dealerFightManager =
         new DealerFightManager([
@@ -65,6 +50,7 @@ export class GameScene extends BaseScene {
     private runEndController!: RunEndController;
     private dealerPresentationController!: DealerPresentationController;
     private roundOutcomeHandler =new RoundOutcomeHandler();
+    private view: GameSceneView;
 
 
     constructor (
@@ -91,13 +77,56 @@ export class GameScene extends BaseScene {
         // Player
         this.player = new Player(25);
 
-        // UI
-        this.gameUI = new GameUI(this.currentDealer);
-        this.gameUI.zIndex = 1000;
-        this.addChild(this.gameUI);
+        // GameSceneView
 
-        this.gameUI.updateBalance(this.player.balance);
-        this.gameUI.updateMultiplier(this.streakMultiplier);
+        this.view =
+            new GameSceneView(
+                this.currentDealer,
+                this.sceneManager,
+                this.popupManager,
+                {
+                    onBetDown: () =>
+                        this.handleBetDown(),
+
+                    onBetUp: () =>
+                        this.handleBetUp(),
+
+                    onPrevCombo: () =>
+                        this.controller
+                            .prevCombo(),
+
+                    onNextCombo: () =>
+                        this.controller
+                            .nextCombo(),
+
+                    onToss: () =>
+                        this.handleToss(),
+
+                    onRestartRun: () => {
+
+                        this.statsManager
+                            .finishRun();
+
+                        this.sceneManager
+                            .showGame();
+                    },
+
+                    onMainMenu: () => {
+
+                        this.statsManager
+                            .finishRun();
+
+                        this.sceneManager
+                            .showMainMenu();
+                    }
+                }
+            );
+
+        this.view.zIndex = 1000;
+
+        this.addChild(
+            this.view
+        );
 
 
         // NEW ROUND
@@ -106,103 +135,42 @@ export class GameScene extends BaseScene {
         
 
         // CONTROLLER
-        this.controller = new GameController({
-            onBetChange: (bet) => {
-                this.gameUI.updateBet(bet);
-            },
+        this.controller =
+            new GameController({
 
-            onComboChange: (combo) => {
-                this.gameUI.updateCombination(combo);
-            },
+                onBetChange: bet => {
 
-            onPopup: (msg) => {
-                this.popupManager.show(msg);
-            },
-        });
-
-
-        this.gameUI.updateBet(this.controller.getBet());
-
-        this.controls = new GameControls({
-            onBetDown: () => this.handleBetDown(),
-            onBetUp: () => this.handleBetUp(),
-            onPrevCombo: () => this.controller.prevCombo(),
-            onNextCombo: () => this.controller.nextCombo(),
-            onToss: () => this.handleToss()
-        });
-
-        this.addChild(this.controls);
-
-        this.optionsPanel = new OptionsPanel(
-            layout.DESIGN_WIDTH,
-            layout.DESIGN_HEIGHT,
-            ()=>{
-                this.optionsPanel.hide();
-            }
-        );
-
-        this.optionsPanel.visible = false;
-        this.optionsPanel.zIndex = 1000;
-
-        this.addChild(this.optionsPanel);
-
-        this.statsPanel = new StatsPanel(
-            layout.DESIGN_WIDTH, 
-            layout.DESIGN_HEIGHT, 
-            () => {
-                this.statsPanel.hide()
-            }
-        );
-
-        this.statsPanel.visible = false;
-        this.statsPanel.zIndex = 1000;
-
-        this.addChild(this.statsPanel);
-
-        this.runSummaryPanel =
-            new RunSummaryPanel(
-
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-
-                ()=>{
-
-                    this.statsManager.finishRun();
-
-                    this.sceneManager.showGame();
-
+                    this.view.gameUI
+                        .updateBet(
+                            bet
+                        );
                 },
 
-                ()=>{
+                onComboChange: combo => {
 
-                    this.statsManager.finishRun();
+                    this.view.gameUI
+                        .updateCombination(
+                            combo
+                        );
+                },
 
-                    this.sceneManager.showMainMenu();
+                onPopup: msg => {
 
+                    this.popupManager
+                        .show(
+                            msg
+                        );
                 }
+            });
 
-            );
+        // INITIAL UI STATE
 
+        this.view.gameUI.updateBalance(this.player.balance);
 
-        this.runSummaryPanel.visible = false;
+        this.view.gameUI.updateBet(this.controller.getBet());
 
-        this.runSummaryPanel.zIndex = 2000;
+        this.view.gameUI.updateMultiplier(this.streakMultiplier);
 
-
-        this.addChild(this.runSummaryPanel);
-
-        this.hamburgerMenu = new HamburgerMenu(
-            this.sceneManager, 
-            this.popupManager,
-            ()=>{
-                this.optionsPanel.show();
-                
-            },
-            () => {
-                this.statsPanel.show();
-            }
-        );
-        this.addChild(this.hamburgerMenu);
 
         this.gameCheatController =
             new GameCheatController(
@@ -236,7 +204,7 @@ export class GameScene extends BaseScene {
 
         this.dealerPresentationController =
             new DealerPresentationController(
-                this,
+                this.view,
                 () => {
 
                     this.startDealerFight();
@@ -253,49 +221,27 @@ export class GameScene extends BaseScene {
 
         this.dealerPresentationController.createInitial(this.currentDealer);
 
-        // VICTORY SCREEN
-
-        this.dealerVictoryOverlay =
-            new DealerVictoryOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT
-            );
-
-        this.dealerVictoryOverlay.zIndex = 5000;
-
-        this.addChild(
-            this.dealerVictoryOverlay
-        );
-
-        // GAME OVER SCREEN
-
-        this.gameOverOverlay =
-            new GameOverOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT
-            );
-
-        this.gameOverOverlay.zIndex =
-            6000;
-
-        this.addChild(
-            this.gameOverOverlay
-        );
-
         this.runEndController =
             new RunEndController(
                 this.statsManager,
-                this.runSummaryPanel,
-                this.gameOverOverlay,
-                this.dealerVictoryOverlay,
-                {
-                    onLockControls: () => {
-                        this.lockControls();
-                    },
 
-                    onUnlockControls: () => {
-                        this.unlockControls();
-                    }
+                this.view
+                    .runSummaryPanel,
+
+                this.view
+                    .gameOverOverlay,
+
+                this.view
+                    .dealerVictoryOverlay,
+
+                {
+                    onLockControls:
+                        () =>
+                            this.lockControls(),
+
+                    onUnlockControls:
+                        () =>
+                            this.unlockControls()
                 }
             );
         
@@ -304,7 +250,7 @@ export class GameScene extends BaseScene {
     override async init(): Promise<void> {
 
         await Promise.all([
-            this.gameUI.init(),
+            this.view.gameUI.init(),
             this.dealerPresentationController.initCurrent(),
             this.createCoinRow()
         ]);
@@ -323,7 +269,7 @@ export class GameScene extends BaseScene {
                 profile
             );
 
-        this.gameUI.updateProbability(
+        this.view.gameUI.updateProbability(
             odds
         );
     }
@@ -360,7 +306,7 @@ export class GameScene extends BaseScene {
                 );
 
 
-        this.gameUI.updateDealerObjective(
+        this.view.gameUI.updateDealerObjective(
             this.currentDealer,
             fight.targetBalance
         );
@@ -388,7 +334,7 @@ export class GameScene extends BaseScene {
 
         this.lockControls();
 
-        await this.dealerVictoryOverlay.play();
+        await this.view.dealerVictoryOverlay.play();
 
         const nextDealer = this.dealerFightManager.advanceToNextDealer();
 
@@ -429,17 +375,17 @@ export class GameScene extends BaseScene {
 
         this.streakMultiplier = 1;
 
-        this.gameUI.updateMultiplier(
+        this.view.gameUI.updateMultiplier(
             this.streakMultiplier
         );
 
-        this.gameUI.updateWon(0);
+        this.view.gameUI.updateWon(0);
 
         /*
             Aktualizacja małej karty i paneli.
         */
 
-        await this.gameUI.setDealer(
+        await this.view.gameUI.setDealer(
             dealer
         );
 
@@ -480,13 +426,18 @@ export class GameScene extends BaseScene {
     // COIN ROW
 
     private async createCoinRow() {
+
         this.coinRow = new CoinRow();
 
         await this.coinRow.init();
 
-        this.coinRow.position.set(750, 424.7);
+        this.coinRow.position.set(750,424.7);
 
-        this.addChild(this.coinRow);
+        this.coinRow.zIndex =0;
+
+        this.addChild(
+            this.coinRow
+        );
     }
 
     // START RUN - FUNCTION RESPONSIBLE FOR THE GAME LOOP
@@ -507,13 +458,13 @@ export class GameScene extends BaseScene {
         this.roundState = 'spinning';
 
         this.lockControls();
-        this.gameUI.updateWon(0);
+        this.view.gameUI.updateWon(0);
 
         
         this.player.balance -= bet;
-        this.gameUI.updateBalance(this.player.balance);
+        this.view.gameUI.updateBalance(this.player.balance);
 
-        this.controls.startTossAnimation();
+        this.view.controls.startTossAnimation();
 
         const baseResult =
             this.generateResult();
@@ -584,9 +535,9 @@ export class GameScene extends BaseScene {
 
         this.streakMultiplier = outcome.newStreakMultiplier;
 
-        this.gameUI.updateBalance(this.player.balance);
+        this.view.gameUI.updateBalance(this.player.balance);
 
-        this.gameUI.updateWon(outcome.wonAmount);
+        this.view.gameUI.updateWon(outcome.wonAmount);
 
         this.runStatsRecorder.recordRound({
                 selected,
@@ -596,7 +547,7 @@ export class GameScene extends BaseScene {
                 streakMultiplier:this.streakMultiplier
             });
 
-        this.gameUI.updateMultiplier(
+        this.view.gameUI.updateMultiplier(
             this.streakMultiplier
         );
 
@@ -662,16 +613,16 @@ export class GameScene extends BaseScene {
 
     private lockControls() {
 
-        this.controls.setDisabled(true);
-        this.hamburgerMenu.setDisabled(true);
-        this.gameUI.setDisabled(true);
+        this.view.controls.setDisabled(true);
+        this.view.hamburgerMenu.setDisabled(true);
+        this.view.gameUI.setDisabled(true);
     }
 
     private unlockControls() {
 
-        this.controls.setDisabled(false);
-        this.hamburgerMenu.setDisabled(false);
-        this.gameUI.setDisabled(false);
+        this.view.controls.setDisabled(false);
+        this.view.hamburgerMenu.setDisabled(false);
+        this.view.gameUI.setDisabled(false);
     }
 
     // TICKER
@@ -682,7 +633,7 @@ export class GameScene extends BaseScene {
 
             const delta = ticker.deltaTime;
 
-            this.controls.update(delta);
+            this.view.controls.update(delta);
 
             if (this.coinRow) {
                 this.coinRow.update(delta);
