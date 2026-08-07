@@ -30,11 +30,11 @@ import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
 import { GameOverOverlay } from '../../ui/overlays/GameOverOverlay';
 import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
 import { DealerSkillId } from "../dealers/DealerSkill";
-import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerOddsProfile } from "../probability/OddsTypes";
 import { AudioManager } from '../../core/AudioManager';
 import { SoundId } from '../../audio/SoundId';
 import { GameCheatController } from '../../dev/GameCheatController';
+import { DealerFightManager } from "../dealers/DealerFightManager";
 
 
 export class GameScene extends BaseScene {
@@ -77,20 +77,13 @@ export class GameScene extends BaseScene {
 
     private gameOverOverlay:GameOverOverlay;
 
-    private readonly dealerOrder:
-        readonly DealerData[] = [
-            BEN_DATA,
-            HILLARY_DATA
-        ];
-
-    private currentDealerIndex = 0;
-
     private isChangingDealer = false;
 
-    private currentDealer: DealerData = this.dealerOrder[0];
-
-    private fightStartingBalance = 0;
-    private fightTargetBalance = 0;
+    private dealerFightManager =
+        new DealerFightManager([
+            BEN_DATA,
+            HILLARY_DATA
+        ]);
 
     private audioManager = AudioManager.getInstance();
 
@@ -356,6 +349,13 @@ export class GameScene extends BaseScene {
         );
     }
 
+    private get currentDealer():
+        DealerData {
+
+        return this.dealerFightManager
+            .getCurrentDealer();
+    }
+
 
     private getCurrentDealerOddsProfile():
         DealerOddsProfile {
@@ -374,24 +374,25 @@ export class GameScene extends BaseScene {
 
     private startDealerFight() {
 
-        this.fightStartingBalance =
-            this.player.balance;
+        const fight =
+            this.dealerFightManager
+                .startFight(
+                    this.player.balance
+                );
 
-        this.fightTargetBalance =
-            this.fightStartingBalance +
-            this.currentDealer.objectiveValue;
 
         this.gameUI.updateDealerObjective(
             this.currentDealer,
-            this.fightTargetBalance
+            fight.targetBalance
         );
+
 
         console.log(
             [
                 `DEALER: ${this.currentDealer.name}`,
-                `STARTING BALANCE: ${this.fightStartingBalance}`,
+                `STARTING BALANCE: ${fight.startingBalance}`,
                 `INCREASE BY: ${this.currentDealer.objectiveValue}`,
-                `TARGET BALANCE: ${this.fightTargetBalance}`
+                `TARGET BALANCE: ${fight.targetBalance}`
             ].join("\n")
         );
     }
@@ -400,26 +401,10 @@ export class GameScene extends BaseScene {
     private isCurrentDealerDefeated():
         boolean {
 
-        switch (
-            this.currentDealer.objectiveType
-        ) {
-
-            case ObjectiveType.INCREASE_BALANCE:
-
-                return (
-                    this.player.balance >=
-                    this.fightTargetBalance
-                );
-
-            default:
-
-                console.warn(
-                    "Unsupported objective type:",
-                    this.currentDealer.objectiveType
-                );
-
-                return false;
-        }
+        return this.dealerFightManager
+            .isCurrentDealerDefeated(
+                this.player.balance
+            );
     }
 
 
@@ -445,8 +430,7 @@ export class GameScene extends BaseScene {
 
         await this.dealerVictoryOverlay.play();
 
-        const nextDealer =
-            this.getNextDealer();
+        const nextDealer = this.dealerFightManager.advanceToNextDealer();
 
         if (!nextDealer) {
 
@@ -476,32 +460,10 @@ export class GameScene extends BaseScene {
     }
 
 
-    private getNextDealer():
-        DealerData | null {
-
-        const nextIndex =
-            this.currentDealerIndex + 1;
-
-        if (
-            nextIndex >=
-            this.dealerOrder.length
-        ) {
-            return null;
-        }
-
-        this.currentDealerIndex =
-            nextIndex;
-
-        return this.dealerOrder[nextIndex];
-    }
-
-
     private async loadDealer(
         dealer: DealerData
     ): Promise<void> {
 
-        this.currentDealer =
-            dealer;
 
         /*
             Nowa walka zaczyna się od x1.
