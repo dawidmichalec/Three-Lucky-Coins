@@ -20,7 +20,6 @@ import { OddsManager } from "../probability/OddsManager";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { DealerData } from "../dealers/DealerData";
 import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
-import { NextOpponentOverlay } from '../../ui/overlays/NextOpponentOverlay';
 import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
 import { GameOverOverlay } from '../../ui/overlays/GameOverOverlay';
 import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
@@ -33,6 +32,7 @@ import { DealerFightManager } from "../dealers/DealerFightManager";
 import { RoundResolver } from "../round/RoundResolver";
 import { RunStatsRecorder } from "../../stats/RunStatsRecorder";
 import { RunEndController } from "../run/RunEndController";
+import { DealerPresentationController } from "../../ui/controllers/DealerPresentationController";
 
 
 export class GameScene extends BaseScene {
@@ -68,8 +68,6 @@ export class GameScene extends BaseScene {
 
     private goldenCoinManager = GoldenCoinManager.getInstance();
 
-    private nextOpponentOverlay!: NextOpponentOverlay;
-
     private dealerVictoryOverlay:DealerVictoryOverlay;
 
     private gameOverOverlay:GameOverOverlay;
@@ -89,6 +87,8 @@ export class GameScene extends BaseScene {
     private runStatsRecorder!: RunStatsRecorder;
 
     private runEndController!: RunEndController;
+
+    private dealerPresentationController!: DealerPresentationController;
 
 
     constructor (
@@ -256,7 +256,26 @@ export class GameScene extends BaseScene {
             this.cheatPanel
         );
 
-        this.createNextOpponentOverlay();
+        // Dealer Presentation Controller
+
+        this.dealerPresentationController =
+            new DealerPresentationController(
+                this,
+                () => {
+
+                    this.startDealerFight();
+
+                    this.roundState =
+                        "ready";
+
+                    this.isChangingDealer =
+                        false;
+
+                    this.unlockControls();
+                }
+            );
+
+        this.dealerPresentationController.createInitial(this.currentDealer);
 
         // VICTORY SCREEN
 
@@ -310,49 +329,11 @@ export class GameScene extends BaseScene {
 
         await Promise.all([
             this.gameUI.init(),
-            this.nextOpponentOverlay.init(),
+            this.dealerPresentationController.initCurrent(),
             this.createCoinRow()
         ]);
 
-        /*
-            Overlay był widoczny już wcześniej.
-            Tutaj jest już również załadowany avatar.
-        */
-        this.nextOpponentOverlay.show();
-
         this.lockControls();
-    }
-
-
-    private createNextOpponentOverlay() {
-
-        const layout =
-            LayoutManager.getInstance();
-
-        this.nextOpponentOverlay =
-            new NextOpponentOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-                this.currentDealer,
-                () => {
-
-                    this.startDealerFight();
-
-                    this.roundState = "ready";
-
-                    this.unlockControls();
-                }
-            );
-
-        this.nextOpponentOverlay.zIndex = 4000;
-
-        this.addChild(
-            this.nextOpponentOverlay
-        );
-
-        this.nextOpponentOverlay.show();
-
-        this.sortChildren();
     }
 
 
@@ -497,60 +478,7 @@ export class GameScene extends BaseScene {
             Tworzymy nowy ekran prezentacji.
         */
 
-        await this.replaceNextOpponentOverlay(
-            dealer
-        );
-    }
-
-
-    private async replaceNextOpponentOverlay(
-        dealer: DealerData
-    ): Promise<void> {
-
-        const layout =
-            LayoutManager.getInstance();
-
-        if (this.nextOpponentOverlay) {
-
-            this.removeChild(
-                this.nextOpponentOverlay
-            );
-
-            this.nextOpponentOverlay.destroy({
-                children: true
-            });
-        }
-
-        this.nextOpponentOverlay =
-            new NextOpponentOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-                dealer,
-                () => {
-
-                    this.startDealerFight();
-
-                    this.roundState = "ready";
-
-                    this.isChangingDealer =
-                        false;
-
-                    this.unlockControls();
-                }
-            );
-
-        this.nextOpponentOverlay.zIndex =
-            4000;
-
-        this.addChild(
-            this.nextOpponentOverlay
-        );
-
-        this.sortChildren();
-
-        this.nextOpponentOverlay.show();
-
-        await this.nextOpponentOverlay.init();
+        await this.dealerPresentationController.showDealer(dealer);
     }
 
 
@@ -863,17 +791,24 @@ export class GameScene extends BaseScene {
 
     cleanup() {
 
-        this.app.ticker.remove(this.updateTicker);
+        this.app.ticker.remove(
+            this.updateTicker
+        );
+
+
+        this.dealerPresentationController
+            .destroy();
+
 
         if (this.cheatPanel) {
 
-            this.removeChild(this.cheatPanel);
+            this.removeChild(
+                this.cheatPanel
+            );
 
             this.cheatPanel.destroy({
-                children:true
+                children: true
             });
-
         }
-
     }
 }
