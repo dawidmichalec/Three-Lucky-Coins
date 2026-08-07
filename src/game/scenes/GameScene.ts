@@ -765,14 +765,6 @@ export class GameScene extends BaseScene {
         return this.player.balance >= this.controller.getMinBet();
     }
 
-    // GAME OVER
-
-    private checkGameOver() {
-        if (!this.canPlay()) {
-            this.triggerGameOver();
-        }
-    }
-
     // TRIGGER GAME OVER
 
     private triggerGameOver() {
