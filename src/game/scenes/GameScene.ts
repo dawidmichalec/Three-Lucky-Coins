@@ -32,6 +32,7 @@ import { GameCheatController } from '../../dev/GameCheatController';
 import { DealerFightManager } from "../dealers/DealerFightManager";
 import { RoundResolver } from "../round/RoundResolver";
 import { RunStatsRecorder } from "../../stats/RunStatsRecorder";
+import { RunEndController } from "../run/RunEndController";
 
 
 export class GameScene extends BaseScene {
@@ -86,6 +87,8 @@ export class GameScene extends BaseScene {
     private gameCheatController!: GameCheatController;
 
     private runStatsRecorder!: RunStatsRecorder;
+
+    private runEndController!: RunEndController;
 
 
     constructor (
@@ -283,6 +286,23 @@ export class GameScene extends BaseScene {
         this.addChild(
             this.gameOverOverlay
         );
+
+        this.runEndController =
+            new RunEndController(
+                this.statsManager,
+                this.runSummaryPanel,
+                this.gameOverOverlay,
+                this.dealerVictoryOverlay,
+                {
+                    onLockControls: () => {
+                        this.lockControls();
+                    },
+
+                    onUnlockControls: () => {
+                        this.unlockControls();
+                    }
+                }
+            );
         
     }
 
@@ -411,15 +431,6 @@ export class GameScene extends BaseScene {
 
         this.lockControls();
 
-        /*
-            Gracz ma chwilę na zobaczenie:
-            - wyniku monet,
-            - wygranej,
-            - nowego salda,
-            - animacji multipliera.
-        */
-        await this.delay(400);
-
         await this.dealerVictoryOverlay.play();
 
         const nextDealer = this.dealerFightManager.advanceToNextDealer();
@@ -435,11 +446,7 @@ export class GameScene extends BaseScene {
                 Później tutaj znajdzie się końcowe zwycięstwo.
             */
 
-            this.statsManager
-                .getRunStats()
-                .won = true;
-
-            await this.showRunSummaryWithFade();
+            await this.runEndController.showRunVictory();
 
             return;
         }
@@ -842,134 +849,15 @@ export class GameScene extends BaseScene {
 
     private triggerGameOver() {
 
-        this.statsManager
-            .getRunStats()
-            .won = false;
-
-        this.lockControls();
-
-        void this.playGameOverSequence();
-    }
-
-
-    private async playGameOverSequence() {
-
-        /*
-            Krótka pauza po ostatnim przegranym rzucie,
-            żeby GAME OVER nie wskoczył w tej samej klatce.
-        */
-        await this.delay(
-            350
-        );
-
-        await this.gameOverOverlay.play(
-            1300
-        );
-
-        await this.showRunSummaryWithFade();
-    }
-
-
-    private delay(
-        milliseconds: number
-    ): Promise<void> {
-
-        return new Promise(resolve => {
-
-            setTimeout(
-                resolve,
-                milliseconds
-            );
-
-        });
-    }
-
-    // RUN SUMMARY
-
-    private async showRunSummaryWithFade() {
-
-        this.runSummaryPanel.refresh();
-
-        this.runSummaryPanel.visible = true;
-        this.runSummaryPanel.alpha = 0;
-
-        await this.fadeInContainer(
-            this.runSummaryPanel,
-            500
-        );
-    }
-
-    private fadeInContainer(
-        container: Container,
-        duration: number
-    ): Promise<void> {
-
-        return new Promise(resolve => {
-
-            const startTime =
-                performance.now();
-
-
-            const animate = (
-                currentTime: number
-            ) => {
-
-                const progress =
-                    Math.min(
-                        1,
-                        (
-                            currentTime -
-                            startTime
-                        ) / duration
-                    );
-
-
-                const easedProgress =
-                    1 -
-                    Math.pow(
-                        1 - progress,
-                        3
-                    );
-
-
-                container.alpha =
-                    easedProgress;
-
-
-                if (progress < 1) {
-
-                    requestAnimationFrame(
-                        animate
-                    );
-
-                    return;
-                }
-
-
-                container.alpha = 1;
-
-                resolve();
-            };
-
-
-            requestAnimationFrame(
-                animate
-            );
-        });
+        void this.runEndController.triggerGameOver();
     }
 
     // VICTORY
 
     private async showDealerVictory() {
 
-        this.lockControls();
-
-        await this.dealerVictoryOverlay.play();
-
-
-        this.unlockControls();
+        await this.runEndController.showDealerVictory();
     }
-
 
     // CLEANUP
 
