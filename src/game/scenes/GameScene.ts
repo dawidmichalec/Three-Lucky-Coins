@@ -29,7 +29,7 @@ import { DealerData } from "../dealers/DealerData";
 import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
 import { NextOpponentOverlay } from '../../ui/overlays/NextOpponentOverlay';
 import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
-import { GameOverOverlay } from '../../ui/overlays/GameOverlay';
+import { GameOverOverlay } from '../../ui/overlays/GameOverOverlay';
 import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
 import { DealerSkillId } from "../dealers/DealerSkill";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
