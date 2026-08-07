@@ -9,7 +9,6 @@ import { BaseScene } from './BaseScene';
 import { SceneManager } from '../SceneManager';
 import { PopupManager } from '../../ui/popups/PopupManager';
 import { StatsManager } from '../../core/StatsManager';
-import { LayoutManager } from '../../core/LayoutManager';
 import { OddsManager } from "../probability/OddsManager";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { DealerData } from "../dealers/DealerData";
@@ -63,8 +62,6 @@ export class GameScene extends BaseScene {
         this.sortableChildren = true;
 
         this.setupTicker();
-
-        const layout = LayoutManager.getInstance();
 
         // StatsManager
 
