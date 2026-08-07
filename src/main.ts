@@ -10,6 +10,7 @@ import { StatsManager } from './core/StatsManager';
 import { LayoutManager } from './core/LayoutManager';
 import { RotateDeviceOverlay } from './ui/overlays/RotateDeviceOverlay';
 import { LocalizationManager } from './core/LocalizationManager';
+import { loadFonts } from './core/FontLoader';
 
 (async () => {
   const app = new Application();
@@ -96,43 +97,7 @@ import { LocalizationManager } from './core/LocalizationManager';
 
     // FONTS
 
-    const font = new FontFace( 'Oswald-Bold', 'url(/assets/main/fonts/Oswald/static/Oswald-Bold.ttf)' ); 
-    await font.load(); 
-    document.fonts.add(font); 
-
-    const fontEgyptianSlate = new FontFace('EgyptianSlateBd', 'url(/assets/main/fonts/egyptian-slate-pro/EgyptianSlateBd.TTF)');
-    await fontEgyptianSlate.load();
-    document.fonts.add(fontEgyptianSlate);
-
-    const fontCrimsonProBold = new FontFace('CrimsonPro-Bold', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Bold.ttf)');
-    await fontCrimsonProBold.load();
-    document.fonts.add(fontCrimsonProBold);
-
-    const fontCrimsonProItalic = new FontFace('CrimsonPro-Italic', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Italic.ttf)');
-    await fontCrimsonProItalic.load();
-    document.fonts.add(fontCrimsonProItalic);
-
-    const fontJackCondensed = new FontFace('JackCondensed', 'url(/assets/main/fonts/JackCondensed/JackCondensed.ttf)');
-    await fontJackCondensed.load();
-    document.fonts.add(fontJackCondensed);
-
-    const fontAnekKannadaSemiCondensed = new FontFace('Anek-Kannada SemiCondensed', 'url(/assets/main/fonts/anek-kannada.semicondensed-extrabold.ttf)');
-    await fontAnekKannadaSemiCondensed.load();
-    document.fonts.add(fontAnekKannadaSemiCondensed);
-
-    const fontAnekKannadaCondensed = new FontFace('Anek-Kannada Condensed', 'url(/assets/main/fonts/anek-kannada.condensed-extrabold.ttf)');
-    await fontAnekKannadaCondensed.load();
-    document.fonts.add(fontAnekKannadaCondensed);
-
-    const fontAnekKannadaBold = new FontFace('Anek-Kannada Bold', 'url(/assets/main/fonts/anek-kannada.bold.ttf)');
-    await fontAnekKannadaBold.load();
-    document.fonts.add(fontAnekKannadaBold);
-
-    const fontCrimsonProRegular = new FontFace('CrimsonPro-Regular', 'url(/assets/main/fonts/Crimson_Pro/static/CrimsonPro-Regular.ttf)');
-    await fontCrimsonProRegular.load();
-    document.fonts.add(fontCrimsonProRegular);
-
-    await document.fonts.ready;
+    await loadFonts();
 
     // STATS MANAGER
 
@@ -182,7 +147,7 @@ import { LocalizationManager } from './core/LocalizationManager';
 
     // SceneManager
 
-    sceneManager.changeScene(mainMenu);
+    await sceneManager.changeScene(mainMenu);
 
     // AUDIO
 
