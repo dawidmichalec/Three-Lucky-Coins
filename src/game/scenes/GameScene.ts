@@ -31,6 +31,7 @@ import { SoundId } from '../../audio/SoundId';
 import { GameCheatController } from '../../dev/GameCheatController';
 import { DealerFightManager } from "../dealers/DealerFightManager";
 import { RoundResolver } from "../round/RoundResolver";
+import { RunStatsRecorder } from "../../stats/RunStatsRecorder";
 
 
 export class GameScene extends BaseScene {
@@ -42,7 +43,6 @@ export class GameScene extends BaseScene {
     private controls!: GameControls;
 
     private coinRow!: CoinRow;
-    private losingStreak = 0;
     private streakMultiplier = 1;
 
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
@@ -85,6 +85,8 @@ export class GameScene extends BaseScene {
 
     private gameCheatController!: GameCheatController;
 
+    private runStatsRecorder!: RunStatsRecorder;
+
 
     constructor (
         private app: Application,
@@ -102,6 +104,10 @@ export class GameScene extends BaseScene {
         // StatsManager
 
         this.statsManager = StatsManager.getInstance();
+
+        // RunStatsRecorder
+
+        this.runStatsRecorder = new RunStatsRecorder(this.statsManager);
 
         // Player
         this.player = new Player(25);
@@ -381,16 +387,6 @@ export class GameScene extends BaseScene {
             this.currentDealer,
             fight.targetBalance
         );
-
-
-        console.log(
-            [
-                `DEALER: ${this.currentDealer.name}`,
-                `STARTING BALANCE: ${fight.startingBalance}`,
-                `INCREASE BY: ${this.currentDealer.objectiveValue}`,
-                `TARGET BALANCE: ${fight.targetBalance}`
-            ].join("\n")
-        );
     }
 
 
@@ -617,7 +613,6 @@ export class GameScene extends BaseScene {
         if (this.roundState !== 'ready') return;
 
         this.roundState = 'spinning';
-        console.log('BET USED:', this.controller.getBet());
 
         this.lockControls();
         this.gameUI.updateWon(0);
@@ -639,16 +634,6 @@ export class GameScene extends BaseScene {
             goldenResult.map(
                 outcome => outcome.side
             );
-
-        console.log(
-            "BASE RESULT:",
-            baseResult
-        );
-
-        console.log(
-            "GOLDEN RESULT:",
-            goldenResult
-        );
 
         const selected =
             this.controller.getCurrentCombo();
@@ -734,14 +719,13 @@ export class GameScene extends BaseScene {
             this.gameUI.updateWon(0);
         }
 
-        this.updateRunStats(
-            selected,
-            win,
-            winAmount,
-            bet
-        );
-
-        console.log(this.statsManager.recordCombination);
+        this.runStatsRecorder.recordRound({
+                selected,
+                win,
+                winAmount,
+                bet,
+                streakMultiplier:this.streakMultiplier
+            });
 
         this.gameUI.updateMultiplier(
             this.streakMultiplier
@@ -973,89 +957,6 @@ export class GameScene extends BaseScene {
             );
         });
     }
-
-    // UPDATE RUN STATS
-
-    private updateRunStats(
-        selected: readonly CoinSide[],
-        win: boolean,
-        winAmount?: number,
-        bet?: number
-    ) {
-        console.log(
-            "UPDATE RUN STATS"
-        );
-
-        const combo = selected.join('-');
-
-
-        // =====================
-        // BET
-        // =====================
-
-        if (bet !== undefined) {
-
-            this.statsManager.recordBet(bet);
-
-        }
-
-
-        // =====================
-        // COMBINATION USAGE
-        // =====================
-
-        this.statsManager.recordCombination(combo);
-
-
-
-        // =====================
-        // WIN
-        // =====================
-
-        if (win) {
-
-
-            this.losingStreak = 0;
-
-
-            this.statsManager.recordSuccessfulBet();
-
-
-            this.statsManager.recordWinningCombination(combo);
-
-
-            if(winAmount !== undefined){
-
-                this.statsManager.recordWin(winAmount);
-
-            }
-
-
-            this.statsManager.recordWinStreak(
-                this.streakMultiplier
-            );
-
-
-        }
-        else {
-
-
-            this.losingStreak++;
-
-
-            this.statsManager.recordLoss(
-                bet ?? 0
-            );
-
-
-            this.statsManager.recordLoseStreak(
-                this.losingStreak
-            );
-
-        }
-
-    }
-
 
     // VICTORY
 
