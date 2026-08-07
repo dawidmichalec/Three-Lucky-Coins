@@ -4,7 +4,6 @@ import { GameUI } from '../../ui/GameUI';
 import { GameController } from '../GameController';
 import { CoinRow } from '../../ui/CoinRow';
 import { CoinSide } from '../../ui/Coin';
-import { COMBINATIONS } from '../data/CoinCombinations';
 import { HamburgerMenu } from '../../ui/menus/HamburgerMenu';
 import { GameControls } from '../../ui/controls/GameControls';
 import { CheatPanel } from '../../dev/CheatPanel';
@@ -17,12 +16,8 @@ import { StatsManager } from '../../core/StatsManager';
 import { RunSummaryPanel } from '../../ui/panels/RunSummaryPanel';
 import { StatsPanel } from '../../ui/panels/StatsPanel';
 import { LayoutManager } from '../../core/LayoutManager';
-import { LocalizedText } from '../../localization/LocalizedText';
-import { TranslationKey } from '../../core/LocalizationManager';
 import { OddsManager } from "../probability/OddsManager";
-import { getCombinationConfig } from "../data/CombinationUtils";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
-import { CoinOutcome } from "../goldenCoins/GoldenCoinTypes";
 import { DealerData } from "../dealers/DealerData";
 import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
 import { NextOpponentOverlay } from '../../ui/overlays/NextOpponentOverlay';
@@ -35,6 +30,7 @@ import { AudioManager } from '../../core/AudioManager';
 import { SoundId } from '../../audio/SoundId';
 import { GameCheatController } from '../../dev/GameCheatController';
 import { DealerFightManager } from "../dealers/DealerFightManager";
+import { RoundResolver } from "../round/RoundResolver";
 
 
 export class GameScene extends BaseScene {
@@ -632,9 +628,6 @@ export class GameScene extends BaseScene {
 
         this.controls.startTossAnimation();
 
-        const currentOdds =
-            this.oddsManager.getOdds();
-
         const baseResult =
             this.generateResult();
 
@@ -670,38 +663,58 @@ export class GameScene extends BaseScene {
         );
 
 
-        const win =
-            this.isWin(
-                selected,
-                resultSides
-            );
+       const goldenMultiplier =
+    this.goldenCoinManager
+        .getGoldenMultiplier(
+            goldenResult
+        );
 
-        let winAmount: number | undefined = undefined;
+
+        const resolution =
+            RoundResolver.resolve({
+
+                selected,
+
+                result:
+                    resultSides,
+
+                bet,
+
+                streakMultiplier:
+                    this.streakMultiplier,
+
+                goldenMultiplier
+            });
+
+
+        const win =
+            resolution.win;
+
+
+        const winAmount =
+            resolution.winAmount;
 
         if (win) {
 
-            const combinationConfig =
-                getCombinationConfig(selected);
+            if (
+                winAmount === undefined
+            ) {
 
-            const goldenMultiplier =
-                this.goldenCoinManager
-                    .getGoldenMultiplier(
-                        goldenResult
-                    );
+                throw new Error(
+                    "Winning round has no win amount."
+                );
+            }
 
-            winAmount =
-                bet *
-                combinationConfig.baseMultiplier *
-                this.streakMultiplier *
-                goldenMultiplier;
 
             this.player.addWin(winAmount);
 
-            this.gameUI.updateBalance(
-                this.player.balance
-            );
 
-            this.streakMultiplier += this.getStreakMultiplierGrowth();
+            this.gameUI.updateBalance(this.player.balance);
+
+
+            this.streakMultiplier +=
+                this.getStreakMultiplierGrowth();
+
 
             this.audioManager.play(
                 SoundId.WIN,
@@ -710,17 +723,15 @@ export class GameScene extends BaseScene {
                     volume: 0.7
                 }
             );
-            
-            this.gameUI.updateWon(
-                winAmount
-            );
+
+
+            this.gameUI.updateWon(winAmount);
 
         } else {
 
             this.streakMultiplier = 1;
 
             this.gameUI.updateWon(0);
-
         }
 
         this.updateRunStats(
@@ -777,16 +788,6 @@ export class GameScene extends BaseScene {
         
     }
 
-    private isWin(
-        selected: readonly CoinSide[],
-        result: readonly CoinSide[]
-    ): boolean {
-
-        return selected.every(
-            (side, index) =>
-                side === result[index]
-        );
-    }
 
     private generateResult():
         CoinSide[] {
