@@ -7,5 +7,6 @@ export enum ButtonTheme {
     BLACK,
     GREY,
     DARKGREEN,
-    GOLD
+    GOLD,
+    DARKGOLD
 }

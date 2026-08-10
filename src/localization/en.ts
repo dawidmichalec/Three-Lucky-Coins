@@ -9,8 +9,13 @@ export default {
 
 
     playerStats: "Player Stats",
-    addOnsUnlocked: "Add-Ons Unlocked",
-    achievements: "Achievements",
+    dealers: "Dealers",
+    juniorDealers: "Junior Dealers",
+    midDealers: "Mid Dealers",
+    seniorDealers: "Senior Dealers",
+    machineFloor: "Machine Floor",
+    management: "Management",
+    
 
 
     // PLAYER STATS LABELS

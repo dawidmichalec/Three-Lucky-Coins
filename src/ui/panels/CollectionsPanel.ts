@@ -12,11 +12,11 @@ import { TranslationKey } from "../../core/LocalizationManager";
 
 export class CollectionsPanel extends Container {
 
-    private currentTab: "player" | "add-ons" | "achievements" = "player";
+    private currentTab: "player" | "dealers" | "perks" = "player";
     private statsManager: StatsManager;
     private playerButton!: RoundedButton;
-    private achievementsButton!: RoundedButton;
-    private addOnsButton!: RoundedButton;
+    private perksButton!: RoundedButton;
+    private dealersButton!: RoundedButton;
     private scrollableContainer!: ScrollableContainer;
 
     private playerStatsValues!: Text;
@@ -54,7 +54,7 @@ export class CollectionsPanel extends Container {
 
             text: "playerStats",
 
-            theme:ButtonTheme.GREEN,
+            theme:ButtonTheme.GOLD,
 
             onClick:()=> {
                 this.showPlayerStats();
@@ -65,40 +65,40 @@ export class CollectionsPanel extends Container {
         this.playerButton.position.set(333.6, 108);
 
 
-        this.addOnsButton = new RoundedButton({
+        this.dealersButton = new RoundedButton({
 
-            text: "addOnsUnlocked",
+            text: "dealers",
 
-            theme: ButtonTheme.GREEN,
+            theme: ButtonTheme.GOLD,
 
             onClick:()=> {
-                this.showAddOnsUnlocked();
+                this.showDealerCollectionPanel();
             }
 
         });
 
-        this.addOnsButton.position.set(798, 108);
+        this.dealersButton.position.set(798, 108);
 
 
-        this.achievementsButton = new RoundedButton({
+        this.perksButton = new RoundedButton({
 
-            text: "achievements",
+            text: "perks",
 
             theme: ButtonTheme.GREEN,
 
             onClick:()=> {
-                this.showAchievements();
+                this.showPerksCollectionPanel();
             }
 
         })
 
 
-        this.achievementsButton.position.set(1290.5, 108);
+        this.perksButton.position.set(1290.5, 108);
 
         this.addChild(
             this.playerButton,
-            this.addOnsButton,
-            this.achievementsButton
+            this.dealersButton,
+            this.perksButton
         );
 
     }
@@ -369,34 +369,34 @@ export class CollectionsPanel extends Container {
 
         this.currentTab = "player";
 
-        this.playerButton.setTheme(ButtonTheme.DARKGREEN);
-        this.addOnsButton.setTheme(ButtonTheme.GREEN);
-        this.achievementsButton.setTheme(ButtonTheme.GREEN);
+        this.playerButton.setTheme(ButtonTheme.DARKGOLD);
+        this.dealersButton.setTheme(ButtonTheme.GOLD);
+        this.perksButton.setTheme(ButtonTheme.GOLD);
 
         this.refresh();
     }
 
 
 
-    private showAddOnsUnlocked() {
+    private showDealerCollectionPanel() {
 
-        this.currentTab = "add-ons";
+        this.currentTab = "dealers";
 
-        this.playerButton.setTheme(ButtonTheme.GREEN);
-        this.addOnsButton.setTheme(ButtonTheme.DARKGREEN);
-        this.achievementsButton.setTheme(ButtonTheme.GREEN);
+        this.playerButton.setTheme(ButtonTheme.GOLD);
+        this.dealersButton.setTheme(ButtonTheme.DARKGOLD);
+        this.perksButton.setTheme(ButtonTheme.GOLD);
 
         this.refresh();
 
     }
 
-    private showAchievements(){
+    private showPerksCollectionPanel(){
 
-        this.currentTab = "achievements";
+        this.currentTab = "perks";
 
-        this.playerButton.setTheme(ButtonTheme.GREEN);
-        this.addOnsButton.setTheme(ButtonTheme.GREEN);
-        this.achievementsButton.setTheme(ButtonTheme.DARKGREEN);
+        this.playerButton.setTheme(ButtonTheme.GOLD);
+        this.dealersButton.setTheme(ButtonTheme.GOLD);
+        this.perksButton.setTheme(ButtonTheme.DARKGOLD);
 
         this.refresh();
 
@@ -449,9 +449,9 @@ export class CollectionsPanel extends Container {
 
         this.currentTab = "player";
 
-        this.playerButton.setTheme(ButtonTheme.DARKGREEN);
-        this.addOnsButton.setTheme(ButtonTheme.GREEN);
-        this.achievementsButton.setTheme(ButtonTheme.GREEN);
+        this.playerButton.setTheme(ButtonTheme.DARKGOLD);
+        this.dealersButton.setTheme(ButtonTheme.GOLD);
+        this.perksButton.setTheme(ButtonTheme.GOLD);
 
         this.refresh();
 

@@ -537,8 +537,8 @@ export class StatsPanel extends Container {
 
         this.currentTab = "run";
 
-        this.runButton.setTheme(ButtonTheme.DARKGREEN);
-        this.playerButton.setTheme(ButtonTheme.GREEN);
+        this.runButton.setTheme(ButtonTheme.DARKGOLD);
+        this.playerButton.setTheme(ButtonTheme.GOLD);
 
         this.refresh();
     }
@@ -547,8 +547,8 @@ export class StatsPanel extends Container {
 
         this.currentTab = "player";
 
-        this.playerButton.setTheme(ButtonTheme.DARKGREEN);
-        this.runButton.setTheme(ButtonTheme.GREEN);
+        this.playerButton.setTheme(ButtonTheme.DARKGOLD);
+        this.runButton.setTheme(ButtonTheme.GOLD);
 
         this.refresh();
     }
@@ -597,8 +597,8 @@ export class StatsPanel extends Container {
 
         this.currentTab = "run";
 
-        this.runButton.setTheme(ButtonTheme.DARKGREEN);
-        this.playerButton.setTheme(ButtonTheme.GREEN);
+        this.runButton.setTheme(ButtonTheme.DARKGOLD);
+        this.playerButton.setTheme(ButtonTheme.GOLD);
 
         this.refresh();
 

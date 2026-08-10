@@ -9,8 +9,12 @@ export default {
 
 
     playerStats: "Statystyki gracza",
-    addOnsUnlocked: "Odblokowane ulepszenia",
-    achievements: "Osiągnięcia",
+    dealers: "Krupierzy",
+    juniorDealers: "Młodsi Krupierzy",
+    midDealers: "Krupierzy",
+    seniorDealers: "Starsi Krupierzy",
+    machineFloor: "Piętro z maszynami",
+    management: "Zarząd",
 
 
     // PLAYER STATS LABELS

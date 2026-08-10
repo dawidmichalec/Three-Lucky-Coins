@@ -10,7 +10,7 @@ export const AUDIO_PATHS = {
         "/assets/main/sounds/sfx_press.mp3",
 
     [SoundId.MAIN_THEME]:
-        "/assets/main/sounds/test_main_music.mp3",
+        "/assets/main/sounds/test_main_music.wav",
 
     [SoundId.SPIN_START]:
         "/assets/main/sounds/coin_spin_start.wav",
