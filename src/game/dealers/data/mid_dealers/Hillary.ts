@@ -3,6 +3,7 @@ import { DealerSkillId } from "../../DealerSkill";
 import { ObjectiveType } from "../../../objectives/ObjectiveTypes";
 import { DealerGroup } from "../../DealerGroup";
 import { DealerRole } from "../../DealerRole";
+import { HILLARY_PROFILE } from "../../../probability/DealerOddsProfiles";
 
 export const HILLARY_DATA: DealerData = {
 
@@ -26,6 +27,8 @@ export const HILLARY_DATA: DealerData = {
 
     group: DealerGroup.MID,
     role: DealerRole.REGULAR,
+
+    oddsProfile: HILLARY_PROFILE,
 
     objectiveType:
         ObjectiveType.INCREASE_BALANCE,

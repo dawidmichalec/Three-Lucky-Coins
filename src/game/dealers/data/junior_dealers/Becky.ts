@@ -3,6 +3,7 @@ import { ObjectiveType } from "../../../objectives/ObjectiveTypes.ts";
 import { DealerGroup } from "../../DealerGroup.ts";
 import { DealerRole } from "../../DealerRole.ts";
 import { DealerSkillId } from "../../DealerSkill.ts";
+import { BECKY_PROFILE } from "../../../probability/DealerOddsProfiles.ts";
 
 export const BECKY_DATA: DealerData = {
 
@@ -26,6 +27,8 @@ export const BECKY_DATA: DealerData = {
 
     group: DealerGroup.JUNIOR,
     role: DealerRole.REGULAR,
+
+    oddsProfile: BECKY_PROFILE,
 
     objectiveType:
         ObjectiveType.INCREASE_BALANCE,

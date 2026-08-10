@@ -2,6 +2,7 @@ import { DealerData } from "../../DealerData.ts";
 import { ObjectiveType } from "../../../objectives/ObjectiveTypes.ts";
 import { DealerGroup } from "../../DealerGroup.ts";
 import { DealerRole } from "../../DealerRole.ts";
+import { ZACK_PROFILE } from "../../../probability/DealerOddsProfiles.ts";
 
 export const ZACK_DATA: DealerData = {
 
@@ -25,6 +26,8 @@ export const ZACK_DATA: DealerData = {
 
     group: DealerGroup.JUNIOR,
     role: DealerRole.REGULAR,
+
+    oddsProfile: ZACK_PROFILE,
 
     objectiveType:
         ObjectiveType.INCREASE_BALANCE,

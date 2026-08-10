@@ -108,11 +108,11 @@ export default {
 
     benDescription: "Ben to przyjazny młodszy krupier, który zawsze chętnie wita nowych graczy.\n\nNie będzie zbytnio utrudniał rozgrywki, dzięki czemu świetnie nadaje się do nauki podstaw. ",
     benSaying: "Nie martw się, dam Ci fory",
-    zackDescription:"Zack jest studentem, który pracuje w kasynie, żeby zarobić trochę pieniędzy.\nJest trochę nieśmiały i niezdarny.",
+    zackDescription:"Zack jest studentem, który pracuje w kasynie, żeby zarobić trochę pieniędzy.\n\nJest trochę nieśmiały i niezdarny.",
     zackSaying: "Tylko mnie nie wylej",
-    beckyDescription: "Koleżanka Zacka ze studiów.\nZawsze radosna, trochę roztrzepana i niezbyt dobra w śledzeniu wypłat.",
+    beckyDescription: "Koleżanka Zacka ze studiów.\n\nZawsze radosna, trochę roztrzepana i niezbyt dobra w śledzeniu wypłat.",
     beckySaying: "Nigdy nie lubiłam matmy",
-    melanieDescription: "Melanie jest młodszą kierowniczką.\nPracuje w kasynie, ale nie lubi tego.",
+    melanieDescription: "Melanie jest młodszą kierowniczką.\n\nPracuje w kasynie, ale nie lubi tego.",
     melanieSaying: "To koniec Twojego szczęścia",
 
     // MID DEALERS

@@ -5,6 +5,7 @@ import { DealerGroup } from "./DealerGroup.ts";
 import { DealerRole } from "./DealerRole.ts";
 import { GoldenCoinSettings } from "../goldenCoins/GoldenCoinTypes.ts";
 import { GambleForMoreSettings } from "../gambleForMore/GambleForMoreSettings.ts";
+import { DealerOddsProfile } from "../probability/OddsTypes.ts";
 
 export interface DealerData {
     id: string;
@@ -20,6 +21,8 @@ export interface DealerData {
 
     group: DealerGroup;
     role: DealerRole;
+
+    oddsProfile: DealerOddsProfile;
 
     objectiveType: ObjectiveType;
     objectiveValue: number;

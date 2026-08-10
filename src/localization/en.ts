@@ -110,11 +110,11 @@ export default {
 
     benDescription: "Ben is a friendly junior dealer who's always happy to welcome new players.\n\nHe won't make things too difficult, making him the perfect opponent to learn the ropes.",
     benSaying: "Don't worry, I'm gonna go easy on you",
-    zackDescription:"Zack is a student who works at a casino to get some money.\nHe’s a bit shy and clumsy.",
+    zackDescription:"Zack is a student who works at a casino to get some money.\n\nHe’s a bit shy and clumsy.",
     zackSaying: "Please don't get me fired",
-    beckyDescription: "Zack’s university friend.\nAlways cheerful, a little silly, and not particularly good at keeping track of payouts.",
+    beckyDescription: "Zack’s university friend.\n\nAlways cheerful, a little silly, and not particularly good at keeping track of payouts.",
     beckySaying: "Math was never my favorite subject",
-    melanieDescription: "Melanie is a Junior Supervisor.\nShe works at a casino but doesn't like this. ",
+    melanieDescription: "Melanie is a Junior Supervisor.\n\nShe works at a casino but doesn't like this. ",
     melanieSaying: "Your luck ends here",
 
     // MID DEALERS

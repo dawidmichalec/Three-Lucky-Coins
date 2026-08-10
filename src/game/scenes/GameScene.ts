@@ -12,9 +12,6 @@ import { StatsManager } from '../../core/StatsManager';
 import { OddsManager } from "../probability/OddsManager";
 import { GoldenCoinManager } from "../goldenCoins/GoldenCoinManager";
 import { DealerData } from "../dealers/DealerData";
-import { BEN_DATA,  HILLARY_DATA } from "../dealers/DealerRegistry";
-import { BEN_PROFILE, HILLARY_PROFILE } from "../probability/DealerOddsProfiles";
-import { DealerOddsProfile } from "../probability/OddsTypes";
 import { GameCheatController } from '../../dev/GameCheatController';
 import { DealerFightManager } from "../dealers/DealerFightManager";
 import { RoundResolver } from "../round/RoundResolver";
@@ -23,6 +20,7 @@ import { RunEndController } from "../run/RunEndController";
 import { DealerPresentationController } from "../../ui/controllers/DealerPresentationController";
 import { RoundOutcomeHandler } from "../round/RoundOutcomeHandler";
 import { GameSceneView } from "../../ui/GameSceneView";
+import { RunDealerGenerator } from '../run/RunDealerGenerator';
 
 
 export class GameScene extends BaseScene {
@@ -39,11 +37,7 @@ export class GameScene extends BaseScene {
     private oddsManager = OddsManager.getInstance();
     private goldenCoinManager = GoldenCoinManager.getInstance();
     private isChangingDealer = false;
-    private dealerFightManager =
-        new DealerFightManager([
-            BEN_DATA,
-            HILLARY_DATA
-        ]);
+    private dealerFightManager!:DealerFightManager;
     private gameCheatController!: GameCheatController;
     private runStatsRecorder!: RunStatsRecorder;
     private runEndController!: RunEndController;
@@ -60,6 +54,30 @@ export class GameScene extends BaseScene {
         super();
 
         this.sortableChildren = true;
+
+        // RUN DEALERS
+
+        const dealerOrder =
+            RunDealerGenerator
+                .generateRun();
+
+        console.log(
+            "RUN DEALER ORDER:",
+            dealerOrder.map(
+                dealer =>
+                    dealer.name
+            )
+        );
+
+
+        this.dealerFightManager =
+            new DealerFightManager(
+                dealerOrder
+            );
+
+        this.applyDealerSettings(
+            this.currentDealer
+        );
 
         this.setupTicker();
 
@@ -256,14 +274,22 @@ export class GameScene extends BaseScene {
     }
 
 
-    private prepareNextRound() {
+    private applyDealerSettings(
+        dealer: DealerData
+    ) {
 
-        const profile =
-            this.getCurrentDealerOddsProfile();
+        this.goldenCoinManager.configure(
+            dealer.goldenCoinSettings
+        );
+    }
+
+
+    private prepareNextRound() {
 
         const odds =
             this.oddsManager.rollOdds(
-                profile
+                this.currentDealer
+                    .oddsProfile
             );
 
         this.view.gameUI.updateProbability(
@@ -276,21 +302,6 @@ export class GameScene extends BaseScene {
 
         return this.dealerFightManager
             .getCurrentDealer();
-    }
-
-
-    private getCurrentDealerOddsProfile():
-        DealerOddsProfile {
-
-        switch (this.currentDealer.id) {
-
-            case HILLARY_DATA.id:
-                return HILLARY_PROFILE;
-
-            case BEN_DATA.id:
-            default:
-                return BEN_PROFILE;
-        }
     }
 
 
@@ -377,6 +388,10 @@ export class GameScene extends BaseScene {
         );
 
         this.view.gameUI.updateWon(0);
+
+        this.applyDealerSettings(
+            dealer
+        );
 
         /*
             Aktualizacja małej karty i paneli.

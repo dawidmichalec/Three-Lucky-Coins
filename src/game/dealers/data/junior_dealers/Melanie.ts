@@ -2,6 +2,7 @@ import { DealerData } from "../../DealerData.ts";
 import { ObjectiveType } from "../../../objectives/ObjectiveTypes.ts";
 import { DealerGroup } from "../../DealerGroup.ts";
 import { DealerRole } from "../../DealerRole.ts";
+import { MELANIE_PROFILE } from "../../../probability/DealerOddsProfiles.ts";
 
 export const MELANIE_DATA: DealerData = {
 
@@ -25,6 +26,8 @@ export const MELANIE_DATA: DealerData = {
 
     group: DealerGroup.JUNIOR,
     role: DealerRole.SUPERVISOR,
+
+    oddsProfile: MELANIE_PROFILE,
 
     objectiveType:
         ObjectiveType.INCREASE_BALANCE,
