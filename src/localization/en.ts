@@ -90,7 +90,9 @@ export default {
     // DEALER CARD DISPLAY
 
     juniorDealer: "Junior Dealer",
+    juniorSupervisor: "Junior Supervisor",
     midDealer: "Mid Dealer",
+    midSupervisor: "Mid Supervisor",
     seniorDealer: "Senior Dealer",
     manager: "Manager",
     vicePresident: "Vice President",
@@ -103,15 +105,31 @@ export default {
     nextOpponent: "NEXT OPPONENT",
     dealerDescription: "Description",
     noSkills: "This opponent has no special skills.",
+
+    // JUNIOR DEALERS
+
     benDescription: "Ben is a friendly junior dealer who's always happy to welcome new players.\n\nHe won't make things too difficult, making him the perfect opponent to learn the ropes.",
     benSaying: "Don't worry, I'm gonna go easy on you",
+    zackDescription:"Zack is a student who works at a casino to get some money.\nHe’s a bit shy and clumsy.",
+    zackSaying: "Please don't get me fired",
+    beckyDescription: "Zack’s university friend.\nAlways cheerful, a little silly, and not particularly good at keeping track of payouts.",
+    beckySaying: "Math was never my favorite subject",
+    melanieDescription: "Melanie is a Junior Supervisor.\nShe works at a casino but doesn't like this. ",
+    melanieSaying: "Your luck ends here",
+
+    // MID DEALERS
+
     hillaryDescription: "Experienced dealer who has been working at a casino for a few years.",
     hillarySaying: "No rush. Let's enjoy the game!",
-    timothyDescription: "Working at a casino is his second job. He needs to work here because he needs money for alimony. \n\nThat’ s why he’s eagerly forcing tips on the players.",
+    timothyDescription: "Working at a casino is his second job. He needs to work here because he needs money for alimony. \n\nThat’s why he’s eagerly forcing tips on the players.",
     timothySaying: "How about a nice tip for a hard working man?",
 
 
     // SKILLS
+
+    oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
+
+    oopsIPaidYouTwiceSkillDescription: "Sometimes gets a little mixed up and accidentally pays the player twice.",
 
     slowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
 

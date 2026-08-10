@@ -148,6 +148,15 @@ export class GoldenCoinManager {
         this.forcedGoldenCount = undefined;
     }
 
+    configure(
+        overrides?: Partial<GoldenCoinSettings>
+    ) {
+        this.settings = {
+            ...DEFAULT_GOLDEN_COIN_SETTINGS,
+            ...overrides
+        };
+    }
+
     private applyForcedGoldenCoins(
         outcomes: CoinOutcome[],
         requestedCount: number

@@ -88,7 +88,9 @@ export default {
     // DEALER CARD DISPLAY
 
     juniorDealer: "Młodszy Krupier",
+    juniorSupervisor: "Młodszy Kierownik",
     midDealer: "Krupier",
+    midSupervisor: "Kierownik",
     seniorDealer: "Starszy Krupier",
     manager: "Manager",
     vicePresident: "Wiceprezes",
@@ -101,8 +103,20 @@ export default {
     nextOpponent: "NASTĘPNY PRZECIWNIK",
     dealerDescription: "Opis",
     noSkills: "Ten przeciwnik nie ma żadnych specjalnych umiejętności.",
+
+    // JUNIOR DEALERS
+
     benDescription: "Ben to przyjazny młodszy krupier, który zawsze chętnie wita nowych graczy.\n\nNie będzie zbytnio utrudniał rozgrywki, dzięki czemu świetnie nadaje się do nauki podstaw. ",
     benSaying: "Nie martw się, dam Ci fory",
+    zackDescription:"Zack jest studentem, który pracuje w kasynie, żeby zarobić trochę pieniędzy.\nJest trochę nieśmiały i niezdarny.",
+    zackSaying: "Tylko mnie nie wylej",
+    beckyDescription: "Koleżanka Zacka ze studiów.\nZawsze radosna, trochę roztrzepana i niezbyt dobra w śledzeniu wypłat.",
+    beckySaying: "Nigdy nie lubiłam matmy",
+    melanieDescription: "Melanie jest młodszą kierowniczką.\nPracuje w kasynie, ale nie lubi tego.",
+    melanieSaying: "To koniec Twojego szczęścia",
+
+    // MID DEALERS
+
     hillaryDescription: "Doświadczona krupierka, która pracuje w kasynie od kilku lat.",
     hillarySaying: "Bez pośpiechu. Cieszmy się grą!",
     timothyDescription: "Praca w kasynie to jego druga praca. Musi tu pracować, bo potrzebuje pieniędzy na alimenty.\n\nDlatego tak chętnie wymusza na graczach napiwki.",
@@ -111,7 +125,11 @@ export default {
     
     // SKILL
 
-    slowerMultiplierGrowthSkillName: "Wolniejszy Wzrost Mnożnika",
+    oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
+
+    oopsIPaidYouTwiceSkillDescription: "Czasami trochę się gubi i przypadkiem płaci graczowi dwa razy.",
+
+    slowerMultiplierGrowthSkillName: "Wolniejszy wzrost mnożnika",
 
     slowerMultiplierGrowthSkillDescription: "Każda wygrana zwiększa mnożnik serii o 0,5.",
 
