@@ -1,6 +1,8 @@
 import { Assets, Container, Sprite, Texture } from "pixi.js";
 import { LocalizedText } from "../../../localization/LocalizedText";
 import { CardColor } from "../../../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
+import { AudioManager } from "../../../core/AudioManager";
+import { SoundId } from "../../../audio/SoundId";
 
 export class RedBlackCardView extends Container {
 
@@ -18,6 +20,8 @@ export class RedBlackCardView extends Container {
     private readonly blackStartX = 750;
     private readonly cardY = 90;
     private readonly centerX = 600;
+
+    private audioManager = AudioManager.getInstance();
 
 
     constructor(width: number, height: number) {
@@ -131,26 +135,76 @@ export class RedBlackCardView extends Container {
         const redStartX = this.redCard.x;
         const blackStartX = this.blackCard.x;
 
+        let soundOnePlayed = false;
+        let soundTwoPlayed = false;
+        let soundThreePlayed = false;
+        let soundFourPlayed = false;
+
         await this.animate(900, progress => {
 
-            const wave =
-                Math.sin(
-                    progress *
-                    Math.PI *
-                    8
-                ) * 100;
+            const wave = Math.sin(progress * Math.PI * 8) * 100;
 
             this.redCard.x =
                 redStartX +
-                (this.centerX - redStartX) *
-                progress +
+                (this.centerX - redStartX) * progress +
                 wave;
 
             this.blackCard.x =
                 blackStartX +
-                (this.centerX - blackStartX) *
-                progress -
+                (this.centerX - blackStartX) * progress -
                 wave;
+
+
+            if (!soundOnePlayed && progress >= 0.15) {
+                soundOnePlayed = true;
+
+                this.audioManager.play(
+                    SoundId.CARD_SWIPE,
+                    {
+                        loop: false,
+                        volume: 0.7
+                    }
+                );
+            }
+
+
+            if (!soundTwoPlayed && progress >= 0.35) {
+                soundTwoPlayed = true;
+
+                this.audioManager.play(
+                    SoundId.CARD_SWIPE,
+                    {
+                        loop: false,
+                        volume: 0.7
+                    }
+                );
+            }
+
+
+            if (!soundThreePlayed && progress >= 0.55) {
+                soundThreePlayed = true;
+
+                this.audioManager.play(
+                    SoundId.CARD_SWIPE,
+                    {
+                        loop: false,
+                        volume: 0.7
+                    }
+                );
+            }
+
+
+            if (!soundFourPlayed && progress >= 0.75) {
+                soundFourPlayed = true;
+
+                this.audioManager.play(
+                    SoundId.CARD_SWIPE,
+                    {
+                        loop: false,
+                        volume: 0.7
+                    }
+                );
+            }
         });
     }
 

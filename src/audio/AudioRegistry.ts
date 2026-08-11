@@ -28,6 +28,8 @@ export const AUDIO_REGISTRY = {
 
     [SoundId.COIN_TWO_CORRECT]: AudioCategory.SFX,
 
-    [SoundId.COIN_THREE_CORRECT]: AudioCategory.SFX
+    [SoundId.COIN_THREE_CORRECT]: AudioCategory.SFX,
+
+    [SoundId.CARD_SWIPE]: AudioCategory.SFX
 
 };

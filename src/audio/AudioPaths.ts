@@ -37,6 +37,9 @@ export const AUDIO_PATHS = {
         "/assets/main/sounds/coin_two_correct.wav",
 
     [SoundId.COIN_THREE_CORRECT]:
-        "/assets/main/sounds/coin_three_correct.wav"
+        "/assets/main/sounds/coin_three_correct.wav",
+
+    [SoundId.CARD_SWIPE]:
+        "/assets/main/sounds/card_swipe.mp3"
 
 };

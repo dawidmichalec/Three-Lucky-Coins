@@ -24,6 +24,8 @@ export enum SoundId {
 
     COIN_TWO_CORRECT = "coin_two_correct",
 
-    COIN_THREE_CORRECT = "coin_three_correct"
+    COIN_THREE_CORRECT = "coin_three_correct",
+
+    CARD_SWIPE = "card_swipe"
 
 }
