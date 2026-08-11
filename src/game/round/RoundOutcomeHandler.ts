@@ -1,4 +1,3 @@
-import { Player } from "../Player";
 import { AudioManager } from "../../core/AudioManager";
 import { SoundId } from "../../audio/SoundId";
 import { DealerData } from "../dealers/DealerData";
@@ -32,7 +31,6 @@ export class RoundOutcomeHandler {
 
 
     apply(
-        player: Player,
         data: RoundOutcomeData
     ): RoundOutcomeResult {
 
@@ -54,11 +52,6 @@ export class RoundOutcomeHandler {
                 "Winning round has no win amount."
             );
         }
-
-
-        player.addWin(
-            data.winAmount
-        );
 
 
         this.audioManager.play(

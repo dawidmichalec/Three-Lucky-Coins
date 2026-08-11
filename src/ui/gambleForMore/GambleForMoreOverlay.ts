@@ -5,13 +5,23 @@ import { LocalizedText } from "../../localization/LocalizedText";
 import { RoundedButton } from "../buttons/RoundedButton";
 import { ButtonTheme } from "../buttons/ButtonTheme";
 import { RedBlackCardView } from "./games/RedBlackCardView";
+import { GambleForMoreOffer } from "../../game/gambleForMore/GambleForMoreTypes";
+import { CardColor } from "../../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
 
 export class GambleForMoreOverlay extends Container {
 
     private layoutManager = LayoutManager.getInstance();
     private redBlackCardView: RedBlackCardView;
+    private currentWinValue: Text;
+    private potentialWinValue:Text;
 
-    constructor(){
+    constructor(
+        private onYes:() => void,
+
+        private onNo:() => void,
+
+        private onColorSelected: (color: CardColor) => void
+    ){
         super();
 
         this.visible = false;
@@ -38,7 +48,8 @@ export class GambleForMoreOverlay extends Container {
         this.redBlackCardView =
             new RedBlackCardView(
                 1200,
-                472.4
+                472.4,
+                this.onColorSelected
             );
 
         this.redBlackCardView.position.set(
@@ -60,8 +71,8 @@ export class GambleForMoreOverlay extends Container {
         currentWinLabel.anchor.set(0);
 
 
-        const currentWinValue = new Text({
-            text: '120.10',
+        this.currentWinValue = new Text({
+            text: '0.00',
             style: {
                 font: "Open Sans",
                 fontSize: 28,
@@ -70,8 +81,8 @@ export class GambleForMoreOverlay extends Container {
             }
         });
 
-        currentWinValue.position.set(1190, 673.4);
-        currentWinValue.anchor.set(0);
+        this.currentWinValue.position.set(1190, 673.4);
+        this.currentWinValue.anchor.set(0);
 
 
         const potentialWinLabel = new LocalizedText(
@@ -88,8 +99,8 @@ export class GambleForMoreOverlay extends Container {
         potentialWinLabel.anchor.set(0);
 
 
-        const potentialWinValue = new Text({
-            text: "520.40",
+        this.potentialWinValue = new Text({
+            text: "0.00",
             style: {
                 font: "Open Sans",
                 fontSize: 28,
@@ -98,8 +109,8 @@ export class GambleForMoreOverlay extends Container {
             }
         })
 
-        potentialWinValue.position.set(1190, 710.4);
-        potentialWinValue.anchor.set(0);
+        this.potentialWinValue.position.set(1190, 710.4);
+        this.potentialWinValue.anchor.set(0);
 
 
         const disclaimer = new LocalizedText(
@@ -124,7 +135,7 @@ export class GambleForMoreOverlay extends Container {
                 theme:ButtonTheme.GREEN,
 
                 onClick:()=>{
-
+                    this.onYes();
                 }
 
             });
@@ -139,7 +150,7 @@ export class GambleForMoreOverlay extends Container {
                 theme:ButtonTheme.RED,
 
                 onClick:()=>{
-
+                    this.onNo();
                 }
 
             });
@@ -152,9 +163,9 @@ export class GambleForMoreOverlay extends Container {
             header,
             this.redBlackCardView,
             currentWinLabel,
-            currentWinValue,
+            this.currentWinValue,
             potentialWinLabel,
-            potentialWinValue,
+            this.potentialWinValue,
             disclaimer,
             yesButton,
             noButton
@@ -166,6 +177,47 @@ export class GambleForMoreOverlay extends Container {
 
         await this.redBlackCardView
             .init();
+    }
+
+    setSelectionEnabled(
+        enabled: boolean
+    ) {
+
+        this.redBlackCardView
+            .setSelectionEnabled(
+                enabled
+            );
+    }
+
+    startGame() {
+
+        this.redBlackCardView
+            .setSelectionEnabled(
+                true
+            );
+    }
+
+    showOffer(
+        offer: GambleForMoreOffer
+    ) {
+
+        this.currentWinValue.text =
+            offer.currentWin.toFixed(2);
+
+
+        this.potentialWinValue.text =
+            offer.potentialWin.toFixed(2);
+
+
+        this.visible =
+            true;
+    }
+
+
+    hide() {
+
+        this.visible =
+            false;
     }
     
 }

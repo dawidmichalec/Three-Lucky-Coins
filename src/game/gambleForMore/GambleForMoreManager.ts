@@ -6,35 +6,68 @@ import {
     GambleForMoreGameId
 } from "./GambleForMoreGameId";
 
+import {
+    GambleForMoreOffer
+} from "./GambleForMoreTypes";
+
+
+const DEFAULT_SETTINGS:
+    GambleForMoreSettings = {
+
+        enabled: false,
+
+        triggerChance: 0,
+
+        availableGames: [
+            GambleForMoreGameId
+                .RED_BLACK_CARD
+        ]
+    };
+
 
 export class GambleForMoreManager {
 
-    shouldTrigger(
-        settings:
-            GambleForMoreSettings
-    ): boolean {
+    private settings:
+        GambleForMoreSettings = {
+            ...DEFAULT_SETTINGS
+        };
 
-        if (!settings.enabled) {
+
+    configure(
+        settings?:
+            Partial<GambleForMoreSettings>
+    ) {
+
+        this.settings = {
+            ...DEFAULT_SETTINGS,
+            ...settings
+        };
+    }
+
+
+    shouldTrigger():
+        boolean {
+
+        if (!this.settings.enabled) {
             return false;
         }
 
         return (
             Math.random() <
-            settings.triggerChance
+            this.settings.triggerChance
         );
     }
 
 
-    selectGame(
-        settings:
-            GambleForMoreSettings
-    ): GambleForMoreGameId {
+    selectGame():
+        GambleForMoreGameId {
 
         const games =
-            settings.availableGames ??
-            Object.values(
+            this.settings.availableGames ??
+            [
                 GambleForMoreGameId
-            );
+                    .RED_BLACK_CARD
+            ];
 
 
         const index =
@@ -45,5 +78,32 @@ export class GambleForMoreManager {
 
 
         return games[index];
+    }
+
+
+    createOffer(
+        currentWin: number
+    ): GambleForMoreOffer {
+
+        const gameId =
+            this.selectGame();
+
+
+        /*
+            TYMCZASOWO x2.
+
+            Docelową ekonomię:
+            win/bet → potential multiplier
+            zrobimy osobno.
+        */
+        const potentialWin =
+            currentWin * 2;
+
+
+        return {
+            currentWin,
+            potentialWin,
+            gameId
+        };
     }
 }

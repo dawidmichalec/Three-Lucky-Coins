@@ -21,6 +21,10 @@ import { DealerPresentationController } from "../../ui/controllers/DealerPresent
 import { RoundOutcomeHandler } from "../round/RoundOutcomeHandler";
 import { GameSceneView } from "../../ui/GameSceneView";
 import { RunDealerGenerator } from '../run/RunDealerGenerator';
+import { GambleForMoreManager } from "../gambleForMore/GambleForMoreManager";
+import { GambleForMoreOffer } from "../gambleForMore/GambleForMoreTypes";
+import { CardColor } from "../gambleForMore/games/redBlackCard/RedBlackCardTypes";
+import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCardGame";
 
 
 export class GameScene extends BaseScene {
@@ -44,6 +48,10 @@ export class GameScene extends BaseScene {
     private dealerPresentationController!: DealerPresentationController;
     private roundOutcomeHandler =new RoundOutcomeHandler();
     private view: GameSceneView;
+    private gambleForMoreManager = new GambleForMoreManager();
+    private pendingGambleOffer?: GambleForMoreOffer;
+    private pendingStreakMultiplier?: number;
+    private redBlackCardGame = new RedBlackCardGame();
 
 
     constructor (
@@ -133,7 +141,20 @@ export class GameScene extends BaseScene {
 
                         this.sceneManager
                             .showMainMenu();
-                    }
+                    },
+
+                    onGambleForMoreYes: () =>
+                        this.handleGambleForMoreYes(),
+
+                    onGambleForMoreNo: () =>
+                        this.handleGambleForMoreNo(),
+
+                    onGambleForMoreColorSelected:
+                        color =>
+                            this.handleGambleForMoreColorSelected(
+                                color
+                            )
+
                 }
             );
 
@@ -282,8 +303,12 @@ export class GameScene extends BaseScene {
         this.goldenCoinManager.configure(
             dealer.goldenCoinSettings
         );
-    }
 
+
+        this.gambleForMoreManager.configure(
+            dealer.gambleForMoreSettings
+        );
+    }
 
     private prepareNextRound() {
 
@@ -453,7 +478,7 @@ export class GameScene extends BaseScene {
         );
     }
 
-    // START RUN - FUNCTION RESPONSIBLE FOR THE GAME LOOP
+    // START ROUND - FUNCTION RESPONSIBLE FOR THE GAME LOOP
 
     private async startRound() {
 
@@ -530,79 +555,282 @@ export class GameScene extends BaseScene {
         const winAmount =
             resolution.winAmount;
 
-        const outcome =
-            this.roundOutcomeHandler
-                .apply(
-                    this.player,
-                    {
-                        win,
-                        winAmount,
 
-                        currentDealer:
-                            this.currentDealer,
+        const outcome = this.roundOutcomeHandler.apply({
+            win,
+            winAmount,
+            currentDealer: this.currentDealer,
+            currentStreakMultiplier: this.streakMultiplier
+        });
 
-                        currentStreakMultiplier:
-                            this.streakMultiplier
-                    }
-                );
+        const pendingStreakMultiplier = outcome.newStreakMultiplier;
 
-        this.streakMultiplier = outcome.newStreakMultiplier;
 
-        this.view.gameUI.updateBalance(this.player.balance);
+        /*
+            ROUND STATS
+        */
 
-        this.view.gameUI.updateWon(outcome.wonAmount);
+        this.runStatsRecorder.startRound({
+            selected,
+            bet
+        });
 
-        this.runStatsRecorder.recordRound({
-                selected,
-                win,
+
+        /*
+            WIN
+        */
+
+        if (win && winAmount !== undefined) {
+
+            console.log("WIN AMOUNT:", winAmount);
+
+            const gambleTriggered = this.gambleForMoreManager.shouldTrigger();
+
+            console.log("GAMBLE TRIGGERED:", gambleTriggered);
+
+            if (gambleTriggered) {
+
+                console.log("WIN IS PENDING:", winAmount);
+
+                this.pendingStreakMultiplier = pendingStreakMultiplier;
+
+                this.startGambleForMore(winAmount);
+
+                return;
+            }
+
+            this.streakMultiplier = pendingStreakMultiplier;
+
+            this.view.gameUI.updateMultiplier(
+                this.streakMultiplier
+            );
+
+            this.runStatsRecorder.finishRound({
+                win: true,
                 winAmount,
-                bet,
-                streakMultiplier:this.streakMultiplier
+                streakMultiplier: this.streakMultiplier
             });
+
+
+            this.commitWin(winAmount);
+
+            await this.finishRound();
+
+            return;
+        }
+
+
+        /*
+            LOSS
+        */
+
+        this.streakMultiplier = pendingStreakMultiplier;
 
         this.view.gameUI.updateMultiplier(
             this.streakMultiplier
         );
 
+        this.runStatsRecorder.finishRound({
+            win: false,
+            streakMultiplier: this.streakMultiplier
+        });
+
+        await this.finishRound();
+                
+    }
+
+
+    private startGambleForMore(
+        winAmount: number
+    ) {
+
+            const offer =
+                this.gambleForMoreManager
+                    .createOffer(
+                        winAmount
+                    );
+
+
+            this.pendingGambleOffer =
+                offer;
+
+
+            this.roundState =
+                "result";
+
+
+            this.view.gambleForMoreOverlay
+                .showOffer(
+                    offer
+                );
+        }
+
+
+        private async handleGambleForMoreNo() {
+
+        const offer = this.pendingGambleOffer;
+
+        if (!offer) {
+            return;
+        }
+
+        this.view.gambleForMoreOverlay.hide();
+
+        this.commitWin(offer.currentWin);
+
+        if (this.pendingStreakMultiplier !== undefined) {
+            this.streakMultiplier = this.pendingStreakMultiplier;
+
+            this.view.gameUI.updateMultiplier(
+                this.streakMultiplier
+            );
+        }
+
+        this.runStatsRecorder.finishRound({
+            win: true,
+            winAmount: offer.currentWin,
+            streakMultiplier: this.streakMultiplier
+        });
+
+        this.pendingGambleOffer = undefined;
+        this.pendingStreakMultiplier = undefined;
+
+        await this.finishRound();
+    }
+
+
+    private handleGambleForMoreYes() {
+
+        const offer =
+            this.pendingGambleOffer;
+
+
+        if (!offer) {
+            return;
+        }
+
+
+        console.log(
+            "START GAMBLE FOR MORE:",
+            offer
+        );
+
+
+        this.view
+            .gambleForMoreOverlay
+            .startGame();
+    }
+
+
+    private async handleGambleForMoreColorSelected(selectedColor: CardColor) {
+
+        const offer = this.pendingGambleOffer;
+
+        if (!offer) {
+            return;
+        }
+
+        this.view.gambleForMoreOverlay.setSelectionEnabled(false);
+
+        const result = this.redBlackCardGame.play(selectedColor);
+
+        console.log(
+            "PENDING STREAK:",
+            this.pendingStreakMultiplier
+        );
+
+        console.log("RED BLACK RESULT:", result);
+
+        if (result.won) {
+
+            this.commitWin(offer.potentialWin);
+
+            if (this.pendingStreakMultiplier !== undefined) {
+                this.streakMultiplier = this.pendingStreakMultiplier;
+            }
+
+            this.runStatsRecorder.finishRound({
+                win: true,
+                winAmount: offer.potentialWin,
+                streakMultiplier: this.streakMultiplier
+            });
+
+        } else {
+
+            this.streakMultiplier = 1;
+
+            this.view.gameUI.updateWon(0);
+
+            this.runStatsRecorder.finishRound({
+                win: false,
+                streakMultiplier: this.streakMultiplier
+            });
+        }
+
+        this.view.gameUI.updateMultiplier(
+            this.streakMultiplier
+        );
+
+        this.view.gambleForMoreOverlay.hide();
+
+        this.pendingGambleOffer = undefined;
+        this.pendingStreakMultiplier = undefined;
+
+        await this.finishRound();
+    }
+
+
+    private async finishRound() {
+
         this.controller.adjustBetToBalance(
             this.player.balance
         );
 
-        /*
-            Najpierw sprawdzamy zwycięstwo nad dealerem.
-        */
+
         if (
             this.isCurrentDealerDefeated()
         ) {
 
-            this.roundState = "result";
+            this.roundState =
+                "result";
 
             await this.handleDealerDefeated();
 
             return;
         }
 
-        /*
-            Dopiero później Game Over.
-        */
+
         if (!this.canPlay()) {
 
-            this.roundState = "result";
+            this.roundState =
+                "result";
 
             this.triggerGameOver();
 
             return;
         }
 
-        /*
-            Normalne przygotowanie kolejnej rundy.
-        */
+
         this.prepareNextRound();
 
-        this.roundState = "ready";
+        this.roundState =
+            "ready";
 
         this.unlockControls();
-        
+    }
+
+
+    private commitWin(amount: number) {
+
+        this.player.addWin(amount);
+
+        this.view.gameUI.updateBalance(
+            this.player.balance
+        );
+
+        this.view.gameUI.updateWon(
+            amount
+        );
     }
 
 

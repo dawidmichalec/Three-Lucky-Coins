@@ -12,6 +12,8 @@ import { SceneManager } from "../game/SceneManager";
 import { PopupManager } from "./popups/PopupManager";
 import { LayoutManager } from "../core/LayoutManager";
 import { GambleForMoreOverlay } from "./gambleForMore/GambleForMoreOverlay";
+import { CardColor } from "../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
+
 
 interface GameSceneViewOptions {
 
@@ -28,6 +30,12 @@ interface GameSceneViewOptions {
     onRestartRun:() => void;
 
     onMainMenu:() => void;
+
+    onGambleForMoreYes:() => void;
+
+    onGambleForMoreNo:() => void;
+
+    onGambleForMoreColorSelected:(color: CardColor) => void;
 }
 
 
@@ -60,7 +68,7 @@ export class GameSceneView
 
         popupManager: PopupManager,
 
-        options: GameSceneViewOptions
+        options: GameSceneViewOptions,
     ) {
 
         super();
@@ -231,8 +239,12 @@ export class GameSceneView
         // GAMBLE FOR MORE OVERLAY
 
         this.gambleForMoreOverlay =
-            new GambleForMoreOverlay();
-
+            new GambleForMoreOverlay(
+                options.onGambleForMoreYes,
+                options.onGambleForMoreNo,
+                options.onGambleForMoreColorSelected
+            );
+            
         this.gambleForMoreOverlay.zIndex = 4000;
 
         this.addChild(
@@ -240,7 +252,6 @@ export class GameSceneView
         );
 
     }
-
 
     async init():
         Promise<void> {

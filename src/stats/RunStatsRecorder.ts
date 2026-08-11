@@ -1,126 +1,73 @@
-import {
-    CoinSide
-} from "../ui/Coin";
+import { CoinSide } from "../ui/Coin";
+import { StatsManager } from "../core/StatsManager";
 
-import {
-    StatsManager
-} from "../core/StatsManager";
-
-
-export interface RoundStatsData {
-
-    selected:
-        readonly CoinSide[];
-
-    win:
-        boolean;
-
-    streakMultiplier:
-        number;
-
-    winAmount?:
-        number;
-
-    bet:
-        number;
+export interface RoundStatsStartData {
+    selected: readonly CoinSide[];
+    bet: number;
 }
 
+export interface RoundStatsResultData {
+    win: boolean;
+    winAmount?: number;
+    streakMultiplier: number;
+}
+
+interface PendingRoundStats {
+    combo: string;
+    bet: number;
+}
 
 export class RunStatsRecorder {
 
     private losingStreak = 0;
+    private pendingRound?: PendingRoundStats;
+
+    constructor(private statsManager: StatsManager) {}
 
 
-    constructor(
-        private statsManager:
-            StatsManager
-    ) {}
+    startRound(data: RoundStatsStartData) {
+
+        const combo = data.selected.join("-");
+
+        this.pendingRound = {
+            combo,
+            bet: data.bet
+        };
+
+        this.statsManager.recordBet(data.bet);
+        this.statsManager.recordCombination(combo);
+    }
 
 
-    recordRound(
-        data: RoundStatsData
-    ) {
+    finishRound(data: RoundStatsResultData) {
 
-        const combo =
-            data.selected.join("-");
+        const round = this.pendingRound;
 
-
-        /*
-            BET
-        */
-
-        this.statsManager.recordBet(
-            data.bet
-        );
-
-
-        /*
-            COMBINATION USAGE
-        */
-
-        this.statsManager
-            .recordCombination(
-                combo
-            );
-
-
-        /*
-            WIN
-        */
+        if (!round) {
+            throw new Error("Cannot finish round stats before starting round stats.");
+        }
 
         if (data.win) {
 
-            this.losingStreak =
-                0;
+            this.losingStreak = 0;
 
+            this.statsManager.recordSuccessfulBet();
+            this.statsManager.recordWinningCombination(round.combo);
 
-            this.statsManager
-                .recordSuccessfulBet();
-
-
-            this.statsManager
-                .recordWinningCombination(
-                    combo
-                );
-
-
-            if (
-                data.winAmount !==
-                undefined
-            ) {
-
-                this.statsManager
-                    .recordWin(
-                        data.winAmount
-                    );
+            if (data.winAmount !== undefined) {
+                this.statsManager.recordWin(data.winAmount);
             }
 
+            this.statsManager.recordWinStreak(data.streakMultiplier);
 
-            this.statsManager
-                .recordWinStreak(
-                    data.streakMultiplier
-                );
+        } else {
 
+            this.losingStreak++;
 
-            return;
+            this.statsManager.recordLoss(round.bet);
+            this.statsManager.recordLoseStreak(this.losingStreak);
         }
 
-
-        /*
-            LOSS
-        */
-
-        this.losingStreak++;
-
-
-        this.statsManager.recordLoss(
-            data.bet
-        );
-
-
-        this.statsManager
-            .recordLoseStreak(
-                this.losingStreak
-            );
+        this.pendingRound = undefined;
     }
 }
