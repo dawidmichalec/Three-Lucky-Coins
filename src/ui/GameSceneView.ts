@@ -11,6 +11,7 @@ import { DealerData } from "../game/dealers/DealerData";
 import { SceneManager } from "../game/SceneManager";
 import { PopupManager } from "./popups/PopupManager";
 import { LayoutManager } from "../core/LayoutManager";
+import { GambleForMoreOverlay } from "./gambleForMore/GambleForMoreOverlay";
 
 interface GameSceneViewOptions {
 
@@ -48,6 +49,8 @@ export class GameSceneView
     readonly dealerVictoryOverlay: DealerVictoryOverlay;
 
     readonly gameOverOverlay:GameOverOverlay;
+
+    readonly gambleForMoreOverlay: GambleForMoreOverlay;
 
 
     constructor(
@@ -223,5 +226,26 @@ export class GameSceneView
         this.addChild(
             this.gameOverOverlay
         );
+
+
+        // GAMBLE FOR MORE OVERLAY
+
+        this.gambleForMoreOverlay =
+            new GambleForMoreOverlay();
+
+        this.gambleForMoreOverlay.zIndex = 4000;
+
+        this.addChild(
+            this.gambleForMoreOverlay
+        );
+
+    }
+
+
+    async init():
+        Promise<void> {
+
+        await this.gambleForMoreOverlay
+            .init();
     }
 }

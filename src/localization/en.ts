@@ -75,7 +75,16 @@ export default {
     youWon: "YOU WON",
     start: "START",
 
-    
+    // GAMBLE FOR MORE
+
+    wouldYouLikeToGambleForMore: "WOULD YOU LIKE TO GAMBLE FOR MORE?",
+    currentWin: "CURRENT WIN",
+    potentialWin: "POTENTIAL WIN",
+    disclaimer: "If you lose, you will forfeit the entire win from the current round.",
+
+    // RED CARD/BLACK CARD
+
+    redCardBlackCardLabel: "RED CARD/BLACK CARD",
 
     // PROBABILITY DISPLAY TEXTS
 

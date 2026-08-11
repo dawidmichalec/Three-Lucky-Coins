@@ -265,6 +265,7 @@ export class GameScene extends BaseScene {
     override async init(): Promise<void> {
 
         await Promise.all([
+            this.view.init(),
             this.view.gameUI.init(),
             this.dealerPresentationController.initCurrent(),
             this.createCoinRow()

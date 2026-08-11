@@ -74,6 +74,17 @@ export default {
     youWon: "WYGRAŁEŚ",
     start: "START",
 
+    // GAMBLE FOR MORE
+
+    wouldYouLikeToGambleForMore: "CZY CHCESZ ZAGRAĆ O WIĘCEJ?",
+    currentWin: "OBECNA WYGRANA",
+    potentialWin: "POTENCJALNA WYGRANA",
+    disclaimer: "Jeżeli przegrasz, utracisz całą wygraną z bieżącej rundy.",
+
+    // RED CARD/BLACK CARD
+
+    redCardBlackCardLabel: "CZARNA KARTA/CZERWONA KARTA",
+
 
     // PROBABILITY DISPLAY TEXTS
     

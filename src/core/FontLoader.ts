@@ -50,7 +50,18 @@ const FONTS:
         {
             family: "Anek-Kannada Bold",
             path: "/assets/main/fonts/anek-kannada.bold.ttf"
+        },
+
+        {
+            family: "Old Standard Regular",
+            path: "/assets/main/fonts/Old_Standard_TT/OldStandardTT-Regular.ttf"
+        },
+
+        {
+            family: "Old Standard Bold",
+            path: "/assets/main/fonts/Old_Standard_TT/OldStandardTT-Bold.ttf"
         }
+
     ];
 
 
