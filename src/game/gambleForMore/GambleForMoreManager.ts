@@ -2,6 +2,8 @@ import { GambleForMoreSettings } from "./GambleForMoreSettings";
 import { GambleForMoreGameId } from "./GambleForMoreGameId";
 import { GambleForMoreOffer } from "./GambleForMoreTypes";
 import { roundMoney } from "../util/MoneyUtils";
+import { calculateRedBlackPotentialWin } from "./games/redBlackCard/RedBlackCardConfig";
+import { GambleForMoreGameId } from "./GambleForMoreGameId";
 
 
 const DEFAULT_SETTINGS:
@@ -75,29 +77,44 @@ export class GambleForMoreManager {
 
 
     createOffer(
-        currentWin: number
+        currentWin: number,
+        bet: number
     ): GambleForMoreOffer {
 
-        const gameId =
-            this.selectGame();
+        const gameId = this.selectGame();
 
-
-        /*
-            TYMCZASOWO x2.
-
-            Docelową ekonomię:
-            win/bet → potential multiplier
-            zrobimy osobno.
-        */
-        const potentialWin = roundMoney(
-            currentWin * 2
+        const potentialWin = this.calculatePotentialWin(
+            gameId,
+            currentWin,
+            bet
         );
-
 
         return {
             currentWin,
             potentialWin,
             gameId
         };
+    }
+
+
+    private calculatePotentialWin(
+        gameId: GambleForMoreGameId,
+        currentWin: number,
+        bet: number
+    ): number {
+
+        switch (gameId) {
+
+            case GambleForMoreGameId.RED_BLACK_CARD:
+                return calculateRedBlackPotentialWin(
+                    currentWin,
+                    bet
+                );
+
+            default:
+                throw new Error(
+                    `Unsupported Gamble For More game: ${gameId}`
+                );
+        }
     }
 }

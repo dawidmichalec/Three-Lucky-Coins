@@ -42,7 +42,7 @@ export const BEN_DATA: DealerData = {
 
     gambleForMoreSettings: {
         enabled: true,
-        triggerChance: 1
+        triggerChance: 0.75
     },
 
     skills: [],

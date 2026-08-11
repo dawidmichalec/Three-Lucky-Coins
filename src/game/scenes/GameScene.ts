@@ -594,7 +594,10 @@ export class GameScene extends BaseScene {
 
                 this.pendingStreakMultiplier = pendingStreakMultiplier;
 
-                this.startGambleForMore(winAmount);
+                this.startGambleForMore(
+                    winAmount,
+                    bet
+                );
 
                 return;
             }
@@ -641,32 +644,26 @@ export class GameScene extends BaseScene {
 
 
     private startGambleForMore(
-        winAmount: number
+        winAmount: number,
+        bet: number
     ) {
 
-            const offer =
-                this.gambleForMoreManager
-                    .createOffer(
-                        winAmount
-                    );
+        const offer = this.gambleForMoreManager.createOffer(
+            winAmount,
+            bet
+        );
+
+        this.pendingGambleOffer = offer;
+
+        this.roundState = "result";
+
+        this.view.gambleForMoreOverlay.showOffer(
+            offer
+        );
+    }
 
 
-            this.pendingGambleOffer =
-                offer;
-
-
-            this.roundState =
-                "result";
-
-
-            this.view.gambleForMoreOverlay
-                .showOffer(
-                    offer
-                );
-        }
-
-
-        private async handleGambleForMoreNo() {
+    private async handleGambleForMoreNo() {
 
         const offer = this.pendingGambleOffer;
 
