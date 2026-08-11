@@ -134,4 +134,9 @@ export class RoundedButton extends Container {
 
         this.text.style.fill = this.style.textColor;
     }
+
+    setText(key: TranslationKey) {
+        this.options.text = key;
+        this.text.setKey(key);
+    }
 }

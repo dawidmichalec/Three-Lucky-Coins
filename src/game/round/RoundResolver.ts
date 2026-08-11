@@ -1,10 +1,8 @@
-import {
-    CoinSide
-} from "../../ui/Coin";
+import { CoinSide } from "../../ui/Coin";
 
-import {
-    getCombinationConfig
-} from "../data/CombinationUtils";
+import { getCombinationConfig } from "../data/CombinationUtils";
+
+import { roundMoney } from "../util/MoneyUtils";
 
 
 export interface RoundResolution {
@@ -58,11 +56,12 @@ export class RoundResolver {
             );
 
 
-        const winAmount =
+        const winAmount = roundMoney(
             input.bet *
             combinationConfig.baseMultiplier *
             input.streakMultiplier *
-            input.goldenMultiplier;
+            input.goldenMultiplier
+        );
 
 
         return {

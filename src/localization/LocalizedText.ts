@@ -48,4 +48,9 @@ export class LocalizedText extends Text {
 
     }
 
+    setKey(key: TranslationKey) {
+        this.translationKey = key;
+        this.text = this.localization.t(key);
+    }
+
 }

@@ -1,14 +1,7 @@
-import {
-    GambleForMoreSettings
-} from "./GambleForMoreSettings";
-
-import {
-    GambleForMoreGameId
-} from "./GambleForMoreGameId";
-
-import {
-    GambleForMoreOffer
-} from "./GambleForMoreTypes";
+import { GambleForMoreSettings } from "./GambleForMoreSettings";
+import { GambleForMoreGameId } from "./GambleForMoreGameId";
+import { GambleForMoreOffer } from "./GambleForMoreTypes";
+import { roundMoney } from "../util/MoneyUtils";
 
 
 const DEFAULT_SETTINGS:
@@ -96,8 +89,9 @@ export class GambleForMoreManager {
             win/bet → potential multiplier
             zrobimy osobno.
         */
-        const potentialWin =
-            currentWin * 2;
+        const potentialWin = roundMoney(
+            currentWin * 2
+        );
 
 
         return {

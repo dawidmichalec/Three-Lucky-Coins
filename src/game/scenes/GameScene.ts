@@ -699,26 +699,17 @@ export class GameScene extends BaseScene {
     }
 
 
-    private handleGambleForMoreYes() {
+    private async handleGambleForMoreYes() {
 
-        const offer =
-            this.pendingGambleOffer;
-
+        const offer = this.pendingGambleOffer;
 
         if (!offer) {
             return;
         }
 
+        console.log("START GAMBLE FOR MORE:", offer);
 
-        console.log(
-            "START GAMBLE FOR MORE:",
-            offer
-        );
-
-
-        this.view
-            .gambleForMoreOverlay
-            .startGame();
+        await this.view.gambleForMoreOverlay.startGame();
     }
 
 
@@ -730,20 +721,39 @@ export class GameScene extends BaseScene {
             return;
         }
 
-        this.view.gambleForMoreOverlay.setSelectionEnabled(false);
-
-        const result = this.redBlackCardGame.play(selectedColor);
-
-        console.log(
-            "PENDING STREAK:",
-            this.pendingStreakMultiplier
+        const result = this.redBlackCardGame.play(
+            selectedColor
         );
 
         console.log("RED BLACK RESULT:", result);
 
+        /*
+            Najpierw pokazujemy graczowi,
+            co faktycznie wylosował.
+        */
+
+        await this.view.gambleForMoreOverlay.revealResult(
+            result.resultColor
+        );
+
+        /*
+            Chwila na zobaczenie rezultatu.
+        */
+
+        await this.wait(
+            1200
+        );
+
+
+        /*
+            Dopiero teraz rozliczamy wynik.
+        */
+
         if (result.won) {
 
-            this.commitWin(offer.potentialWin);
+            this.commitWin(
+                offer.potentialWin
+            );
 
             if (this.pendingStreakMultiplier !== undefined) {
                 this.streakMultiplier = this.pendingStreakMultiplier;
@@ -759,7 +769,9 @@ export class GameScene extends BaseScene {
 
             this.streakMultiplier = 1;
 
-            this.view.gameUI.updateWon(0);
+            this.view.gameUI.updateWon(
+                0
+            );
 
             this.runStatsRecorder.finishRound({
                 win: false,
@@ -777,6 +789,17 @@ export class GameScene extends BaseScene {
         this.pendingStreakMultiplier = undefined;
 
         await this.finishRound();
+    }
+
+
+    private wait(milliseconds: number): Promise<void> {
+
+        return new Promise(resolve => {
+            setTimeout(
+                resolve,
+                milliseconds
+            );
+        });
     }
 
 

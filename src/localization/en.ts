@@ -85,6 +85,8 @@ export default {
     // RED CARD/BLACK CARD
 
     redCardBlackCardLabel: "RED CARD/BLACK CARD",
+    black: "BLACK",
+    red: "RED",
 
     // PROBABILITY DISPLAY TEXTS
 

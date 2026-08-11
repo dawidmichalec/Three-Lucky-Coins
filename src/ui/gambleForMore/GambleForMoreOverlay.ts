@@ -14,6 +14,9 @@ export class GambleForMoreOverlay extends Container {
     private redBlackCardView: RedBlackCardView;
     private currentWinValue: Text;
     private potentialWinValue:Text;
+    private leftButton: RoundedButton;
+    private rightButton: RoundedButton;
+    private gameStarted = false;
 
     constructor(
         private onYes:() => void,
@@ -45,12 +48,10 @@ export class GambleForMoreOverlay extends Container {
 
         // RED BLACK CARD VIEW
 
-        this.redBlackCardView =
-            new RedBlackCardView(
-                1200,
-                472.4,
-                this.onColorSelected
-            );
+        this.redBlackCardView = new RedBlackCardView(
+            1200,
+            472.4
+        );
 
         this.redBlackCardView.position.set(
             364.8,
@@ -127,35 +128,26 @@ export class GambleForMoreOverlay extends Container {
         disclaimer.anchor.set(0.5);
 
 
-        const yesButton =
-            new RoundedButton({
+        this.leftButton = new RoundedButton({
+            text: "yesButtonText",
+            theme: ButtonTheme.GREEN,
+            onClick: () => {
+                this.handleYes();
+            }
+        });
 
-                text: "yesButtonText",
+        this.leftButton.position.set(550, 907.4);
 
-                theme:ButtonTheme.GREEN,
 
-                onClick:()=>{
-                    this.onYes();
-                }
+        this.rightButton = new RoundedButton({
+            text: "noButtonText",
+            theme: ButtonTheme.RED,
+            onClick: () => {
+                this.handleNo();
+            }
+        });
 
-            });
-
-        yesButton.position.set(550, 907.4);
-
-        const noButton =
-            new RoundedButton({
-
-                text: "noButtonText",
-
-                theme:ButtonTheme.RED,
-
-                onClick:()=>{
-                    this.onNo();
-                }
-
-            });
-
-        noButton.position.set(1071.3, 907.4);
+        this.rightButton.position.set(1071.3, 907.4);
 
 
         this.addChild(
@@ -167,8 +159,8 @@ export class GambleForMoreOverlay extends Container {
             potentialWinLabel,
             this.potentialWinValue,
             disclaimer,
-            yesButton,
-            noButton
+            this.leftButton,
+            this.rightButton
         );
     }
 
@@ -179,45 +171,83 @@ export class GambleForMoreOverlay extends Container {
             .init();
     }
 
-    setSelectionEnabled(
-        enabled: boolean
-    ) {
+    private handleYes() {
 
-        this.redBlackCardView
-            .setSelectionEnabled(
-                enabled
-            );
+        if (!this.gameStarted) {
+            this.onYes();
+            return;
+        }
+
+        this.gameStarted = false;
+
+        this.onColorSelected(
+            CardColor.BLACK
+        );
     }
 
-    startGame() {
+    private handleNo() {
 
-        this.redBlackCardView
-            .setSelectionEnabled(
-                true
-            );
+        if (!this.gameStarted) {
+            this.onNo();
+            return;
+        }
+
+        this.gameStarted = false;
+
+        this.onColorSelected(
+            CardColor.RED
+        );
     }
 
-    showOffer(
-        offer: GambleForMoreOffer
-    ) {
+    async startGame(): Promise<void> {
 
-        this.currentWinValue.text =
-            offer.currentWin.toFixed(2);
+        this.leftButton.visible = false;
+        this.rightButton.visible = false;
+
+        await this.redBlackCardView.startShuffle();
+
+        this.gameStarted = true;
+
+        this.leftButton.setText("black");
+        this.rightButton.setText("red");
+
+        this.leftButton.visible = true;
+        this.rightButton.visible = true;
+    }
+
+    showOffer(offer: GambleForMoreOffer) {
+
+        this.gameStarted = false;
+
+        this.redBlackCardView.reset();
+
+        this.leftButton.setText("yesButtonText");
+        this.rightButton.setText("noButtonText");
+
+        this.leftButton.visible = true;
+        this.rightButton.visible = true;
+
+        this.currentWinValue.text = offer.currentWin.toFixed(2);
+        this.potentialWinValue.text = offer.potentialWin.toFixed(2);
+
+        this.visible = true;
+    }
 
 
-        this.potentialWinValue.text =
-            offer.potentialWin.toFixed(2);
+    async revealResult(color: CardColor): Promise<void> {
 
+        this.leftButton.visible = false;
+        this.rightButton.visible = false;
 
-        this.visible =
-            true;
+        await this.redBlackCardView.revealResult(
+            color
+        );
     }
 
 
     hide() {
-
-        this.visible =
-            false;
+        this.gameStarted = false;
+        this.visible = false;
     }
     
 }

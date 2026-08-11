@@ -1,172 +1,278 @@
-import {
-    Container,
-    Sprite,
-    Assets
-} from "pixi.js";
+import { Assets, Container, Sprite, Texture } from "pixi.js";
+import { LocalizedText } from "../../../localization/LocalizedText";
+import { CardColor } from "../../../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
 
-import {
-    LocalizedText
-} from "../../../localization/LocalizedText";
+export class RedBlackCardView extends Container {
 
-import {
-    CardColor
-} from "../../../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
+    private redCard!: Sprite;
+    private blackCard!: Sprite;
+
+    private redTexture!: Texture;
+    private blackTexture!: Texture;
+    private cardBackTexture!: Texture;
+
+    private readonly cardWidth = 228.4;
+    private readonly cardHeight = 342.7;
+
+    private readonly redStartX = 220;
+    private readonly blackStartX = 750;
+    private readonly cardY = 90;
+    private readonly centerX = 600;
 
 
-export class RedBlackCardView
-extends Container {
-
-    private cardOne!: Sprite;
-    private cardTwo!: Sprite;
-
-
-    constructor(
-        width: number,
-        height: number,
-
-        private onColorSelected:
-            (color: CardColor) => void
-    ) {
-
+    constructor(width: number, height: number) {
         super();
 
-
-        const gameName =
-            new LocalizedText(
-                "redCardBlackCardLabel",
-                {
-                    fontFamily:
-                        "Old Standard Regular",
-
-                    fontSize: 48,
-
-                    fill: 0xffd21f
-                }
-            );
-
-
-        gameName.position.set(
-            width / 2,
-            20
+        const gameName = new LocalizedText(
+            "redCardBlackCardLabel",
+            {
+                fontFamily: "Old Standard Regular",
+                fontSize: 48,
+                fill: 0xffd21f
+            }
         );
 
-        gameName.anchor.set(
-            0.5
-        );
+        gameName.position.set(width / 2, 20);
+        gameName.anchor.set(0.5);
 
-
-        this.addChild(
-            gameName
-        );
+        this.addChild(gameName);
     }
 
 
-    async init():
-        Promise<void> {
-
+    async init(): Promise<void> {
         await this.createCards();
     }
 
 
-    private async createCards() {
+    private async createCards(): Promise<void> {
 
-        const redCardTexture = await Assets.load("/assets/main/icons/cards/red_card.png");
-        const blackCardTexture = await Assets.load("/assets/main/icons/cards/black_card.png");
-
-        this.cardOne = new Sprite(redCardTexture);
-        this.cardTwo = new Sprite(blackCardTexture);
-
-
-        this.cardOne.width = 228.4;
-        this.cardOne.height = 342.7;
-
-        this.cardTwo.width = 228.4;
-        this.cardTwo.height = 342.7;
-
-
-        this.cardOne.position.set(
-            220,
-            90
+        this.redTexture = await Assets.load(
+            "/assets/main/icons/cards/red_card.png"
         );
 
-        this.cardTwo.position.set(
-            750,
-            90
+        this.blackTexture = await Assets.load(
+            "/assets/main/icons/cards/black_card.png"
+        );
+
+        this.cardBackTexture = await Assets.load(
+            "/assets/main/icons/cards/card_back.png"
         );
 
 
-        /*
-            Na początku karty są tylko preview.
-            Gracz nie może ich jeszcze wybrać.
-        */
+        this.redCard = new Sprite(this.redTexture);
+        this.blackCard = new Sprite(this.blackTexture);
 
-        this.setSelectionEnabled(
-            false
+        this.redCard.width = this.cardWidth;
+        this.redCard.height = this.cardHeight;
+
+        this.blackCard.width = this.cardWidth;
+        this.blackCard.height = this.cardHeight;
+
+        this.redCard.anchor.set(0.5);
+        this.blackCard.anchor.set(0.5);
+
+        this.redCard.position.set(
+            this.redStartX + this.cardWidth / 2,
+            this.cardY + this.cardHeight / 2
         );
 
-
-        this.cardOne.on(
-            "pointertap",
-            () => {
-
-                this.onColorSelected(
-                    CardColor.RED
-                );
-            }
+        this.blackCard.position.set(
+            this.blackStartX + this.cardWidth / 2,
+            this.cardY + this.cardHeight / 2
         );
-
-
-        this.cardTwo.on(
-            "pointertap",
-            () => {
-
-                this.onColorSelected(
-                    CardColor.BLACK
-                );
-            }
-        );
-
 
         this.addChild(
-            this.cardOne,
-            this.cardTwo
+            this.redCard,
+            this.blackCard
         );
     }
 
 
-    setSelectionEnabled(
-        enabled: boolean
-    ) {
+    async startShuffle(): Promise<void> {
 
-        if (
-            !this.cardOne ||
-            !this.cardTwo
-        ) {
-            return;
-        }
+        await this.flipToBack();
+        await this.shuffleCards();
+        await this.stackCards();
+    }
 
 
-        const eventMode =
-            enabled
-                ? "static"
-                : "none";
+    private async flipToBack(): Promise<void> {
+
+        const redBaseScaleX = this.redCard.scale.x;
+        const blackBaseScaleX = this.blackCard.scale.x;
+
+        await this.animate(200, progress => {
+
+            this.redCard.scale.x =
+                redBaseScaleX * (1 - progress);
+
+            this.blackCard.scale.x =
+                blackBaseScaleX * (1 - progress);
+        });
 
 
-        this.cardOne.eventMode =
-            eventMode;
-
-        this.cardTwo.eventMode =
-            eventMode;
+        this.redCard.texture = this.cardBackTexture;
+        this.blackCard.texture = this.cardBackTexture;
 
 
-        this.cardOne.cursor =
-            enabled
-                ? "pointer"
-                : "default";
+        await this.animate(200, progress => {
 
-        this.cardTwo.cursor =
-            enabled
-                ? "pointer"
-                : "default";
+            this.redCard.scale.x =
+                redBaseScaleX * progress;
+
+            this.blackCard.scale.x =
+                blackBaseScaleX * progress;
+        });
+    }
+
+
+    private async shuffleCards(): Promise<void> {
+
+        const redStartX = this.redCard.x;
+        const blackStartX = this.blackCard.x;
+
+        await this.animate(900, progress => {
+
+            const wave =
+                Math.sin(
+                    progress *
+                    Math.PI *
+                    8
+                ) * 100;
+
+            this.redCard.x =
+                redStartX +
+                (this.centerX - redStartX) *
+                progress +
+                wave;
+
+            this.blackCard.x =
+                blackStartX +
+                (this.centerX - blackStartX) *
+                progress -
+                wave;
+        });
+    }
+
+
+    private async stackCards(): Promise<void> {
+
+        const redStartX = this.redCard.x;
+        const blackStartX = this.blackCard.x;
+
+        await this.animate(250, progress => {
+
+            this.redCard.x =
+                redStartX +
+                (this.centerX - redStartX) *
+                progress;
+
+            this.blackCard.x =
+                blackStartX +
+                (this.centerX - blackStartX) *
+                progress;
+        });
+
+
+        /*
+            Obie karty leżą teraz dokładnie
+            w tym samym miejscu.
+
+            Ukrywamy jedną, więc gracz widzi
+            pojedynczą zakrytą kartę.
+        */
+
+        this.redCard.visible = false;
+        this.blackCard.visible = true;
+    }
+
+
+    async revealResult(color: CardColor): Promise<void> {
+
+        const baseScaleX = this.blackCard.scale.x;
+
+        await this.animate(200, progress => {
+
+            this.blackCard.scale.x =
+                baseScaleX * (1 - progress);
+        });
+
+        this.blackCard.texture =
+            color === CardColor.RED
+                ? this.redTexture
+                : this.blackTexture;
+
+        await this.animate(200, progress => {
+
+            this.blackCard.scale.x =
+                baseScaleX * progress;
+        });
+    }
+
+
+    reset() {
+
+        this.redCard.visible = true;
+        this.blackCard.visible = true;
+
+        this.redCard.texture = this.redTexture;
+        this.blackCard.texture = this.blackTexture;
+
+        this.redCard.width = this.cardWidth;
+        this.redCard.height = this.cardHeight;
+
+        this.blackCard.width = this.cardWidth;
+        this.blackCard.height = this.cardHeight;
+
+        this.redCard.position.set(
+            this.redStartX + this.cardWidth / 2,
+            this.cardY + this.cardHeight / 2
+        );
+
+        this.blackCard.position.set(
+            this.blackStartX + this.cardWidth / 2,
+            this.cardY + this.cardHeight / 2
+        );
+
+        this.redCard.alpha = 1;
+        this.blackCard.alpha = 1;
+
+        this.redCard.rotation = 0;
+        this.blackCard.rotation = 0;
+    }
+
+
+    private animate(
+        duration: number,
+        update: (progress: number) => void
+    ): Promise<void> {
+
+        return new Promise(resolve => {
+
+            const startTime = performance.now();
+
+            const frame = (currentTime: number) => {
+
+                const elapsed =
+                    currentTime - startTime;
+
+                const progress =
+                    Math.min(
+                        1,
+                        elapsed / duration
+                    );
+
+                update(progress);
+
+                if (progress >= 1) {
+                    resolve();
+                    return;
+                }
+
+                requestAnimationFrame(frame);
+            };
+
+            requestAnimationFrame(frame);
+        });
     }
 }
