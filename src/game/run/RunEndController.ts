@@ -3,7 +3,7 @@ import { Container } from "pixi.js";
 import { StatsManager } from "../../core/StatsManager";
 import { RunSummaryPanel } from "../../ui/panels/RunSummaryPanel";
 import { GameOverOverlay } from "../../ui/overlays/GameOverOverlay";
-import { DealerVictoryOverlay } from "../../ui/overlays/DealerVictoryOverlay";
+import { GameMessageOverlay } from "../../ui/overlays/GameMessageOverlay";
 
 
 interface RunEndControllerOptions {
@@ -28,8 +28,8 @@ export class RunEndController {
         private gameOverOverlay:
             GameOverOverlay,
 
-        private dealerVictoryOverlay:
-            DealerVictoryOverlay,
+        private gameMessageOverlay:
+            GameMessageOverlay,
 
         private options:
             RunEndControllerOptions
@@ -78,8 +78,8 @@ export class RunEndController {
             .onLockControls();
 
 
-        await this.dealerVictoryOverlay
-            .play();
+        await this.gameMessageOverlay
+            .play("youWon");
 
 
         this.options

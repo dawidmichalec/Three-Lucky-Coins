@@ -1,20 +1,15 @@
-import {
-    Container,
-    Graphics
-} from "pixi.js";
-
-import {
-    LocalizedText
-} from "../../localization/LocalizedText";
+import { Container, Graphics } from "pixi.js";
+import { LocalizedText } from "../../localization/LocalizedText";
+import { TranslationKey } from "../../core/LocalizationManager";
 
 
-export class DealerVictoryOverlay extends Container {
+export class GameMessageOverlay extends Container {
 
     private readonly barHeight = 245;
 
     private background: Graphics;
 
-    private victoryLabel: LocalizedText;
+    private messageLabel: LocalizedText;
 
     private animationFrameId?: number;
 
@@ -67,7 +62,7 @@ export class DealerVictoryOverlay extends Container {
         );
 
 
-        this.victoryLabel =
+        this.messageLabel =
             new LocalizedText(
                 "youWon",
                 {
@@ -90,12 +85,12 @@ export class DealerVictoryOverlay extends Container {
             );
 
 
-        this.victoryLabel.anchor.set(
+        this.messageLabel.anchor.set(
             0.5
         );
 
 
-        this.victoryLabel.position.set(
+        this.messageLabel.position.set(
             this.screenWidth / 2,
             this.screenHeight / 2
         );
@@ -103,12 +98,13 @@ export class DealerVictoryOverlay extends Container {
 
         this.addChild(
             this.background,
-            this.victoryLabel
+            this.messageLabel
         );
     }
 
 
     async play(
+        message: TranslationKey,
         visibleDuration = 1200
     ): Promise<void> {
 
@@ -116,41 +112,22 @@ export class DealerVictoryOverlay extends Container {
             return;
         }
 
-        this.isAnimating = true;
+        this.messageLabel.setKey(message);
 
+        this.isAnimating = true;
         this.visible = true;
         this.alpha = 0;
 
-        /*
-            Tekst zaczyna minimalnie pomniejszony.
-        */
+        this.messageLabel.scale.set(0.88);
 
-        this.victoryLabel.scale.set(
-            0.88
-        );
-
-
-        await this.fadeIn(
-            350
-        );
-
-
-        await this.delay(
-            visibleDuration
-        );
-
-
-        await this.fadeOut(
-            450
-        );
-
+        await this.fadeIn(350);
+        await this.delay(visibleDuration);
+        await this.fadeOut(450);
 
         this.visible = false;
         this.alpha = 0;
 
-        this.victoryLabel.scale.set(
-            1
-        );
+        this.messageLabel.scale.set(1);
 
         this.isAnimating = false;
     }
@@ -213,7 +190,7 @@ export class DealerVictoryOverlay extends Container {
                     punch * 0.04;
 
 
-                this.victoryLabel.scale.set(
+                this.messageLabel.scale.set(
                     scale
                 );
 
@@ -231,7 +208,7 @@ export class DealerVictoryOverlay extends Container {
 
                 this.alpha = 1;
 
-                this.victoryLabel.scale.set(
+                this.messageLabel.scale.set(
                     1
                 );
 

@@ -49,14 +49,10 @@ export const BECKY_DATA: DealerData = {
     skills: [
         {
 
-            id:
-                DealerSkillId.OOPS_I_PAID_YOU_TWICE,
-
-            name:
-                "oopsIPaidYouTwiceSkillName",
-
-            description:
-                "oopsIPaidYouTwiceSkillDescription"
+            id: DealerSkillId.OOPS_I_PAID_YOU_TWICE,
+            name: "oopsIPaidYouTwiceSkillName",
+            description: "oopsIPaidYouTwiceSkillDescription",
+            triggerChance: 1
 
         }
     ],

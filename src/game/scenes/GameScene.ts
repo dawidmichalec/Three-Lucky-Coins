@@ -25,6 +25,7 @@ import { GambleForMoreManager } from "../gambleForMore/GambleForMoreManager";
 import { GambleForMoreOffer } from "../gambleForMore/GambleForMoreTypes";
 import { CardColor } from "../gambleForMore/games/redBlackCard/RedBlackCardTypes";
 import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCardGame";
+import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandler";
 
 
 export class GameScene extends BaseScene {
@@ -52,6 +53,7 @@ export class GameScene extends BaseScene {
     private pendingGambleOffer?: GambleForMoreOffer;
     private pendingStreakMultiplier?: number;
     private redBlackCardGame = new RedBlackCardGame();
+    private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
 
 
     constructor (
@@ -164,6 +166,11 @@ export class GameScene extends BaseScene {
             this.view
         );
 
+        // DEALER SKILL FEEDBACK HANDLER
+
+        this.dealerSkillFeedbackHandler = new DealerSkillFeedbackHandler(
+            this.view.gameMessageOverlay
+        );
 
         // NEW ROUND
 
@@ -268,7 +275,7 @@ export class GameScene extends BaseScene {
                     .gameOverOverlay,
 
                 this.view
-                    .dealerVictoryOverlay,
+                    .gameMessageOverlay,
 
                 {
                     onLockControls:
@@ -368,7 +375,7 @@ export class GameScene extends BaseScene {
 
         this.lockControls();
 
-        await this.view.dealerVictoryOverlay.play();
+        await this.view.gameMessageOverlay.play("youWon");
 
         const nextDealer = this.dealerFightManager.advanceToNextDealer();
 
@@ -563,6 +570,10 @@ export class GameScene extends BaseScene {
             currentStreakMultiplier: this.streakMultiplier
         });
 
+        await this.dealerSkillFeedbackHandler.handle(
+            outcome.triggeredSkills
+        );
+
         const pendingStreakMultiplier = outcome.newStreakMultiplier;
 
 
@@ -582,20 +593,23 @@ export class GameScene extends BaseScene {
 
         if (win && winAmount !== undefined) {
 
-            console.log("WIN AMOUNT:", winAmount);
+            const resolvedWinAmount = outcome.wonAmount;
+
+            console.log(
+                "BASE WIN:",
+                winAmount,
+                "RESOLVED WIN:",
+                resolvedWinAmount
+            );
 
             const gambleTriggered = this.gambleForMoreManager.shouldTrigger();
 
-            console.log("GAMBLE TRIGGERED:", gambleTriggered);
-
             if (gambleTriggered) {
-
-                console.log("WIN IS PENDING:", winAmount);
 
                 this.pendingStreakMultiplier = pendingStreakMultiplier;
 
                 this.startGambleForMore(
-                    winAmount,
+                    resolvedWinAmount,
                     bet
                 );
 
@@ -610,12 +624,13 @@ export class GameScene extends BaseScene {
 
             this.runStatsRecorder.finishRound({
                 win: true,
-                winAmount,
+                winAmount: resolvedWinAmount,
                 streakMultiplier: this.streakMultiplier
             });
 
-
-            this.commitWin(winAmount);
+            this.commitWin(
+                resolvedWinAmount
+            );
 
             await this.finishRound();
 

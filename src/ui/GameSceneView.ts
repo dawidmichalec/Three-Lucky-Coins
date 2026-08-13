@@ -5,7 +5,7 @@ import { HamburgerMenu } from "./menus/HamburgerMenu";
 import { OptionsPanel } from "./panels/OptionsPanel";
 import { StatsPanel } from "./panels/StatsPanel";
 import { RunSummaryPanel } from "./panels/RunSummaryPanel";
-import { DealerVictoryOverlay } from "./overlays/DealerVictoryOverlay";
+import { GameMessageOverlay } from "./overlays/GameMessageOverlay";
 import { GameOverOverlay } from "./overlays/GameOverOverlay";
 import { DealerData } from "../game/dealers/DealerData";
 import { SceneManager } from "../game/SceneManager";
@@ -54,7 +54,7 @@ export class GameSceneView
 
     readonly hamburgerMenu: HamburgerMenu;
 
-    readonly dealerVictoryOverlay: DealerVictoryOverlay;
+    readonly gameMessageOverlay: GameMessageOverlay;
 
     readonly gameOverOverlay:GameOverOverlay;
 
@@ -206,17 +206,17 @@ export class GameSceneView
 
         // DEALER VICTORY
 
-        this.dealerVictoryOverlay =
-            new DealerVictoryOverlay(
+        this.gameMessageOverlay =
+            new GameMessageOverlay(
                 layout.DESIGN_WIDTH,
                 layout.DESIGN_HEIGHT
             );
 
-        this.dealerVictoryOverlay
+        this.gameMessageOverlay
             .zIndex = 5000;
 
         this.addChild(
-            this.dealerVictoryOverlay
+            this.gameMessageOverlay
         );
 
 
