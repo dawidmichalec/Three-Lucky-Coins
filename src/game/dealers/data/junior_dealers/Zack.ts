@@ -42,7 +42,7 @@ export const ZACK_DATA: DealerData = {
 
     gambleForMoreSettings: {
         enabled: true,
-        triggerChance: 0.75
+        triggerChance: 0.5
     },
 
     skills: [],
