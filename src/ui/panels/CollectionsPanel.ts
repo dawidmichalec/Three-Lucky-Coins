@@ -8,6 +8,11 @@ import { ClosePanelButton } from "../buttons/ClosePanelButton";
 import { LocalizedText } from "../../localization/LocalizedText";
 import { LocalizationManager } from "../../core/LocalizationManager";
 import { TranslationKey } from "../../core/LocalizationManager";
+import { DealerCollectionContent } from "./collections/dealers/DealersCollectionContent";
+import { DealerData } from "../../game/dealers/DealerData";
+import { LayoutManager } from "../../core/LayoutManager";
+import { DealerCollectionManager } from "../../game/dealers/collection/DealerCollectionManager";
+import { CollectionDetailPanel } from "./collections/detail/CollectionDetailPanel";
 
 
 export class CollectionsPanel extends Container {
@@ -24,6 +29,15 @@ export class CollectionsPanel extends Container {
     private combinationValues!: Text;
 
     private localization = LocalizationManager.getInstance();
+
+    private readonly viewportWidth = 1000;
+    private readonly viewportHeight = 450;
+
+    private layoutManager = LayoutManager.getInstance();
+    private dealerCollectionManager = DealerCollectionManager.getInstance();
+    private lockedDealerTooltip!: LocalizedText;
+    private lockedDealerTooltipTimeout?: ReturnType<typeof setTimeout>;
+    private collectionDetailPanel!: CollectionDetailPanel;
 
     constructor(
         width: number,
@@ -42,7 +56,11 @@ export class CollectionsPanel extends Container {
 
         this.createScrollableContainer();
 
-        this.refresh();
+        this.createCollectionDetailPanel();
+
+        this.createLockedDealerTooltip();
+
+        void this.refresh();
 
     }
 
@@ -107,41 +125,174 @@ export class CollectionsPanel extends Container {
 
     private createScrollableContainer() {
 
-
-        this.scrollableContainer = 
-        new ScrollableContainer(
-            1000, 
-            450
+        this.scrollableContainer = new ScrollableContainer(
+            this.viewportWidth,
+            this.viewportHeight
         );
 
+        this.scrollableContainer.position.set(
+            (this.layoutManager.DESIGN_WIDTH - this.viewportWidth) / 2,
+            293
+        );
 
-        this.scrollableContainer.position.set(312, 293);
-
-        this.addChild(this.scrollableContainer);
-
-
+        this.addChild(
+            this.scrollableContainer
+        );
     }
 
 
-    refresh() {
+    private createCollectionDetailPanel() {
+
+        this.collectionDetailPanel =
+            new CollectionDetailPanel(
+                () => {
+                    this.collectionDetailPanel.hide();
+                }
+            );
+
+        this.collectionDetailPanel.zIndex = 5000;
+
+        this.addChild(
+            this.collectionDetailPanel
+        );
+    }
+
+
+    private createLockedDealerTooltip() {
+
+        this.lockedDealerTooltip = new LocalizedText(
+            "youNeedToUnlockThisDealerFirst",
+            {
+                font: "Open Sans",
+                fontSize: 28,
+                fontWeight: "bold",
+                fill: 0xffd21f
+            }
+        );
+
+        this.lockedDealerTooltip.anchor.set(0.5);
+
+        this.lockedDealerTooltip.position.set(
+            this.layoutManager.DESIGN_WIDTH / 2,
+            820
+        );
+
+        this.lockedDealerTooltip.visible = false;
+
+        this.addChild(
+            this.lockedDealerTooltip
+        );
+    }
+
+
+    private showLockedDealerTooltip() {
+
+        if (this.lockedDealerTooltipTimeout) {
+            clearTimeout(
+                this.lockedDealerTooltipTimeout
+            );
+        }
+
+        this.lockedDealerTooltip.visible = true;
+
+        this.lockedDealerTooltipTimeout = setTimeout(
+            () => {
+                this.lockedDealerTooltip.visible = false;
+            },
+            1800
+        );
+    }
+
+
+    async refresh(): Promise<void> {
 
         this.scrollableContainer.clearContent();
 
-        if(this.currentTab === "player") {
 
-            this.createPlayerStats();
+        switch (this.currentTab) {
 
-            this.refreshPlayerStats();
+            case "player":
 
+                this.createPlayerStats();
+                this.refreshPlayerStats();
+
+                break;
+
+
+            case "dealers":
+
+                await this.createDealerCollection();
+
+                break;
+
+
+            case "perks":
+
+                this.createPerkCollectionPlaceholder();
+
+                break;
         }
-        /* else if(this.currentTab === "add-ons") {
 
-        
+
+        this.scrollableContainer.refresh();
+    }
+
+
+    private async createDealerCollection(): Promise<void> {
+
+        const content = new DealerCollectionContent({
+            width: this.viewportWidth,
+
+            onDealerClick: dealer => {
+                this.handleDealerClick(
+                    dealer
+                );
+            }
+        });
+
+
+        await content.init();
+
+
+        this.scrollableContainer.addContent(
+            content
+        );
+    }
+
+
+    private handleDealerClick(dealer: DealerData) {
+
+        const isDiscovered =
+            this.dealerCollectionManager.isDealerDiscovered(
+                dealer.id
+            );
+
+        if (!isDiscovered) {
+            this.showLockedDealerTooltip();
+            return;
         }
-        else {
 
-        } */
+        void this.collectionDetailPanel.showDealer(
+            dealer
+        );
+    }
+    
 
+    private createPerkCollectionPlaceholder() {
+
+        const placeholder = new LocalizedText(
+            "perks",
+            {
+                fontFamily: "Open Sans",
+                fontSize: 32,
+                fontWeight: "bold",
+                fill: 0xffd21f
+            }
+        );
+
+        this.scrollableContainer.addContent(
+            placeholder
+        );
     }
 
 
@@ -373,7 +524,7 @@ export class CollectionsPanel extends Container {
         this.dealersButton.setTheme(ButtonTheme.GOLD);
         this.perksButton.setTheme(ButtonTheme.GOLD);
 
-        this.refresh();
+        void this.refresh();
     }
 
 
@@ -386,7 +537,7 @@ export class CollectionsPanel extends Container {
         this.dealersButton.setTheme(ButtonTheme.DARKGOLD);
         this.perksButton.setTheme(ButtonTheme.GOLD);
 
-        this.refresh();
+        void this.refresh();
 
     }
 
@@ -398,7 +549,7 @@ export class CollectionsPanel extends Container {
         this.dealersButton.setTheme(ButtonTheme.GOLD);
         this.perksButton.setTheme(ButtonTheme.DARKGOLD);
 
-        this.refresh();
+        void this.refresh();
 
 
     }
@@ -453,7 +604,7 @@ export class CollectionsPanel extends Container {
         this.dealersButton.setTheme(ButtonTheme.GOLD);
         this.perksButton.setTheme(ButtonTheme.GOLD);
 
-        this.refresh();
+        void this.refresh();
 
 
         this.visible = true;
@@ -462,6 +613,16 @@ export class CollectionsPanel extends Container {
 
 
     hide(){
+
+        this.lockedDealerTooltip.visible = false;
+
+        if (this.lockedDealerTooltipTimeout) {
+            clearTimeout(
+                this.lockedDealerTooltipTimeout
+            );
+
+            this.lockedDealerTooltipTimeout = undefined;
+        }
 
         this.visible = false;
 

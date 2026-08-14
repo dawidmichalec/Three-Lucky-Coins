@@ -15,6 +15,8 @@ export default {
     seniorDealers: "Senior Dealers",
     machineFloor: "Machine Floor",
     management: "Management",
+    youNeedToUnlockThisDealerFirst: "You need to unlock this dealer first",
+    signatureToken: "Signature Token",
     
 
 

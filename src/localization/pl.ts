@@ -9,12 +9,14 @@ export default {
 
 
     playerStats: "Statystyki gracza",
-    dealers: "Krupierzy",
+    dealers: "Postacie",
     juniorDealers: "Młodsi Krupierzy",
     midDealers: "Krupierzy",
     seniorDealers: "Starsi Krupierzy",
     machineFloor: "Piętro z maszynami",
     management: "Zarząd",
+    youNeedToUnlockThisDealerFirst: "Najpierw musisz odblokować tę postać",
+    signatureToken: "Osobisty przedmiot",
 
 
     // PLAYER STATS LABELS

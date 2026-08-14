@@ -26,6 +26,7 @@ import { GambleForMoreOffer } from "../gambleForMore/GambleForMoreTypes";
 import { CardColor } from "../gambleForMore/games/redBlackCard/RedBlackCardTypes";
 import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCardGame";
 import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandler";
+import { DealerCollectionManager } from '../dealers/collection/DealerCollectionManager';
 
 
 export class GameScene extends BaseScene {
@@ -54,6 +55,7 @@ export class GameScene extends BaseScene {
     private pendingStreakMultiplier?: number;
     private redBlackCardGame = new RedBlackCardGame();
     private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
+    private dealerCollectionManager = DealerCollectionManager.getInstance();
 
 
     constructor (
@@ -87,6 +89,10 @@ export class GameScene extends BaseScene {
 
         this.applyDealerSettings(
             this.currentDealer
+        );
+
+        this.dealerCollectionManager.discoverDealer(
+            this.currentDealer.id
         );
 
         this.setupTicker();
@@ -364,8 +370,7 @@ export class GameScene extends BaseScene {
     }
 
 
-    private async handleDealerDefeated():
-        Promise<void> {
+    private async handleDealerDefeated(): Promise<void> {
 
         if (this.isChangingDealer) {
             return;
@@ -375,9 +380,29 @@ export class GameScene extends BaseScene {
 
         this.lockControls();
 
-        await this.view.gameMessageOverlay.play("youWon");
 
-        const nextDealer = this.dealerFightManager.advanceToNextDealer();
+        const defeatedDealer = this.currentDealer;
+
+
+        this.dealerCollectionManager.unlockSignatureToken(
+            defeatedDealer.id
+        );
+
+
+        console.log(
+            "SIGNATURE TOKEN UNLOCKED:",
+            defeatedDealer.name
+        );
+
+
+        await this.view.gameMessageOverlay.play(
+            "youWon"
+        );
+
+
+        const nextDealer =
+            this.dealerFightManager.advanceToNextDealer();
+
 
         if (!nextDealer) {
 
@@ -385,19 +410,16 @@ export class GameScene extends BaseScene {
                 "All currently available dealers defeated."
             );
 
-            /*
-                Tymczasowo pokazujemy podsumowanie runu.
-                Później tutaj znajdzie się końcowe zwycięstwo.
-            */
-
             await this.runEndController.showRunVictory();
 
             return;
         }
 
+
         await this.loadDealer(
             nextDealer
         );
+
 
         this.isChangingDealer = false;
     }
@@ -407,6 +429,7 @@ export class GameScene extends BaseScene {
         dealer: DealerData
     ): Promise<void> {
 
+        this.dealerCollectionManager.discoverDealer(dealer.id);
 
         /*
             Nowa walka zaczyna się od x1.
