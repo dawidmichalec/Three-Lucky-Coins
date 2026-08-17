@@ -24,6 +24,8 @@ export const TIMOTHY_DATA: DealerData = {
 
     signatureToken:
         "/assets/main/icons/signature_token_icons/mid_dealers/timothy/timothy_signature_token_icon.png",
+    signatureTokenName: "timothyTipJar",
+    signatureTokenDescription: "timothyTipJarDescription",
 
     group: DealerGroup.MID,
     role: DealerRole.REGULAR,

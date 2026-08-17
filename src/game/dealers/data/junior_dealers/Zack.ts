@@ -23,6 +23,8 @@ export const ZACK_DATA: DealerData = {
 
     signatureToken:
         "/assets/main/icons/signature_token_icons/junior_dealers/zack/zack_signature_token_icon.png",
+    signatureTokenName: "zackStudentId",
+    signatureTokenDescription: "zackStudentIdDescription",
 
     group: DealerGroup.JUNIOR,
     role: DealerRole.REGULAR,

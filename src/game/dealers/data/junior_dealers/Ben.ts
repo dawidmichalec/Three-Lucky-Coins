@@ -23,6 +23,8 @@ export const BEN_DATA: DealerData = {
 
     signatureToken:
         "/assets/main/icons/signature_token_icons/junior_dealers/ben/ben_signature_token_icon.png",
+    signatureTokenName: "bensLuckyCoin",
+    signatureTokenDescription: "bensLuckyCoinDescription",
 
     group: DealerGroup.JUNIOR,
     role: DealerRole.REGULAR,

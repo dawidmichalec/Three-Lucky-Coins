@@ -19,6 +19,24 @@ export default {
     signatureToken: "Osobisty przedmiot",
 
 
+    // SIGNATURE TOKENS:
+
+    signatureTokenLocked: "Musisz pokonać tę postać, aby to odblokować",
+    bensLuckyCoin: "Szczęśliwa moneta Bena",
+    bensLuckyCoinDescription: "Ben zawsze podrzuca tę monetę przed każdą zmianą.",
+    zackStudentId: "Legitymacja studencka Zacka",
+    zackStudentIdDescription: "Każda zmiana finansuje jego przyszłość.",
+    beckysCompactMirror: "Przenośne lusterko Becky",
+    beckysCompactMirrorDescription: "Najpierw piękno. Potem liczenie żetonów.",
+    melanieReadingGlasses: "Okulary do czytania Melanie",
+    melanieReadingGlassesDescription: "Widzi więcej, niż kasyno by chciało.",
+    hillarySilverStopWatch: "Srebrny stoper Hillary",
+    hillarySilverStopWatchDescription: "Z Hillary wszystko trwa dłużej.",
+    timothyTipJar: "Słoik na napiwki Timothy'ego",
+    timothyTipJarDescription: "Każda moneta w środku ma swoją historię. Większość z nich dotyczy alimentów.",
+
+
+
     // PLAYER STATS LABELS
 
 

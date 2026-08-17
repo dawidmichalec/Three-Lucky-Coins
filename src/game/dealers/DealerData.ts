@@ -18,6 +18,8 @@ export interface DealerData {
     avatarLocked: string;
 
     signatureToken: string;
+    signatureTokenName: TranslationKey;
+    signatureTokenDescription: TranslationKey;
 
     group: DealerGroup;
     role: DealerRole;

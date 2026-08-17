@@ -17,6 +17,23 @@ export default {
     management: "Management",
     youNeedToUnlockThisDealerFirst: "You need to unlock this dealer first",
     signatureToken: "Signature Token",
+
+
+    // SIGNATURE TOKENS:
+
+    signatureTokenLocked: "You need to defeat this character to unlock it",
+    bensLuckyCoin: "Ben's Lucky Coin",
+    bensLuckyCoinDescription: "Ben always flips this coin before every shift.",
+    zackStudentId: "Zack's Student ID",
+    zackStudentIdDescription: "Every shift pays for another page of his future.",
+    beckysCompactMirror: "Becky's Compact Mirror",
+    beckysCompactMirrorDescription: "Beauty first. Counting chips second.",
+    melanieReadingGlasses: "Melanie's Reading Glasses",
+    melanieReadingGlassesDescription: "She sees more than the casino would like her to.",
+    hillarySilverStopWatch: "Hillary's Silver Stopwatch",
+    hillarySilverStopWatchDescription: "Everything takes longer with Hillary",
+    timothyTipJar: "Timothy's Tip Jar",
+    timothyTipJarDescription: "Every coin inside has a story. Most of them are about alimony.",
     
 
 

@@ -23,6 +23,8 @@ export const MELANIE_DATA: DealerData = {
 
     signatureToken:
         "/assets/main/icons/signature_token_icons/junior_dealers/melanie/melanie_signature_token_icon.png",
+    signatureTokenName: "melanieReadingGlasses",
+    signatureTokenDescription: "melanieReadingGlassesDescription",
 
     group: DealerGroup.JUNIOR,
     role: DealerRole.SUPERVISOR,
