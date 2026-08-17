@@ -1,6 +1,7 @@
 import {
     Assets,
     Container,
+    Graphics,
     Sprite,
     Text
 } from "pixi.js";
@@ -21,6 +22,9 @@ export class DealerDetailContent extends Container {
     private scrollableContainer!: ScrollableContainer;
 
     private scrollContent = new Container();
+
+    private signatureTokenTooltip!: Container;
+    private signatureTokenTooltipVisible = false;
 
     constructor(
         private dealer: DealerData
@@ -317,11 +321,9 @@ export class DealerDetailContent extends Container {
 
     private async createSignatureToken(): Promise<void> {
 
-        const unlocked =
-            this.collectionManager
-                .isSignatureTokenUnlocked(
-                    this.dealer.id
-                );
+        const unlocked = this.collectionManager.isSignatureTokenUnlocked(
+            this.dealer.id
+        );
 
         const texturePath = unlocked
             ? this.dealer.signatureToken
@@ -337,9 +339,13 @@ export class DealerDetailContent extends Container {
         token.height = 120;
 
         token.position.set(
-            1060,
+            1220,
             850
         );
+
+        token.eventMode = "static";
+        token.cursor = "pointer";
+
 
         const label = new LocalizedText(
             "signatureToken",
@@ -356,9 +362,194 @@ export class DealerDetailContent extends Container {
             805
         );
 
+
+        this.signatureTokenTooltip = this.createSignatureTokenTooltip(
+            unlocked
+        );
+
+
+        this.signatureTokenTooltip.position.set(
+            token.x + token.width / 2,
+            token.y - 20
+        );
+
+
+        token.on("pointerover", () => {
+            this.showSignatureTokenTooltip();
+        });
+
+        token.on("pointerout", () => {
+            this.hideSignatureTokenTooltip();
+        });
+
+        token.on("pointertap", () => {
+            this.toggleSignatureTokenTooltip();
+        });
+
+
         this.addChild(
             label,
-            token
+            token,
+            this.signatureTokenTooltip
         );
+    }
+
+
+    private createSignatureTokenTooltip(
+        unlocked: boolean
+    ): Container {
+
+        const tooltip = new Container();
+
+        tooltip.visible = false;
+
+        const tooltipWidth = 420;
+
+        const background = new Graphics();
+
+
+        if (!unlocked) {
+
+            const lockedText = new LocalizedText(
+                "signatureTokenLocked",
+                {
+                    font: "Open Sans",
+                    fontSize: 22,
+                    fill: 0xffffff,
+                    wordWrap: true,
+                    wordWrapWidth: tooltipWidth - 40,
+                    align: "center"
+                }
+            );
+
+            lockedText.anchor.set(0.5, 0);
+
+            lockedText.position.set(
+                0,
+                20
+            );
+
+
+            const tooltipHeight =
+                lockedText.height + 40;
+
+
+            background
+                .roundRect(
+                    -tooltipWidth / 2,
+                    0,
+                    tooltipWidth,
+                    tooltipHeight,
+                    12
+                )
+                .fill({
+                    color: 0x000000,
+                    alpha: 0.9
+                });
+
+
+            tooltip.addChild(
+                background,
+                lockedText
+            );
+
+
+            return tooltip;
+        }
+
+
+        const tokenName = new LocalizedText(
+            this.dealer.signatureTokenName,
+            {
+                font: "Open Sans",
+                fontSize: 24,
+                fontWeight: "bold",
+                fill: 0xffd21f,
+                wordWrap: true,
+                wordWrapWidth: tooltipWidth - 40,
+                align: "center"
+            }
+        );
+
+        tokenName.anchor.set(0.5, 0);
+
+        tokenName.position.set(
+            0,
+            18
+        );
+
+
+        const tokenDescription = new LocalizedText(
+            this.dealer.signatureTokenDescription,
+            {
+                font: "Open Sans",
+                fontSize: 20,
+                fill: 0xffffff,
+                wordWrap: true,
+                wordWrapWidth: tooltipWidth - 40,
+                align: "center"
+            }
+        );
+
+        tokenDescription.anchor.set(0.5, 0);
+
+        tokenDescription.position.set(
+            0,
+            tokenName.y +
+            tokenName.height +
+            10
+        );
+
+
+        const tooltipHeight =
+            tokenDescription.y +
+            tokenDescription.height +
+            18;
+
+
+        background
+            .roundRect(
+                -tooltipWidth / 2,
+                0,
+                tooltipWidth,
+                tooltipHeight,
+                12
+            )
+            .fill({
+                color: 0x000000,
+                alpha: 0.9
+            });
+
+
+        tooltip.addChild(
+            background,
+            tokenName,
+            tokenDescription
+        );
+
+
+        return tooltip;
+    }
+
+
+    private showSignatureTokenTooltip() {
+        this.signatureTokenTooltipVisible = true;
+        this.signatureTokenTooltip.visible = true;
+    }
+
+
+    private hideSignatureTokenTooltip() {
+        this.signatureTokenTooltipVisible = false;
+        this.signatureTokenTooltip.visible = false;
+    }
+
+
+    private toggleSignatureTokenTooltip() {
+
+        this.signatureTokenTooltipVisible =
+            !this.signatureTokenTooltipVisible;
+
+        this.signatureTokenTooltip.visible =
+            this.signatureTokenTooltipVisible;
     }
 }
