@@ -27,6 +27,7 @@ import { CardColor } from "../gambleForMore/games/redBlackCard/RedBlackCardTypes
 import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCardGame";
 import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandler";
 import { DealerCollectionManager } from '../dealers/collection/DealerCollectionManager';
+import { StreakMultiplierManager } from '../streak/StreakMultiplierManager';
 
 
 export class GameScene extends BaseScene {
@@ -34,7 +35,6 @@ export class GameScene extends BaseScene {
     private player: Player;
     private controller: GameController;
     private coinRow!: CoinRow;
-    private streakMultiplier = 1;
     private roundState: 'ready' | 'spinning' | 'result' = 'ready';
     private cheatPanel: CheatPanel;
     private cheatManager = new CheatManager();
@@ -56,6 +56,7 @@ export class GameScene extends BaseScene {
     private redBlackCardGame = new RedBlackCardGame();
     private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
     private dealerCollectionManager = DealerCollectionManager.getInstance();
+    private streakMultiplierManager = new StreakMultiplierManager();
 
 
     constructor (
@@ -218,7 +219,9 @@ export class GameScene extends BaseScene {
 
         this.view.gameUI.updateBet(this.controller.getBet());
 
-        this.view.gameUI.updateMultiplier(this.streakMultiplier);
+        this.view.gameUI.updateMultiplier(
+            this.streakMultiplierManager.getValue()
+        );
 
 
         this.gameCheatController =
@@ -437,10 +440,10 @@ export class GameScene extends BaseScene {
             automatycznie między dealerami.
         */
 
-        this.streakMultiplier = 1;
+        this.streakMultiplierManager.reset();
 
         this.view.gameUI.updateMultiplier(
-            this.streakMultiplier
+            this.streakMultiplierManager.getValue()
         );
 
         this.view.gameUI.updateWon(0);
@@ -572,7 +575,7 @@ export class GameScene extends BaseScene {
                 bet,
 
                 streakMultiplier:
-                    this.streakMultiplier,
+                    this.streakMultiplierManager.getValue(),
 
                 goldenMultiplier
             });
@@ -590,7 +593,7 @@ export class GameScene extends BaseScene {
             win,
             winAmount,
             currentDealer: this.currentDealer,
-            currentStreakMultiplier: this.streakMultiplier
+            currentStreakMultiplier: this.streakMultiplierManager.getValue()
         });
 
         await this.dealerSkillFeedbackHandler.handle(
@@ -639,16 +642,19 @@ export class GameScene extends BaseScene {
                 return;
             }
 
-            this.streakMultiplier = pendingStreakMultiplier;
+            this.streakMultiplierManager.setValue(
+                pendingStreakMultiplier
+            );
 
             this.view.gameUI.updateMultiplier(
-                this.streakMultiplier
+                this.streakMultiplierManager.getValue()
             );
 
             this.runStatsRecorder.finishRound({
                 win: true,
                 winAmount: resolvedWinAmount,
-                streakMultiplier: this.streakMultiplier
+                streakMultiplier:
+                    this.streakMultiplierManager.getValue()
             });
 
             this.commitWin(
@@ -665,15 +671,18 @@ export class GameScene extends BaseScene {
             LOSS
         */
 
-        this.streakMultiplier = pendingStreakMultiplier;
+        this.streakMultiplierManager.setValue(
+            pendingStreakMultiplier
+        );
 
         this.view.gameUI.updateMultiplier(
-            this.streakMultiplier
+            this.streakMultiplierManager.getValue()
         );
 
         this.runStatsRecorder.finishRound({
             win: false,
-            streakMultiplier: this.streakMultiplier
+            streakMultiplier:
+                this.streakMultiplierManager.getValue()
         });
 
         await this.finishRound();
@@ -714,17 +723,21 @@ export class GameScene extends BaseScene {
         this.commitWin(offer.currentWin);
 
         if (this.pendingStreakMultiplier !== undefined) {
-            this.streakMultiplier = this.pendingStreakMultiplier;
+
+            this.streakMultiplierManager.setValue(
+                this.pendingStreakMultiplier
+            );
 
             this.view.gameUI.updateMultiplier(
-                this.streakMultiplier
+                this.streakMultiplierManager.getValue()
             );
         }
 
         this.runStatsRecorder.finishRound({
             win: true,
             winAmount: offer.currentWin,
-            streakMultiplier: this.streakMultiplier
+            streakMultiplier:
+                this.streakMultiplierManager.getValue()
         });
 
         this.pendingGambleOffer = undefined;
@@ -791,18 +804,21 @@ export class GameScene extends BaseScene {
             );
 
             if (this.pendingStreakMultiplier !== undefined) {
-                this.streakMultiplier = this.pendingStreakMultiplier;
+                this.streakMultiplierManager.setValue(
+                    this.pendingStreakMultiplier
+                );
             }
 
             this.runStatsRecorder.finishRound({
                 win: true,
                 winAmount: offer.potentialWin,
-                streakMultiplier: this.streakMultiplier
+                streakMultiplier:
+                    this.streakMultiplierManager.getValue()
             });
 
         } else {
 
-            this.streakMultiplier = 1;
+            this.streakMultiplierManager.reset();
 
             this.view.gameUI.updateWon(
                 0
@@ -810,12 +826,13 @@ export class GameScene extends BaseScene {
 
             this.runStatsRecorder.finishRound({
                 win: false,
-                streakMultiplier: this.streakMultiplier
+                streakMultiplier:
+                    this.streakMultiplierManager.getValue()
             });
         }
 
         this.view.gameUI.updateMultiplier(
-            this.streakMultiplier
+            this.streakMultiplierManager.getValue()
         );
 
         this.view.gambleForMoreOverlay.hide();
