@@ -1,4 +1,5 @@
 import { DEFAULT_STREAK_MULTIPLIER_SETTINGS } from "./StreakMultiplierConfig";
+import { StreakAction, StreakResolution } from "./StreakResolution";
 
 export class StreakMultiplierManager {
 
@@ -10,6 +11,43 @@ export class StreakMultiplierManager {
 
     private growthPerWin =
         DEFAULT_STREAK_MULTIPLIER_SETTINGS.growthPerWin;
+
+
+    applyResolution(
+        resolution: StreakResolution
+    ) {
+
+        switch (resolution.action) {
+
+            case StreakAction.INCREASE:
+
+                this.currentValue +=
+                    resolution.value ?? 0;
+
+                break;
+
+
+            case StreakAction.DECREASE:
+
+                this.decrease(
+                    resolution.value ?? 0
+                );
+
+                break;
+
+
+            case StreakAction.RESET:
+
+                this.reset();
+
+                break;
+
+
+            case StreakAction.NONE:
+
+                break;
+        }
+    }
 
 
     getValue(): number {

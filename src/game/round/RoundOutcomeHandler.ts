@@ -3,25 +3,22 @@ import { SoundId } from "../../audio/SoundId";
 import { DealerData } from "../dealers/DealerData";
 import { DealerSkillId } from "../dealers/DealerSkill";
 import { roundMoney } from "../util/MoneyUtils";
+import { StreakAction, StreakResolution } from "../streak/StreakResolution";
 
 
 export interface RoundOutcomeData {
-
     win: boolean;
-
     winAmount?: number;
-
     currentDealer: DealerData;
-
-    currentStreakMultiplier: number;
 }
 
 
 export interface RoundOutcomeResult {
-    newStreakMultiplier: number;
     wonAmount: number;
     triggeredSkills: DealerSkillId[];
+    streakResolution: StreakResolution;
 }
+
 
 interface WinModifierResult {
     winAmount: number;
@@ -31,28 +28,25 @@ interface WinModifierResult {
 
 export class RoundOutcomeHandler {
 
-    private audioManager =
-        AudioManager.getInstance();
+    private audioManager = AudioManager.getInstance();
 
 
-    apply(
-        data: RoundOutcomeData
-    ): RoundOutcomeResult {
+    apply(data: RoundOutcomeData): RoundOutcomeResult {
 
         if (!data.win) {
+
             return {
-                newStreakMultiplier: 1,
                 wonAmount: 0,
-                triggeredSkills: []
+                triggeredSkills: [],
+
+                streakResolution: {
+                    action: StreakAction.RESET
+                }
             };
         }
 
 
-        if (
-            data.winAmount ===
-            undefined
-        ) {
-
+        if (data.winAmount === undefined) {
             throw new Error(
                 "Winning round has no win amount."
             );
@@ -73,32 +67,48 @@ export class RoundOutcomeHandler {
             data.currentDealer
         );
 
-        return {
-            newStreakMultiplier:
-                data.currentStreakMultiplier +
-                this.getStreakMultiplierGrowth(
-                    data.currentDealer
-                ),
 
-            wonAmount: winModifierResult.winAmount,
-            triggeredSkills: winModifierResult.triggeredSkills
+        return {
+            wonAmount:
+                winModifierResult.winAmount,
+
+            triggeredSkills:
+                winModifierResult.triggeredSkills,
+
+            streakResolution: {
+                action: StreakAction.INCREASE,
+
+                value:
+                    this.getStreakMultiplierGrowth(
+                        data.currentDealer
+                    )
+            }
         };
     }
 
 
-    private applyWinModifiers(winAmount: number, dealer: DealerData): WinModifierResult {
+    private applyWinModifiers(
+        winAmount: number,
+        dealer: DealerData
+    ): WinModifierResult {
 
         const triggeredSkills: DealerSkillId[] = [];
 
         let finalWinAmount = winAmount;
 
+
         const doublePayoutSkill = dealer.skills.find(
-            skill => skill.id === DealerSkillId.OOPS_I_PAID_YOU_TWICE
+            skill =>
+                skill.id ===
+                DealerSkillId.OOPS_I_PAID_YOU_TWICE
         );
+
 
         if (doublePayoutSkill) {
 
-            const triggerChance = doublePayoutSkill.triggerChance ?? 0;
+            const triggerChance =
+                doublePayoutSkill.triggerChance ?? 0;
+
 
             if (Math.random() < triggerChance) {
 
@@ -112,6 +122,7 @@ export class RoundOutcomeHandler {
             }
         }
 
+
         return {
             winAmount: finalWinAmount,
             triggeredSkills
@@ -123,19 +134,14 @@ export class RoundOutcomeHandler {
         dealer: DealerData
     ): number {
 
-        const hasSlowerMultiplierGrowth =
-            dealer.skills.some(
-                skill =>
-                    skill.id ===
-                    DealerSkillId
-                        .SLOWER_MULTIPLIER_GROWTH
-            );
+        const hasSlowerMultiplierGrowth = dealer.skills.some(
+            skill =>
+                skill.id ===
+                DealerSkillId.SLOWER_MULTIPLIER_GROWTH
+        );
 
 
-        if (
-            hasSlowerMultiplierGrowth
-        ) {
-
+        if (hasSlowerMultiplierGrowth) {
             return 0.5;
         }
 

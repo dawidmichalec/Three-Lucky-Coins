@@ -28,6 +28,7 @@ import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCa
 import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandler";
 import { DealerCollectionManager } from '../dealers/collection/DealerCollectionManager';
 import { StreakMultiplierManager } from '../streak/StreakMultiplierManager';
+import { StreakResolution, StreakAction } from '../streak/StreakResolution';
 
 
 export class GameScene extends BaseScene {
@@ -52,7 +53,7 @@ export class GameScene extends BaseScene {
     private view: GameSceneView;
     private gambleForMoreManager = new GambleForMoreManager();
     private pendingGambleOffer?: GambleForMoreOffer;
-    private pendingStreakMultiplier?: number;
+    private pendingStreakResolution?: StreakResolution;
     private redBlackCardGame = new RedBlackCardGame();
     private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
     private dealerCollectionManager = DealerCollectionManager.getInstance();
@@ -593,14 +594,13 @@ export class GameScene extends BaseScene {
             win,
             winAmount,
             currentDealer: this.currentDealer,
-            currentStreakMultiplier: this.streakMultiplierManager.getValue()
         });
 
         await this.dealerSkillFeedbackHandler.handle(
             outcome.triggeredSkills
         );
 
-        const pendingStreakMultiplier = outcome.newStreakMultiplier;
+        const streakResolution = outcome.streakResolution;
 
 
         /*
@@ -632,7 +632,7 @@ export class GameScene extends BaseScene {
 
             if (gambleTriggered) {
 
-                this.pendingStreakMultiplier = pendingStreakMultiplier;
+                this.pendingStreakResolution = outcome.streakResolution;
 
                 this.startGambleForMore(
                     resolvedWinAmount,
@@ -642,8 +642,8 @@ export class GameScene extends BaseScene {
                 return;
             }
 
-            this.streakMultiplierManager.setValue(
-                pendingStreakMultiplier
+            this.streakMultiplierManager.applyResolution(
+                streakResolution
             );
 
             this.view.gameUI.updateMultiplier(
@@ -671,8 +671,8 @@ export class GameScene extends BaseScene {
             LOSS
         */
 
-        this.streakMultiplierManager.setValue(
-            pendingStreakMultiplier
+        this.streakMultiplierManager.applyResolution(
+            streakResolution
         );
 
         this.view.gameUI.updateMultiplier(
@@ -722,10 +722,10 @@ export class GameScene extends BaseScene {
 
         this.commitWin(offer.currentWin);
 
-        if (this.pendingStreakMultiplier !== undefined) {
+        if (this.pendingStreakResolution) {
 
-            this.streakMultiplierManager.setValue(
-                this.pendingStreakMultiplier
+            this.streakMultiplierManager.applyResolution(
+                this.pendingStreakResolution
             );
 
             this.view.gameUI.updateMultiplier(
@@ -741,7 +741,7 @@ export class GameScene extends BaseScene {
         });
 
         this.pendingGambleOffer = undefined;
-        this.pendingStreakMultiplier = undefined;
+        this.pendingStreakResolution = undefined;
 
         await this.finishRound();
     }
@@ -803,9 +803,9 @@ export class GameScene extends BaseScene {
                 offer.potentialWin
             );
 
-            if (this.pendingStreakMultiplier !== undefined) {
-                this.streakMultiplierManager.setValue(
-                    this.pendingStreakMultiplier
+            if (this.pendingStreakResolution) {
+                this.streakMultiplierManager.applyResolution(
+                    this.pendingStreakResolution
                 );
             }
 
@@ -818,7 +818,9 @@ export class GameScene extends BaseScene {
 
         } else {
 
-            this.streakMultiplierManager.reset();
+            this.streakMultiplierManager.applyResolution({
+                action: StreakAction.RESET
+            });
 
             this.view.gameUI.updateWon(
                 0
@@ -838,7 +840,7 @@ export class GameScene extends BaseScene {
         this.view.gambleForMoreOverlay.hide();
 
         this.pendingGambleOffer = undefined;
-        this.pendingStreakMultiplier = undefined;
+        this.pendingStreakResolution = undefined;
 
         await this.finishRound();
     }
