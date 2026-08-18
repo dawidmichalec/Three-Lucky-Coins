@@ -29,6 +29,8 @@ import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandle
 import { DealerCollectionManager } from '../dealers/collection/DealerCollectionManager';
 import { StreakMultiplierManager } from '../streak/StreakMultiplierManager';
 import { StreakResolution, StreakAction } from '../streak/StreakResolution';
+import { PerkRewardGenerator } from '../perks/reward/PerkRewardGenerator';
+import { RunPerkRewardState } from '../perks/reward/RunPerkRewardState';
 
 
 export class GameScene extends BaseScene {
@@ -58,6 +60,8 @@ export class GameScene extends BaseScene {
     private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
     private dealerCollectionManager = DealerCollectionManager.getInstance();
     private streakMultiplierManager = new StreakMultiplierManager();
+    private perkRewardGenerator = new PerkRewardGenerator();
+    private runPerkRewardState = new RunPerkRewardState();
 
 
     constructor (
@@ -402,6 +406,31 @@ export class GameScene extends BaseScene {
         await this.view.gameMessageOverlay.play(
             "youWon"
         );
+
+
+        // TEMP - PERK REWARD GENERATOR TEST
+
+        const perkRewards =
+            this.perkRewardGenerator.generate(
+                this.runPerkRewardState,
+                3
+            );
+
+        console.group(
+            `PERK REWARDS - ${defeatedDealer.name}`
+        );
+
+        console.table(
+            perkRewards.map(
+                reward => ({
+                    perk: reward.perk.id,
+                    rarity: reward.variant.rarity
+                })
+            )
+        );
+
+        console.groupEnd();
+
 
 
         const nextDealer =

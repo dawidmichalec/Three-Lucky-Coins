@@ -1,5 +1,5 @@
 import { PerkData } from "./PerkData";
-
+import { PerkRarity } from "./PerkRarity";
 import { MULTIPLIER_BOOSTER_DATA } from "./data/MultiplierBooster";
 import { CASINO_BONUS_DATA } from "./data/CasinoBonus";
 import { PIGGY_BANK_DATA } from "./data/PiggyBank";
@@ -33,5 +33,16 @@ export function getPerkById(
     return PERKS.find(
         perk =>
             perk.id === perkId
+    );
+}
+
+export function getPerkVariant(
+    perk: PerkData,
+    rarity: PerkRarity
+) {
+
+    return perk.variants.find(
+        variant =>
+            variant.rarity === rarity
     );
 }
