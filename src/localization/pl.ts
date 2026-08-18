@@ -171,6 +171,71 @@ export default {
     mandatoryTipSkillDescription: "Co trzecią zwycięską rundę Timothy zgarnia połowę wygranej z tej rundy.",
 
 
+    // PERKS
+
+    // MULTIPLIER BOOSTER
+
+    multiplierBoosterName: "WZROST MNOŻNIKA",
+
+    multiplierBoosterDescriptionUncommon: "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+0,25",
+
+
+    // CASINO BONUS
+
+    casinoBonusName: "BONUS KASYNA",
+
+    casinoBonusDescriptionCommon: "Pierwszy zakład w każdej walce jest darmowy.\n\nMaksymalna darmowa stawka: 10,00.",
+
+
+    // PIGGY BANK
+
+    piggyBankName: "ŚWINKA SKARBONKA",
+
+    piggyBankDescription: "Jeśli saldo spadnie poniżej minimalnej stawki, zostanie zwiększone na tyle, aby można było ją postawić.\n\nPerk zostaje zużyty po użyciu.",
+
+
+    // COIN SENSE
+
+    coinSenseName: "SZÓSTY ZMYSŁ",
+
+    coinSenseDescriptionCommon: "Na początku każdej walki ujawnia dokładną kombinację pierwszego rzutu.\n\nWygrana z tego rzutu jest zmniejszona o 25%.",
+
+
+    // RISK TAKER
+
+    riskTakerName: "RYZYKANT",
+
+    riskTakerDescriptionUncommon: "Postawienie maksymalnej dostępnej stawki zwiększa wygraną o 12,5%.",
+
+
+    // GAMBLER
+
+    gamblerName: "HAZARDZISTA",
+
+    gamblerDescriptionUncommon: "Po przegranej Twoja następna wygrana jest zwiększona o 30%.\n\nEfekt znika po aktywacji.",
+
+
+    // INSURANCE
+
+    insuranceName: "UBEZPIECZENIE",
+
+    insuranceDescription: "Przegrana zmniejsza mnożnik passy o 1 zamiast go resetować.\n\nNie może on spaść poniżej podstawowego mnożnika passy.\n\nEfekt resetuje się po każdej walce.",
+
+
+    // DOUBLE DOWN
+
+    doubleDownName: "PODWÓJNA STAWKA",
+
+    doubleDownDescription: "Po 3 wygranych z rzędu czwarty zakład liczy się podwójnie przy obliczaniu wygranej.\n\nZ salda pobierana jest tylko standardowa stawka.",
+
+
+    // LUCKY HAND
+
+    luckyHandName: "SZCZĘŚLIWA RĘKA",
+
+    luckyHandDescription: "Co piąty zwycięski rzut podwaja wygraną.",
+
+
     // PERKS GAME UI
 
     perks: "Perki",

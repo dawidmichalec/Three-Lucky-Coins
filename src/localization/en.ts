@@ -170,6 +170,72 @@ export default {
     mandatoryTipSkillDescription: "Every third winning round, Timothy takes 50% of that round's winnings.",
 
 
+    // PERKS 
+
+    // MULTIPLIER BOOSTER
+
+    multiplierBoosterName: "MULTIPLIER BOOSTER",
+
+    multiplierBoosterDescriptionUncommon: "Increases your base streak multiplier and streak growth.\n\n+0.25",
+
+
+    // CASINO BONUS
+
+    casinoBonusName: "CASINO BONUS",
+
+    casinoBonusDescriptionCommon: "Your first bet in every fight is free.\n\nMaximum free bet: 10.00.",
+
+
+    // PIGGY BANK
+
+    piggyBankName: "PIGGY BANK",
+
+    piggyBankDescription: "If your balance drops below the minimum bet, it is increased enough to place a minimum bet.\n\nConsumed after use.",
+
+
+    // COIN SENSE
+
+    coinSenseName: "COIN SENSE",
+
+    coinSenseDescriptionCommon: "At the start of every fight, reveals the exact combination for the first toss.\n\nWinnings from that toss are reduced by 25%.",
+
+
+    // RISK TAKER
+
+    riskTakerName: "RISK TAKER",
+
+    riskTakerDescriptionUncommon: "Betting the maximum available amount increases your winnings by 12.5%.",
+
+
+    // GAMBLER
+
+    gamblerName: "GAMBLER",
+
+    gamblerDescriptionUncommon: "After a loss, your next win pays 30% more.\n\nConsumed after triggering.",
+
+
+    // INSURANCE
+
+    insuranceName: "INSURANCE",
+
+    insuranceDescription: "A loss reduces your streak multiplier by 1 instead of resetting it.\n\nIt cannot fall below your base streak multiplier.\n\nResets after each fight.",
+
+
+    // DOUBLE DOWN
+
+    doubleDownName: "DOUBLE DOWN",
+
+    doubleDownDescription: "After 3 consecutive wins, your 4th bet counts as double for payout calculations.\n\nOnly the regular bet amount is deducted from your balance.",
+
+
+    // LUCKY HAND
+
+    luckyHandName: "LUCKY HAND",
+
+    luckyHandDescription: "Every fifth winning toss pays double.",
+
+    
+
     // PERKS GAME UI
 
     perks: "Perks",
