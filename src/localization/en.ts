@@ -176,7 +176,7 @@ export default {
 
     multiplierBoosterName: "MULTIPLIER BOOSTER",
 
-    multiplierBoosterDescriptionUncommon: "Increases your base streak multiplier and streak growth.\n\n+0.25",
+    multiplierBoosterDescriptionCommon: "Increases your base streak multiplier and streak growth.\n\n+0.25",
 
 
     // CASINO BONUS

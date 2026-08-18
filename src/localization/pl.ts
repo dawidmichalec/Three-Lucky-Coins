@@ -177,7 +177,7 @@ export default {
 
     multiplierBoosterName: "WZROST MNOŻNIKA",
 
-    multiplierBoosterDescriptionUncommon: "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+0,25",
+    multiplierBoosterDescriptionCommon: "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+0,25",
 
 
     // CASINO BONUS
