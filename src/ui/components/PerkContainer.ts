@@ -25,7 +25,8 @@ export class PerkContainer extends Container {
 
     constructor(
         width: number,
-        height: number
+        height: number,
+        private readonly onPerkClick: (reward: PerkReward) => void
     ) {
 
         super();
@@ -85,6 +86,21 @@ export class PerkContainer extends Container {
 
         perkIcon.height =
             this.iconSize;
+
+        perkIcon.eventMode = "static";
+        perkIcon.cursor = "pointer";
+
+        perkIcon.on(
+            "pointertap",
+            event => {
+
+                event.stopPropagation();
+
+                this.onPerkClick(
+                    reward
+                );
+            }
+        );
 
 
         const index =

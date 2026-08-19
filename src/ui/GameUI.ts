@@ -11,6 +11,7 @@ import { MultiplierEffect } from "./effects/MultiplierEffect";
 import { AudioManager } from "../core/AudioManager";
 import { SoundId } from "../audio/SoundId";
 import { PerkReward } from "../game/perks/reward/PerkReward";
+import { PerkTooltip } from "./components/PerkTooltip";
 
 
 export class GameUI extends Container {
@@ -36,6 +37,7 @@ export class GameUI extends Container {
     private currentFightTargetBalance = 0;
 
     private audioManager = AudioManager.getInstance();
+    private activePerkTooltip?: PerkTooltip;
 
 
     constructor (
@@ -292,7 +294,20 @@ export class GameUI extends Container {
 
         // PERKS CONTAINER
 
-        this.perkContainer = new PerkContainer(300, 180);
+        const handlePerkClick =
+            (reward: PerkReward) => {
+
+                void this.showPerkTooltip(
+                    reward
+                );
+            };
+
+        this.perkContainer =
+            new PerkContainer(
+                300,
+                180,
+                handlePerkClick
+            );
         this.perkContainer.position.set(477.9, 656.2);
 
 
@@ -314,7 +329,12 @@ export class GameUI extends Container {
 
         // BONUSES CONTAINER
 
-        this.bonusesContainer = new PerkContainer(300, 180);
+        this.bonusesContainer =
+            new PerkContainer(
+                300,
+                180,
+                handlePerkClick
+            );
         this.bonusesContainer.position.set(822.9, 656.2);
 
 
@@ -336,7 +356,12 @@ export class GameUI extends Container {
 
         // EFFECTS CONTAINER
 
-        this.effectsContainer = new PerkContainer(300, 180);
+        this.effectsContainer =
+            new PerkContainer(
+                300,
+                180,
+                handlePerkClick
+            );
         this.effectsContainer.position.set(1167.9, 656.2);
 
         
@@ -399,6 +424,69 @@ export class GameUI extends Container {
                 reward
             );
     }
+
+
+    private async showPerkTooltip(
+        reward: PerkReward
+    ): Promise<void> {
+
+        this.hidePerkTooltip();
+
+
+        const tooltip =
+            new PerkTooltip(
+                reward,
+                () => {
+                    this.hidePerkTooltip();
+                }
+            );
+
+
+        await tooltip.init();
+
+
+        tooltip.position.set(
+            500,
+            420
+        );
+
+
+        tooltip.zIndex =
+            5000;
+
+
+        this.activePerkTooltip =
+            tooltip;
+
+
+        this.addChild(
+            tooltip
+        );
+    }
+
+
+    private hidePerkTooltip(): void {
+
+        if (!this.activePerkTooltip) {
+            return;
+        }
+
+
+        this.removeChild(
+            this.activePerkTooltip
+        );
+
+
+        this.activePerkTooltip.destroy({
+            children: true
+        });
+
+
+        this.activePerkTooltip =
+            undefined;
+    }
+
+
 
     private async createDealerCard() {
 
