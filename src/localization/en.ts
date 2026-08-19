@@ -172,6 +172,12 @@ export default {
 
     // PERKS 
 
+    chooseAPerk: "CHOOSE A PERK",
+    theLongerYouAreInTheCasino: "The longer you are in the casino, the more new perks you learn",
+    confirm: "CONFIRM",
+    skip: "SKIP",
+
+
     // MULTIPLIER BOOSTER
 
     multiplierBoosterName: "MULTIPLIER BOOSTER",

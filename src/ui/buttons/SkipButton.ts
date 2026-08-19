@@ -1,6 +1,7 @@
 import { Container, Sprite, Assets } from "pixi.js";
+import { LocalizedText } from "../../localization/LocalizedText";
 
-export class ClosePanelButton extends Container{
+export class SkipButton extends Container{
     private bg!: Sprite;
     private buttonWidth: number;
     private buttonHeight: number;
@@ -8,16 +9,16 @@ export class ClosePanelButton extends Container{
     constructor(){
         super();
 
-        this.buttonWidth = 50;
-        this.buttonHeight = 50;
-
+        this.buttonWidth = 175;
+        this.buttonHeight = 175;
+        
         this.eventMode = 'static';
         this.cursor = 'pointer';
     }
 
     async init() {
         const texture = await Assets.load(
-            '/assets/main/icons/close_button_icon.png'
+            '/assets/main/icons/skip_button_icon.png'
         );
     
         this.bg = new Sprite(texture);
@@ -27,8 +28,21 @@ export class ClosePanelButton extends Container{
 
         this.bg.scale.set(scaleX, scaleY);
 
+        const skipLabel = new LocalizedText(
+            "skip",
+            {
+                font: "Open Sans",
+                fontWeight: "bold",
+                fill: 0xffffff
+            }
+        );
+
+        skipLabel.anchor.set(0.5, 0);
+        skipLabel.position.set(75, (this.bg.height-skipLabel.height)/2);
+
+        this.bg.addChild(skipLabel);
+
         this.addChild(this.bg);
     }
-    
 
 }

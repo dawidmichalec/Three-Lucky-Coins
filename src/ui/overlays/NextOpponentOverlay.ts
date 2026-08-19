@@ -1,4 +1,4 @@
-import { Container, Graphics, Text, Sprite, Assets, curveEps } from 'pixi.js';
+import { Container, Graphics, Text, Sprite, Assets } from 'pixi.js';
 import { DealerData } from '../../game/dealers/DealerData';
 import { LocalizedText } from '../../localization/LocalizedText';
 import { LayoutManager } from '../../core/LayoutManager';

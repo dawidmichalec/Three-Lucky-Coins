@@ -173,6 +173,12 @@ export default {
 
     // PERKS
 
+    chooseAPerk: "WYBIERZ PERK",
+    theLongerYouAreInTheCasino: "Im dłużej jesteś w kasynie, tym więcej nowych umiejętności się uczysz",
+    confirm: "POTWIERDŹ",
+    skip: "POMIŃ",
+
+
     // MULTIPLIER BOOSTER
 
     multiplierBoosterName: "WZROST MNOŻNIKA",
