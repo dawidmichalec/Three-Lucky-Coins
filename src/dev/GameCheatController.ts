@@ -22,6 +22,10 @@ import {
     GoldenCoinManager
 } from "../game/goldenCoins/GoldenCoinManager";
 
+import {
+    PerkRewardGenerator
+} from "../game/perks/reward/PerkRewardGenerator";
+
 
 interface GameCheatControllerOptions {
 
@@ -48,6 +52,9 @@ export class GameCheatController {
 
         private goldenCoinManager:
             GoldenCoinManager,
+
+        private perkRewardGenerator:
+            PerkRewardGenerator,
 
         private options:
             GameCheatControllerOptions
@@ -143,6 +150,16 @@ export class GameCheatController {
                     .onGameOver();
             }
         );
+
+        this.cheatManager.register(
+            CheatCode.FORCE_MULTIPLIER_BOOSTER,
+            () => {
+
+                this.forcePerkReward(
+                    "multiplier_booster"
+                );
+            }
+        );
     }
 
 
@@ -211,6 +228,23 @@ export class GameCheatController {
 
                 `FORCED COMBINATION: ${this.forcedResult.join("-")}`
             ].join("\n")
+        );
+    }
+
+
+    private forcePerkReward(
+        perkId: string
+    ): void {
+
+        this.perkRewardGenerator
+            .forceNextPerk(
+                perkId
+            );
+
+
+        console.log(
+            "FORCED PERK REWARD:",
+            perkId
         );
     }
 }

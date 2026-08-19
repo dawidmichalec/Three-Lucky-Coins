@@ -8,5 +8,6 @@ export enum StreakAction {
 
 export interface StreakResolution {
     action: StreakAction;
+    growthModifier?: number;
     value?: number;
 }

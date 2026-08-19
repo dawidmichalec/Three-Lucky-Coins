@@ -21,8 +21,9 @@ export class StreakMultiplierManager {
 
             case StreakAction.INCREASE:
 
-                this.currentValue +=
-                    resolution.value ?? 0;
+                this.increase(
+                    resolution.growthModifier ?? 1
+                );
 
                 break;
 
@@ -61,7 +62,14 @@ export class StreakMultiplierManager {
 
 
     getBaseValue(): number {
-        return this.baseValue;
+    return this.baseValue;
+}
+
+
+    setBaseValue(
+        value: number
+    ) {
+        this.baseValue = value;
     }
 
 
@@ -70,10 +78,11 @@ export class StreakMultiplierManager {
     }
 
 
-    setGrowthPerWin(value: number) {
+    setGrowthPerWin(
+        value: number
+    ) {
         this.growthPerWin = value;
     }
-
 
     increase(growthModifier = 1) {
 

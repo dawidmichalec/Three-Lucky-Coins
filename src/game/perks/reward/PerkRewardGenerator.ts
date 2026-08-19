@@ -4,6 +4,8 @@ import { RunPerkRewardState } from "./RunPerkRewardState";
 
 export class PerkRewardGenerator {
 
+    private forcedPerkId?: string;
+
     generate(
         state: RunPerkRewardState,
         count = 3
@@ -26,17 +28,61 @@ export class PerkRewardGenerator {
         }
 
 
+        const selectedRewards:
+            PerkReward[] = [];
+
+
+        if (this.forcedPerkId) {
+
+            const forcedReward =
+                availableRewards.find(
+                    reward =>
+                        reward.perk.id ===
+                        this.forcedPerkId
+                );
+
+
+            if (!forcedReward) {
+
+                console.warn(
+                    `Forced perk reward "${this.forcedPerkId}" is not available.`
+                );
+
+            } else {
+
+                selectedRewards.push(
+                    forcedReward
+                );
+            }
+
+
+            this.forcedPerkId =
+                undefined;
+        }
+
+
+        const remainingRewards =
+            availableRewards.filter(
+                reward =>
+                    !selectedRewards.includes(
+                        reward
+                    )
+            );
+
+
         const shuffledRewards =
             this.shuffle(
-                availableRewards
+                remainingRewards
             );
 
 
-        const selectedRewards =
-            shuffledRewards.slice(
+        selectedRewards.push(
+            ...shuffledRewards.slice(
                 0,
-                count
-            );
+                count -
+                selectedRewards.length
+            )
+        );
 
 
         for (
@@ -128,4 +174,13 @@ export class PerkRewardGenerator {
 
         return result;
     }
+
+    forceNextPerk(
+        perkId: string
+    ): void {
+
+        this.forcedPerkId =
+            perkId;
+    }
+
 }

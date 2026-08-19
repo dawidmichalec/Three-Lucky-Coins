@@ -33,6 +33,7 @@ import { PerkRewardGenerator } from '../perks/reward/PerkRewardGenerator';
 import { RunPerkRewardState } from '../perks/reward/RunPerkRewardState';
 import { PerkReward } from '../perks/reward/PerkReward';
 import { RunPerkManager } from "../perks/RunPerkManager";
+import { PerkEffectApplier } from '../perks/PerkEffectApplier';
 
 
 export class GameScene extends BaseScene {
@@ -65,6 +66,7 @@ export class GameScene extends BaseScene {
     private perkRewardGenerator = new PerkRewardGenerator();
     private runPerkRewardState = new RunPerkRewardState();
     private runPerkManager = new RunPerkManager();
+    private perkEffectApplier = new PerkEffectApplier(this.streakMultiplierManager);
 
 
     constructor (
@@ -247,6 +249,7 @@ export class GameScene extends BaseScene {
                 this.cheatManager,
                 this.controller,
                 this.goldenCoinManager,
+                this.perkRewardGenerator,
                 {
                     onDealerWin: () => {
 
@@ -476,6 +479,10 @@ export class GameScene extends BaseScene {
             "PERK ACQUIRED:",
             reward.perk.id,
             reward.variant.rarity
+        );
+
+        this.perkEffectApplier.applyPerk(
+            reward
         );
 
 

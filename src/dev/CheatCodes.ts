@@ -14,6 +14,8 @@ export enum CheatCode {
 
     DEALER_WIN = "dealerwin",
 
-    GAME_OVER = "gameover"
+    GAME_OVER = "gameover",
+
+    FORCE_MULTIPLIER_BOOSTER = "perk_multiplier_booster"
 
 }

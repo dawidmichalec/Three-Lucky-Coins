@@ -46,34 +46,39 @@ export class MultiplierEffect extends Container {
     }
 
 
-    play(multiplier: number) {
+    play(
+        previousMultiplier: number,
+        currentMultiplier: number
+    ) {
+
+        const previousMilestone =
+            Math.floor(
+                previousMultiplier / 5
+            );
+
+
+        const currentMilestone =
+            Math.floor(
+                currentMultiplier / 5
+            );
+
 
         /*
-            Efekt progowy uruchamiamy tylko dla:
-
-            x5
-            x10
-            x15
-            x20
-            itd.
+            Nie przekroczyliśmy nowego
+            progu x5 / x10 / x15 / ...
         */
 
         if (
-            multiplier < 5 ||
-            multiplier % 5 !== 0
+            currentMilestone <=
+            previousMilestone
         ) {
             return;
         }
 
 
         const milestoneLevel =
-            Math.floor(multiplier / 5);
+            currentMilestone;
 
-
-        /*
-            Jeżeli poprzedni efekt jeszcze działa,
-            usuwamy go przed rozpoczęciem następnego.
-        */
 
         this.clearEffect();
 
@@ -83,29 +88,23 @@ export class MultiplierEffect extends Container {
         );
 
 
-        /*
-            Od x10 dodajemy krótki flash.
-        */
-
-        if (milestoneLevel >= 2) {
+        if (
+            milestoneLevel >= 2
+        ) {
 
             this.createFlash(
                 milestoneLevel
             );
-
         }
 
 
-        /*
-            Od x20 dodajemy prosty efekt ognia.
-        */
-
-        if (milestoneLevel >= 4) {
+        if (
+            milestoneLevel >= 4
+        ) {
 
             this.createFlames(
                 milestoneLevel
             );
-
         }
 
 

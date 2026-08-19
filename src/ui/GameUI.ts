@@ -626,6 +626,7 @@ export class GameUI extends Container {
 
 
             this.multiplierEffect.play(
+                previousMultiplier,
                 multiplier
             );
 
