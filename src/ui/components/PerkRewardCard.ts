@@ -32,18 +32,6 @@ export class PerkRewardCard extends Container {
         this.cursor = "pointer";
 
 
-        const bg = new Graphics()
-            .rect(
-                0,
-                0,
-                this.cardWidth,
-                this.cardHeight
-            )
-            .fill({
-                color: 0xff3131
-            });
-
-
         this.selectionBorder = new Graphics()
             .rect(
                 6,
@@ -67,12 +55,19 @@ export class PerkRewardCard extends Container {
 
 
         this.addChild(
-            bg,
             this.selectionBorder
         );
 
 
-        this.init();
+        void this.init().catch(error => {
+
+            console.error(
+                "FAILED TO INITIALIZE PERK REWARD CARD:",
+                this.reward.perk.id,
+                this.reward.variant.rarity,
+                error
+            );
+        });
     }
 
 
@@ -88,6 +83,15 @@ export class PerkRewardCard extends Container {
 
     private async createPerkIcon():
     Promise<void> {
+
+        const assetPath =
+        this.reward.variant.assets.mid;
+
+        console.log(
+            "LOADING PERK ICON:",
+            this.reward.perk.id,
+            assetPath
+        );
 
         const texture = await Assets.load(
             this.reward.variant.assets.mid

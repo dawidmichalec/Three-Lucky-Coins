@@ -27,10 +27,10 @@ PerkData<MultiplierBoosterConfig> = {
                     "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_small_icon_common.png",
 
                 mid:
-                    "/assets/main/icons/perks/multiplier_booster/common/multiplier_booster_mid_icon_common.png",
+                    "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_mid_icon_common.png",
 
                 big:
-                    "/assets/main/icons/perks/multiplier_booster/common/multiplier_booster_big_icon_common.png"
+                    "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_big_icon_common.png"
             },
 
             config: {

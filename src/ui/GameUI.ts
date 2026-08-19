@@ -10,6 +10,7 @@ import { OddsTable } from "../game/probability/OddsTypes";
 import { MultiplierEffect } from "./effects/MultiplierEffect";
 import { AudioManager } from "../core/AudioManager";
 import { SoundId } from "../audio/SoundId";
+import { PerkReward } from "../game/perks/reward/PerkReward";
 
 
 export class GameUI extends Container {
@@ -26,7 +27,7 @@ export class GameUI extends Container {
     private dealerCard!: DealerCard;
     private dealerSkillsPanel!: DealerSkillsPanel;
     private dealerObjectivePanel!: DealerObjectivePanel;
-    private perksContainer!: PerkContainer;
+    readonly perkContainer: PerkContainer;
     private bonusesContainer!: PerkContainer;
     private effectsContainer!: PerkContainer;
 
@@ -291,8 +292,8 @@ export class GameUI extends Container {
 
         // PERKS CONTAINER
 
-        this.perksContainer = new PerkContainer(300, 180);
-        this.perksContainer.position.set(477.9, 656.2);
+        this.perkContainer = new PerkContainer(300, 180);
+        this.perkContainer.position.set(477.9, 656.2);
 
 
         // PERKS LABEL
@@ -372,7 +373,7 @@ export class GameUI extends Container {
             this.probabilityDisplay,
             this.dealerSkillsPanel,
             this.dealerObjectivePanel,
-            this.perksContainer,
+            this.perkContainer,
             perksLabel,
             this.bonusesContainer,
             bonusesLabel,
@@ -385,6 +386,18 @@ export class GameUI extends Container {
     async init(): Promise<void> {
 
         await this.createDealerCard();
+    }
+
+
+    async addPerk(
+        reward:
+            PerkReward
+    ): Promise<void> {
+
+        await this.perkContainer
+            .addPerk(
+                reward
+            );
     }
 
     private async createDealerCard() {

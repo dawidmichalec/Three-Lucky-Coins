@@ -31,6 +31,8 @@ import { StreakMultiplierManager } from '../streak/StreakMultiplierManager';
 import { StreakResolution, StreakAction } from '../streak/StreakResolution';
 import { PerkRewardGenerator } from '../perks/reward/PerkRewardGenerator';
 import { RunPerkRewardState } from '../perks/reward/RunPerkRewardState';
+import { PerkReward } from '../perks/reward/PerkReward';
+import { RunPerkManager } from "../perks/RunPerkManager";
 
 
 export class GameScene extends BaseScene {
@@ -62,6 +64,7 @@ export class GameScene extends BaseScene {
     private streakMultiplierManager = new StreakMultiplierManager();
     private perkRewardGenerator = new PerkRewardGenerator();
     private runPerkRewardState = new RunPerkRewardState();
+    private runPerkManager = new RunPerkManager();
 
 
     constructor (
@@ -167,7 +170,17 @@ export class GameScene extends BaseScene {
                         color =>
                             this.handleGambleForMoreColorSelected(
                                 color
-                            )
+                            ),
+                    
+                    onPerkRewardConfirm:
+                        reward =>
+                            this.handlePerkRewardConfirm(
+                                reward
+                            ),
+
+                    onPerkRewardSkip:
+                        () =>
+                            this.handlePerkRewardSkip()        
 
                 }
             );
@@ -431,10 +444,80 @@ export class GameScene extends BaseScene {
 
         console.groupEnd();
 
+        this.view.perkRewardOverlay.show(
+            perkRewards
+        );
 
+    }
+
+
+    private async handlePerkRewardConfirm(
+        reward: PerkReward
+    ): Promise<void> {
+
+        const added =
+            this.runPerkManager.addPerk(
+                reward
+            );
+
+
+        if (!added) {
+
+            console.warn(
+                "PERK ALREADY OWNED:",
+                reward.perk.id
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "PERK ACQUIRED:",
+            reward.perk.id,
+            reward.variant.rarity
+        );
+
+
+        this.view.perkRewardOverlay.hide();
+
+
+        await this.view.gameUI
+            .addPerk(
+                reward
+            );
+
+        
+        await this.wait(
+            900
+        );
+
+
+        await this.continueAfterPerkReward();
+    }
+
+
+    private async handlePerkRewardSkip():
+    Promise<void> {
+
+        console.log(
+            "PERK REWARD SKIPPED"
+        );
+
+
+        this.view.perkRewardOverlay.hide();
+
+
+        await this.continueAfterPerkReward();
+    }
+
+
+    private async continueAfterPerkReward():
+    Promise<void> {
 
         const nextDealer =
-            this.dealerFightManager.advanceToNextDealer();
+            this.dealerFightManager
+                .advanceToNextDealer();
 
 
         if (!nextDealer) {
@@ -443,7 +526,8 @@ export class GameScene extends BaseScene {
                 "All currently available dealers defeated."
             );
 
-            await this.runEndController.showRunVictory();
+            await this.runEndController
+                .showRunVictory();
 
             return;
         }
@@ -454,7 +538,8 @@ export class GameScene extends BaseScene {
         );
 
 
-        this.isChangingDealer = false;
+        this.isChangingDealer =
+            false;
     }
 
 

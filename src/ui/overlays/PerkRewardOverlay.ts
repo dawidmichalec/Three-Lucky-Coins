@@ -31,7 +31,9 @@ export class PerkRewardOverlay extends Container {
 
     constructor(
         width: number,
-        height: number
+        height: number,
+        private onConfirm: (reward: PerkReward) => void,
+        private onSkip: () => void
     ) {
 
         super();
@@ -160,25 +162,20 @@ export class PerkRewardOverlay extends Container {
                 theme:
                     ButtonTheme.GOLD,
 
-                onClick:
-                    () => {
+                onClick: () => {
 
-                        const reward =
-                            this.selectedCard
-                                ?.getReward();
+                    const reward =
+                        this.selectedCard
+                            ?.getReward();
 
-
-                        if (!reward) {
-                            return;
-                        }
-
-
-                        console.log(
-                            "CONFIRMED PERK:",
-                            reward.perk.id,
-                            reward.variant.rarity
-                        );
+                    if (!reward) {
+                        return;
                     }
+
+                    this.onConfirm(
+                        reward
+                    );
+                }
             });
 
 
@@ -193,8 +190,6 @@ export class PerkRewardOverlay extends Container {
 
         this.confirmButton.visible =
             false;
-
-        this.init();
 
         this.addChild(
             chooseAPerkLabel,
@@ -231,7 +226,7 @@ export class PerkRewardOverlay extends Container {
 
 
         this.skipButton.on("pointertap", () => {
-            this.hide();
+            this.onSkip();
         });
 
 

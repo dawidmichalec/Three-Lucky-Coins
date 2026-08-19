@@ -14,6 +14,7 @@ import { LayoutManager } from "../core/LayoutManager";
 import { GambleForMoreOverlay } from "./gambleForMore/GambleForMoreOverlay";
 import { CardColor } from "../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
 import { PerkRewardOverlay } from "./overlays/PerkRewardOverlay";
+import { PerkReward } from "../game/perks/reward/PerkReward";
 
 
 interface GameSceneViewOptions {
@@ -37,6 +38,11 @@ interface GameSceneViewOptions {
     onGambleForMoreNo:() => void;
 
     onGambleForMoreColorSelected:(color: CardColor) => void;
+
+    onPerkRewardConfirm: (reward: PerkReward) => void;
+
+    onPerkRewardSkip: () => void;
+
 }
 
 
@@ -257,8 +263,14 @@ export class GameSceneView
 
         //PERK REWARD
 
-        this.perkRewardOverlay = new PerkRewardOverlay(layout.DESIGN_WIDTH, layout.DESIGN_HEIGHT);
-        this.perkRewardOverlay.zIndex = 8000;
+        this.perkRewardOverlay =
+            new PerkRewardOverlay(
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT,
+                options.onPerkRewardConfirm,
+                options.onPerkRewardSkip
+            );
+        this.perkRewardOverlay.zIndex = 4000;
         this.addChild(this.perkRewardOverlay);
 
     }
@@ -266,7 +278,9 @@ export class GameSceneView
     async init():
         Promise<void> {
 
-        await this.gambleForMoreOverlay
-            .init();
+        await Promise.all([
+            this.gambleForMoreOverlay.init(),
+            this.perkRewardOverlay.init()
+        ]);
     }
 }
