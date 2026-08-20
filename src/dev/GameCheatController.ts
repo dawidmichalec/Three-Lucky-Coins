@@ -160,6 +160,17 @@ export class GameCheatController {
                 );
             }
         );
+
+        this.cheatManager.register(
+            CheatCode.FORCE_CASINO_BONUS,
+            () => {
+
+                this.forcePerkReward(
+                    "casino_bonus"
+                );
+            }
+        );
+
     }
 
 

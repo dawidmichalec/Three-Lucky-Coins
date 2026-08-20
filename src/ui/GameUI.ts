@@ -39,6 +39,8 @@ export class GameUI extends Container {
     private audioManager = AudioManager.getInstance();
     private activePerkTooltip?: PerkTooltip;
 
+    private freeBetLabel:  LocalizedText;
+
 
     constructor (
         private currentDealer: DealerData
@@ -381,6 +383,28 @@ export class GameUI extends Container {
         effectsLabel.position.set(1259.5, 844.8);
 
 
+        // FREE BET LABEL
+
+        this.freeBetLabel = new LocalizedText(
+            "freeBet",
+            {
+                fontFamily: 'Anek-Kannada Bold',
+                fontSize: 28,
+                fontWeight: 'bold',
+                fill: 0xffffff,
+                dropShadow: {
+                    alpha: 0.8,
+                    blur: 8,
+                    color: '#ffaa00',
+                    distance: 0,
+                }
+            }
+        );
+
+        this.freeBetLabel.position.set(917.3, 1000);
+
+        this.freeBetLabel.visible = false;
+
 
         // ADD
 
@@ -403,7 +427,8 @@ export class GameUI extends Container {
             this.bonusesContainer,
             bonusesLabel,
             this.effectsContainer,
-            effectsLabel
+            effectsLabel,
+            this.freeBetLabel
         );
 
     }
@@ -423,6 +448,15 @@ export class GameUI extends Container {
             .addPerk(
                 reward
             );
+    }
+
+
+    setFreeBetIndicator(
+        visible: boolean
+    ): void {
+
+        this.freeBetLabel.visible =
+            visible;
     }
 
 

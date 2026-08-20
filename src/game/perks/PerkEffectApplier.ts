@@ -1,4 +1,5 @@
 import { PerkReward } from "./reward/PerkReward";
+import { RunPerkManager } from "./RunPerkManager";
 import { StreakMultiplierManager } from "../streak/StreakMultiplierManager";
 
 
@@ -7,10 +8,22 @@ interface MultiplierBoosterConfig {
 }
 
 
+interface CasinoBonusConfig {
+    freeBetsPerFight: number;
+    maximumFreeBet: number;
+}
+
+
 export class PerkEffectApplier {
 
+    private casinoBonusBetsPlacedThisFight = 0;
+
+
     constructor(
-        private streakMultiplierManager:
+        private readonly runPerkManager:
+            RunPerkManager,
+
+        private readonly streakMultiplierManager:
             StreakMultiplierManager
     ) {}
 
@@ -29,6 +42,77 @@ export class PerkEffectApplier {
 
                 break;
         }
+    }
+
+
+    isCurrentBetFree(
+        bet: number
+    ): boolean {
+
+        const casinoBonus =
+            this.runPerkManager.getPerk(
+                "casino_bonus"
+            );
+
+
+        if (!casinoBonus) {
+            return false;
+        }
+
+
+        const config =
+            casinoBonus.variant.config as
+                CasinoBonusConfig;
+
+
+        return (
+            this.casinoBonusBetsPlacedThisFight <
+                config.freeBetsPerFight
+            &&
+            bet <=
+                config.maximumFreeBet
+        );
+    }
+
+
+    resolveBetCost(
+        bet: number
+    ): number {
+
+        if (
+            this.isCurrentBetFree(
+                bet
+            )
+        ) {
+            return 0;
+        }
+
+
+        return bet;
+    }
+
+
+    recordBet(): void {
+
+        const casinoBonus =
+            this.runPerkManager.getPerk(
+                "casino_bonus"
+            );
+
+
+        if (!casinoBonus) {
+            return;
+        }
+
+
+        this.casinoBonusBetsPlacedThisFight++;
+    }
+
+
+    resetFightEffects(): void {
+
+        this.casinoBonusBetsPlacedThisFight =
+            0;
     }
 
 

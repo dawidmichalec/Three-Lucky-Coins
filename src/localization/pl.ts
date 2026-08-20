@@ -177,6 +177,7 @@ export default {
     theLongerYouAreInTheCasino: "Im dłużej jesteś w kasynie, tym więcej nowych umiejętności się uczysz",
     confirm: "POTWIERDŹ",
     skip: "POMIŃ",
+    freeBet: "DARMOWY ZAKŁAD",
 
 
     // MULTIPLIER BOOSTER

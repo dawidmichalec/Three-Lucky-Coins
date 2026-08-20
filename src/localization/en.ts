@@ -176,6 +176,7 @@ export default {
     theLongerYouAreInTheCasino: "The longer you are in the casino, the more new perks you learn",
     confirm: "CONFIRM",
     skip: "SKIP",
+    freeBet: "FREE BET",
 
 
     // MULTIPLIER BOOSTER

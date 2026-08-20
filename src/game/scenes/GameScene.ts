@@ -66,7 +66,7 @@ export class GameScene extends BaseScene {
     private perkRewardGenerator = new PerkRewardGenerator();
     private runPerkRewardState = new RunPerkRewardState();
     private runPerkManager = new RunPerkManager();
-    private perkEffectApplier = new PerkEffectApplier(this.streakMultiplierManager);
+    private perkEffectApplier = new PerkEffectApplier(this.runPerkManager, this.streakMultiplierManager);
 
 
     constructor (
@@ -214,6 +214,8 @@ export class GameScene extends BaseScene {
                         .updateBet(
                             bet
                         );
+                    
+                    this.refreshFreeBetIndicator();
                 },
 
                 onComboChange: combo => {
@@ -330,6 +332,26 @@ export class GameScene extends BaseScene {
         ]);
 
         this.lockControls();
+    }
+
+
+    private refreshFreeBetIndicator(): void {
+
+        const bet =
+            this.controller.getBet();
+
+
+        const isFree =
+            this.perkEffectApplier
+                .isCurrentBetFree(
+                    bet
+                );
+
+
+        this.view.gameUI
+            .setFreeBetIndicator(
+                isFree
+            );
     }
 
 
@@ -486,6 +508,9 @@ export class GameScene extends BaseScene {
         );
 
 
+        this.refreshFreeBetIndicator();
+
+
         this.view.perkRewardOverlay.hide();
 
 
@@ -562,11 +587,15 @@ export class GameScene extends BaseScene {
             automatycznie między dealerami.
         */
 
+        this.perkEffectApplier.resetFightEffects();
+
         this.streakMultiplierManager.reset();
 
         this.view.gameUI.updateMultiplier(
             this.streakMultiplierManager.getValue()
         );
+
+        this.refreshFreeBetIndicator();
 
         this.view.gameUI.updateWon(0);
 
@@ -601,16 +630,43 @@ export class GameScene extends BaseScene {
         this.controller.decreaseBet();
     }
 
-    private handleBetUp() {
-        const nextBet = this.controller.getNextBet();
 
-        if (nextBet !== null && nextBet > this.player.balance) {
-            this.popupManager.show("insufficientBalance");
+    private handleBetUp() {
+
+        const nextBet =
+            this.controller.getNextBet();
+
+
+        if (
+            nextBet === null
+        ) {
             return;
         }
 
+
+        const nextBetCost =
+            this.perkEffectApplier
+                .resolveBetCost(
+                    nextBet
+                );
+
+
+        if (
+            nextBetCost >
+            this.player.balance
+        ) {
+
+            this.popupManager.show(
+                "insufficientBalance"
+            );
+
+            return;
+        }
+
+
         this.controller.increaseBet();
     }
+
 
     private handleToss() {
         this.startRound();
@@ -639,22 +695,44 @@ export class GameScene extends BaseScene {
 
         const bet = this.controller.getBet();
 
-        if (this.player.balance < bet) {
+
+        const betCost = this.perkEffectApplier.resolveBetCost(bet);
+
+
+        if (
+            this.player.balance < betCost
+        ) {
 
             this.popupManager.show("insufficientBalance");
 
             return;
         }
 
-        if (this.roundState !== 'ready') return;
 
-        this.roundState = 'spinning';
+        if (
+            this.roundState !== "ready"
+        ) {
+            return;
+        }
+
+
+        this.roundState = "spinning";
+
 
         this.lockControls();
+
         this.view.gameUI.updateWon(0);
 
-        
-        this.player.balance -= bet;
+
+        this.player.balance -= betCost;
+
+
+        this.perkEffectApplier.recordBet();
+
+
+        this.refreshFreeBetIndicator();
+
+
         this.view.gameUI.updateBalance(this.player.balance);
 
         this.view.controls.startTossAnimation();
@@ -980,14 +1058,18 @@ export class GameScene extends BaseScene {
 
     private async finishRound() {
 
-        this.controller.adjustBetToBalance(
-            this.player.balance
-        );
+        const currentBetCost = this.perkEffectApplier.resolveBetCost(this.controller.getBet());
+
+        if (currentBetCost > this.player.balance) {
+
+            this.controller
+                .adjustBetToBalance(
+                    this.player.balance
+                );
+        }
 
 
-        if (
-            this.isCurrentDealerDefeated()
-        ) {
+        if (this.isCurrentDealerDefeated()) {
 
             this.roundState =
                 "result";
@@ -1086,7 +1168,22 @@ export class GameScene extends BaseScene {
     // IS PLAYER ABLE TO PLAY?
 
     canPlay(): boolean {
-        return this.player.balance >= this.controller.getMinBet();
+
+        const minBet =
+            this.controller.getMinBet();
+
+
+        const minBetCost =
+            this.perkEffectApplier
+                .resolveBetCost(
+                    minBet
+                );
+
+
+        return (
+            this.player.balance >=
+            minBetCost
+        );
     }
 
     // TRIGGER GAME OVER
