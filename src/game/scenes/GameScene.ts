@@ -334,6 +334,66 @@ export class GameScene extends BaseScene {
     }
 
 
+    private async tryTriggerPiggyBank():
+    Promise<boolean> {
+
+        const minimumBet =
+            this.controller
+                .getMinBet();
+
+
+        const result =
+            this.perkEffectApplier
+                .applyPiggyBank(
+                    this.player.balance,
+                    minimumBet
+                );
+
+
+        if (!result.triggered) {
+            return false;
+        }
+
+
+        /*
+            Uzupełniamy saldo dokładnie
+            do wartości minimum bet.
+        */
+
+        this.player.balance =
+            result.finalBalance;
+
+
+        this.view.gameUI
+            .updateBalance(
+                this.player.balance
+            );
+
+
+        await this.view
+            .perkEffectMessageOverlay
+            .play(
+                "piggyBankActivated",
+                `+${result.amountGranted.toFixed(2)}`,
+                PerkEffectMessageType.POSITIVE
+            );
+
+
+        if (
+            result.consumed
+        ) {
+
+            await this.view.gameUI
+                .removePerk(
+                    "piggy_bank"
+                );
+        }
+
+
+        return true;
+    }
+
+
     private prepareCoinSense(): void {
 
         if (
@@ -1598,6 +1658,23 @@ export class GameScene extends BaseScene {
             await this.handleDealerDefeated();
 
             return;
+        }
+
+
+        if (
+            !this.canPlay()
+        ) {
+
+            await this.tryTriggerPiggyBank();
+
+            this.controller.adjustBetToBalance(this.player.balance);
+
+            console.log(
+                "PIGGY BANK CONSUMED:",
+                !this.runPerkManager.hasPerk(
+                    "piggy_bank"
+                )
+            );
         }
 
 

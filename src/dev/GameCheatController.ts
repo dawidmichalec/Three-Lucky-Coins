@@ -236,6 +236,17 @@ export class GameCheatController {
         );
 
 
+        this.cheatManager.register(
+            CheatCode.FORCE_PIGGY_BANK,
+            () => {
+
+                this.forcePerkReward(
+                    "piggy_bank"
+                );
+            }
+        );
+
+
     }
 
 

@@ -440,6 +440,17 @@ export class GameUI extends Container {
     }
 
 
+    async removePerk(
+        perkId: string
+    ): Promise<void> {
+
+        await this.perkContainer
+            .removePerk(
+                perkId
+            );
+    }
+
+
     async animatePenaltyIntoWon(
         penaltyAmount: number,
         finalAmount: number

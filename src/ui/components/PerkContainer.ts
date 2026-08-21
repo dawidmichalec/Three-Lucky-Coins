@@ -7,12 +7,19 @@ import {
 
 import { PerkReward } from "../../game/perks/reward/PerkReward";
 
+interface ActivePerkIcon {
+
+    perkId: string;
+
+    sprite: Sprite;
+}
+
 
 export class PerkContainer extends Container {
 
     private bg: Graphics;
 
-    private perkIcons: Sprite[] = [];
+    private perkIcons: ActivePerkIcon[] = [];
 
     private readonly containerWidth: number;
     private readonly containerHeight: number;
@@ -165,9 +172,13 @@ export class PerkContainer extends Container {
         );
 
 
-        this.perkIcons.push(
-            perkIcon
-        );
+        this.perkIcons.push({
+            perkId:
+                reward.perk.id,
+
+            sprite:
+                perkIcon
+        });
 
 
         await Promise.all([
@@ -191,6 +202,160 @@ export class PerkContainer extends Container {
             1
         );
     }
+
+
+    private async repositionPerks():
+    Promise<void> {
+
+        await Promise.all(
+            this.perkIcons.map(
+                (
+                    entry,
+                    index
+                ) =>
+                    this.animatePerkMove(
+                        entry.sprite,
+                        this.getIconPosition(
+                            index
+                        )
+                    )
+            )
+        );
+    }
+
+
+    private animatePerkRemoval(
+        icon: Sprite
+    ): Promise<void> {
+
+        return this.animate(
+            350,
+
+            progress => {
+
+                icon.alpha =
+                    1 - progress;
+
+
+                const scale =
+                    1 -
+                    progress * 0.5;
+
+
+                icon.scale.set(
+                    scale
+                );
+            }
+        );
+    }
+
+
+    private animatePerkMove(
+        icon: Sprite,
+        target: {
+            x: number;
+            y: number;
+        }
+    ): Promise<void> {
+
+        const startX =
+            icon.x;
+
+        const startY =
+            icon.y;
+
+
+        return this.animate(
+            300,
+
+            progress => {
+
+                const easedProgress =
+                    1 -
+                    Math.pow(
+                        1 - progress,
+                        3
+                    );
+
+
+                icon.x =
+                    startX +
+                    (
+                        target.x -
+                        startX
+                    ) *
+                    easedProgress;
+
+
+                icon.y =
+                    startY +
+                    (
+                        target.y -
+                        startY
+                    ) *
+                    easedProgress;
+            }
+        );
+    }
+
+
+    async removePerk(
+        perkId: string
+    ): Promise<void> {
+
+        const index =
+            this.perkIcons
+                .findIndex(
+                    entry =>
+                        entry.perkId ===
+                        perkId
+                );
+
+
+        if (
+            index === -1
+        ) {
+            return;
+        }
+
+
+        const entry =
+            this.perkIcons[
+                index
+            ];
+
+
+        /*
+            Najpierw Piggy Bank znika.
+        */
+
+        await this.animatePerkRemoval(
+            entry.sprite
+        );
+
+
+        this.removeChild(
+            entry.sprite
+        );
+
+
+        entry.sprite.destroy();
+
+
+        this.perkIcons.splice(
+            index,
+            1
+        );
+
+
+        /*
+            Następnie pozostałe ikony
+            przesuwamy do nowych slotów.
+        */
+
+        await this.repositionPerks();
+    }
+
 
 
     private getIconPosition(

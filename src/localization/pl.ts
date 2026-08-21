@@ -199,7 +199,7 @@ export default {
     piggyBankName: "ŚWINKA SKARBONKA",
 
     piggyBankDescription: "Jeśli saldo spadnie poniżej minimalnej stawki, zostanie zwiększone na tyle, aby można było ją postawić.\n\nPerk zostaje zużyty po użyciu.",
-
+    piggyBankActivated: "ŚWINKA SKARBONKA",
 
     // COIN SENSE
 

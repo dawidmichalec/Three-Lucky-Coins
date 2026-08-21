@@ -1,7 +1,7 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-interface PiggyBankConfig {
+export interface PiggyBankConfig {
     uses: number;
 }
 

@@ -30,6 +30,8 @@ export enum CheatCode {
 
     FORCE_COIN_SENSE = "perk_coin_sense",
 
-    FORCE_LUCKY_HAND = "perk_lucky_hand"
+    FORCE_LUCKY_HAND = "perk_lucky_hand",
+
+    FORCE_PIGGY_BANK = "perk_piggy_bank"
 
 }

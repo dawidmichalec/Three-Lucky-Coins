@@ -198,7 +198,7 @@ export default {
     piggyBankName: "PIGGY BANK",
 
     piggyBankDescription: "If your balance drops below the minimum bet, it is increased enough to place a minimum bet.\n\nConsumed after use.",
-
+    piggyBankActivated: "PIGGY BANK ACTIVATED",
 
     // COIN SENSE
 

@@ -10,6 +10,7 @@ import { GamblerConfig } from "./data/Gambler";
 import { DoubleDownConfig } from "./data/DoubleDown";
 import { LuckyHandConfig } from "./data/LuckyHand";
 import { CoinSenseConfig } from "./data/CoinSense";
+import { PiggyBankConfig } from "./data/PiggyBank";
 
 export interface InsuranceResult {
     triggered: boolean;
@@ -55,6 +56,14 @@ export interface LuckyHandResult {
     bonusAmount: number;
     finalWinAmount: number;
     payoutMultiplier: number;
+}
+
+
+export interface PiggyBankResult {
+    triggered: boolean;
+    amountGranted: number;
+    finalBalance: number;
+    consumed: boolean;
 }
 
 
@@ -760,6 +769,65 @@ export class PerkEffectApplier {
             finalWinAmount,
             payoutMultiplier:
                 config.payoutMultiplier
+        };
+    }
+
+
+    applyPiggyBank(
+        balance: number,
+        minimumBet: number
+    ): PiggyBankResult {
+
+        const piggyBank =
+            this.runPerkManager.getPerk(
+                "piggy_bank"
+            );
+
+
+        if (
+            !piggyBank ||
+            balance >= minimumBet
+        ) {
+
+            return {
+                triggered: false,
+                amountGranted: 0,
+                finalBalance: balance,
+                consumed: false
+            };
+        }
+
+
+        const amountGranted =
+            roundMoney(
+                minimumBet -
+                balance
+            );
+
+
+        /*
+            Piggy Bank jest consumable.
+
+            Skoro właśnie się aktywował,
+            natychmiast usuwamy go
+            z aktywnych perków runa.
+        */
+
+        this.runPerkManager
+            .removePerk(
+                "piggy_bank"
+            );
+
+
+        return {
+            triggered: true,
+
+            amountGranted,
+
+            finalBalance:
+                minimumBet,
+
+            consumed: true
         };
     }
 
