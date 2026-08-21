@@ -1,8 +1,8 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-interface LuckyHandConfig {
-    triggerEveryWinningTosses: number;
+export interface LuckyHandConfig {
+    triggerEvery: number;
     payoutMultiplier: number;
 }
 
@@ -25,7 +25,7 @@ export const LUCKY_HAND_DATA: PerkData<LuckyHandConfig> = {
             },
 
             config: {
-                triggerEveryWinningTosses: 5,
+                triggerEvery: 5,
                 payoutMultiplier: 2
             }
         }

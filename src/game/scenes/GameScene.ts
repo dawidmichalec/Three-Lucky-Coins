@@ -533,6 +533,21 @@ export class GameScene extends BaseScene {
         );
     }
 
+
+    private prepareNextRoundWithPerks(): void {
+
+        this.prepareNextRound();
+
+        if (
+            this.perkEffectApplier
+                .isCoinSenseAvailable()
+        ) {
+
+            this.prepareCoinSense();
+        }
+    }
+
+
     private get currentDealer():
         DealerData {
 
@@ -975,6 +990,13 @@ export class GameScene extends BaseScene {
             resolution.win;
 
 
+        const luckyHandTriggered =
+            this.perkEffectApplier
+                .recordLuckyHandToss(
+                    win
+                );
+
+
         const winAmount =
             resolution.winAmount;
 
@@ -1052,8 +1074,16 @@ export class GameScene extends BaseScene {
                         riskTakerResult.finalWinAmount
                     );
 
+            
+            const luckyHandResult =
+                this.perkEffectApplier
+                    .applyLuckyHand(
+                        gamblerResult.finalWinAmount,
+                        luckyHandTriggered
+                    );
 
-            const finalWinAmount = gamblerResult.finalWinAmount;
+
+            const finalWinAmount = luckyHandResult.finalWinAmount;
 
 
             console.log(
@@ -1208,6 +1238,28 @@ export class GameScene extends BaseScene {
                     .animateBonusIntoWon(
                         gamblerResult.bonusAmount,
                         gamblerResult.finalWinAmount
+                    );
+            }
+
+
+            if (
+                luckyHandResult.triggered &&
+                luckyHandResult.bonusAmount > 0
+            ) {
+
+                await this.view
+                    .perkEffectMessageOverlay
+                    .play(
+                        "payoutDoubled",
+                        "",
+                        PerkEffectMessageType.POSITIVE
+                    );
+
+
+                await this.view.gameUI
+                    .animateBonusIntoWon(
+                        luckyHandResult.bonusAmount,
+                        luckyHandResult.finalWinAmount
                     );
             }
 
@@ -1560,7 +1612,7 @@ export class GameScene extends BaseScene {
         }
 
 
-        this.prepareNextRound();
+        this.prepareNextRoundWithPerks();
 
         this.roundState =
             "ready";

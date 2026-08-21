@@ -1,7 +1,7 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-interface DoubleDownConfig {
+export interface DoubleDownConfig {
     requiredSuccessfulSpins: number;
     betMultiplier: number;
 }

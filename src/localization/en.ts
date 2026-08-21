@@ -245,6 +245,7 @@ export default {
     luckyHandName: "LUCKY HAND",
 
     luckyHandDescription: "Every fifth winning toss pays double.",
+    payoutDoubled: "PAYOUT DOUBLED",
 
     
 

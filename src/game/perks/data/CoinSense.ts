@@ -1,7 +1,7 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-interface CoinSenseConfig {
+export interface CoinSenseConfig {
     revealedTossesPerFight: number;
     payoutMultiplier: number;
 }

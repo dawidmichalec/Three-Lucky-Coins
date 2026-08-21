@@ -2,7 +2,7 @@ import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
 
-interface MultiplierBoosterConfig {
+export interface MultiplierBoosterConfig {
     streakMultiplierIncrease: number;
 }
 

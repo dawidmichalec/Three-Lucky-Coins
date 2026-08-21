@@ -225,6 +225,17 @@ export class GameCheatController {
         );
 
 
+        this.cheatManager.register(
+            CheatCode.FORCE_LUCKY_HAND,
+            () => {
+
+                this.forcePerkReward(
+                    "lucky_hand"
+                );
+            }
+        );
+
+
     }
 
 

@@ -1,7 +1,7 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-interface CasinoBonusConfig {
+export interface CasinoBonusConfig {
     freeBetsPerFight: number;
     maximumFreeBet: number;
 }

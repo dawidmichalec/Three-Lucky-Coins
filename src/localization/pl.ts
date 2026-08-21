@@ -246,6 +246,7 @@ export default {
     luckyHandName: "SZCZĘŚLIWA RĘKA",
 
     luckyHandDescription: "Co piąty zwycięski rzut podwaja wygraną.",
+    payoutDoubled: "WYGRANA PODWOJONA",
 
 
     // PERKS GAME UI

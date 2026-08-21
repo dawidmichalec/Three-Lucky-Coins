@@ -3,40 +3,18 @@ import { RunPerkManager } from "./RunPerkManager";
 import { StreakMultiplierManager } from "../streak/StreakMultiplierManager";
 import { roundMoney } from "../util/MoneyUtils";
 import { StreakAction, StreakResolution } from "../streak/StreakResolution";
-
-
-interface MultiplierBoosterConfig {
-    streakMultiplierIncrease: number;
-}
-
-
-interface CasinoBonusConfig {
-    freeBetsPerFight: number;
-    maximumFreeBet: number;
-}
-
-interface RiskTakerConfig {
-    payoutMultiplier: number;
-}
+import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
+import { CasinoBonusConfig } from "./data/CasinoBonus";
+import { RiskTakerConfig } from "./data/RiskTaker";
+import { GamblerConfig } from "./data/Gambler";
+import { DoubleDownConfig } from "./data/DoubleDown";
+import { LuckyHandConfig } from "./data/LuckyHand";
+import { CoinSenseConfig } from "./data/CoinSense";
 
 export interface InsuranceResult {
     triggered: boolean;
     streakResolution: StreakResolution;
 }
-
-interface GamblerConfig {
-    payoutMultiplier: number;
-}
-
-interface DoubleDownConfig {
-    requiredSuccessfulSpins: number;
-    betMultiplier: number;
-}
-
-interface CoinSenseConfig {
-    payoutMultiplier: number;
-}
-
 
 export interface RiskTakerResult {
 
@@ -71,13 +49,22 @@ export interface CoinSenseResult {
     payoutMultiplier: number;
 }
 
+export interface LuckyHandResult {
+    triggered: boolean;
+    baseWinAmount: number;
+    bonusAmount: number;
+    finalWinAmount: number;
+    payoutMultiplier: number;
+}
+
 
 export class PerkEffectApplier {
 
     private casinoBonusBetsPlacedThisFight = 0;
     private gamblerBonusActive = false;
     private doubleDownSuccessfulSpins = 0;
-    private coinSenseUsedThisFight = false;
+    private coinSenseTossesUsedThisFight = 0;
+    private luckyHandTossCount = 0;
 
 
     constructor(
@@ -174,7 +161,7 @@ export class PerkEffectApplier {
 
         this.casinoBonusBetsPlacedThisFight = 0;
 
-        this.coinSenseUsedThisFight = false;
+        this.coinSenseTossesUsedThisFight = 0;
     }
 
 
@@ -587,9 +574,19 @@ export class PerkEffectApplier {
             );
 
 
+        if (!coinSense) {
+            return false;
+        }
+
+
+        const config =
+            coinSense.variant.config as
+                CoinSenseConfig;
+
+
         return (
-            coinSense !== undefined &&
-            !this.coinSenseUsedThisFight
+            this.coinSenseTossesUsedThisFight <
+            config.revealedTossesPerFight
         );
     }
 
@@ -660,5 +657,110 @@ export class PerkEffectApplier {
         }
     }
 
+
+    recordLuckyHandToss(
+        won: boolean
+    ): boolean {
+
+        const luckyHand =
+            this.runPerkManager.getPerk(
+                "lucky_hand"
+            );
+
+
+        if (!luckyHand) {
+            return false;
+        }
+
+
+        const config =
+            luckyHand.variant.config as
+                LuckyHandConfig;
+
+
+        this.luckyHandTossCount++;
+
+
+        if (
+            this.luckyHandTossCount <
+            config.triggerEvery
+        ) {
+            return false;
+        }
+
+
+        /*
+            Osiągnęliśmy piąty toss.
+            Po nim cykl zaczyna się od nowa,
+            niezależnie od wyniku.
+        */
+
+        this.luckyHandTossCount =
+            0;
+
+
+        return won;
+    }
+
+
+    applyLuckyHand(
+        winAmount: number,
+        triggered: boolean
+    ): LuckyHandResult {
+
+        const luckyHand =
+            this.runPerkManager.getPerk(
+                "lucky_hand"
+            );
+
+
+        if (
+            !luckyHand ||
+            !triggered
+        ) {
+
+            return {
+                triggered: false,
+                baseWinAmount:
+                    winAmount,
+                bonusAmount:
+                    0,
+                finalWinAmount:
+                    winAmount,
+                payoutMultiplier:
+                    1
+            };
+        }
+
+
+        const config =
+            luckyHand.variant.config as
+                LuckyHandConfig;
+
+
+        const finalWinAmount =
+            roundMoney(
+                winAmount *
+                config.payoutMultiplier
+            );
+
+
+        const bonusAmount =
+            roundMoney(
+                finalWinAmount -
+                winAmount
+            );
+
+
+        return {
+            triggered: true,
+            baseWinAmount:
+                winAmount,
+            bonusAmount,
+            finalWinAmount,
+            payoutMultiplier:
+                config.payoutMultiplier
+        };
+    }
 
 }
