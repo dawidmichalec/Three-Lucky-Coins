@@ -1,23 +1,20 @@
 import { roundMoney } from "../../../util/MoneyUtils";
 
 export function calculateRedBlackPotentialWin(
-    currentWin: number,
-    bet: number
+  currentWin: number,
+  bet: number,
 ): number {
+  const winRatio = currentWin / bet;
 
-    const winRatio = currentWin / bet;
+  let multiplier: number;
 
-    let multiplier: number;
+  if (winRatio < 2) {
+    multiplier = 4;
+  } else if (winRatio < 5) {
+    multiplier = 3;
+  } else {
+    multiplier = 2;
+  }
 
-    if (winRatio < 2) {
-        multiplier = 4;
-    } else if (winRatio < 5) {
-        multiplier = 3;
-    } else {
-        multiplier = 2;
-    }
-
-    return roundMoney(
-        currentWin * multiplier
-    );
+  return roundMoney(currentWin * multiplier);
 }

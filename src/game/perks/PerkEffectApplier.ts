@@ -10,802 +10,460 @@ import { GamblerConfig } from "./data/Gambler";
 import { DoubleDownConfig } from "./data/DoubleDown";
 import { LuckyHandConfig } from "./data/LuckyHand";
 import { CoinSenseConfig } from "./data/CoinSense";
-import { PiggyBankConfig } from "./data/PiggyBank";
 
 export interface InsuranceResult {
-    triggered: boolean;
-    streakResolution: StreakResolution;
+  triggered: boolean;
+  streakResolution: StreakResolution;
 }
 
 export interface RiskTakerResult {
+  triggered: boolean;
 
-    triggered: boolean;
+  baseWinAmount: number;
 
-    baseWinAmount: number;
+  bonusAmount: number;
 
-    bonusAmount: number;
+  finalWinAmount: number;
 
-    finalWinAmount: number;
-
-    payoutMultiplier: number;
+  payoutMultiplier: number;
 }
 
 export interface GamblerResult {
-    triggered: boolean;
+  triggered: boolean;
 
-    baseWinAmount: number;
+  baseWinAmount: number;
 
-    bonusAmount: number;
+  bonusAmount: number;
 
-    finalWinAmount: number;
+  finalWinAmount: number;
 
-    payoutMultiplier: number;
+  payoutMultiplier: number;
 }
 
 export interface CoinSenseResult {
-    triggered: boolean;
-    baseWinAmount: number;
-    bonusAmount: number;
-    finalWinAmount: number;
-    payoutMultiplier: number;
+  triggered: boolean;
+  baseWinAmount: number;
+  bonusAmount: number;
+  finalWinAmount: number;
+  payoutMultiplier: number;
 }
 
 export interface LuckyHandResult {
-    triggered: boolean;
-    baseWinAmount: number;
-    bonusAmount: number;
-    finalWinAmount: number;
-    payoutMultiplier: number;
+  triggered: boolean;
+  baseWinAmount: number;
+  bonusAmount: number;
+  finalWinAmount: number;
+  payoutMultiplier: number;
 }
-
 
 export interface PiggyBankResult {
-    triggered: boolean;
-    amountGranted: number;
-    finalBalance: number;
-    consumed: boolean;
+  triggered: boolean;
+  amountGranted: number;
+  finalBalance: number;
+  consumed: boolean;
 }
 
-
 export class PerkEffectApplier {
+  private casinoBonusBetsPlacedThisFight = 0;
+  private gamblerBonusActive = false;
+  private doubleDownSuccessfulSpins = 0;
+  private coinSenseTossesUsedThisFight = 0;
+  private luckyHandTossCount = 0;
 
-    private casinoBonusBetsPlacedThisFight = 0;
-    private gamblerBonusActive = false;
-    private doubleDownSuccessfulSpins = 0;
-    private coinSenseTossesUsedThisFight = 0;
-    private luckyHandTossCount = 0;
+  constructor(
+    private readonly runPerkManager: RunPerkManager,
 
+    private readonly streakMultiplierManager: StreakMultiplierManager,
+  ) {}
 
-    constructor(
-        private readonly runPerkManager:
-            RunPerkManager,
+  applyPerk(reward: PerkReward): void {
+    switch (reward.perk.id) {
+      case "multiplier_booster":
+        this.applyMultiplierBooster(reward);
 
-        private readonly streakMultiplierManager:
-            StreakMultiplierManager
-    ) {}
+        break;
+    }
+  }
 
+  isCurrentBetFree(bet: number): boolean {
+    const casinoBonus = this.runPerkManager.getPerk("casino_bonus");
 
-    applyPerk(
-        reward: PerkReward
-    ): void {
-
-        switch (reward.perk.id) {
-
-            case "multiplier_booster":
-
-                this.applyMultiplierBooster(
-                    reward
-                );
-
-                break;
-        }
+    if (!casinoBonus) {
+      return false;
     }
 
+    const config = casinoBonus.variant.config as CasinoBonusConfig;
 
-    isCurrentBetFree(
-        bet: number
-    ): boolean {
+    return (
+      this.casinoBonusBetsPlacedThisFight < config.freeBetsPerFight &&
+      bet <= config.maximumFreeBet
+    );
+  }
 
-        const casinoBonus =
-            this.runPerkManager.getPerk(
-                "casino_bonus"
-            );
-
-
-        if (!casinoBonus) {
-            return false;
-        }
-
-
-        const config =
-            casinoBonus.variant.config as
-                CasinoBonusConfig;
-
-
-        return (
-            this.casinoBonusBetsPlacedThisFight <
-                config.freeBetsPerFight
-            &&
-            bet <=
-                config.maximumFreeBet
-        );
+  resolveBetCost(bet: number): number {
+    if (this.isCurrentBetFree(bet)) {
+      return 0;
     }
 
+    return bet;
+  }
 
-    resolveBetCost(
-        bet: number
-    ): number {
+  recordBet(): void {
+    const casinoBonus = this.runPerkManager.getPerk("casino_bonus");
 
-        if (
-            this.isCurrentBetFree(
-                bet
-            )
-        ) {
-            return 0;
-        }
-
-
-        return bet;
+    if (!casinoBonus) {
+      return;
     }
 
+    this.casinoBonusBetsPlacedThisFight++;
+  }
 
-    recordBet(): void {
+  resetFightEffects(): void {
+    this.casinoBonusBetsPlacedThisFight = 0;
 
-        const casinoBonus =
-            this.runPerkManager.getPerk(
-                "casino_bonus"
-            );
+    this.coinSenseTossesUsedThisFight = 0;
+  }
 
+  private applyMultiplierBooster(reward: PerkReward): void {
+    const config = reward.variant.config as MultiplierBoosterConfig;
 
-        if (!casinoBonus) {
-            return;
-        }
+    const increase = config.streakMultiplierIncrease;
 
+    this.streakMultiplierManager.setBaseValue(1 + increase);
 
-        this.casinoBonusBetsPlacedThisFight++;
+    this.streakMultiplierManager.setGrowthPerWin(1 + increase);
+
+    this.streakMultiplierManager.reset();
+  }
+
+  getRiskTakerPayoutMultiplier(
+    currentBet: number,
+    highestAffordableBet: number,
+  ): number | undefined {
+    const riskTaker = this.runPerkManager.getPerk("risk_taker");
+
+    if (!riskTaker) {
+      return undefined;
     }
 
-
-    resetFightEffects(): void {
-
-        this.casinoBonusBetsPlacedThisFight = 0;
-
-        this.coinSenseTossesUsedThisFight = 0;
+    if (currentBet !== highestAffordableBet) {
+      return undefined;
     }
 
+    const config = riskTaker.variant.config as RiskTakerConfig;
 
-    private applyMultiplierBooster(
-        reward: PerkReward
-    ): void {
+    return config.payoutMultiplier;
+  }
 
-        const config =
-            reward.variant.config as
-                MultiplierBoosterConfig;
+  applyRiskTaker(
+    winAmount: number,
+    currentBet: number,
+    highestAffordableBet: number,
+  ): RiskTakerResult {
+    const payoutMultiplier = this.getRiskTakerPayoutMultiplier(
+      currentBet,
+      highestAffordableBet,
+    );
 
+    if (payoutMultiplier === undefined) {
+      return {
+        triggered: false,
 
-        const increase =
-            config.streakMultiplierIncrease;
+        baseWinAmount: winAmount,
 
+        bonusAmount: 0,
 
-        this.streakMultiplierManager
-            .setBaseValue(
-                1 + increase
-            );
+        finalWinAmount: winAmount,
 
-
-        this.streakMultiplierManager
-            .setGrowthPerWin(
-                1 + increase
-            );
-
-
-        this.streakMultiplierManager
-            .reset();
+        payoutMultiplier: 1,
+      };
     }
 
+    const finalWinAmount = roundMoney(winAmount * payoutMultiplier);
 
-    getRiskTakerPayoutMultiplier(
-        currentBet: number,
-        highestAffordableBet: number
-    ): number | undefined {
+    const bonusAmount = roundMoney(finalWinAmount - winAmount);
 
-        const riskTaker =
-            this.runPerkManager
-                .getPerk(
-                    "risk_taker"
-                );
+    return {
+      triggered: true,
 
+      baseWinAmount: winAmount,
 
-        if (!riskTaker) {
-            return undefined;
-        }
+      bonusAmount,
 
+      finalWinAmount,
 
-        if (
-            currentBet !==
-            highestAffordableBet
-        ) {
-            return undefined;
-        }
+      payoutMultiplier,
+    };
+  }
 
+  resolveLossStreakResolution(resolution: StreakResolution): InsuranceResult {
+    const insurance = this.runPerkManager.getPerk("insurance");
 
-        const config =
-            riskTaker.variant.config as
-                RiskTakerConfig;
-
-
-        return config.payoutMultiplier;
+    if (!insurance || resolution.action !== StreakAction.RESET) {
+      return {
+        triggered: false,
+        streakResolution: resolution,
+      };
     }
 
+    return {
+      triggered: true,
 
-    applyRiskTaker(
-        winAmount: number,
-        currentBet: number,
-        highestAffordableBet: number
-    ): RiskTakerResult {
+      streakResolution: {
+        action: StreakAction.DECREASE,
 
-        const payoutMultiplier =
-            this.getRiskTakerPayoutMultiplier(
-                currentBet,
-                highestAffordableBet
-            );
+        value: 1,
+      },
+    };
+  }
 
+  activateGamblerAfterLoss(): number | undefined {
+    const gambler = this.runPerkManager.getPerk("gambler");
 
-        if (
-            payoutMultiplier ===
-            undefined
-        ) {
-
-            return {
-                triggered: false,
-
-                baseWinAmount:
-                    winAmount,
-
-                bonusAmount:
-                    0,
-
-                finalWinAmount:
-                    winAmount,
-
-                payoutMultiplier:
-                    1
-            };
-        }
-
-
-        const finalWinAmount =
-            roundMoney(
-                winAmount *
-                payoutMultiplier
-            );
-
-        const bonusAmount =
-            roundMoney(
-                finalWinAmount -
-                winAmount
-            );
-
-
-        return {
-            triggered: true,
-
-            baseWinAmount:
-                winAmount,
-
-            bonusAmount,
-
-            finalWinAmount,
-
-            payoutMultiplier
-        };
+    if (!gambler) {
+      return undefined;
     }
 
+    const config = gambler.variant.config as GamblerConfig;
 
-    resolveLossStreakResolution(
-        resolution: StreakResolution
-    ): InsuranceResult {
+    this.gamblerBonusActive = true;
 
-        const insurance =
-            this.runPerkManager.getPerk(
-                "insurance"
-            );
+    return config.payoutMultiplier;
+  }
 
+  applyGambler(winAmount: number): GamblerResult {
+    const gambler = this.runPerkManager.getPerk("gambler");
 
-        if (
-            !insurance ||
-            resolution.action !==
-                StreakAction.RESET
-        ) {
+    if (!gambler || !this.gamblerBonusActive) {
+      return {
+        triggered: false,
 
-            return {
-                triggered: false,
-                streakResolution:
-                    resolution
-            };
-        }
+        baseWinAmount: winAmount,
 
+        bonusAmount: 0,
 
-        return {
-            triggered: true,
+        finalWinAmount: winAmount,
 
-            streakResolution: {
-                action:
-                    StreakAction.DECREASE,
-
-                value:
-                    1
-            }
-        };
+        payoutMultiplier: 1,
+      };
     }
 
+    const config = gambler.variant.config as GamblerConfig;
 
-    activateGamblerAfterLoss():
-    number | undefined {
+    const finalWinAmount = roundMoney(winAmount * config.payoutMultiplier);
 
-        const gambler =
-            this.runPerkManager
-                .getPerk(
-                    "gambler"
-                );
+    const bonusAmount = roundMoney(finalWinAmount - winAmount);
 
-
-        if (!gambler) {
-            return undefined;
-        }
-
-
-        const config =
-            gambler.variant.config as
-                GamblerConfig;
-
-
-        this.gamblerBonusActive =
-            true;
-
-
-        return config.payoutMultiplier;
-    }
-
-
-    applyGambler(
-        winAmount: number
-    ): GamblerResult {
-
-        const gambler =
-            this.runPerkManager
-                .getPerk(
-                    "gambler"
-                );
-
-
-        if (
-            !gambler ||
-            !this.gamblerBonusActive
-        ) {
-
-            return {
-                triggered: false,
-
-                baseWinAmount:
-                    winAmount,
-
-                bonusAmount:
-                    0,
-
-                finalWinAmount:
-                    winAmount,
-
-                payoutMultiplier:
-                    1
-            };
-        }
-
-
-        const config =
-            gambler.variant.config as
-                GamblerConfig;
-
-
-        const finalWinAmount =
-            roundMoney(
-                winAmount *
-                config.payoutMultiplier
-            );
-
-
-        const bonusAmount =
-            roundMoney(
-                finalWinAmount -
-                winAmount
-            );
-
-
-        /*
+    /*
             Konsumujemy bonus dopiero
             po faktycznej wygranej.
         */
 
-        this.gamblerBonusActive =
-            false;
+    this.gamblerBonusActive = false;
 
+    return {
+      triggered: true,
 
-        return {
-            triggered: true,
+      baseWinAmount: winAmount,
 
-            baseWinAmount:
-                winAmount,
+      bonusAmount,
 
-            bonusAmount,
+      finalWinAmount,
 
-            finalWinAmount,
+      payoutMultiplier: config.payoutMultiplier,
+    };
+  }
 
-            payoutMultiplier:
-                config.payoutMultiplier
-        };
+  isDoubleDownActive(): boolean {
+    const doubleDown = this.runPerkManager.getPerk("double_down");
+
+    if (!doubleDown) {
+      return false;
     }
 
+    const config = doubleDown.variant.config as DoubleDownConfig;
 
-    isDoubleDownActive(): boolean {
+    return this.doubleDownSuccessfulSpins >= config.requiredSuccessfulSpins;
+  }
 
-        const doubleDown =
-            this.runPerkManager.getPerk(
-                "double_down"
-            );
+  resolvePayoutBet(bet: number): number {
+    const doubleDown = this.runPerkManager.getPerk("double_down");
 
-
-        if (!doubleDown) {
-            return false;
-        }
-
-
-        const config =
-            doubleDown.variant.config as
-                DoubleDownConfig;
-
-
-        return (
-            this.doubleDownSuccessfulSpins >=
-            config.requiredSuccessfulSpins
-        );
+    if (!doubleDown || !this.isDoubleDownActive()) {
+      return bet;
     }
 
+    const config = doubleDown.variant.config as DoubleDownConfig;
 
-    resolvePayoutBet(
-        bet: number
-    ): number {
+    return bet * config.betMultiplier;
+  }
 
-        const doubleDown =
-            this.runPerkManager.getPerk(
-                "double_down"
-            );
+  recordDoubleDownSpinResult(
+    won: boolean,
+    doubleDownWasActive: boolean,
+  ): boolean {
+    const doubleDown = this.runPerkManager.getPerk("double_down");
 
-
-        if (
-            !doubleDown ||
-            !this.isDoubleDownActive()
-        ) {
-            return bet;
-        }
-
-
-        const config =
-            doubleDown.variant.config as
-                DoubleDownConfig;
-
-
-        return (
-            bet *
-            config.betMultiplier
-        );
+    if (!doubleDown) {
+      return false;
     }
 
-
-    recordDoubleDownSpinResult(
-        won: boolean,
-        doubleDownWasActive: boolean
-    ): boolean {
-
-        const doubleDown =
-            this.runPerkManager.getPerk(
-                "double_down"
-            );
-
-
-        if (!doubleDown) {
-            return false;
-        }
-
-
-        /*
+    /*
             Jeżeli właśnie wykorzystaliśmy
             Double Down, zaczynamy progress
             od nowa.
         */
 
-        if (
-            doubleDownWasActive
-        ) {
+    if (doubleDownWasActive) {
+      this.doubleDownSuccessfulSpins = 0;
 
-            this.doubleDownSuccessfulSpins =
-                0;
+      return false;
+    }
 
-            return false;
-        }
-
-
-        /*
+    /*
             Przegrana przerywa serię.
         */
 
-        if (!won) {
+    if (!won) {
+      this.doubleDownSuccessfulSpins = 0;
 
-            this.doubleDownSuccessfulSpins =
-                0;
+      return false;
+    }
 
-            return false;
-        }
+    this.doubleDownSuccessfulSpins++;
 
+    const config = doubleDown.variant.config as DoubleDownConfig;
 
-        this.doubleDownSuccessfulSpins++;
-
-
-        const config =
-            doubleDown.variant.config as
-                DoubleDownConfig;
-
-
-        /*
+    /*
             true TYLKO w rundzie,
             która właśnie uzbroiła Double Down.
         */
 
-        return (
-            this.doubleDownSuccessfulSpins ===
-            config.requiredSuccessfulSpins
-        );
+    return this.doubleDownSuccessfulSpins === config.requiredSuccessfulSpins;
+  }
+
+  resetDoubleDownProgress(): void {
+    this.doubleDownSuccessfulSpins = 0;
+  }
+
+  isCoinSenseAvailable(): boolean {
+    const coinSense = this.runPerkManager.getPerk("coin_sense");
+
+    if (!coinSense) {
+      return false;
     }
 
+    const config = coinSense.variant.config as CoinSenseConfig;
 
-    
-    resetDoubleDownProgress(): void {
+    return this.coinSenseTossesUsedThisFight < config.revealedTossesPerFight;
+  }
 
-        this.doubleDownSuccessfulSpins =
-            0;
+  applyCoinSense(
+    winAmount: number,
+    coinSenseWasActive: boolean,
+  ): CoinSenseResult {
+    const coinSense = this.runPerkManager.getPerk("coin_sense");
+
+    if (!coinSense || !coinSenseWasActive) {
+      return {
+        triggered: false,
+        baseWinAmount: winAmount,
+        bonusAmount: 0,
+        finalWinAmount: winAmount,
+        payoutMultiplier: 1,
+      };
     }
 
+    const config = coinSense.variant.config as CoinSenseConfig;
 
-    isCoinSenseAvailable(): boolean {
+    const finalWinAmount = roundMoney(winAmount * config.payoutMultiplier);
 
-        const coinSense =
-            this.runPerkManager.getPerk(
-                "coin_sense"
-            );
+    const bonusAmount = roundMoney(finalWinAmount - winAmount);
 
+    return {
+      triggered: true,
+      baseWinAmount: winAmount,
+      bonusAmount,
+      finalWinAmount,
+      payoutMultiplier: config.payoutMultiplier,
+    };
+  }
 
-        if (!coinSense) {
-            return false;
-        }
+  consumeCoinSense(): void {
+    if (this.isCoinSenseAvailable()) {
+      this.coinSenseUsedThisFight = true;
+    }
+  }
 
+  recordLuckyHandToss(won: boolean): boolean {
+    const luckyHand = this.runPerkManager.getPerk("lucky_hand");
 
-        const config =
-            coinSense.variant.config as
-                CoinSenseConfig;
-
-
-        return (
-            this.coinSenseTossesUsedThisFight <
-            config.revealedTossesPerFight
-        );
+    if (!luckyHand) {
+      return false;
     }
 
+    const config = luckyHand.variant.config as LuckyHandConfig;
 
-    applyCoinSense(
-        winAmount: number,
-        coinSenseWasActive: boolean
-    ): CoinSenseResult {
+    this.luckyHandTossCount++;
 
-        const coinSense =
-            this.runPerkManager.getPerk(
-                "coin_sense"
-            );
-
-
-        if (
-            !coinSense ||
-            !coinSenseWasActive
-        ) {
-
-            return {
-                triggered: false,
-                baseWinAmount: winAmount,
-                bonusAmount: 0,
-                finalWinAmount: winAmount,
-                payoutMultiplier: 1
-            };
-        }
-
-
-        const config =
-            coinSense.variant.config as
-                CoinSenseConfig;
-
-
-        const finalWinAmount =
-            roundMoney(
-                winAmount *
-                config.payoutMultiplier
-            );
-
-
-        const bonusAmount =
-            roundMoney(
-                finalWinAmount -
-                winAmount
-            );
-
-
-        return {
-            triggered: true,
-            baseWinAmount: winAmount,
-            bonusAmount,
-            finalWinAmount,
-            payoutMultiplier:
-                config.payoutMultiplier
-        };
+    if (this.luckyHandTossCount < config.triggerEvery) {
+      return false;
     }
 
-
-    consumeCoinSense(): void {
-
-        if (
-            this.isCoinSenseAvailable()
-        ) {
-            this.coinSenseUsedThisFight =
-                true;
-        }
-    }
-
-
-    recordLuckyHandToss(
-        won: boolean
-    ): boolean {
-
-        const luckyHand =
-            this.runPerkManager.getPerk(
-                "lucky_hand"
-            );
-
-
-        if (!luckyHand) {
-            return false;
-        }
-
-
-        const config =
-            luckyHand.variant.config as
-                LuckyHandConfig;
-
-
-        this.luckyHandTossCount++;
-
-
-        if (
-            this.luckyHandTossCount <
-            config.triggerEvery
-        ) {
-            return false;
-        }
-
-
-        /*
+    /*
             Osiągnęliśmy piąty toss.
             Po nim cykl zaczyna się od nowa,
             niezależnie od wyniku.
         */
 
-        this.luckyHandTossCount =
-            0;
+    this.luckyHandTossCount = 0;
 
+    return won;
+  }
 
-        return won;
+  applyLuckyHand(winAmount: number, triggered: boolean): LuckyHandResult {
+    const luckyHand = this.runPerkManager.getPerk("lucky_hand");
+
+    if (!luckyHand || !triggered) {
+      return {
+        triggered: false,
+        baseWinAmount: winAmount,
+        bonusAmount: 0,
+        finalWinAmount: winAmount,
+        payoutMultiplier: 1,
+      };
     }
 
+    const config = luckyHand.variant.config as LuckyHandConfig;
 
-    applyLuckyHand(
-        winAmount: number,
-        triggered: boolean
-    ): LuckyHandResult {
+    const finalWinAmount = roundMoney(winAmount * config.payoutMultiplier);
 
-        const luckyHand =
-            this.runPerkManager.getPerk(
-                "lucky_hand"
-            );
+    const bonusAmount = roundMoney(finalWinAmount - winAmount);
 
+    return {
+      triggered: true,
+      baseWinAmount: winAmount,
+      bonusAmount,
+      finalWinAmount,
+      payoutMultiplier: config.payoutMultiplier,
+    };
+  }
 
-        if (
-            !luckyHand ||
-            !triggered
-        ) {
+  applyPiggyBank(balance: number, minimumBet: number): PiggyBankResult {
+    const piggyBank = this.runPerkManager.getPerk("piggy_bank");
 
-            return {
-                triggered: false,
-                baseWinAmount:
-                    winAmount,
-                bonusAmount:
-                    0,
-                finalWinAmount:
-                    winAmount,
-                payoutMultiplier:
-                    1
-            };
-        }
-
-
-        const config =
-            luckyHand.variant.config as
-                LuckyHandConfig;
-
-
-        const finalWinAmount =
-            roundMoney(
-                winAmount *
-                config.payoutMultiplier
-            );
-
-
-        const bonusAmount =
-            roundMoney(
-                finalWinAmount -
-                winAmount
-            );
-
-
-        return {
-            triggered: true,
-            baseWinAmount:
-                winAmount,
-            bonusAmount,
-            finalWinAmount,
-            payoutMultiplier:
-                config.payoutMultiplier
-        };
+    if (!piggyBank || balance >= minimumBet) {
+      return {
+        triggered: false,
+        amountGranted: 0,
+        finalBalance: balance,
+        consumed: false,
+      };
     }
 
+    const amountGranted = roundMoney(minimumBet - balance);
 
-    applyPiggyBank(
-        balance: number,
-        minimumBet: number
-    ): PiggyBankResult {
-
-        const piggyBank =
-            this.runPerkManager.getPerk(
-                "piggy_bank"
-            );
-
-
-        if (
-            !piggyBank ||
-            balance >= minimumBet
-        ) {
-
-            return {
-                triggered: false,
-                amountGranted: 0,
-                finalBalance: balance,
-                consumed: false
-            };
-        }
-
-
-        const amountGranted =
-            roundMoney(
-                minimumBet -
-                balance
-            );
-
-
-        /*
+    /*
             Piggy Bank jest consumable.
 
             Skoro właśnie się aktywował,
@@ -813,22 +471,16 @@ export class PerkEffectApplier {
             z aktywnych perków runa.
         */
 
-        this.runPerkManager
-            .removePerk(
-                "piggy_bank"
-            );
+    this.runPerkManager.removePerk("piggy_bank");
 
+    return {
+      triggered: true,
 
-        return {
-            triggered: true,
+      amountGranted,
 
-            amountGranted,
+      finalBalance: minimumBet,
 
-            finalBalance:
-                minimumBet,
-
-            consumed: true
-        };
-    }
-
+      consumed: true,
+    };
+  }
 }

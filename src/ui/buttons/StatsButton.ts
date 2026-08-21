@@ -1,47 +1,44 @@
 import { Container, Sprite, Assets } from "pixi.js";
 
-export class StatsButton extends Container{
+export class StatsButton extends Container {
+  private bg!: Sprite;
+  private buttonWidth: number;
+  private buttonHeight: number;
 
-    private bg!: Sprite;
-    private buttonWidth: number;
-    private buttonHeight: number;
+  constructor() {
+    super();
 
-    constructor(){
-        super();
+    this.buttonWidth = 68;
+    this.buttonHeight = 68;
 
-        this.buttonWidth = 68;
-        this.buttonHeight = 68;
+    this.eventMode = "static";
+    this.cursor = "pointer";
+    this.visible = false;
+  }
 
-        this.eventMode = 'static';
-        this.cursor = 'pointer';
-        this.visible = false;
-    }
+  async init() {
+    const texture = await Assets.load("/assets/main/icons/stats_icon.png");
 
-    async init() {
-        const texture = await Assets.load(
-            '/assets/main/icons/stats_icon.png'
-        );
-    
-        this.bg = new Sprite(texture);
-    
-        const scaleX = this.buttonWidth / this.bg.texture.width;
-        const scaleY = this.buttonHeight / this.bg.texture.height;
+    this.bg = new Sprite(texture);
 
-        this.bg.scale.set(scaleX, scaleY);
+    const scaleX = this.buttonWidth / this.bg.texture.width;
+    const scaleY = this.buttonHeight / this.bg.texture.height;
 
-        this.addChild(this.bg);
-    }
+    this.bg.scale.set(scaleX, scaleY);
 
-    setDisabled(value: boolean) {
-        this.eventMode = value ? 'none' : 'static';
-        this.alpha = value ? 0.85 : 1;
-    }
+    this.addChild(this.bg);
+  }
 
-    hide(){
-        this.visible = false;
-    }
+  setDisabled(value: boolean) {
+    this.eventMode = value ? "none" : "static";
+    this.alpha = value ? 0.85 : 1;
+  }
 
-    show() {
-        this.visible = true;
-    }
+  hide() {
+    this.visible = false;
+  }
+
+  show() {
+    this.visible = true;
+  }
 }

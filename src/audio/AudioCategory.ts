@@ -1,7 +1,5 @@
 export enum AudioCategory {
+  MUSIC,
 
-    MUSIC,
-
-    SFX
-
+  SFX,
 }

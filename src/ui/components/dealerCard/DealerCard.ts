@@ -6,118 +6,89 @@ import { DealerData } from "../../../game/dealers/DealerData";
 import { LocalizedText } from "../../../localization/LocalizedText";
 
 export class DealerCard extends Container {
+  private skillsButton!: SkillsButton;
+  private objectiveButton!: ObjectiveButton;
+  private avatar!: Sprite;
 
-    private skillsButton!: SkillsButton;
-    private objectiveButton!: ObjectiveButton;
-    private avatar!: Sprite;
+  constructor(
+    private dealer: DealerData,
+    private onSkillsClick: () => void,
+    private onObjectiveClick: () => void,
+  ) {
+    super();
 
-    constructor(
-        private dealer: DealerData,
-        private onSkillsClick: () => void,
-        private onObjectiveClick: () => void
-    ) {
-        super();
+    const dealerName = new Text({
+      text: this.dealer.name,
+      style: {
+        font: "Open Sans",
+        fontSize: 38,
+        fontWeight: "bold",
+        fill: 0xffd21f,
+      },
+    });
 
-        const dealerName = new Text({
-            text: this.dealer.name,
-            style: {
-                font: "Open Sans",
-                fontSize: 38,
-                fontWeight: "bold",
-                fill: 0xffd21f
+    dealerName.position.set(200, 20);
 
-            }
-        });
+    const dealerTitle = new LocalizedText(this.dealer.title, {
+      font: "Open Sans",
+      fontSize: 28,
+      fontWeight: "bold",
+      fill: 0xffd21f,
+    });
 
-        dealerName.position.set(200, 20);
+    dealerTitle.position.set(200, 110);
 
+    this.createBackground();
 
-        const dealerTitle = new LocalizedText(
-            this.dealer.title,
-            {
-                font: "Open Sans",
-                fontSize: 28,
-                fontWeight: "bold",
-                fill: 0xffd21f
+    this.addChild(dealerName, dealerTitle);
+  }
 
-            }
-        );
+  async init() {
+    this.createAvatar();
+    this.createSkillsButton();
+    this.createObjectiveButton();
 
-        dealerTitle.position.set(200, 110);
+    await this.skillsButton.init();
+    await this.objectiveButton.init();
+  }
 
-        this.createBackground();
+  private async createAvatar() {
+    const texture = await Assets.load(this.dealer.avatarSmall);
 
-        this.addChild(
-            dealerName,
-            dealerTitle
-        );
-    }
+    this.avatar = new Sprite(texture);
 
+    this.avatar.width = 174.3;
+    this.avatar.height = 174.3;
 
-    async init() {
+    this.avatar.position.set(0, 0);
 
-        this.createAvatar();
-        this.createSkillsButton();
-        this.createObjectiveButton();
+    this.addChild(this.avatar);
+  }
 
-        await this.skillsButton.init();
-        await this.objectiveButton.init();
+  private createBackground() {
+    const bg = new DealerCardBackground(556.1, 180.7);
 
-    }
+    this.addChild(bg);
+  }
 
-    private async createAvatar() {
+  private createSkillsButton() {
+    this.skillsButton = new SkillsButton(this.onSkillsClick);
 
-        const texture = await Assets.load(
-            this.dealer.avatarSmall
-        );
+    this.skillsButton.position.set(480, 25);
 
-        this.avatar = new Sprite(texture);
+    this.addChild(this.skillsButton);
+  }
 
-        this.avatar.width = 174.3;
-        this.avatar.height = 174.3;
+  private createObjectiveButton() {
+    this.objectiveButton = new ObjectiveButton(this.onObjectiveClick);
 
-        this.avatar.position.set(
-            0,
-            0
-        );
+    this.objectiveButton.position.set(480, 100);
 
-        this.addChild(this.avatar);
+    this.addChild(this.objectiveButton);
+  }
 
-    }
-
-
-
-    private createBackground() {
-
-        const bg = new DealerCardBackground(556.1, 180.7);
-
-        this.addChild(bg);
-
-    }
-
-
-    private createSkillsButton() {
-
-        this.skillsButton = new SkillsButton(this.onSkillsClick);
-
-        this.skillsButton.position.set(480, 25);
-
-        this.addChild(this.skillsButton);
-    }
-
-
-    private createObjectiveButton() {
-
-        this.objectiveButton = new ObjectiveButton(this.onObjectiveClick);
-
-        this.objectiveButton.position.set(480, 100);
-
-        this.addChild(this.objectiveButton);
-    }
-
-    setDisabled(value: boolean){
-        this.skillsButton.setDisabled(value);
-        this.objectiveButton.setDisabled(value);
-    }
-
+  setDisabled(value: boolean) {
+    this.skillsButton.setDisabled(value);
+    this.objectiveButton.setDisabled(value);
+  }
 }

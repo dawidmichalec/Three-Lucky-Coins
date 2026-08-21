@@ -1,166 +1,135 @@
-import { Application, Sprite, Assets, Container} from 'pixi.js';
-import { PopupManager } from './ui/popups/PopupManager';
-import { SceneManager } from './game/SceneManager';
-import { MainMenuScene } from './game/scenes/MainMenuScene';
-import { AudioManager } from './core/AudioManager';
-import { SettingsManager } from './core/SettingsManager';
-import { SoundId } from './audio/SoundId';
-import { DisplayManager } from './core/DisplayManager';
-import { StatsManager } from './core/StatsManager';
-import { LayoutManager } from './core/LayoutManager';
-import { RotateDeviceOverlay } from './ui/overlays/RotateDeviceOverlay';
-import { LocalizationManager } from './core/LocalizationManager';
-import { loadFonts } from './core/FontLoader';
+import { Application, Sprite, Assets, Container } from "pixi.js";
+import { PopupManager } from "./ui/popups/PopupManager";
+import { SceneManager } from "./game/SceneManager";
+import { MainMenuScene } from "./game/scenes/MainMenuScene";
+import { AudioManager } from "./core/AudioManager";
+import { SettingsManager } from "./core/SettingsManager";
+import { SoundId } from "./audio/SoundId";
+import { DisplayManager } from "./core/DisplayManager";
+import { StatsManager } from "./core/StatsManager";
+import { LayoutManager } from "./core/LayoutManager";
+import { RotateDeviceOverlay } from "./ui/overlays/RotateDeviceOverlay";
+import { LocalizationManager } from "./core/LocalizationManager";
+import { loadFonts } from "./core/FontLoader";
 
 (async () => {
   const app = new Application();
 
-    await app.init({
-        background: '#0f0f0f',
-        width: 1920,
-        height: 1080,
-        resizeTo: window
-    });
+  await app.init({
+    background: "#0f0f0f",
+    width: 1920,
+    height: 1080,
+    resizeTo: window,
+  });
 
-    app.stage.sortableChildren = true;
+  app.stage.sortableChildren = true;
 
-    document.body.appendChild(app.canvas);
+  document.body.appendChild(app.canvas);
 
-    app.canvas.style.position = 'fixed';
-    app.canvas.style.top = '0';
-    app.canvas.style.left = '0';
-    app.canvas.style.width = "100%";
-    app.canvas.style.height = "100%";
-    document.body.style.margin = "0";
-    document.body.style.overflow = "hidden";
+  app.canvas.style.position = "fixed";
+  app.canvas.style.top = "0";
+  app.canvas.style.left = "0";
+  app.canvas.style.width = "100%";
+  app.canvas.style.height = "100%";
+  document.body.style.margin = "0";
+  document.body.style.overflow = "hidden";
 
-    // LAYOUT MANAGER
+  // LAYOUT MANAGER
 
-    const layout = LayoutManager.getInstance();
-    layout.initialize(app);
+  const layout = LayoutManager.getInstance();
+  layout.initialize(app);
 
-    // GAME ROOT
+  // GAME ROOT
 
-    const gameRoot = new Container();
+  const gameRoot = new Container();
 
-    app.stage.addChild(gameRoot);
+  app.stage.addChild(gameRoot);
 
-    // BACKGROUND
+  // BACKGROUND
 
-    const backgroundImage = await Assets.load('/assets/main/background image.png');
-    const background = new Sprite(backgroundImage);
-    background.width = layout.DESIGN_WIDTH;
-    background.height = layout.DESIGN_HEIGHT;
+  const backgroundImage = await Assets.load(
+    "/assets/main/background image.png",
+  );
+  const background = new Sprite(backgroundImage);
+  background.width = layout.DESIGN_WIDTH;
+  background.height = layout.DESIGN_HEIGHT;
 
-    // ORIENTATION OVERLAY
+  // ORIENTATION OVERLAY
 
-    const orientationOverlay = new RotateDeviceOverlay();
+  const orientationOverlay = new RotateDeviceOverlay();
 
-    orientationOverlay.zIndex = 9999;
+  orientationOverlay.zIndex = 9999;
 
-    app.stage.addChild(
-        orientationOverlay
-    );
+  app.stage.addChild(orientationOverlay);
 
-    gameRoot.addChild(
-        background,
-        orientationOverlay
-    );
+  gameRoot.addChild(background, orientationOverlay);
 
-    const updateLayout = () => {
+  const updateLayout = () => {
+    gameRoot.scale.set(layout.scale);
 
-    gameRoot.scale.set(
-            layout.scale
-        );
+    gameRoot.position.set(layout.offsetX, layout.offsetY);
+  };
 
+  layout.register({
+    onLayoutChanged() {
+      updateLayout();
+    },
+  });
 
-        gameRoot.position.set(
-            layout.offsetX,
-            layout.offsetY
-        );
+  updateLayout();
 
-    };
+  // FONTS
 
+  await loadFonts();
 
-    layout.register({
+  // STATS MANAGER
 
-        onLayoutChanged(){
+  const statsManager = StatsManager.getInstance();
 
-            updateLayout();
+  statsManager.startSession();
 
-        }
+  // SETTINGS
 
-    });
+  const settingsManager = SettingsManager.getInstance();
 
+  // LOCALIZATION
 
-    updateLayout();
+  const localization = LocalizationManager.getInstance();
 
-    // FONTS
+  localization.setLanguage(settingsManager.get().language);
 
-    await loadFonts();
+  // DISPLAY
 
-    // STATS MANAGER
+  const displayManager = DisplayManager.getInstance(app.stage);
 
-    const statsManager =
-        StatsManager.getInstance();
+  displayManager.setBrightness(settingsManager.get().brightness);
 
-    statsManager.startSession();
+  // PopupManager
 
-    // SETTINGS
+  const popupManager = new PopupManager(
+    layout.DESIGN_WIDTH,
+    layout.DESIGN_HEIGHT,
+  );
 
-    const settingsManager = SettingsManager.getInstance();
+  popupManager.zIndex = 1000;
 
-    // LOCALIZATION
+  app.stage.addChild(popupManager);
 
-    const localization =
-        LocalizationManager.getInstance();
+  const sceneManager = new SceneManager(app, popupManager, gameRoot);
 
-    localization.setLanguage(
-        settingsManager.get().language
-    );
+  const mainMenu = new MainMenuScene(sceneManager);
 
-    // DISPLAY
+  // SceneManager
 
-    const displayManager =
-        DisplayManager.getInstance(
-            app.stage
-        );
+  await sceneManager.changeScene(mainMenu);
 
-    displayManager.setBrightness(
-        settingsManager.get().brightness
-    );
+  // AUDIO
 
-    
-    // PopupManager
+  const audioManager = AudioManager.getInstance(settingsManager);
 
-    const popupManager = new PopupManager(layout.DESIGN_WIDTH, layout.DESIGN_HEIGHT);
+  await audioManager.loadAll();
 
-    popupManager.zIndex = 1000;
-
-    app.stage.addChild(popupManager);
-
-    const sceneManager = new SceneManager(app, popupManager, gameRoot);
-
-    const mainMenu = new MainMenuScene(
-        sceneManager
-    );
-
-    // SceneManager
-
-    await sceneManager.changeScene(mainMenu);
-
-    // AUDIO
-
-    const audioManager = AudioManager.getInstance(settingsManager);
-    
-
-    await audioManager.loadAll();
-
-    audioManager.play(
-        SoundId.MAIN_THEME,
-        {
-            loop:true
-        }
-    );
-
+  audioManager.play(SoundId.MAIN_THEME, {
+    loop: true,
+  });
 })();

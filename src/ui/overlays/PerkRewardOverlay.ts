@@ -1,7 +1,4 @@
-import {
-    Container,
-    Graphics
-} from "pixi.js";
+import { Container, Graphics } from "pixi.js";
 
 import { LocalizedText } from "../../localization/LocalizedText";
 import { LayoutManager } from "../../core/LayoutManager";
@@ -11,372 +8,199 @@ import { SkipButton } from "../buttons/SkipButton";
 import { PerkRewardCard } from "../components/PerkRewardCard";
 import { PerkReward } from "../../game/perks/reward/PerkReward";
 
-
 export class PerkRewardOverlay extends Container {
+  private confirmButton!: RoundedButton;
+  private skipButton!: SkipButton;
 
-    private confirmButton!: RoundedButton;
-    private skipButton!: SkipButton;
+  private bg!: Graphics;
 
-    private bg!: Graphics;
+  private perkRewardContainer: Container;
 
-    private perkRewardContainer:
-        Container;
+  private cards: PerkRewardCard[] = [];
 
-    private cards:
-        PerkRewardCard[] = [];
+  private selectedCard?: PerkRewardCard;
 
-    private selectedCard?:
-        PerkRewardCard;
+  constructor(
+    width: number,
+    height: number,
+    private onConfirm: (reward: PerkReward) => void,
+    private onSkip: () => void,
+  ) {
+    super();
 
+    this.bg = new Graphics().rect(0, 0, width, height).fill({
+      color: 0x000000,
+    });
 
-    constructor(
-        width: number,
-        height: number,
-        private onConfirm: (reward: PerkReward) => void,
-        private onSkip: () => void
-    ) {
+    this.addChild(this.bg);
 
-        super();
+    this.eventMode = "static";
 
+    this.cursor = "default";
 
-        this.bg = new Graphics()
-            .rect(
-                0,
-                0,
-                width,
-                height
-            )
-            .fill({
-                color: 0x000000
-            });
+    this.visible = false;
 
+    const layout = LayoutManager.getInstance();
 
-        this.addChild(
-            this.bg
-        );
+    const chooseAPerkLabel = new LocalizedText("chooseAPerk", {
+      fontFamily: "JackCondensed",
 
+      fontWeight: "bold",
 
-        this.eventMode =
-            "static";
+      fontSize: 50,
 
-        this.cursor =
-            "default";
+      fill: 0xffd21f,
+    });
 
-        this.visible =
-            false;
+    chooseAPerkLabel.anchor.set(0.5);
 
+    chooseAPerkLabel.position.set(layout.DESIGN_WIDTH / 2, 80);
 
-        const layout =
-            LayoutManager.getInstance();
+    const theLongerYouAreLabel = new LocalizedText(
+      "theLongerYouAreInTheCasino",
+      {
+        fontFamily: "CrimsonPro-Italic",
 
+        fontWeight: "bold",
 
-        const chooseAPerkLabel =
-            new LocalizedText(
-                "chooseAPerk",
-                {
-                    fontFamily:
-                        "JackCondensed",
+        fontSize: 38,
 
-                    fontWeight:
-                        "bold",
+        fill: 0xffd21f,
+      },
+    );
 
-                    fontSize:
-                        50,
+    theLongerYouAreLabel.anchor.set(0.5);
 
-                    fill:
-                        0xffd21f
-                }
-            );
+    theLongerYouAreLabel.position.set(layout.DESIGN_WIDTH / 2, 180);
 
+    const perkRewardContainerWidth = 1400;
 
-        chooseAPerkLabel.anchor.set(
-            0.5
-        );
+    const perkRewardContainerHeight = 530;
 
+    this.perkRewardContainer = new Container();
 
-        chooseAPerkLabel.position.set(
-            layout.DESIGN_WIDTH / 2,
-            80
-        );
+    this.perkRewardContainer.position.set(
+      (layout.DESIGN_WIDTH - perkRewardContainerWidth) / 2,
 
+      (layout.DESIGN_HEIGHT - perkRewardContainerHeight) / 2,
+    );
 
-        const theLongerYouAreLabel =
-            new LocalizedText(
-                "theLongerYouAreInTheCasino",
-                {
-                    fontFamily:
-                        "CrimsonPro-Italic",
+    this.confirmButton = new RoundedButton({
+      text: "confirm",
 
-                    fontWeight:
-                        "bold",
+      theme: ButtonTheme.GOLD,
 
-                    fontSize:
-                        38,
+      onClick: () => {
+        const reward = this.selectedCard?.getReward();
 
-                    fill:
-                        0xffd21f
-                }
-            );
-
-
-        theLongerYouAreLabel.anchor.set(
-            0.5
-        );
-
-
-        theLongerYouAreLabel.position.set(
-            layout.DESIGN_WIDTH / 2,
-            180
-        );
-
-
-        const perkRewardContainerWidth =
-            1400;
-
-        const perkRewardContainerHeight =
-            530;
-
-
-        this.perkRewardContainer =
-            new Container();
-
-
-        this.perkRewardContainer.position.set(
-            (
-                layout.DESIGN_WIDTH -
-                perkRewardContainerWidth
-            ) / 2,
-
-            (
-                layout.DESIGN_HEIGHT -
-                perkRewardContainerHeight
-            ) / 2
-        );
-
-
-        this.confirmButton =
-            new RoundedButton({
-                text:
-                    "confirm",
-
-                theme:
-                    ButtonTheme.GOLD,
-
-                onClick: () => {
-
-                    const reward =
-                        this.selectedCard
-                            ?.getReward();
-
-                    if (!reward) {
-                        return;
-                    }
-
-                    this.onConfirm(
-                        reward
-                    );
-                }
-            });
-
-
-        this.confirmButton.position.set(
-            (
-                layout.DESIGN_WIDTH -
-                this.confirmButton.width
-            ) / 2,
-            883
-        );
-
-
-        this.confirmButton.visible =
-            false;
-
-        this.addChild(
-            chooseAPerkLabel,
-            theLongerYouAreLabel,
-            this.confirmButton,
-            this.perkRewardContainer
-        );
-    }
-
-
-    async init(): Promise<void> {
-
-        await this.createSkipButton();
-    }
-
-    private async createSkipButton(): Promise<void> {
-
-        this.skipButton = new SkipButton();
-
-        await this.skipButton.init();
-
-
-        this.skipButton.on("pointerdown", () => {
-            this.skipButton.scale.set(0.95);
-        });
-
-        this.skipButton.on("pointerup", () => {
-            this.skipButton.scale.set(1);
-        });
-
-        this.skipButton.on("pointerupoutside", () => {
-            this.skipButton.scale.set(1);
-        });
-
-
-        this.skipButton.on("pointertap", () => {
-            this.onSkip();
-        });
-
-
-        this.skipButton.position.set(
-            1618.3,
-            861.2
-        );
-
-
-        this.addChild(
-            this.skipButton
-        );
-    }
-
-
-    private createCards(
-        rewards:
-            readonly PerkReward[]
-    ) {
-
-        this.perkRewardContainer
-            .removeChildren();
-
-
-        this.cards = [];
-
-        this.selectedCard =
-            undefined;
-
-        this.confirmButton.visible =
-            false;
-
-
-        const cardWidth =
-            400;
-
-        const cardHeight =
-            530;
-
-        const cardSpacing =
-            100;
-
-
-        rewards.forEach(
-            (reward, index) => {
-
-                let card!:
-                    PerkRewardCard;
-
-
-                card =
-                    new PerkRewardCard(
-                        reward,
-                        cardWidth,
-                        cardHeight,
-                        () => {
-                            this.selectCard(
-                                card
-                            );
-                        }
-                    );
-
-
-                card.position.set(
-                    index *
-                    (
-                        cardWidth +
-                        cardSpacing
-                    ),
-                    0
-                );
-
-
-                this.cards.push(
-                    card
-                );
-
-
-                this.perkRewardContainer
-                    .addChild(
-                        card
-                    );
-            }
-        );
-    }
-
-
-    private selectCard(
-        card:
-            PerkRewardCard
-    ) {
-
-        if (
-            this.selectedCard ===
-            card
-        ) {
-            return;
+        if (!reward) {
+          return;
         }
 
+        this.onConfirm(reward);
+      },
+    });
 
-        this.selectedCard
-            ?.setSelected(
-                false
-            );
+    this.confirmButton.position.set(
+      (layout.DESIGN_WIDTH - this.confirmButton.width) / 2,
+      883,
+    );
 
+    this.confirmButton.visible = false;
 
-        this.selectedCard =
-            card;
+    this.addChild(
+      chooseAPerkLabel,
+      theLongerYouAreLabel,
+      this.confirmButton,
+      this.perkRewardContainer,
+    );
+  }
 
+  async init(): Promise<void> {
+    await this.createSkipButton();
+  }
 
-        this.selectedCard
-            .setSelected(
-                true
-            );
+  private async createSkipButton(): Promise<void> {
+    this.skipButton = new SkipButton();
 
+    await this.skipButton.init();
 
-        this.confirmButton.visible =
-            true;
+    this.skipButton.on("pointerdown", () => {
+      this.skipButton.scale.set(0.95);
+    });
+
+    this.skipButton.on("pointerup", () => {
+      this.skipButton.scale.set(1);
+    });
+
+    this.skipButton.on("pointerupoutside", () => {
+      this.skipButton.scale.set(1);
+    });
+
+    this.skipButton.on("pointertap", () => {
+      this.onSkip();
+    });
+
+    this.skipButton.position.set(1618.3, 861.2);
+
+    this.addChild(this.skipButton);
+  }
+
+  private createCards(rewards: readonly PerkReward[]) {
+    this.perkRewardContainer.removeChildren();
+
+    this.cards = [];
+
+    this.selectedCard = undefined;
+
+    this.confirmButton.visible = false;
+
+    const cardWidth = 400;
+
+    const cardHeight = 530;
+
+    const cardSpacing = 100;
+
+    rewards.forEach((reward, index) => {
+      const card = new PerkRewardCard(reward, cardWidth, cardHeight, () => {
+        this.selectCard(card);
+      });
+
+      card.position.set(index * (cardWidth + cardSpacing), 0);
+
+      this.cards.push(card);
+
+      this.perkRewardContainer.addChild(card);
+    });
+  }
+
+  private selectCard(card: PerkRewardCard) {
+    if (this.selectedCard === card) {
+      return;
     }
 
+    this.selectedCard?.setSelected(false);
 
-    show(
-        rewards:
-            readonly PerkReward[]
-    ) {
+    this.selectedCard = card;
 
-        if (
-            rewards.length !==
-            3
-        ) {
+    this.selectedCard.setSelected(true);
 
-            throw new Error(
-                `PerkRewardOverlay expected 3 rewards, received ${rewards.length}.`
-            );
-        }
+    this.confirmButton.visible = true;
+  }
 
-
-        this.createCards(
-            rewards
-        );
-
-
-        this.visible =
-            true;
+  show(rewards: readonly PerkReward[]) {
+    if (rewards.length !== 3) {
+      throw new Error(
+        `PerkRewardOverlay expected 3 rewards, received ${rewards.length}.`,
+      );
     }
 
+    this.createCards(rewards);
 
-    hide() {
+    this.visible = true;
+  }
 
-        this.visible =
-            false;
-    }
+  hide() {
+    this.visible = false;
+  }
 }

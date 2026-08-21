@@ -7,126 +7,88 @@ import { TranslationKey } from "../../../../core/LocalizationManager";
 import { DealerCollectionSection } from "./DealerCollectionSection";
 
 interface DealerCollectionSectionConfig {
-    group: DealerGroup;
-    title: TranslationKey;
+  group: DealerGroup;
+  title: TranslationKey;
 }
 
 interface DealerCollectionContentOptions {
-    width: number;
-    onDealerClick: (dealer: DealerData) => void;
+  width: number;
+  onDealerClick: (dealer: DealerData) => void;
 }
 
 export class DealerCollectionContent extends Container {
+  private collectionManager = DealerCollectionManager.getInstance();
 
-    private collectionManager =
-        DealerCollectionManager.getInstance();
+  private readonly sectionSpacing = 55;
 
-    private readonly sectionSpacing = 55;
+  private readonly sections: readonly DealerCollectionSectionConfig[] = [
+    {
+      group: DealerGroup.JUNIOR,
+      title: "juniorDealers",
+    },
 
+    {
+      group: DealerGroup.MID,
+      title: "midDealers",
+    },
 
-    private readonly sections:
-        readonly DealerCollectionSectionConfig[] = [
+    {
+      group: DealerGroup.SENIOR,
+      title: "seniorDealers",
+    },
 
-        {
-            group: DealerGroup.JUNIOR,
-            title: "juniorDealers"
-        },
+    {
+      group: DealerGroup.MACHINE_FLOOR,
+      title: "machineFloor",
+    },
 
-        {
-            group: DealerGroup.MID,
-            title: "midDealers"
-        },
+    {
+      group: DealerGroup.MANAGEMENT,
+      title: "management",
+    },
+  ];
 
-        {
-            group: DealerGroup.SENIOR,
-            title: "seniorDealers"
-        },
+  constructor(private options: DealerCollectionContentOptions) {
+    super();
+  }
 
-        {
-            group: DealerGroup.MACHINE_FLOOR,
-            title: "machineFloor"
-        },
+  async init(): Promise<void> {
+    let currentY = 0;
 
-        {
-            group: DealerGroup.MANAGEMENT,
-            title: "management"
-        }
-    ];
+    for (const config of this.sections) {
+      const dealers = getDealersByGroup(config.group);
 
-
-    constructor(
-        private options: DealerCollectionContentOptions
-    ) {
-        super();
-    }
-
-
-    async init(): Promise<void> {
-
-        let currentY = 0;
-
-
-        for (const config of this.sections) {
-
-            const dealers =
-                getDealersByGroup(
-                    config.group
-                );
-
-
-            /*
+      /*
                 Nie pokazujemy pustej sekcji.
 
                 Gdy dodasz pierwszego Seniora do registry,
                 Senior Dealers pojawi się automatycznie.
             */
 
-            if (dealers.length === 0) {
-                continue;
-            }
+      if (dealers.length === 0) {
+        continue;
+      }
 
+      const section = new DealerCollectionSection({
+        title: config.title,
 
-            const section =
-                new DealerCollectionSection({
+        dealers,
 
-                    title:
-                        config.title,
+        width: this.options.width,
 
-                    dealers,
+        isDealerDiscovered: (dealerId) =>
+          this.collectionManager.isDealerDiscovered(dealerId),
 
-                    width:
-                        this.options.width,
+        onDealerClick: this.options.onDealerClick,
+      });
 
-                    isDealerDiscovered:
-                        dealerId =>
-                            this.collectionManager
-                                .isDealerDiscovered(
-                                    dealerId
-                                ),
+      await section.init();
 
-                    onDealerClick:
-                        this.options
-                            .onDealerClick
-                });
+      section.position.set(0, currentY);
 
+      this.addChild(section);
 
-            await section.init();
-
-
-            section.position.set(
-                0,
-                currentY
-            );
-
-
-            this.addChild(
-                section
-            );
-
-
-            currentY +=
-                section.getHeight() +
-                this.sectionSpacing;
-        }
+      currentY += section.getHeight() + this.sectionSpacing;
     }
+  }
 }

@@ -1,44 +1,42 @@
 export class RunStats {
+  // STREAKS
 
-    // STREAKS
+  currentWinStreak = 0;
+  bestWinStreak = 0;
 
-    currentWinStreak = 0;
-    bestWinStreak = 0;
+  currentLoseStreak = 0;
+  biggestLoseStreak = 0;
 
-    currentLoseStreak = 0;
-    biggestLoseStreak = 0;
+  // WINS
 
-    // WINS
+  highestWin = 0;
+  totalWon = 0;
+  totalLost = 0;
 
-    highestWin = 0;
-    totalWon = 0;
-    totalLost = 0;
+  wins = 0;
+  losses = 0;
 
-    wins = 0;
-    losses = 0;
+  // BETS
 
-    // BETS
+  totalBets = 0;
 
-    totalBets = 0;
+  totalBetValue = 0;
 
-    totalBetValue = 0;
+  betUsage: Record<number, number> = {};
 
-    betUsage: Record<number, number> = {};
+  successfulBets = 0;
 
-    successfulBets = 0;
+  // COMBINATIONS
 
-    // COMBINATIONS
+  combinationUsage: Record<string, number> = {};
 
-    combinationUsage: Record<string, number> = {};
+  winningCombinationUsage: Record<string, number> = {};
 
-    winningCombinationUsage: Record<string, number> = {};
+  // RUN
 
-    // RUN
+  startedAt = Date.now();
 
-    startedAt = Date.now();
+  finishedAt?: number;
 
-    finishedAt?: number;
-
-    won = false;
-
+  won = false;
 }

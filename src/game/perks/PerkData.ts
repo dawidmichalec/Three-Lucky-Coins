@@ -1,29 +1,26 @@
 import { TranslationKey } from "../../core/LocalizationManager";
 import { PerkRarity } from "./PerkRarity";
 
-
 export interface PerkAssets {
-    small: string;
-    mid: string;
-    big: string;
+  small: string;
+  mid: string;
+  big: string;
 }
-
 
 export interface PerkVariant<TConfig = unknown> {
-    rarity: PerkRarity;
+  rarity: PerkRarity;
 
-    description: TranslationKey;
+  description: TranslationKey;
 
-    assets: PerkAssets;
+  assets: PerkAssets;
 
-    config: TConfig;
+  config: TConfig;
 }
 
-
 export interface PerkData<TConfig = unknown> {
-    id: string;
+  id: string;
 
-    name: TranslationKey;
+  name: TranslationKey;
 
-    variants: readonly PerkVariant<TConfig>[];
+  variants: readonly PerkVariant<TConfig>[];
 }

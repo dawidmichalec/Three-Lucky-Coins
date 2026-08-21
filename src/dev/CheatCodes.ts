@@ -1,37 +1,35 @@
 export enum CheatCode {
+  ALL_HEADS_WIN = "ALL_HEADS_WIN",
 
-    ALL_HEADS_WIN = "ALL_HEADS_WIN",
+  ALL_TAILS_WIN = "ALL_TAILS_WIN",
 
-    ALL_TAILS_WIN = "ALL_TAILS_WIN",
+  NOT_ALL_SAME_WIN = "NOT_ALL_SAME_WIN",
 
-    NOT_ALL_SAME_WIN = "NOT_ALL_SAME_WIN",
+  GOLDEN_ONE = "gold1",
 
-    GOLDEN_ONE = "gold1",
+  GOLDEN_TWO = "gold2",
 
-    GOLDEN_TWO = "gold2",
+  GOLDEN_THREE = "gold3",
 
-    GOLDEN_THREE = "gold3",
+  DEALER_WIN = "dealerwin",
 
-    DEALER_WIN = "dealerwin",
+  GAME_OVER = "gameover",
 
-    GAME_OVER = "gameover",
+  FORCE_MULTIPLIER_BOOSTER = "perk_multiplier_booster",
 
-    FORCE_MULTIPLIER_BOOSTER = "perk_multiplier_booster",
+  FORCE_CASINO_BONUS = "perk_casino_bonus",
 
-    FORCE_CASINO_BONUS = "perk_casino_bonus",
+  FORCE_RISK_TAKER = "perk_risk_taker",
 
-    FORCE_RISK_TAKER = "perk_risk_taker",
+  FORCE_INSURANCE = "perk_insurance",
 
-    FORCE_INSURANCE = "perk_insurance",
+  FORCE_GAMBLER = "perk_gambler",
 
-    FORCE_GAMBLER = "perk_gambler",
+  FORCE_DOUBLE_DOWN = "perk_double_down",
 
-    FORCE_DOUBLE_DOWN = "perk_double_down",
+  FORCE_COIN_SENSE = "perk_coin_sense",
 
-    FORCE_COIN_SENSE = "perk_coin_sense",
+  FORCE_LUCKY_HAND = "perk_lucky_hand",
 
-    FORCE_LUCKY_HAND = "perk_lucky_hand",
-
-    FORCE_PIGGY_BANK = "perk_piggy_bank"
-
+  FORCE_PIGGY_BANK = "perk_piggy_bank",
 }

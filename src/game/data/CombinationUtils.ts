@@ -1,45 +1,27 @@
 import { CoinSide } from "../../ui/Coin";
-import {
-    COMBINATION_CONFIGS,
-    CoinCombination
-} from "./CoinCombinations";
+import { COMBINATION_CONFIGS, CoinCombination } from "./CoinCombinations";
 import { CombinationId } from "./CombinationId";
 
 export function getCombinationId(
-    combination: readonly CoinSide[]
+  combination: readonly CoinSide[],
 ): CombinationId {
+  const entry = Object.values(COMBINATION_CONFIGS).find((config) =>
+    config.sides.every((side, index) => side === combination[index]),
+  );
 
-    const entry =
-        Object.values(COMBINATION_CONFIGS)
-            .find(config =>
-                config.sides.every(
-                    (side, index) =>
-                        side === combination[index]
-                )
-            );
+  if (!entry) {
+    throw new Error(`Unknown combination: ${combination.join("-")}`);
+  }
 
-    if (!entry) {
-        throw new Error(
-            `Unknown combination: ${combination.join("-")}`
-        );
-    }
-
-    return entry.id;
+  return entry.id;
 }
 
-export function getCombinationConfig(
-    combination: readonly CoinSide[]
-) {
+export function getCombinationConfig(combination: readonly CoinSide[]) {
+  const id = getCombinationId(combination);
 
-    const id =
-        getCombinationId(combination);
-
-    return COMBINATION_CONFIGS[id];
+  return COMBINATION_CONFIGS[id];
 }
 
-export function getCombinationById(
-    id: CombinationId
-): CoinCombination {
-
-    return COMBINATION_CONFIGS[id].sides;
+export function getCombinationById(id: CombinationId): CoinCombination {
+  return COMBINATION_CONFIGS[id].sides;
 }

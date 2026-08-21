@@ -1,51 +1,42 @@
 export interface CoinOdds {
+  heads: number;
 
-    heads: number;
-
-    tails: number;
+  tails: number;
 }
-
 
 export interface OddsTable {
+  coin1: CoinOdds;
 
-    coin1: CoinOdds;
+  coin2: CoinOdds;
 
-    coin2: CoinOdds;
-
-    coin3: CoinOdds;
+  coin3: CoinOdds;
 }
-
 
 export enum OddsVisibility {
+  EXACT,
 
-    EXACT,
+  RANGE,
 
-    RANGE,
+  WORDS,
 
-    WORDS,
-
-    HIDDEN
+  HIDDEN,
 }
 
-
 export interface DealerOddsProfile {
-
-    /*
+  /*
         Określa sposób prezentowania oddsów
         graczowi.
 
         Nie wpływa na samo generowanie wyniku.
     */
-    visibility: OddsVisibility;
+  visibility: OddsVisibility;
 
-
-    /*
+  /*
         Lista wartości, z których generator
         może losować probability Heads.
 
         Tails zawsze wynosi:
         1 - heads
     */
-    headsProbabilities:
-        readonly number[];
+  headsProbabilities: readonly number[];
 }

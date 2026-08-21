@@ -1,17 +1,11 @@
 export enum GambleForMoreGameId {
+  RED_BLACK_CARD = "red_black_card",
 
-    RED_BLACK_CARD =
-        "red_black_card",
+  HIGHER_LOWER = "higher_lower",
 
-    HIGHER_LOWER =
-        "higher_lower",
+  SCRATCH = "scratch",
 
-    SCRATCH =
-        "scratch",
+  DICE = "dice",
 
-    DICE =
-        "dice",
-
-    CRASH =
-        "crash"
+  CRASH = "crash",
 }

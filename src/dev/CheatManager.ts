@@ -1,30 +1,19 @@
 export class CheatManager {
+  private cheats: Map<string, () => void> = new Map();
 
-    private cheats: Map<string, () => void> = new Map();
+  register(code: string, action: () => void) {
+    this.cheats.set(code, action);
+  }
 
+  execute(code: string) {
+    const cheat = this.cheats.get(code);
 
-    register(
-        code: string,
-        action: () => void
-    ) {
-        this.cheats.set(code, action);
+    if (!cheat) {
+      console.log("Unknown cheat:", code);
+
+      return;
     }
 
-
-    execute(code: string) {
-
-        const cheat = this.cheats.get(code);
-
-        if (!cheat) {
-            console.log(
-                "Unknown cheat:",
-                code
-            );
-
-            return;
-        }
-
-        cheat();
-    }
-
+    cheat();
+  }
 }

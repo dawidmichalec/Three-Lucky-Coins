@@ -3,125 +3,119 @@ import { TriangleButton } from "../buttons/TriangleButton";
 import { TossButton } from "../buttons/TossButton";
 
 interface GameControlsOptions {
-    onBetDown: () => void;
-    onBetUp: () => void;
-    onPrevCombo: () => void;
-    onNextCombo: () => void;
-    onToss: () => void;
+  onBetDown: () => void;
+  onBetUp: () => void;
+  onPrevCombo: () => void;
+  onNextCombo: () => void;
+  onToss: () => void;
 }
 
 export class GameControls extends Container {
+  private betDown!: TriangleButton;
+  private betUp!: TriangleButton;
 
-    private betDown!: TriangleButton;
-    private betUp!: TriangleButton;
+  private prevCombo!: TriangleButton;
+  private nextCombo!: TriangleButton;
 
-    private prevCombo!: TriangleButton;
-    private nextCombo!: TriangleButton;
+  private tossButton!: TossButton;
 
-    private tossButton!: TossButton;
+  constructor(private options: GameControlsOptions) {
+    super();
 
-    constructor(private options: GameControlsOptions){
-        super();
+    this.createBetButtons();
+    this.createCombinationButtons();
+    this.createTossButton();
+  }
 
-        this.createBetButtons();
-        this.createCombinationButtons();
-        this.createTossButton();
+  // BET BUTTONS
+
+  private createBetButtons() {
+    const betDown = new TriangleButton({
+      direction: "left",
+      label: "-",
+      onClick: () => {
+        this.options.onBetDown();
+      },
+    });
+
+    const betUp = new TriangleButton({
+      direction: "right",
+      label: "+",
+      onClick: () => {
+        this.options.onBetUp();
+      },
+    });
+
+    betDown.position.set(805, 1038.4);
+    betUp.position.set(1080, 1038.4);
+
+    this.betDown = betDown;
+    this.betUp = betUp;
+
+    this.addChild(betDown, betUp);
+  }
+
+  // COMBINATIONS
+
+  private createCombinationButtons() {
+    const prevCombo = new TriangleButton({
+      direction: "left",
+      label: "-",
+      onClick: () => {
+        this.options.onPrevCombo();
+      },
+    });
+
+    const nextCombo = new TriangleButton({
+      direction: "right",
+      label: "+",
+      onClick: () => {
+        this.options.onNextCombo();
+      },
+    });
+
+    prevCombo.position.set(1280.1, 1038.4);
+    nextCombo.position.set(1637.3, 1038.4);
+
+    this.prevCombo = prevCombo;
+    this.nextCombo = nextCombo;
+
+    this.addChild(prevCombo, nextCombo);
+  }
+
+  // TOSS BUTTON
+
+  private async createTossButton() {
+    this.tossButton = new TossButton();
+
+    await this.tossButton.init();
+
+    this.tossButton.position.set(1710, 861.8);
+
+    this.addChild(this.tossButton);
+
+    this.tossButton.on("toss", () => {
+      this.options.onToss();
+    });
+  }
+
+  setDisabled(value: boolean) {
+    this.betDown.setDisabled(value);
+    this.betUp.setDisabled(value);
+
+    this.prevCombo.setDisabled(value);
+    this.nextCombo.setDisabled(value);
+
+    this.tossButton.setDisabled(value);
+  }
+
+  startTossAnimation() {
+    this.tossButton.startAnimation();
+  }
+
+  update(delta: number) {
+    if (this.tossButton) {
+      this.tossButton.update(delta);
     }
-
-    // BET BUTTONS
-
-    private createBetButtons() {
-        const betDown = new TriangleButton({
-            direction: 'left',
-            label: '-',
-            onClick: () => {
-            this.options.onBetDown();
-            },
-        });
-
-        const betUp = new TriangleButton({
-            direction: 'right',
-            label: '+',
-            onClick: () => {
-                this.options.onBetUp();
-            },
-        });
-
-        betDown.position.set(805, 1038.4);
-        betUp.position.set(1080, 1038.4);
-
-        this.betDown = betDown;
-        this.betUp = betUp;
-
-        this.addChild(betDown, betUp);
-    }
-
-    // COMBINATIONS
-
-    private createCombinationButtons() {
-
-        const prevCombo = new TriangleButton({
-            direction: 'left',
-            label: '-',
-            onClick: () => {
-            this.options.onPrevCombo();
-            },
-        });
-
-        const nextCombo = new TriangleButton({
-            direction: 'right',
-            label: '+',
-            onClick: () => {
-            this.options.onNextCombo();
-            },
-        });
-
-        prevCombo.position.set(1280.1, 1038.4);
-        nextCombo.position.set(1637.3, 1038.4);
-
-        this.prevCombo = prevCombo;
-        this.nextCombo = nextCombo;
-
-        this.addChild(prevCombo, nextCombo);
-    }
-
-    // TOSS BUTTON
-    
-    private async createTossButton() {
-        this.tossButton = new TossButton();
-
-        await this.tossButton.init();
-
-        this.tossButton.position.set(1710, 861.8);
-
-        this.addChild(this.tossButton);
-
-        this.tossButton.on("toss", () => {
-            this.options.onToss();
-        });
-    }
-
-    setDisabled(value: boolean) {
-
-        this.betDown.setDisabled(value);
-        this.betUp.setDisabled(value);
-
-        this.prevCombo.setDisabled(value);
-        this.nextCombo.setDisabled(value);
-
-        this.tossButton.setDisabled(value);
-        
-    }
-
-    startTossAnimation() {
-        this.tossButton.startAnimation();
-    }
-
-    update(delta: number) {
-        if (this.tossButton) {
-                this.tossButton.update(delta);
-            }
-    }
-
-    
+  }
 }

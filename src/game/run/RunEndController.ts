@@ -5,183 +5,93 @@ import { RunSummaryPanel } from "../../ui/panels/RunSummaryPanel";
 import { GameOverOverlay } from "../../ui/overlays/GameOverOverlay";
 import { GameMessageOverlay } from "../../ui/overlays/GameMessageOverlay";
 
-
 interface RunEndControllerOptions {
+  onLockControls: () => void;
 
-    onLockControls:
-        () => void;
-
-    onUnlockControls:
-        () => void;
+  onUnlockControls: () => void;
 }
 
-
 export class RunEndController {
+  constructor(
+    private statsManager: StatsManager,
 
-    constructor(
-        private statsManager:
-            StatsManager,
+    private runSummaryPanel: RunSummaryPanel,
 
-        private runSummaryPanel:
-            RunSummaryPanel,
+    private gameOverOverlay: GameOverOverlay,
 
-        private gameOverOverlay:
-            GameOverOverlay,
+    private gameMessageOverlay: GameMessageOverlay,
 
-        private gameMessageOverlay:
-            GameMessageOverlay,
+    private options: RunEndControllerOptions,
+  ) {}
 
-        private options:
-            RunEndControllerOptions
-    ) {}
+  async triggerGameOver() {
+    this.statsManager.getRunStats().won = false;
 
+    this.options.onLockControls();
 
-    async triggerGameOver() {
+    await this.delay(350);
 
-        this.statsManager
-            .getRunStats()
-            .won = false;
+    await this.gameOverOverlay.play(1300);
 
+    await this.showRunSummary();
+  }
 
-        this.options
-            .onLockControls();
+  async showRunVictory() {
+    this.statsManager.getRunStats().won = true;
 
+    await this.showRunSummary();
+  }
 
-        await this.delay(
-            350
-        );
+  async showDealerVictory() {
+    this.options.onLockControls();
 
+    await this.gameMessageOverlay.play("youWon");
 
-        await this.gameOverOverlay.play(
-            1300
-        );
+    this.options.onUnlockControls();
+  }
 
+  private async showRunSummary() {
+    this.runSummaryPanel.refresh();
 
-        await this.showRunSummary();
-    }
+    this.runSummaryPanel.visible = true;
 
+    this.runSummaryPanel.alpha = 0;
 
-    async showRunVictory() {
+    await this.fadeInContainer(this.runSummaryPanel, 500);
+  }
 
-        this.statsManager
-            .getRunStats()
-            .won = true;
+  private delay(milliseconds: number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(resolve, milliseconds);
+    });
+  }
 
+  private fadeInContainer(
+    container: Container,
+    duration: number,
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const startTime = performance.now();
 
-        await this.showRunSummary();
-    }
+      const animate = (currentTime: number) => {
+        const progress = Math.min(1, (currentTime - startTime) / duration);
 
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
 
-    async showDealerVictory() {
+        container.alpha = easedProgress;
 
-        this.options
-            .onLockControls();
+        if (progress < 1) {
+          requestAnimationFrame(animate);
 
+          return;
+        }
 
-        await this.gameMessageOverlay
-            .play("youWon");
+        container.alpha = 1;
 
+        resolve();
+      };
 
-        this.options
-            .onUnlockControls();
-    }
-
-
-    private async showRunSummary() {
-
-        this.runSummaryPanel
-            .refresh();
-
-
-        this.runSummaryPanel.visible =
-            true;
-
-
-        this.runSummaryPanel.alpha =
-            0;
-
-
-        await this.fadeInContainer(
-            this.runSummaryPanel,
-            500
-        );
-    }
-
-
-    private delay(
-        milliseconds: number
-    ): Promise<void> {
-
-        return new Promise(resolve => {
-
-            setTimeout(
-                resolve,
-                milliseconds
-            );
-        });
-    }
-
-
-    private fadeInContainer(
-        container: Container,
-        duration: number
-    ): Promise<void> {
-
-        return new Promise(resolve => {
-
-            const startTime =
-                performance.now();
-
-
-            const animate = (
-                currentTime: number
-            ) => {
-
-                const progress =
-                    Math.min(
-                        1,
-                        (
-                            currentTime -
-                            startTime
-                        ) / duration
-                    );
-
-
-                const easedProgress =
-                    1 -
-                    Math.pow(
-                        1 - progress,
-                        3
-                    );
-
-
-                container.alpha =
-                    easedProgress;
-
-
-                if (
-                    progress < 1
-                ) {
-
-                    requestAnimationFrame(
-                        animate
-                    );
-
-                    return;
-                }
-
-
-                container.alpha =
-                    1;
-
-
-                resolve();
-            };
-
-
-            requestAnimationFrame(
-                animate
-            );
-        });
-    }
+      requestAnimationFrame(animate);
+    });
+  }
 }

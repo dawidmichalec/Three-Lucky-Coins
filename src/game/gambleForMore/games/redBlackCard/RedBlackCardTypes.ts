@@ -1,16 +1,12 @@
 export enum CardColor {
-    RED = "red",
-    BLACK = "black"
+  RED = "red",
+  BLACK = "black",
 }
 
 export interface RedBlackCardResult {
+  selectedColor: CardColor;
 
-    selectedColor:
-        CardColor;
+  resultColor: CardColor;
 
-    resultColor:
-        CardColor;
-
-    won:
-        boolean;
+  won: boolean;
 }

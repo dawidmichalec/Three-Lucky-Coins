@@ -17,288 +17,219 @@ import { PerkRewardOverlay } from "./overlays/PerkRewardOverlay";
 import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkEffectMessageOverlay } from "./overlays/PerkEffectOverlay";
 
-
 interface GameSceneViewOptions {
+  onBetDown: () => void;
 
-    onBetDown:() => void;
+  onBetUp: () => void;
 
-    onBetUp:() => void;
+  onPrevCombo: () => void;
 
-    onPrevCombo:() => void;
+  onNextCombo: () => void;
 
-    onNextCombo:() => void;
+  onToss: () => void;
 
-    onToss:() => void;
+  onRestartRun: () => void;
 
-    onRestartRun:() => void;
+  onMainMenu: () => void;
 
-    onMainMenu:() => void;
+  onGambleForMoreYes: () => void;
 
-    onGambleForMoreYes:() => void;
+  onGambleForMoreNo: () => void;
 
-    onGambleForMoreNo:() => void;
+  onGambleForMoreColorSelected: (color: CardColor) => void;
 
-    onGambleForMoreColorSelected:(color: CardColor) => void;
+  onPerkRewardConfirm: (reward: PerkReward) => void;
 
-    onPerkRewardConfirm: (reward: PerkReward) => void;
-
-    onPerkRewardSkip: () => void;
-
+  onPerkRewardSkip: () => void;
 }
 
+export class GameSceneView extends Container {
+  readonly gameUI: GameUI;
 
-export class GameSceneView
-    extends Container {
+  readonly controls: GameControls;
 
-    readonly gameUI: GameUI;
+  readonly optionsPanel: OptionsPanel;
 
-    readonly controls: GameControls;
+  readonly statsPanel: StatsPanel;
 
-    readonly optionsPanel: OptionsPanel;
+  readonly runSummaryPanel: RunSummaryPanel;
 
-    readonly statsPanel: StatsPanel;
+  readonly hamburgerMenu: HamburgerMenu;
 
-    readonly runSummaryPanel: RunSummaryPanel;
+  readonly gameMessageOverlay: GameMessageOverlay;
 
-    readonly hamburgerMenu: HamburgerMenu;
+  readonly gameOverOverlay: GameOverOverlay;
 
-    readonly gameMessageOverlay: GameMessageOverlay;
+  readonly gambleForMoreOverlay: GambleForMoreOverlay;
 
-    readonly gameOverOverlay:GameOverOverlay;
+  readonly perkRewardOverlay: PerkRewardOverlay;
 
-    readonly gambleForMoreOverlay: GambleForMoreOverlay;
+  readonly perkEffectMessageOverlay: PerkEffectMessageOverlay;
 
-    readonly perkRewardOverlay: PerkRewardOverlay;
+  constructor(
+    dealer: DealerData,
 
-    readonly perkEffectMessageOverlay: PerkEffectMessageOverlay;
+    sceneManager: SceneManager,
 
+    popupManager: PopupManager,
 
-    constructor(
-        dealer: DealerData,
+    options: GameSceneViewOptions,
+  ) {
+    super();
 
-        sceneManager: SceneManager,
+    this.sortableChildren = true;
 
-        popupManager: PopupManager,
+    const layout = LayoutManager.getInstance();
 
-        options: GameSceneViewOptions,
-    ) {
+    // GAME UI
 
-        super();
+    this.gameUI = new GameUI(dealer);
 
+    this.gameUI.zIndex = 1000;
 
-        this.sortableChildren = true;
+    this.addChild(this.gameUI);
 
+    // CONTROLS
 
-        const layout = LayoutManager.getInstance();
+    this.controls = new GameControls({
+      onBetDown: options.onBetDown,
 
+      onBetUp: options.onBetUp,
 
-        // GAME UI
+      onPrevCombo: options.onPrevCombo,
 
-        this.gameUI = new GameUI(dealer);
+      onNextCombo: options.onNextCombo,
 
-        this.gameUI.zIndex = 1000;
+      onToss: options.onToss,
+    });
 
-        this.addChild(this.gameUI);
+    this.addChild(this.controls);
 
-        
-        // CONTROLS
+    // OPTIONS
 
-        this.controls =
-            new GameControls({
-                onBetDown:
-                    options.onBetDown,
+    this.optionsPanel = new OptionsPanel(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+      () => {
+        this.optionsPanel.hide();
+      },
+    );
 
-                onBetUp:
-                    options.onBetUp,
+    this.optionsPanel.visible = false;
 
-                onPrevCombo:
-                    options.onPrevCombo,
+    this.optionsPanel.zIndex = 1000;
 
-                onNextCombo:
-                    options.onNextCombo,
+    this.addChild(this.optionsPanel);
 
-                onToss:
-                    options.onToss
-            });
+    // STATS
 
-        this.addChild(
-            this.controls
-        );
+    this.statsPanel = new StatsPanel(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+      () => {
+        this.statsPanel.hide();
+      },
+    );
 
+    this.statsPanel.visible = false;
 
-        // OPTIONS
+    this.statsPanel.zIndex = 1000;
 
-        this.optionsPanel =
-            new OptionsPanel(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-                () => {
-                    this.optionsPanel
-                        .hide();
-                }
-            );
+    this.addChild(this.statsPanel);
 
-        this.optionsPanel.visible =
-            false;
+    // RUN SUMMARY
 
-        this.optionsPanel.zIndex =
-            1000;
+    this.runSummaryPanel = new RunSummaryPanel(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+      options.onRestartRun,
+      options.onMainMenu,
+    );
 
-        this.addChild(
-            this.optionsPanel
-        );
+    this.runSummaryPanel.visible = false;
 
+    this.runSummaryPanel.zIndex = 2000;
 
-        // STATS
+    this.addChild(this.runSummaryPanel);
 
-        this.statsPanel =
-            new StatsPanel(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-                () => {
-                    this.statsPanel
-                        .hide();
-                }
-            );
+    // HAMBURGER MENU
 
-        this.statsPanel.visible =
-            false;
+    this.hamburgerMenu = new HamburgerMenu(
+      sceneManager,
+      popupManager,
 
-        this.statsPanel.zIndex =
-            1000;
+      () => {
+        this.optionsPanel.show();
+      },
 
-        this.addChild(
-            this.statsPanel
-        );
+      () => {
+        this.statsPanel.show();
+      },
+    );
 
+    this.addChild(this.hamburgerMenu);
 
-        // RUN SUMMARY
+    // DEALER VICTORY
 
-        this.runSummaryPanel =
-            new RunSummaryPanel(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-                options.onRestartRun,
-                options.onMainMenu
-            );
+    this.gameMessageOverlay = new GameMessageOverlay(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+    );
 
-        this.runSummaryPanel.visible =
-            false;
+    this.gameMessageOverlay.zIndex = 5000;
 
-        this.runSummaryPanel.zIndex =
-            2000;
+    this.addChild(this.gameMessageOverlay);
 
-        this.addChild(
-            this.runSummaryPanel
-        );
+    // GAME OVER
 
+    this.gameOverOverlay = new GameOverOverlay(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+    );
 
-        // HAMBURGER MENU
+    this.gameOverOverlay.zIndex = 6000;
 
-        this.hamburgerMenu =
-            new HamburgerMenu(
-                sceneManager,
-                popupManager,
+    this.addChild(this.gameOverOverlay);
 
-                () => {
-                    this.optionsPanel
-                        .show();
-                },
+    // GAMBLE FOR MORE OVERLAY
 
-                () => {
-                    this.statsPanel
-                        .show();
-                }
-            );
+    this.gambleForMoreOverlay = new GambleForMoreOverlay(
+      options.onGambleForMoreYes,
+      options.onGambleForMoreNo,
+      options.onGambleForMoreColorSelected,
+    );
 
-        this.addChild(
-            this.hamburgerMenu
-        );
+    this.gambleForMoreOverlay.zIndex = 4000;
 
+    this.addChild(this.gambleForMoreOverlay);
 
-        // DEALER VICTORY
+    // PERK EFFECTS OVERLAY
 
-        this.gameMessageOverlay =
-            new GameMessageOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT
-            );
+    this.perkEffectMessageOverlay = new PerkEffectMessageOverlay(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+    );
 
-        this.gameMessageOverlay
-            .zIndex = 5000;
+    this.perkEffectMessageOverlay.zIndex = 4000;
 
-        this.addChild(
-            this.gameMessageOverlay
-        );
+    this.addChild(this.perkEffectMessageOverlay);
 
+    //PERK REWARD
 
-        // GAME OVER
+    this.perkRewardOverlay = new PerkRewardOverlay(
+      layout.DESIGN_WIDTH,
+      layout.DESIGN_HEIGHT,
+      options.onPerkRewardConfirm,
+      options.onPerkRewardSkip,
+    );
+    this.perkRewardOverlay.zIndex = 4000;
+    this.addChild(this.perkRewardOverlay);
+  }
 
-        this.gameOverOverlay =
-            new GameOverOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT
-            );
-
-        this.gameOverOverlay.zIndex =
-            6000;
-
-        this.addChild(
-            this.gameOverOverlay
-        );
-
-
-        // GAMBLE FOR MORE OVERLAY
-
-        this.gambleForMoreOverlay =
-            new GambleForMoreOverlay(
-                options.onGambleForMoreYes,
-                options.onGambleForMoreNo,
-                options.onGambleForMoreColorSelected
-            );
-            
-        this.gambleForMoreOverlay.zIndex = 4000;
-
-        this.addChild(
-            this.gambleForMoreOverlay
-        );
-
-        // PERK EFFECTS OVERLAY
-
-        this.perkEffectMessageOverlay =
-            new PerkEffectMessageOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT
-            );
-
-        this.perkEffectMessageOverlay.zIndex =
-            4000;
-
-        this.addChild(
-            this.perkEffectMessageOverlay
-        );
-
-
-        //PERK REWARD
-
-        this.perkRewardOverlay =
-            new PerkRewardOverlay(
-                layout.DESIGN_WIDTH,
-                layout.DESIGN_HEIGHT,
-                options.onPerkRewardConfirm,
-                options.onPerkRewardSkip
-            );
-        this.perkRewardOverlay.zIndex = 4000;
-        this.addChild(this.perkRewardOverlay);
-
-    }
-
-    async init():
-        Promise<void> {
-
-        await Promise.all([
-            this.gambleForMoreOverlay.init(),
-            this.perkRewardOverlay.init()
-        ]);
-    }
+  async init(): Promise<void> {
+    await Promise.all([
+      this.gambleForMoreOverlay.init(),
+      this.perkRewardOverlay.init(),
+    ]);
+  }
 }

@@ -1,4 +1,4 @@
 export enum DealerRole {
-    REGULAR = "regular",
-    SUPERVISOR = "supervisor"
+  REGULAR = "regular",
+  SUPERVISOR = "supervisor",
 }

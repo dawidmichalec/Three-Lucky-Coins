@@ -1,74 +1,49 @@
 import { CoinSide } from "../../ui/Coin";
 
-import {
-    CoinOdds,
-    DealerOddsProfile,
-    OddsTable
-} from "./OddsTypes";
+import { CoinOdds, DealerOddsProfile, OddsTable } from "./OddsTypes";
 
 import { OddsGenerator } from "./OddsGenerator";
 
 export class OddsManager {
+  private static instance: OddsManager;
 
-    private static instance: OddsManager;
+  private currentOdds?: OddsTable;
 
-    private currentOdds?: OddsTable;
-
-    static getInstance() {
-
-        if (!OddsManager.instance) {
-
-            OddsManager.instance =
-                new OddsManager();
-
-        }
-
-        return OddsManager.instance;
+  static getInstance() {
+    if (!OddsManager.instance) {
+      OddsManager.instance = new OddsManager();
     }
 
-    private constructor() {}
+    return OddsManager.instance;
+  }
 
-    rollOdds(
-        profile: DealerOddsProfile
-    ): OddsTable {
+  private constructor() {}
 
-        this.currentOdds =
-            OddsGenerator.generate(profile);
+  rollOdds(profile: DealerOddsProfile): OddsTable {
+    this.currentOdds = OddsGenerator.generate(profile);
 
-        return this.currentOdds;
+    return this.currentOdds;
+  }
+
+  getOdds(): OddsTable {
+    if (!this.currentOdds) {
+      throw new Error("Odds have not been generated yet.");
     }
 
-    getOdds(): OddsTable {
+    return this.currentOdds;
+  }
 
-        if (!this.currentOdds) {
+  rollResult(): CoinSide[] {
+    const odds = this.getOdds();
 
-            throw new Error(
-                "Odds have not been generated yet."
-            );
+    return [
+      this.rollCoin(odds.coin1),
+      this.rollCoin(odds.coin2),
+      this.rollCoin(odds.coin3),
+    ];
+  }
 
-        }
-
-        return this.currentOdds;
-    }
-
-    rollResult(): CoinSide[] {
-
-        const odds =
-            this.getOdds();
-
-        return [
-            this.rollCoin(odds.coin1),
-            this.rollCoin(odds.coin2),
-            this.rollCoin(odds.coin3)
-        ];
-    }
-
-    private rollCoin(
-        odds: CoinOdds
-    ): CoinSide {
-
-        return Math.random() < odds.heads
-            ? CoinSide.Heads
-            : CoinSide.Tails;
-    }
+  private rollCoin(odds: CoinOdds): CoinSide {
+    return Math.random() < odds.heads ? CoinSide.Heads : CoinSide.Tails;
+  }
 }

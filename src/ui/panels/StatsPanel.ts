@@ -9,108 +9,82 @@ import { LocalizationManager } from "../../core/LocalizationManager";
 import { LocalizedText } from "../../localization/LocalizedText";
 
 export class StatsPanel extends Container {
+  private currentTab: "run" | "player" = "run";
+  private runButton!: RoundedButton;
+  private playerButton!: RoundedButton;
 
-    private currentTab: "run" | "player" = "run";
-    private runButton!: RoundedButton;
-    private playerButton!: RoundedButton;
+  private statsManager: StatsManager;
+  private statsScroll!: ScrollableContainer;
+  private runStatsValues!: Text;
+  private playerStatsValues!: Text;
 
-    private statsManager: StatsManager;
-    private statsScroll!: ScrollableContainer;
-    private runStatsValues!: Text;
-    private playerStatsValues!: Text;
+  private combinationLabels!: Text;
+  private combinationValues!: Text;
 
-    private combinationLabels!: Text;
-    private combinationValues!: Text;
+  private localization = LocalizationManager.getInstance();
 
-    private localization = LocalizationManager.getInstance();
+  constructor(
+    width: number,
+    height: number,
+    private onClose: () => void,
+  ) {
+    super();
 
+    this.statsManager = StatsManager.getInstance();
 
-    constructor(
-        width: number,
-        height: number, 
-        private onClose: () => void
-    ) {
-        super();
+    this.createOverlay(width, height);
 
-        this.statsManager =
-            StatsManager.getInstance();
+    this.createCloseButton();
 
+    this.createButtons();
 
-        this.createOverlay(width, height);
+    this.createStatsContainer();
 
-        this.createCloseButton();
+    this.refresh();
+  }
 
-        this.createButtons();
+  private createButtons() {
+    this.runButton = new RoundedButton({
+      text: "runStatsLabel",
+      theme: ButtonTheme.DARKGREEN,
+      onClick: () => {
+        this.showRunStats();
+      },
+    });
 
-        this.createStatsContainer();
+    this.runButton.position.set(508.6, 108);
 
-        this.refresh();
+    this.playerButton = new RoundedButton({
+      text: "playerStats",
+      theme: ButtonTheme.GREEN,
+      onClick: () => {
+        this.showPlayerStats();
+      },
+    });
 
+    this.playerButton.position.set(1097.9, 108);
 
+    this.addChild(this.runButton, this.playerButton);
+  }
+
+  refresh() {
+    this.statsScroll.clearContent();
+
+    if (this.currentTab === "run") {
+      this.createRunStats();
+
+      this.refreshRunStats();
+    } else {
+      this.createPlayerStats();
+
+      this.refreshPlayerStats();
     }
+  }
 
-    private createButtons() {
+  private refreshRunStats() {
+    const stats = this.statsManager.getRunStats();
 
-        this.runButton = new RoundedButton({
-            text: "runStatsLabel",
-            theme: ButtonTheme.DARKGREEN,
-            onClick: () => {
-                this.showRunStats();
-            }
-        });
-
-        this.runButton.position.set(508.6, 108);
-
-        this.playerButton = new RoundedButton({
-            text: "playerStats",
-            theme: ButtonTheme.GREEN,
-            onClick: () => {
-                this.showPlayerStats();
-            }
-        })
-
-        this.playerButton.position.set(1097.9, 108);
-
-        this.addChild(
-            this.runButton,
-            this.playerButton
-        );
-
-
-    }
-
-    refresh() {
-
-        this.statsScroll.clearContent();
-
-        if(this.currentTab === "run") {
-
-            this.createRunStats();
-
-            this.refreshRunStats();
-
-        }
-        else {
-
-            this.createPlayerStats();
-
-            this.refreshPlayerStats();
-
-        }
-
-    }
-
-
-    private refreshRunStats(){
-
-
-        const stats =
-            this.statsManager.getRunStats();
-
-
-
-        this.runStatsValues.text =
-    `    ${stats.bestWinStreak}
+    this.runStatsValues.text = `    ${stats.bestWinStreak}
     ${stats.biggestLoseStreak}
     ${stats.highestWin.toFixed(2)}
     ${this.statsManager.getAccuracyCurrentRun().toFixed(2)}%
@@ -121,185 +95,119 @@ export class StatsPanel extends Container {
     ${this.statsManager.getLuckiestCombinationCurrentRun() ?? "-"}
     `;
 
+    const combinations = Object.entries(stats.combinationUsage).sort(
+      (a, b) => b[1] - a[1],
+    );
 
+    let labels = "";
+    let values = "";
 
-        const combinations =
-            Object.entries(
-                stats.combinationUsage
-            )
-            .sort(
-                (a,b)=>b[1]-a[1]
-            );
+    for (const [combo, count] of combinations) {
+      labels += `${combo}\n`;
 
-
-
-        let labels = "";
-        let values = "";
-
-
-        for(const [combo,count] of combinations){
-
-            labels +=`${combo}\n`;
-
-            values +=`${count}\n`;
-
-        }
-
-
-
-        this.combinationLabels.text = labels;
-
-        this.combinationValues.text = values;
-
-
-        this.statsScroll.refresh();
-
+      values += `${count}\n`;
     }
 
+    this.combinationLabels.text = labels;
 
+    this.combinationValues.text = values;
 
-    private createRunStats(){
+    this.statsScroll.refresh();
+  }
 
+  private createRunStats() {
+    const labels = new Text({
+      text: this.localization.tList([
+        "bestStreak",
+        "biggestLosingStreakCurrentRun",
+        "highestWin",
+        "accuracy",
+        "totalBets",
+        "favoriteBet",
+        "runDurationCurrentRun",
+        "favoriteCombination",
+        "luckiestCombination",
+      ]),
 
-        const labels = new Text({
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
 
-            text:
-            this.localization.tList([
-                "bestStreak",
-                "biggestLosingStreakCurrentRun",
-                "highestWin",
-                "accuracy",
-                "totalBets",
-                "favoriteBet",
-                "runDurationCurrentRun",
-                "favoriteCombination",
-                "luckiestCombination"
-            ]),
+    labels.position.set(0, 0);
 
-            style:{
-                fill:0xffffff,
-                font:'Open Sans',
-                fontSize:24,
-                fontWeight:'bold',
-                lineHeight:36
-            }
+    this.runStatsValues = new Text({
+      text: "",
 
-        });
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
 
+    this.runStatsValues.position.set(760, 0);
 
-        labels.position.set(0,0);
+    const combinationTitle = new LocalizedText(
+      "combinationUsage",
 
+      {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    );
 
+    combinationTitle.position.set(0, 340);
 
-        this.runStatsValues =
-            new Text({
+    this.combinationLabels = new Text({
+      text: "",
 
-                text:"",
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
 
-                style:{
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
+    this.combinationLabels.position.set(25, 380);
 
-            });
+    this.combinationValues = new Text({
+      text: "",
 
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
 
-        this.runStatsValues.position.set(
-            760,
-            0
-        );
+    this.combinationValues.position.set(785, 350);
 
+    this.statsScroll.addContent(labels);
+    this.statsScroll.addContent(this.runStatsValues);
 
+    this.statsScroll.addContent(combinationTitle);
+    this.statsScroll.addContent(this.combinationLabels);
+    this.statsScroll.addContent(this.combinationValues);
+  }
 
-        const combinationTitle =
-            new LocalizedText(
+  private refreshPlayerStats() {
+    const stats = this.statsManager.getPlayerStats();
 
-                "combinationUsage",
-
-                {
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
-
-            );
-
-
-        combinationTitle.position.set(
-            0,
-            340
-        );
-
-
-
-        this.combinationLabels =
-            new Text({
-
-                text:"",
-
-                style:{
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
-
-            });
-
-
-        this.combinationLabels.position.set(
-            25,
-            380
-        );
-
-
-
-        this.combinationValues =
-            new Text({
-
-                text:"",
-
-                style:{
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
-
-            });
-
-
-        this.combinationValues.position.set(
-            785,
-            350
-        );
-
-
-
-        this.statsScroll.addContent(labels);
-        this.statsScroll.addContent(this.runStatsValues);
-
-        this.statsScroll.addContent(combinationTitle);
-        this.statsScroll.addContent(this.combinationLabels);
-        this.statsScroll.addContent(this.combinationValues);
-
-    }
-
-
-    private refreshPlayerStats(){
-
-        const stats =
-            this.statsManager.getPlayerStats();
-
-        this.playerStatsValues.text =
-    `    ${stats.runs}
+    this.playerStatsValues.text = `    ${stats.runs}
     ${stats.runsWon}
     ${stats.runsLost}
     ${this.statsManager.getWinRateAllTime()}    
@@ -317,300 +225,206 @@ export class StatsPanel extends Container {
     ${stats.totalCoinsTossed}
     ${this.statsManager.getFormattedTotalPlayTime()}
     ${stats.sessionsPlayed}
-    ${this.localization.t(
-        this.statsManager.getAddictionRank()
-    )}
+    ${this.localization.t(this.statsManager.getAddictionRank())}
     ${this.statsManager.getFavoriteCombinationAllTime() ?? "-"}
     ${this.statsManager.getLuckiestCombinationAllTime() ?? "-"}
     `;
 
-         const combinations =
-            Object.entries(
-                stats.combinationUsage
-            )
-            .sort(
-                (a,b)=>b[1]-a[1]
-            );
+    const combinations = Object.entries(stats.combinationUsage).sort(
+      (a, b) => b[1] - a[1],
+    );
 
+    let labels = "";
+    let values = "";
 
+    for (const [combo, count] of combinations) {
+      labels += `${combo}\n`;
 
-        let labels = "";
-        let values = "";
-
-
-        for(const [combo,count] of combinations){
-
-            labels +=`${combo}\n`;
-
-            values +=`${count}\n`;
-
-        }
-
-
-
-        this.combinationLabels.text = labels;
-
-        this.combinationValues.text = values;
-
-
-        this.statsScroll.refresh();
-
+      values += `${count}\n`;
     }
 
+    this.combinationLabels.text = labels;
+
+    this.combinationValues.text = values;
+
+    this.statsScroll.refresh();
+  }
+
+  private createPlayerStats() {
+    const labels = new Text({
+      text: this.localization.tList([
+        "numberOfRuns",
+        "runsWon",
+        "runsLost",
+        "winRate",
+        "bestStreak",
+        "biggestLosingStreakAllTime",
+        "totalWonAllTime",
+        "totalLostAllTime",
+        "highestWin",
+        "averageWinAllTime",
+        "accuracy",
+        "totalBets",
+        "favoriteBet",
+        "averageBetValueAllTime",
+        "fastestRun",
+        "totalCoinsTossed",
+        "totalPlayTime",
+        "sessionsPlayed",
+        "addictionRank",
+        "favoriteCombination",
+        "luckiestCombination",
+      ]),
+
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
+
+    labels.position.set(0, 0);
+
+    this.playerStatsValues = new Text({
+      text: "",
+
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
+
+    this.playerStatsValues.position.set(760, 0);
+
+    const statsCount = 21;
+
+    const y = statsCount * 36 + 15;
+
+    const combinationTitle = new LocalizedText(
+      "combinationUsage",
+
+      {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    );
+
+    combinationTitle.position.set(0, y);
+
+    this.combinationLabels = new Text({
+      text: "",
+
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
+
+    this.combinationLabels.position.set(25, y + 40);
+
+    this.combinationValues = new Text({
+      text: "",
+
+      style: {
+        fill: 0xffffff,
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        lineHeight: 36,
+      },
+    });
 
+    this.combinationValues.position.set(785, y + 40);
 
-    private createPlayerStats(){
+    this.statsScroll.addContent(labels);
+    this.statsScroll.addContent(this.playerStatsValues);
 
-        const labels = new Text({
+    this.statsScroll.addContent(combinationTitle);
+    this.statsScroll.addContent(this.combinationLabels);
+    this.statsScroll.addContent(this.combinationValues);
+  }
 
-            text:
-            this.localization.tList([
+  private createStatsContainer() {
+    this.statsScroll = new ScrollableContainer(1000, 450);
 
-                "numberOfRuns",
-                "runsWon",
-                "runsLost",
-                "winRate",
-                "bestStreak",
-                "biggestLosingStreakAllTime",
-                "totalWonAllTime",
-                "totalLostAllTime",
-                "highestWin",
-                "averageWinAllTime",
-                "accuracy",
-                "totalBets",
-                "favoriteBet",
-                "averageBetValueAllTime",
-                "fastestRun",
-                "totalCoinsTossed",
-                "totalPlayTime",
-                "sessionsPlayed",
-                "addictionRank",
-                "favoriteCombination",
-                "luckiestCombination"
+    this.statsScroll.position.set(312, 283);
 
-            ]),
+    this.addChild(this.statsScroll);
+  }
 
-            style:{
-                fill:0xffffff,
-                font:'Open Sans',
-                fontSize:24,
-                fontWeight:'bold',
-                lineHeight:36
-            }
+  private showRunStats() {
+    this.currentTab = "run";
 
-        });
+    this.runButton.setTheme(ButtonTheme.DARKGOLD);
+    this.playerButton.setTheme(ButtonTheme.GOLD);
 
+    this.refresh();
+  }
 
+  private showPlayerStats() {
+    this.currentTab = "player";
 
-        labels.position.set(0,0);
+    this.playerButton.setTheme(ButtonTheme.DARKGOLD);
+    this.runButton.setTheme(ButtonTheme.GOLD);
 
+    this.refresh();
+  }
 
-        this.playerStatsValues =
-            new Text({
+  async createCloseButton() {
+    const close = new ClosePanelButton();
 
-                text:"",
+    await close.init();
 
-                style:{
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
+    close.on("pointerdown", () => {
+      close.scale.set(0.95);
+    });
 
-            });
+    close.on("pointerup", () => {
+      close.scale.set(1);
+    });
 
+    close.on("pointerupoutside", () => {
+      close.scale.set(1);
+    });
 
-        this.playerStatsValues.position.set(
-            760,
-            0
-        );
+    close.on("pointertap", () => {
+      this.hide();
+    });
 
+    close.position.set(1750, 108);
 
-        const statsCount = 21;
+    this.addChild(close);
+  }
 
-        const y = statsCount * 36 + 15;
+  private createOverlay(width: number, height: number) {
+    const overlay = new Overlay(width, height);
 
+    this.addChild(overlay);
+  }
 
-        const combinationTitle =
-            new LocalizedText(
+  show() {
+    this.currentTab = "run";
 
-                "combinationUsage",
+    this.runButton.setTheme(ButtonTheme.DARKGOLD);
+    this.playerButton.setTheme(ButtonTheme.GOLD);
 
-                {
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
+    this.refresh();
 
-            );
+    this.visible = true;
+  }
 
-
-
-        combinationTitle.position.set(
-            0,
-            y
-        );
-
-
-
-        this.combinationLabels =
-            new Text({
-
-                text:"",
-
-                style:{
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
-
-            });
-
-
-        this.combinationLabels.position.set(
-            25,
-            y + 40
-        );
-
-
-
-        this.combinationValues =
-            new Text({
-
-                text:"",
-
-                style:{
-                    fill:0xffffff,
-                    font:'Open Sans',
-                    fontSize:24,
-                    fontWeight:'bold',
-                    lineHeight:36
-                }
-
-            });
-
-
-        this.combinationValues.position.set(
-            785,
-            y + 40
-        );
-
-
-        this.statsScroll.addContent(labels);
-        this.statsScroll.addContent(this.playerStatsValues);
-
-        this.statsScroll.addContent(combinationTitle);
-        this.statsScroll.addContent(this.combinationLabels);
-        this.statsScroll.addContent(this.combinationValues);
-
-    }
-
-
-
-    private createStatsContainer(){
-
-        this.statsScroll =
-        new ScrollableContainer(
-            1000,
-            450
-        );
-
-
-        this.statsScroll.position.set(
-            312,
-            283
-        );
-
-
-        this.addChild(
-            this.statsScroll
-        );
-
-    }
-
-    private showRunStats() {
-
-        this.currentTab = "run";
-
-        this.runButton.setTheme(ButtonTheme.DARKGOLD);
-        this.playerButton.setTheme(ButtonTheme.GOLD);
-
-        this.refresh();
-    }
-
-    private showPlayerStats() {
-
-        this.currentTab = "player";
-
-        this.playerButton.setTheme(ButtonTheme.DARKGOLD);
-        this.runButton.setTheme(ButtonTheme.GOLD);
-
-        this.refresh();
-    }
-
-    async createCloseButton() {
-        const close = new ClosePanelButton();
-
-        await close.init();
-
-        close.on("pointerdown", () => {
-            close.scale.set(0.95);
-        });
-
-        close.on("pointerup", () => {
-            close.scale.set(1);
-        });
-
-        close.on("pointerupoutside", () => {
-            close.scale.set(1);
-        });
-
-        close.on("pointertap", () => {
-            this.hide();
-        });
-
-        close.position.set(
-            1750,
-            108
-        );
-
-        this.addChild(close);
-    }
-
-    private createOverlay(width:number,height:number){
-
-        const overlay = new Overlay(
-            width,
-            height
-        );
-
-        this.addChild(overlay);
-
-    }
-
-    show(){
-
-        this.currentTab = "run";
-
-        this.runButton.setTheme(ButtonTheme.DARKGOLD);
-        this.playerButton.setTheme(ButtonTheme.GOLD);
-
-        this.refresh();
-
-        this.visible = true;
-
-    }
-
-
-    hide(){
-
-        this.visible = false;
-
-    }
-
+  hide() {
+    this.visible = false;
+  }
 }

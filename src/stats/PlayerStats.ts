@@ -1,53 +1,51 @@
 export class PlayerStats {
+  // RUNS
 
-    // RUNS
+  runs = 0;
 
-    runs = 0;
+  runsWon = 0;
 
-    runsWon = 0;
+  runsLost = 0;
 
-    runsLost = 0;
+  // STREAKS
 
-    // STREAKS
+  bestWinStreak = 0;
 
-    bestWinStreak = 0;
+  biggestLoseStreak = 0;
 
-    biggestLoseStreak = 0;
+  // MONEY
 
-    // MONEY
+  totalWon = 0;
 
-    totalWon = 0;
+  totalLost = 0;
 
-    totalLost = 0;
+  highestWin = 0;
 
-    highestWin = 0;
+  // BETS
 
-    // BETS
+  totalBets = 0;
 
-    totalBets = 0;
+  totalBetValue = 0;
 
-    totalBetValue = 0;
+  betUsage: Record<number, number> = {};
 
-    betUsage: Record<number, number> = {};
+  successfulBets = 0;
 
-    successfulBets = 0;
+  // PLAYTIME
 
-    // PLAYTIME
+  totalPlayTime = 0;
 
-    totalPlayTime = 0;
+  sessionsPlayed = 0;
 
-    sessionsPlayed = 0;
+  fastestRun = Number.MAX_SAFE_INTEGER;
 
-    fastestRun = Number.MAX_SAFE_INTEGER;
+  // COINS
 
-    // COINS
+  totalCoinsTossed = 0;
 
-    totalCoinsTossed = 0;
+  // COMBINATIONS
 
-    // COMBINATIONS
+  combinationUsage: Record<string, number> = {};
 
-    combinationUsage: Record<string, number> = {};
-
-    winningCombinationUsage: Record<string, number> = {};
-
+  winningCombinationUsage: Record<string, number> = {};
 }

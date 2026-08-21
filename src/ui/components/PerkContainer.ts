@@ -1,561 +1,286 @@
-import {
-    Assets,
-    Container,
-    Graphics,
-    Sprite
-} from "pixi.js";
+import { Assets, Container, Graphics, Sprite } from "pixi.js";
 
 import { PerkReward } from "../../game/perks/reward/PerkReward";
 
 interface ActivePerkIcon {
+  perkId: string;
 
-    perkId: string;
-
-    sprite: Sprite;
+  sprite: Sprite;
 }
 
-
 export class PerkContainer extends Container {
+  private bg: Graphics;
 
-    private bg: Graphics;
+  private perkIcons: ActivePerkIcon[] = [];
 
-    private perkIcons: ActivePerkIcon[] = [];
+  private readonly containerWidth: number;
+  private readonly containerHeight: number;
 
-    private readonly containerWidth: number;
-    private readonly containerHeight: number;
+  private readonly iconSize = 50;
 
-    private readonly iconSize = 50;
+  private readonly columns = 5;
+  private readonly rows = 3;
 
-    private readonly columns = 5;
-    private readonly rows = 3;
+  constructor(
+    width: number,
+    height: number,
+    private readonly onPerkClick: (reward: PerkReward) => void,
+  ) {
+    super();
 
+    this.containerWidth = width;
 
-    constructor(
-        width: number,
-        height: number,
-        private readonly onPerkClick: (reward: PerkReward) => void
-    ) {
+    this.containerHeight = height;
 
-        super();
+    this.bg = new Graphics().rect(0, 0, width, height).fill({
+      color: 0x4ca626,
+      alpha: 0.25,
+    });
 
-        this.containerWidth =
-            width;
+    this.visible = true;
 
-        this.containerHeight =
-            height;
+    this.addChild(this.bg);
+  }
 
+  async addPerk(reward: PerkReward): Promise<void> {
+    const texture = await Assets.load(reward.variant.assets.small);
 
-        this.bg = new Graphics()
-            .rect(
-                0,
-                0,
-                width,
-                height
-            )
-            .fill({
-                color: 0x4ca626,
-                alpha: 0.25
-            });
+    const perkIcon = new Sprite(texture);
 
+    perkIcon.anchor.set(0.5);
 
-        this.visible = true;
+    perkIcon.width = this.iconSize;
 
+    perkIcon.height = this.iconSize;
 
-        this.addChild(
-            this.bg
-        );
-    }
+    perkIcon.eventMode = "static";
+    perkIcon.cursor = "pointer";
 
+    perkIcon.on("pointertap", (event) => {
+      event.stopPropagation();
 
-    async addPerk(
-        reward: PerkReward
-    ): Promise<void> {
+      this.onPerkClick(reward);
+    });
 
-        const texture =
-            await Assets.load(
-                reward.variant.assets.small
-            );
+    const index = this.perkIcons.length;
 
+    const position = this.getIconPosition(index);
 
-        const perkIcon =
-            new Sprite(
-                texture
-            );
+    perkIcon.position.set(position.x, position.y);
 
+    perkIcon.alpha = 0;
 
-        perkIcon.anchor.set(
-            0.5
-        );
+    perkIcon.scale.set(0.3);
 
-
-        perkIcon.width =
-            this.iconSize;
-
-        perkIcon.height =
-            this.iconSize;
-
-        perkIcon.eventMode = "static";
-        perkIcon.cursor = "pointer";
-
-        perkIcon.on(
-            "pointertap",
-            event => {
-
-                event.stopPropagation();
-
-                this.onPerkClick(
-                    reward
-                );
-            }
-        );
-
-
-        const index =
-            this.perkIcons.length;
-
-
-        const position =
-            this.getIconPosition(
-                index
-            );
-
-        perkIcon.position.set(
-            position.x,
-            position.y
-        );
-
-
-        perkIcon.alpha =
-            0;
-
-        perkIcon.scale.set(
-            0.3
-        );
-
-
-        /*
+    /*
             FLASH POJAWIA SIĘ
             DOKŁADNIE ZA IKONĄ.
         */
 
-        const flash =
-            new Graphics()
-                .circle(
-                    0,
-                    0,
-                    this.iconSize * 0.8
-                )
-                .fill({
-                    color: 0xffde59,
-                    alpha: 0.8
-                });
+    const flash = new Graphics().circle(0, 0, this.iconSize * 0.8).fill({
+      color: 0xffde59,
+      alpha: 0.8,
+    });
 
+    flash.position.copyFrom(perkIcon.position);
 
-        flash.position.copyFrom(
-            perkIcon.position
-        );
+    flash.scale.set(0.35);
 
-
-        flash.scale.set(
-            0.35
-        );
-
-
-        /*
+    /*
             Flash musi być dodany przed ikoną,
             żeby znajdował się pod nią.
         */
 
-        this.addChild(
-            flash,
-            perkIcon
-        );
+    this.addChild(flash, perkIcon);
 
+    this.perkIcons.push({
+      perkId: reward.perk.id,
 
-        this.perkIcons.push({
-            perkId:
-                reward.perk.id,
+      sprite: perkIcon,
+    });
 
-            sprite:
-                perkIcon
-        });
+    await Promise.all([
+      this.animatePerkIcon(perkIcon),
 
+      this.animateFlash(flash),
+    ]);
 
-        await Promise.all([
-            this.animatePerkIcon(
-                perkIcon
-            ),
+    flash.destroy();
 
-            this.animateFlash(
-                flash
-            )
-        ]);
+    perkIcon.alpha = 1;
 
+    perkIcon.scale.set(1);
+  }
 
-        flash.destroy();
+  private async repositionPerks(): Promise<void> {
+    await Promise.all(
+      this.perkIcons.map((entry, index) =>
+        this.animatePerkMove(entry.sprite, this.getIconPosition(index)),
+      ),
+    );
+  }
 
+  private animatePerkRemoval(icon: Sprite): Promise<void> {
+    return this.animate(
+      350,
 
-        perkIcon.alpha =
-            1;
+      (progress) => {
+        icon.alpha = 1 - progress;
 
-        perkIcon.scale.set(
-            1
-        );
+        const scale = 1 - progress * 0.5;
+
+        icon.scale.set(scale);
+      },
+    );
+  }
+
+  private animatePerkMove(
+    icon: Sprite,
+    target: {
+      x: number;
+      y: number;
+    },
+  ): Promise<void> {
+    const startX = icon.x;
+
+    const startY = icon.y;
+
+    return this.animate(
+      300,
+
+      (progress) => {
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+        icon.x = startX + (target.x - startX) * easedProgress;
+
+        icon.y = startY + (target.y - startY) * easedProgress;
+      },
+    );
+  }
+
+  async removePerk(perkId: string): Promise<void> {
+    const index = this.perkIcons.findIndex((entry) => entry.perkId === perkId);
+
+    if (index === -1) {
+      return;
     }
 
+    const entry = this.perkIcons[index];
 
-    private async repositionPerks():
-    Promise<void> {
-
-        await Promise.all(
-            this.perkIcons.map(
-                (
-                    entry,
-                    index
-                ) =>
-                    this.animatePerkMove(
-                        entry.sprite,
-                        this.getIconPosition(
-                            index
-                        )
-                    )
-            )
-        );
-    }
-
-
-    private animatePerkRemoval(
-        icon: Sprite
-    ): Promise<void> {
-
-        return this.animate(
-            350,
-
-            progress => {
-
-                icon.alpha =
-                    1 - progress;
-
-
-                const scale =
-                    1 -
-                    progress * 0.5;
-
-
-                icon.scale.set(
-                    scale
-                );
-            }
-        );
-    }
-
-
-    private animatePerkMove(
-        icon: Sprite,
-        target: {
-            x: number;
-            y: number;
-        }
-    ): Promise<void> {
-
-        const startX =
-            icon.x;
-
-        const startY =
-            icon.y;
-
-
-        return this.animate(
-            300,
-
-            progress => {
-
-                const easedProgress =
-                    1 -
-                    Math.pow(
-                        1 - progress,
-                        3
-                    );
-
-
-                icon.x =
-                    startX +
-                    (
-                        target.x -
-                        startX
-                    ) *
-                    easedProgress;
-
-
-                icon.y =
-                    startY +
-                    (
-                        target.y -
-                        startY
-                    ) *
-                    easedProgress;
-            }
-        );
-    }
-
-
-    async removePerk(
-        perkId: string
-    ): Promise<void> {
-
-        const index =
-            this.perkIcons
-                .findIndex(
-                    entry =>
-                        entry.perkId ===
-                        perkId
-                );
-
-
-        if (
-            index === -1
-        ) {
-            return;
-        }
-
-
-        const entry =
-            this.perkIcons[
-                index
-            ];
-
-
-        /*
+    /*
             Najpierw Piggy Bank znika.
         */
 
-        await this.animatePerkRemoval(
-            entry.sprite
-        );
+    await this.animatePerkRemoval(entry.sprite);
 
+    this.removeChild(entry.sprite);
 
-        this.removeChild(
-            entry.sprite
-        );
+    entry.sprite.destroy();
 
+    this.perkIcons.splice(index, 1);
 
-        entry.sprite.destroy();
-
-
-        this.perkIcons.splice(
-            index,
-            1
-        );
-
-
-        /*
+    /*
             Następnie pozostałe ikony
             przesuwamy do nowych slotów.
         */
 
-        await this.repositionPerks();
-    }
+    await this.repositionPerks();
+  }
 
+  private getIconPosition(index: number): {
+    x: number;
+    y: number;
+  } {
+    const column = index % this.columns;
 
+    const row = Math.floor(index / this.columns);
 
-    private getIconPosition(
-        index: number
-    ): {
-        x: number;
-        y: number;
-    } {
+    const horizontalSpacing =
+      (this.containerWidth - this.iconSize * this.columns) / (this.columns + 1);
 
-        const column =
-            index % this.columns;
+    const verticalSpacing =
+      (this.containerHeight - this.iconSize * this.rows) / (this.rows + 1);
 
-        const row =
-            Math.floor(
-                index / this.columns
-            );
+    return {
+      x:
+        horizontalSpacing +
+        this.iconSize / 2 +
+        column * (this.iconSize + horizontalSpacing),
 
+      y:
+        verticalSpacing +
+        this.iconSize / 2 +
+        row * (this.iconSize + verticalSpacing),
+    };
+  }
 
-        const horizontalSpacing =
-            (
-                this.containerWidth -
-                this.iconSize * this.columns
-            ) /
-            (
-                this.columns + 1
-            );
+  private animatePerkIcon(icon: Sprite): Promise<void> {
+    return this.animate(
+      420,
 
+      (progress) => {
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
 
-        const verticalSpacing =
-            (
-                this.containerHeight -
-                this.iconSize * this.rows
-            ) /
-            (
-                this.rows + 1
-            );
-
-
-        return {
-            x:
-                horizontalSpacing +
-                this.iconSize / 2 +
-                column *
-                (
-                    this.iconSize +
-                    horizontalSpacing
-                ),
-
-            y:
-                verticalSpacing +
-                this.iconSize / 2 +
-                row *
-                (
-                    this.iconSize +
-                    verticalSpacing
-                )
-        };
-    }
-
-
-    private animatePerkIcon(
-        icon: Sprite
-    ): Promise<void> {
-
-        return this.animate(
-            420,
-
-            progress => {
-
-                const easedProgress =
-                    1 -
-                    Math.pow(
-                        1 - progress,
-                        3
-                    );
-
-
-                /*
+        /*
                     Lekki overshoot:
                     0.3 → około 1.18 → 1
                 */
 
-                const punch =
-                    Math.sin(
-                        progress *
-                        Math.PI
-                    );
+        const punch = Math.sin(progress * Math.PI);
 
+        const scale = 0.3 + easedProgress * 0.7 + punch * 0.18;
 
-                const scale =
-                    0.3 +
-                    easedProgress * 0.7 +
-                    punch * 0.18;
+        icon.scale.set(scale);
 
+        icon.alpha = easedProgress;
+      },
+    );
+  }
 
-                icon.scale.set(
-                    scale
-                );
+  private animateFlash(flash: Graphics): Promise<void> {
+    return this.animate(
+      500,
 
-
-                icon.alpha =
-                    easedProgress;
-            }
-        );
-    }
-
-
-    private animateFlash(
-        flash: Graphics
-    ): Promise<void> {
-
-        return this.animate(
-            500,
-
-            progress => {
-
-                /*
+      (progress) => {
+        /*
                     Flash rozszerza się
                     i jednocześnie zanika.
                 */
 
-                const scale =
-                    0.35 +
-                    progress *
-                    1.5;
+        const scale = 0.35 + progress * 1.5;
 
+        flash.scale.set(scale);
 
-                flash.scale.set(
-                    scale
-                );
+        flash.alpha = 0.8 * (1 - progress);
+      },
+    );
+  }
 
+  private animate(
+    duration: number,
 
-                flash.alpha =
-                    0.8 *
-                    (
-                        1 - progress
-                    );
-            }
-        );
-    }
+    update: (progress: number) => void,
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const startTime = performance.now();
 
+      const frame = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
 
-    private animate(
-        duration: number,
+        const progress = Math.min(1, elapsed / duration);
 
-        update:
-            (
-                progress: number
-            ) => void
-    ): Promise<void> {
+        update(progress);
 
-        return new Promise(
-            resolve => {
+        if (progress >= 1) {
+          resolve();
 
-                const startTime =
-                    performance.now();
+          return;
+        }
 
+        requestAnimationFrame(frame);
+      };
 
-                const frame = (
-                    currentTime: number
-                ) => {
-
-                    const elapsed =
-                        currentTime -
-                        startTime;
-
-
-                    const progress =
-                        Math.min(
-                            1,
-                            elapsed /
-                            duration
-                        );
-
-
-                    update(
-                        progress
-                    );
-
-
-                    if (
-                        progress >= 1
-                    ) {
-
-                        resolve();
-
-                        return;
-                    }
-
-
-                    requestAnimationFrame(
-                        frame
-                    );
-                };
-
-
-                requestAnimationFrame(
-                    frame
-                );
-            }
-        );
-    }
+      requestAnimationFrame(frame);
+    });
+  }
 }

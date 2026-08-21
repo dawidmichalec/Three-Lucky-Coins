@@ -1,5 +1,5 @@
-import { BET_LEVELS } from './data/BetLevels';
-import { COMBINATIONS } from './data/CoinCombinations';
+import { BET_LEVELS } from "./data/BetLevels";
+import { COMBINATIONS } from "./data/CoinCombinations";
 
 type ControllerConfig = {
   onBetChange: (bet: number) => void;
@@ -12,59 +12,47 @@ export class GameController {
 
   constructor(private config: ControllerConfig) {}
 
-  adjustBetToBalance(
-      balance: number
-  ): boolean {
-
-      /*
+  adjustBetToBalance(balance: number): boolean {
+    /*
           Jeżeli obecny bet nadal jest dostępny,
           niczego nie zmieniamy.
       */
-      if (this.getBet() <= balance) {
-          return false;
-      }
+    if (this.getBet() <= balance) {
+      return false;
+    }
 
-      /*
+    /*
           Szukamy najwyższego betu,
           który nie przekracza salda gracza.
       */
-      let affordableBetIndex = -1;
+    let affordableBetIndex = -1;
 
-      for (
-          let index = BET_LEVELS.length - 1;
-          index >= 0;
-          index--
-      ) {
+    for (let index = BET_LEVELS.length - 1; index >= 0; index--) {
+      if (BET_LEVELS[index] <= balance) {
+        affordableBetIndex = index;
 
-          if (BET_LEVELS[index] <= balance) {
-
-              affordableBetIndex = index;
-
-              break;
-          }
+        break;
       }
+    }
 
-      /*
+    /*
           Gracza nie stać nawet na minimalny bet.
           Nie zmieniamy indeksu — GameScene za chwilę
           uruchomi Game Over.
       */
-      if (affordableBetIndex === -1) {
-          return false;
-      }
+    if (affordableBetIndex === -1) {
+      return false;
+    }
 
-      this.betIndex =
-          affordableBetIndex;
+    this.betIndex = affordableBetIndex;
 
-      /*
+    /*
           Aktualizujemy UI bez wyświetlania popupu
           minimumBet / maximumBet.
       */
-      this.config.onBetChange(
-          this.getBet()
-      );
+    this.config.onBetChange(this.getBet());
 
-      return true;
+    return true;
   }
 
   decreaseBet() {
@@ -82,15 +70,9 @@ export class GameController {
   }
 
   private syncBet() {
+    const bet = BET_LEVELS[this.betIndex];
 
-    const bet =
-        BET_LEVELS[
-            this.betIndex
-        ];
-
-    this.config.onBetChange(
-        bet
-    );
+    this.config.onBetChange(bet);
   }
 
   getBet() {
@@ -99,18 +81,18 @@ export class GameController {
 
   getNextBet() {
     if (this.betIndex >= BET_LEVELS.length - 1) {
-        return null;
+      return null;
     }
 
     return BET_LEVELS[this.betIndex + 1];
   }
 
   getMinBet(): number {
-      return BET_LEVELS[0]; // albo jak masz strukturę
+    return BET_LEVELS[0]; // albo jak masz strukturę
   }
 
   private formatCombo(index: number): string {
-    return COMBINATIONS[index].join(' - ');
+    return COMBINATIONS[index].join(" - ");
   }
 
   prevCombo() {
@@ -121,8 +103,7 @@ export class GameController {
   }
 
   nextCombo() {
-    this.comboIndex =
-      (this.comboIndex + 1) % COMBINATIONS.length;
+    this.comboIndex = (this.comboIndex + 1) % COMBINATIONS.length;
 
     this.config.onComboChange(this.formatCombo(this.comboIndex));
   }
@@ -131,30 +112,13 @@ export class GameController {
     return COMBINATIONS[this.comboIndex];
   }
 
-
-  getHighestAffordableBet(
-      balance: number
-  ): number {
-
-      for (
-          let index =
-              BET_LEVELS.length - 1;
-
-          index >= 0;
-
-          index--
-      ) {
-
-          if (
-              BET_LEVELS[index] <=
-              balance
-          ) {
-
-              return BET_LEVELS[index];
-          }
+  getHighestAffordableBet(balance: number): number {
+    for (let index = BET_LEVELS.length - 1; index >= 0; index--) {
+      if (BET_LEVELS[index] <= balance) {
+        return BET_LEVELS[index];
       }
+    }
 
-
-      return BET_LEVELS[0];
+    return BET_LEVELS[0];
   }
 }

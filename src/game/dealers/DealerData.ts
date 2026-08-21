@@ -8,32 +8,32 @@ import { GambleForMoreSettings } from "../gambleForMore/GambleForMoreSettings.ts
 import { DealerOddsProfile } from "../probability/OddsTypes.ts";
 
 export interface DealerData {
-    id: string;
+  id: string;
 
-    name: string;
-    title: TranslationKey;
+  name: string;
+  title: TranslationKey;
 
-    avatarNormal: string;
-    avatarSmall: string;
-    avatarLocked: string;
+  avatarNormal: string;
+  avatarSmall: string;
+  avatarLocked: string;
 
-    signatureToken: string;
-    signatureTokenName: TranslationKey;
-    signatureTokenDescription: TranslationKey;
+  signatureToken: string;
+  signatureTokenName: TranslationKey;
+  signatureTokenDescription: TranslationKey;
 
-    group: DealerGroup;
-    role: DealerRole;
+  group: DealerGroup;
+  role: DealerRole;
 
-    oddsProfile: DealerOddsProfile;
+  oddsProfile: DealerOddsProfile;
 
-    objectiveType: ObjectiveType;
-    objectiveValue: number;
+  objectiveType: ObjectiveType;
+  objectiveValue: number;
 
-    goldenCoinSettings?: Partial<GoldenCoinSettings>;
-    gambleForMoreSettings?: Partial<GambleForMoreSettings>;
+  goldenCoinSettings?: Partial<GoldenCoinSettings>;
+  gambleForMoreSettings?: Partial<GambleForMoreSettings>;
 
-    skills: DealerSkillData[];
+  skills: DealerSkillData[];
 
-    dealerDescription: TranslationKey;
-    saying: TranslationKey;
+  dealerDescription: TranslationKey;
+  saying: TranslationKey;
 }

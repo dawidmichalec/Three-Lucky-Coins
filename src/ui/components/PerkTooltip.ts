@@ -1,277 +1,147 @@
-import {
-    Container,
-    Graphics
-} from "pixi.js";
+import { Container, Graphics } from "pixi.js";
 
 import { LocalizedText } from "../../localization/LocalizedText";
 import { PerkReward } from "../../game/perks/reward/PerkReward";
 import { PerkTooltipCloseButton } from "../buttons/PerkTooltipCloseButton";
 
-
 export class PerkTooltip extends Container {
+  private readonly tooltipWidth = 380;
 
-    private readonly tooltipWidth =
-        380;
+  private readonly contentWidth = 320;
 
-    private readonly contentWidth =
-        320;
+  private readonly minimumHeight = 220;
 
-    private readonly minimumHeight =
-        220;
+  private readonly onClose: () => void;
 
-    private readonly onClose:
-        () => void;
+  constructor(reward: PerkReward, onClose: () => void) {
+    super();
 
+    this.onClose = onClose;
 
-    constructor(
-        reward: PerkReward,
-        onClose: () => void
-    ) {
+    this.eventMode = "static";
 
-        super();
-
-
-        this.onClose =
-            onClose;
-
-
-        this.eventMode =
-            "static";
-
-
-        /*
+    /*
             PERK NAME
         */
 
-        const perkName =
-            new LocalizedText(
-                reward.perk.name,
-                {
-                    fontFamily:
-                        "JackCondensed",
+    const perkName = new LocalizedText(reward.perk.name, {
+      fontFamily: "JackCondensed",
 
-                    fontWeight:
-                        "bold",
+      fontWeight: "bold",
 
-                    fontSize:
-                        30,
+      fontSize: 30,
 
-                    fill:
-                        0xffd21f,
+      fill: 0xffd21f,
 
-                    wordWrap:
-                        true,
+      wordWrap: true,
 
-                    wordWrapWidth:
-                        this.contentWidth,
+      wordWrapWidth: this.contentWidth,
 
-                    align:
-                        "center"
-                }
-            );
+      align: "center",
+    });
 
+    perkName.anchor.set(0.5, 0);
 
-        perkName.anchor.set(
-            0.5,
-            0
-        );
+    perkName.position.set(this.tooltipWidth / 2, 30);
 
-
-        perkName.position.set(
-            this.tooltipWidth / 2,
-            30
-        );
-
-
-        /*
+    /*
             DESCRIPTION
         */
 
-        const description =
-            new LocalizedText(
-                reward.variant.description,
-                {
-                    font:
-                        "Open Sans",
+    const description = new LocalizedText(reward.variant.description, {
+      font: "Open Sans",
 
-                    fontWeight:
-                        "bold",
+      fontWeight: "bold",
 
-                    fontSize:
-                        20,
+      fontSize: 20,
 
-                    fill:
-                        0xffffff,
+      fill: 0xffffff,
 
-                    wordWrap:
-                        true,
+      wordWrap: true,
 
-                    wordWrapWidth:
-                        this.contentWidth,
+      wordWrapWidth: this.contentWidth,
 
-                    align:
-                        "left"
-                }
-            );
+      align: "left",
+    });
 
+    description.position.set((this.tooltipWidth - this.contentWidth) / 2, 90);
 
-        description.position.set(
-            (
-                this.tooltipWidth -
-                this.contentWidth
-            ) / 2,
-            90
-        );
-
-
-        /*
+    /*
             HEIGHT CALCULATED FROM CONTENT
         */
 
-        const tooltipHeight =
-            Math.max(
-                this.minimumHeight,
+    const tooltipHeight = Math.max(
+      this.minimumHeight,
 
-                description.y +
-                description.height +
-                30
-            );
+      description.y + description.height + 30,
+    );
 
-
-        /*
+    /*
             BACKGROUND
         */
 
-        const bg =
-            new Graphics()
-                .roundRect(
-                    0,
-                    0,
-                    this.tooltipWidth,
-                    tooltipHeight,
-                    16
-                )
-                .fill({
-                    color:
-                        0x111111,
+    const bg = new Graphics()
+      .roundRect(0, 0, this.tooltipWidth, tooltipHeight, 16)
+      .fill({
+        color: 0x111111,
 
-                    alpha:
-                        0.97
-                })
-                .stroke({
-                    color:
-                        0xffde59,
+        alpha: 0.97,
+      })
+      .stroke({
+        color: 0xffde59,
 
-                    width:
-                        4
-                });
+        width: 4,
+      });
 
-
-        /*
+    /*
             Nie przepuszczamy pointertap
             przez tooltip.
         */
 
-        this.on(
-            "pointertap",
-            event => {
+    this.on("pointertap", (event) => {
+      event.stopPropagation();
+    });
 
-                event.stopPropagation();
-            }
-        );
+    this.addChild(bg, perkName, description);
+  }
 
+  async init(): Promise<void> {
+    await this.createCloseButton();
+  }
 
-        this.addChild(
-            bg,
-            perkName,
-            description
-        );
-    }
+  private async createCloseButton(): Promise<void> {
+    const close = new PerkTooltipCloseButton();
 
+    await close.init();
 
-    async init():
-    Promise<void> {
+    close.on("pointerdown", () => {
+      close.scale.set(0.95);
+    });
 
-        await this.createCloseButton();
-    }
+    close.on("pointerup", () => {
+      close.scale.set(1);
+    });
 
+    close.on("pointerupoutside", () => {
+      close.scale.set(1);
+    });
 
-    private async createCloseButton():
-    Promise<void> {
+    close.on("pointertap", (event) => {
+      event.stopPropagation();
 
-        const close =
-            new PerkTooltipCloseButton();
+      this.onClose();
+    });
 
+    close.position.set(this.tooltipWidth - 45, 40);
 
-        await close.init();
+    this.addChild(close);
+  }
 
+  show(): void {
+    this.visible = true;
+  }
 
-        close.on(
-            "pointerdown",
-            () => {
-
-                close.scale.set(
-                    0.95
-                );
-            }
-        );
-
-
-        close.on(
-            "pointerup",
-            () => {
-
-                close.scale.set(
-                    1
-                );
-            }
-        );
-
-
-        close.on(
-            "pointerupoutside",
-            () => {
-
-                close.scale.set(
-                    1
-                );
-            }
-        );
-
-
-        close.on(
-            "pointertap",
-            event => {
-
-                event.stopPropagation();
-
-                this.onClose();
-            }
-        );
-
-
-        close.position.set(
-            this.tooltipWidth - 45,
-            40
-        );
-
-
-        this.addChild(
-            close
-        );
-    }
-
-
-    show(): void {
-
-        this.visible =
-            true;
-    }
-
-
-    hide(): void {
-
-        this.visible =
-            false;
-    }
+  hide(): void {
+    this.visible = false;
+  }
 }

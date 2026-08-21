@@ -1,3 +1,3 @@
 export const GAME_CONFIG = {
-    DEV_MODE: import.meta.env.DEV
+  DEV_MODE: import.meta.env.DEV,
 };

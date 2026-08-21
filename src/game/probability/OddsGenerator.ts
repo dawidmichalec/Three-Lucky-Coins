@@ -1,73 +1,31 @@
-import {
-    CoinOdds,
-    DealerOddsProfile,
-    OddsTable
-} from "./OddsTypes";
-
+import { CoinOdds, DealerOddsProfile, OddsTable } from "./OddsTypes";
 
 export class OddsGenerator {
+  static generate(profile: DealerOddsProfile): OddsTable {
+    return {
+      coin1: this.generateCoinOdds(profile),
 
-    static generate(
-        profile: DealerOddsProfile
-    ): OddsTable {
+      coin2: this.generateCoinOdds(profile),
 
-        return {
+      coin3: this.generateCoinOdds(profile),
+    };
+  }
 
-            coin1:
-                this.generateCoinOdds(
-                    profile
-                ),
+  private static generateCoinOdds(profile: DealerOddsProfile): CoinOdds {
+    const probabilities = profile.headsProbabilities;
 
-            coin2:
-                this.generateCoinOdds(
-                    profile
-                ),
-
-            coin3:
-                this.generateCoinOdds(
-                    profile
-                )
-        };
+    if (probabilities.length === 0) {
+      throw new Error("Dealer odds profile contains no probabilities.");
     }
 
+    const randomIndex = Math.floor(Math.random() * probabilities.length);
 
-    private static generateCoinOdds(
-        profile: DealerOddsProfile
-    ): CoinOdds {
+    const heads = probabilities[randomIndex];
 
-        const probabilities =
-            profile.headsProbabilities;
+    return {
+      heads,
 
-
-        if (
-            probabilities.length === 0
-        ) {
-
-            throw new Error(
-                "Dealer odds profile contains no probabilities."
-            );
-        }
-
-
-        const randomIndex =
-            Math.floor(
-                Math.random() *
-                probabilities.length
-            );
-
-
-        const heads =
-            probabilities[
-                randomIndex
-            ];
-
-
-        return {
-
-            heads,
-
-            tails:
-                1 - heads
-        };
-    }
+      tails: 1 - heads,
+    };
+  }
 }

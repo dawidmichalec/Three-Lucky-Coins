@@ -3,200 +3,166 @@ import { SceneManager } from "../SceneManager";
 import { MenuButton } from "../../ui/buttons/MenuButton";
 import { CreditsPanel } from "../../ui/panels/CreditsPanel";
 import { OptionsPanel } from "../../ui/panels/OptionsPanel";
-import { StatsManager } from "../../core/StatsManager";
 import { CollectionsPanel } from "../../ui/panels/CollectionsPanel";
 import { LayoutManager } from "../../core/LayoutManager";
-import { LocalizedText } from "../../localization/LocalizedText";
 import { Assets, Sprite } from "pixi.js";
 
 export class MainMenuScene extends BaseScene {
+  private creditsPanel!: CreditsPanel;
+  private optionsPanel!: OptionsPanel;
+  private collectionsPanel!: CollectionsPanel;
+  private layout!: LayoutManager;
+  private logoSprite!: Sprite;
 
-    private creditsPanel!: CreditsPanel;
-    private optionsPanel!: OptionsPanel;
-    private collectionsPanel!: CollectionsPanel;
-    private layout!: LayoutManager;
-    private logoSprite!: Sprite;
+  constructor(private sceneManager: SceneManager) {
+    super();
 
-    constructor(
-        private sceneManager: SceneManager
-    ) {
+    this.layout = LayoutManager.getInstance();
 
-        super();
+    this.createLogo();
+    this.createCreditsPanel();
+    this.createOptionsPanel();
+    this.createCollectionPanel();
 
-        this.layout = LayoutManager.getInstance();
+    // CONTINUE BUTTON
+
+    const continueButton = new MenuButton({
+      text: "continue",
+      onClick: () => {},
+    });
 
-        this.createLogo();
-        this.createCreditsPanel();
-        this.createOptionsPanel();
-        this.createCollectionPanel();
+    continueButton.position.set(650, 413);
 
-        // CONTINUE BUTTON
+    // NEW RUN
+
+    const newRunButton = new MenuButton({
+      text: "newRun",
+      onClick: () => {
+        this.sceneManager.showGame();
+      },
+    });
+
+    newRunButton.position.set(650, 493);
+
+    // COLLECTIONS
+
+    const collectionsButton = new MenuButton({
+      text: "collections",
+      onClick: () => {
+        this.collectionsPanel.show();
+      },
+    });
 
-        const continueButton = new MenuButton({
-            text: "continue",
-            onClick:() => {
+    collectionsButton.position.set(650, 573);
 
-            }
-        });
+    // OPTIONS
 
-        continueButton.position.set(650, 413);
+    const optionsButton = new MenuButton({
+      text: "options",
+      onClick: () => {
+        this.optionsPanel.show();
+      },
+    });
 
-        // NEW RUN
+    optionsButton.position.set(650, 653);
 
-        const newRunButton = new MenuButton({
-            text: "newRun",
-            onClick:() => {
+    // CREDITS
 
-                this.sceneManager.showGame();
+    const creditsButton = new MenuButton({
+      text: "credits",
+      onClick: () => {
+        this.creditsPanel.show();
+      },
+    });
 
-            }
-        });
+    creditsButton.position.set(650, 733);
 
-        newRunButton.position.set(650, 493);
+    // QUIT BUTTON
 
-        // COLLECTIONS 
+    const quitButton = new MenuButton({
+      text: "quit",
+      onClick: () => {},
+    });
 
-        const collectionsButton = new MenuButton({
-            text: "collections",
-            onClick:() => {
+    quitButton.position.set(650, 813);
 
-                this.collectionsPanel.show();
+    this.addChild(
+      continueButton,
+      newRunButton,
+      collectionsButton,
+      optionsButton,
+      creditsButton,
+      quitButton,
+    );
+  }
 
-            }
-        });
+  cleanup() {}
 
-        collectionsButton.position.set(650, 573);
+  private createCollectionPanel() {
+    this.collectionsPanel = new CollectionsPanel(
+      this.layout.DESIGN_WIDTH,
+      this.layout.DESIGN_HEIGHT,
 
-        // OPTIONS
+      () => {
+        this.collectionsPanel.hide();
+      },
+    );
 
-        const optionsButton = new MenuButton({
-            text: "options",
-            onClick:() => {
+    this.collectionsPanel.visible = false;
+    this.collectionsPanel.zIndex = 100;
 
-                this.optionsPanel.show();
+    this.addChild(this.collectionsPanel);
+  }
 
-            }
-        });
+  private createCreditsPanel() {
+    this.creditsPanel = new CreditsPanel(
+      this.layout.DESIGN_WIDTH,
+      this.layout.DESIGN_HEIGHT,
+      () => {
+        this.creditsPanel.hide();
+      },
+    );
 
-        optionsButton.position.set(650, 653);
+    this.creditsPanel.visible = false;
+    this.creditsPanel.zIndex = 100;
 
-        // CREDITS
+    this.addChild(this.creditsPanel);
+  }
 
-        const creditsButton = new MenuButton({
-            text: "credits",
-            onClick:() => {
+  private createOptionsPanel() {
+    this.optionsPanel = new OptionsPanel(
+      this.layout.DESIGN_WIDTH,
+      this.layout.DESIGN_HEIGHT,
+      () => {
+        this.optionsPanel.hide();
+      },
+    );
 
-                this.creditsPanel.show();
+    this.optionsPanel.visible = false;
+    this.optionsPanel.zIndex = 100;
 
-            }
-        });
+    this.addChild(this.optionsPanel);
+  }
 
-        creditsButton.position.set(650, 733);
+  // LOGO
 
-        // QUIT BUTTON
+  private async createLogo() {
+    const texture = await Assets.load("/assets/main/logo.png");
 
-        const quitButton = new MenuButton({
-            text: "quit",
-            onClick:() => {
+    this.logoSprite = new Sprite(texture);
 
-            }
+    this.logoSprite.width = 900;
+    this.logoSprite.height = 212;
+    this.logoSprite.position.set(495.6, 154.5);
 
-        });
+    this.addChild(this.logoSprite);
+  }
 
-        quitButton.position.set(650, 813);
+  override update(delta: number) {
+    void delta;
 
+    if (!this.logoSprite) return;
 
-        this.addChild(
-            continueButton,
-            newRunButton,
-            collectionsButton,
-            optionsButton,
-            creditsButton,
-            quitButton
-        );
-    }
-
-    cleanup() {
-
-    }
-
-
-    private createCollectionPanel() {
-
-        this.collectionsPanel = new CollectionsPanel(
-            this.layout.DESIGN_WIDTH,
-            this.layout.DESIGN_HEIGHT,
-
-            () => {
-                this.collectionsPanel.hide();
-            }
-        );
-
-        this.collectionsPanel.visible = false;
-        this.collectionsPanel.zIndex = 100;
-
-        this.addChild(this.collectionsPanel);
-
-    }
-
-
-
-    private createCreditsPanel() {
-
-        this.creditsPanel = new CreditsPanel(
-            this.layout.DESIGN_WIDTH,
-            this.layout.DESIGN_HEIGHT,
-            () => {
-                this.creditsPanel.hide();
-            }
-        );
-
-        this.creditsPanel.visible = false;
-        this.creditsPanel.zIndex = 100;
-
-        this.addChild(this.creditsPanel);
-
-    }
-
-    private createOptionsPanel() {
-
-        this.optionsPanel = new OptionsPanel(
-            this.layout.DESIGN_WIDTH,
-            this.layout.DESIGN_HEIGHT,
-            () => {
-                this.optionsPanel.hide();
-            }
-        );
-
-        this.optionsPanel.visible = false;
-        this.optionsPanel.zIndex = 100;
-
-        this.addChild(this.optionsPanel);
-
-    }
-
-    // LOGO
-
-    private async createLogo() {
-
-        const texture = await Assets.load("/assets/main/logo.png");
-
-        this.logoSprite = new Sprite(texture);
-
-        this.logoSprite.width = 900;
-        this.logoSprite.height = 212;
-        this.logoSprite.position.set(495.6, 154.5);
-
-        this.addChild(this.logoSprite);
-    }
-
-    override update(delta: number) {
-
-        if (!this.logoSprite) return;
-
-        this.logoSprite.alpha =
-            0.85 + Math.sin(performance.now() * 0.006) * 0.30;
-
-    }
-        
+    this.logoSprite.alpha = 0.85 + Math.sin(performance.now() * 0.006) * 0.3;
+  }
 }

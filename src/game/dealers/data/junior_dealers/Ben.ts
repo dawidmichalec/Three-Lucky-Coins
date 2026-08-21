@@ -5,53 +5,46 @@ import { DealerRole } from "../../DealerRole.ts";
 import { BEN_PROFILE } from "../../../probability/DealerOddsProfiles.ts";
 
 export const BEN_DATA: DealerData = {
+  id: "ben",
 
-    id: "ben",
+  name: "Ben",
 
-    name: "Ben",
+  title: "juniorDealer",
 
-    title: "juniorDealer",
+  avatarNormal: "/assets/main/icons/casino_staff_icons/ben_icon.png",
 
-    avatarNormal:
-        "/assets/main/icons/casino_staff_icons/ben_icon.png",
+  avatarSmall: "/assets/main/icons/casino_staff_icons/ben_icon_small.png",
 
-    avatarSmall:
-        "/assets/main/icons/casino_staff_icons/ben_icon_small.png",
+  avatarLocked: "/assets/main/icons/casino_staff_icons/locked_dealer_icon.png",
 
-    avatarLocked:
-        "/assets/main/icons/casino_staff_icons/locked_dealer_icon.png",
+  signatureToken:
+    "/assets/main/icons/signature_token_icons/junior_dealers/ben/ben_signature_token_icon.png",
+  signatureTokenName: "bensLuckyCoin",
+  signatureTokenDescription: "bensLuckyCoinDescription",
 
-    signatureToken:
-        "/assets/main/icons/signature_token_icons/junior_dealers/ben/ben_signature_token_icon.png",
-    signatureTokenName: "bensLuckyCoin",
-    signatureTokenDescription: "bensLuckyCoinDescription",
+  group: DealerGroup.JUNIOR,
+  role: DealerRole.REGULAR,
 
-    group: DealerGroup.JUNIOR,
-    role: DealerRole.REGULAR,
+  oddsProfile: BEN_PROFILE,
 
-    oddsProfile: BEN_PROFILE,
+  objectiveType: ObjectiveType.INCREASE_BALANCE,
 
-    objectiveType:
-        ObjectiveType.INCREASE_BALANCE,
+  objectiveValue: 50,
 
-    objectiveValue: 50,
+  goldenCoinSettings: {
+    baseChance: 0.015,
+    chanceMultiplier: 1,
+    maximumGoldenCoins: 3,
+  },
 
-    goldenCoinSettings: {
-        baseChance: 0.015,
-        chanceMultiplier: 1,
-        maximumGoldenCoins: 3
-    },
+  gambleForMoreSettings: {
+    enabled: true,
+    triggerChance: 0.75,
+  },
 
-    gambleForMoreSettings: {
-        enabled: true,
-        triggerChance: 0.75
-    },
+  skills: [],
 
-    skills: [],
+  dealerDescription: "benDescription",
 
-    dealerDescription:
-        "benDescription",
-
-    saying:
-        "benSaying"
+  saying: "benSaying",
 };

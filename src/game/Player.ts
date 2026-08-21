@@ -1,26 +1,26 @@
 export class Player {
-    balance: number;
-    wins: number;
-    losses: number;
-    
-    totalWon: number = 0;
-    totalLost: number = 0;
+  balance: number;
+  wins: number;
+  losses: number;
 
-    constructor(startBalance: number) {
-        this.balance = startBalance;
-        this.wins = 0;
-        this.losses = 0;
-    }
+  totalWon: number = 0;
+  totalLost: number = 0;
 
-    addWin(amount: number) {
-        this.balance += amount;
-        this.totalWon += amount;
-        this.wins++;
-    }
+  constructor(startBalance: number) {
+    this.balance = startBalance;
+    this.wins = 0;
+    this.losses = 0;
+  }
 
-    addLoss(amount: number) {
-        this.balance -= amount;
-        this.totalLost += amount;
-        this.losses++;
-    }
+  addWin(amount: number) {
+    this.balance += amount;
+    this.totalWon += amount;
+    this.wins++;
+  }
+
+  addLoss(amount: number) {
+    this.balance -= amount;
+    this.totalLost += amount;
+    this.losses++;
+  }
 }

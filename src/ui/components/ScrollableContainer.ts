@@ -1,183 +1,97 @@
-import { Container, Graphics, FederatedPointerEvent, FederatedWheelEvent } from "pixi.js";
-
+import {
+  Container,
+  Graphics,
+  FederatedPointerEvent,
+  FederatedWheelEvent,
+} from "pixi.js";
 
 export class ScrollableContainer extends Container {
+  private content: Container;
 
+  private maxScroll = 0;
 
-    private content: Container;
+  private scrollY = 0;
 
-    private maxScroll = 0;
+  private viewportHeight: number;
 
-    private scrollY = 0;
+  private dragging = false;
 
-    private viewportHeight: number;
+  private lastPointerY = 0;
 
-    private dragging = false;
+  constructor(width: number, height: number) {
+    super();
 
-    private lastPointerY = 0;
+    this.viewportHeight = height;
 
+    this.content = new Container();
 
+    const mask = new Graphics().rect(0, 0, width, height).fill(0xffffff);
 
-    constructor(
-        width:number,
-        height:number
-    ){
+    this.addChild(this.content);
 
-        super();
+    this.addChild(mask);
 
+    this.mask = mask;
 
-        this.viewportHeight = height;
+    this.eventMode = "static";
 
+    this.on("wheel", (event: FederatedWheelEvent) => {
+      this.scroll(event.deltaY);
+    });
 
-        this.content = new Container();
+    this.on("pointerdown", (e: FederatedPointerEvent) => {
+      this.dragging = true;
+      this.lastPointerY = e.global.y;
+    });
 
+    this.on("pointermove", (e: FederatedPointerEvent) => {
+      if (!this.dragging) return;
 
+      const delta = this.lastPointerY - e.global.y;
+      this.lastPointerY = e.global.y;
 
-        const mask = new Graphics()
-            .rect(
-                0,
-                0,
-                width,
-                height
-            )
-            .fill(0xffffff);
+      this.scroll(delta);
+    });
 
+    this.on("pointerup", () => {
+      this.dragging = false;
+    });
 
+    this.on("pointerupoutside", () => {
+      this.dragging = false;
+    });
+  }
 
-        this.addChild(
-            this.content
-        );
+  addContent(child: Container) {
+    this.content.addChild(child);
 
+    this.updateScroll();
+  }
 
-        this.addChild(
-            mask
-        );
+  scroll(deltaY: number) {
+    this.scrollY += deltaY;
 
+    this.scrollY = Math.max(0, Math.min(this.scrollY, this.maxScroll));
 
-        this.mask = mask;
+    this.content.y = -this.scrollY;
+  }
 
+  refresh() {
+    this.updateScroll();
+  }
 
+  private updateScroll() {
+    const bounds = this.content.getLocalBounds();
 
-        this.eventMode = "static";
+    this.maxScroll = Math.max(0, bounds.height - this.viewportHeight);
+  }
 
+  clearContent() {
+    this.content.removeChildren();
 
+    this.scrollY = 0;
+    this.maxScroll = 0;
 
-        this.on(
-            "wheel",
-            (event:FederatedWheelEvent)=>{
-
-                this.scroll(
-                    event.deltaY
-                );
-
-            }
-        );
-
-        this.on("pointerdown", (e: FederatedPointerEvent) => {
-            this.dragging = true;
-            this.lastPointerY = e.global.y;
-        });
-
-        this.on("pointermove", (e: FederatedPointerEvent) => {
-            if (!this.dragging) return;
-
-            const delta = this.lastPointerY - e.global.y;
-            this.lastPointerY = e.global.y;
-
-            this.scroll(delta);
-        });
-
-        this.on("pointerup", () => {
-            this.dragging = false;
-        });
-
-        this.on("pointerupoutside", () => {
-            this.dragging = false;
-        });
-
-    }
-
-
-
-    addContent(
-        child:Container
-    ){
-
-        this.content.addChild(
-            child
-        );
-
-
-        this.updateScroll();
-
-    }
-
-
-
-    scroll(
-        deltaY:number
-    ){
-
-
-        this.scrollY += deltaY;
-
-
-
-        this.scrollY =
-            Math.max(
-                0,
-                Math.min(
-                    this.scrollY,
-                    this.maxScroll
-                )
-            );
-
-
-
-        this.content.y =
-            -this.scrollY;
-
-
-    }
-
-
-
-    refresh(){
-
-        this.updateScroll();
-
-    }
-
-
-
-    private updateScroll(){
-
-
-        const bounds =
-            this.content.getLocalBounds();
-
-
-
-        this.maxScroll =
-            Math.max(
-                0,
-                bounds.height -
-                this.viewportHeight
-            );
-
-
-    }
-
-    clearContent(){
-
-        this.content.removeChildren();
-
-        this.scrollY = 0;
-        this.maxScroll = 0;
-
-        this.content.y = 0;
-
-    }
-
-
+    this.content.y = 0;
+  }
 }

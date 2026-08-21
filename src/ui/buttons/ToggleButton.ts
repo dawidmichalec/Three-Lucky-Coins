@@ -1,137 +1,99 @@
 import { Container, Graphics } from "pixi.js";
 
 interface ToggleButtonOptions {
-    width?: number;
-    height?: number;
-    initialState: boolean;
-    onChange: (state: boolean) => void;
+  width?: number;
+  height?: number;
+  initialState: boolean;
+  onChange: (state: boolean) => void;
 }
 
-
 export class ToggleButton extends Container {
+  private track!: Graphics;
+  private knob!: Graphics;
 
-    private track!: Graphics;
-    private knob!: Graphics;
+  private state: boolean;
 
-    private state: boolean;
+  private widthValue: number;
+  private heightValue: number;
 
-    private widthValue: number;
-    private heightValue: number;
+  constructor(private options: ToggleButtonOptions) {
+    super();
 
-    constructor(
-        private options: ToggleButtonOptions
-    ) {
+    this.widthValue = options.width ?? 100;
+    this.heightValue = options.height ?? 45;
 
-        super();
+    this.state = options.initialState;
 
-        this.widthValue = options.width ?? 100;
-        this.heightValue = options.height ?? 45;
+    this.createTrack();
+    this.createKnob();
 
-        this.state = options.initialState;
+    this.updateVisual();
 
-        this.createTrack();
-        this.createKnob();
+    this.eventMode = "static";
+    this.cursor = "pointer";
 
-        this.updateVisual();
+    this.on("pointerdown", () => {
+      this.state = !this.state;
 
-        this.eventMode = "static";
-        this.cursor = "pointer";
+      this.updateVisual();
 
-        this.on("pointerdown", () => {
+      this.options.onChange(this.state);
+    });
+  }
 
-            this.state = !this.state;
+  private createTrack() {
+    this.track = new Graphics();
 
-            this.updateVisual();
+    this.addChild(this.track);
+  }
 
-            this.options.onChange(this.state);
+  private createKnob() {
+    this.knob = new Graphics();
 
-        });
+    this.addChild(this.knob);
+  }
 
-    }
+  private updateVisual() {
+    const trackColor = this.state ? 0x4ca626 : 0xb4b4b4;
 
+    // TRACK
 
-    private createTrack() {
+    this.track.clear();
 
-        this.track = new Graphics();
+    this.track.roundRect(
+      0,
+      0,
+      this.widthValue,
+      this.heightValue,
+      this.heightValue / 2,
+    );
 
-        this.addChild(this.track);
+    this.track.fill(trackColor);
 
-    }
+    // KNOB
 
+    this.knob.clear();
 
-    private createKnob() {
+    const knobRadius = this.heightValue * 0.38;
 
-        this.knob = new Graphics();
+    this.knob.circle(0, 0, knobRadius);
 
-        this.addChild(this.knob);
+    this.knob.fill(0xffffff);
 
-    }
+    this.knob.position.y = this.heightValue / 2;
 
+    this.knob.position.x = this.state
+      ? this.widthValue - knobRadius - 5
+      : knobRadius + 5;
+  }
 
-    private updateVisual() {
+  getState() {
+    return this.state;
+  }
 
+  setState(state: boolean) {
+    this.state = state;
 
-        const trackColor = this.state
-            ? 0x4ca626
-            : 0xb4b4b4;
-
-
-        // TRACK
-
-        this.track.clear();
-
-        this.track.roundRect(
-            0,
-            0,
-            this.widthValue,
-            this.heightValue,
-            this.heightValue / 2
-        );
-
-        this.track.fill(trackColor);
-
-
-
-        // KNOB
-
-        this.knob.clear();
-
-        const knobRadius =
-            this.heightValue * 0.38;
-
-
-        this.knob.circle(
-            0,
-            0,
-            knobRadius
-        );
-
-        this.knob.fill(0xffffff);
-
-
-        this.knob.position.y =
-            this.heightValue / 2;
-
-        this.knob.position.x =
-            this.state
-                ? this.widthValue - knobRadius - 5
-                : knobRadius + 5;
-
-    }
-
-
-    getState(){
-
-        return this.state;
-
-    }
-
-    setState(state:boolean){
-
-        this.state = state;
-
-        this.updateVisual();
-
-    }
-
+    this.updateVisual();
+  }
 }

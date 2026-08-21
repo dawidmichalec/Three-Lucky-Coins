@@ -2,30 +2,30 @@ import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
 export interface GamblerConfig {
-    payoutMultiplier: number;
+  payoutMultiplier: number;
 }
 
 export const GAMBLER_DATA: PerkData<GamblerConfig> = {
+  id: "gambler",
 
-    id: "gambler",
+  name: "gamblerName",
 
-    name: "gamblerName",
+  variants: [
+    {
+      rarity: PerkRarity.UNCOMMON,
 
-    variants: [
-        {
-            rarity: PerkRarity.UNCOMMON,
+      description: "gamblerDescriptionUncommon",
 
-            description: "gamblerDescriptionUncommon",
+      assets: {
+        small:
+          "/assets/main/icons/perk_icons/gambler/uncommon/gambler_small_icon_uncommon.png",
+        mid: "/assets/main/icons/perk_icons/gambler/uncommon/gambler_mid_icon_uncommon.png",
+        big: "/assets/main/icons/perk_icons/gambler/uncommon/gambler_big_icon_uncommon.png",
+      },
 
-            assets: {
-                small: "/assets/main/icons/perk_icons/gambler/uncommon/gambler_small_icon_uncommon.png",
-                mid: "/assets/main/icons/perk_icons/gambler/uncommon/gambler_mid_icon_uncommon.png",
-                big: "/assets/main/icons/perk_icons/gambler/uncommon/gambler_big_icon_uncommon.png"
-            },
-
-            config: {
-                payoutMultiplier: 1.30
-            }
-        }
-    ]
+      config: {
+        payoutMultiplier: 1.3,
+      },
+    },
+  ],
 };

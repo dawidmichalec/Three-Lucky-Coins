@@ -1,6 +1,5 @@
 export interface CombinationModifiers {
-
-    /*
+  /*
         Dodawane do bazowego multipliera.
 
         Przykład:
@@ -8,17 +7,17 @@ export interface CombinationModifiers {
         multiplierBonus = 0.5
         finalMultiplier = 1.8
     */
-    multiplierBonus: number;
+  multiplierBonus: number;
 
-    /*
+  /*
         Procentowa zmiana końcowej wygranej.
 
         0.15 = +15%
         -0.20 = -20%
     */
-    winningsPercentModifier: number;
+  winningsPercentModifier: number;
 
-    /*
+  /*
         Waga prawdopodobieństwa.
 
         1 = bez zmian
@@ -26,18 +25,16 @@ export interface CombinationModifiers {
         0.75 = kombinacja o 25% rzadsza
         0 = kombinacja niemożliwa
     */
-    probabilityWeight: number;
+  probabilityWeight: number;
 
-    blocked: boolean;
+  blocked: boolean;
 }
 
-export function createDefaultCombinationModifiers():
-    CombinationModifiers {
-
-    return {
-        multiplierBonus: 0,
-        winningsPercentModifier: 0,
-        probabilityWeight: 1,
-        blocked: false
-    };
+export function createDefaultCombinationModifiers(): CombinationModifiers {
+  return {
+    multiplierBonus: 0,
+    winningsPercentModifier: 0,
+    probabilityWeight: 1,
+    blocked: false,
+  };
 }

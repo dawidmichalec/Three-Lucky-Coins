@@ -1,12 +1,12 @@
 export enum ButtonTheme {
-    YELLOW,
-    BLUE,
-    RED,
-    GREEN,
-    MAGENTA, 
-    BLACK,
-    GREY,
-    DARKGREEN,
-    GOLD,
-    DARKGOLD
+  YELLOW,
+  BLUE,
+  RED,
+  GREEN,
+  MAGENTA,
+  BLACK,
+  GREY,
+  DARKGREEN,
+  GOLD,
+  DARKGOLD,
 }

@@ -6,62 +6,53 @@ import { DealerSkillId } from "../../DealerSkill.ts";
 import { BECKY_PROFILE } from "../../../probability/DealerOddsProfiles.ts";
 
 export const BECKY_DATA: DealerData = {
+  id: "becky",
 
-    id: "becky",
+  name: "Becky",
 
-    name: "Becky",
+  title: "juniorDealer",
 
-    title: "juniorDealer",
+  avatarNormal: "/assets/main/icons/casino_staff_icons/becky_icon.png",
 
-    avatarNormal:
-        "/assets/main/icons/casino_staff_icons/becky_icon.png",
+  avatarSmall: "/assets/main/icons/casino_staff_icons/becky_icon_small.png",
 
-    avatarSmall:
-        "/assets/main/icons/casino_staff_icons/becky_icon_small.png",
+  avatarLocked: "/assets/main/icons/casino_staff_icons/locked_dealer_icon.png",
 
-    avatarLocked:
-        "/assets/main/icons/casino_staff_icons/locked_dealer_icon.png",
+  signatureToken:
+    "/assets/main/icons/signature_token_icons/junior_dealers/becky/becky_signature_token_icon.png",
+  signatureTokenName: "beckysCompactMirror",
+  signatureTokenDescription: "beckysCompactMirrorDescription",
 
-    signatureToken:
-        "/assets/main/icons/signature_token_icons/junior_dealers/becky/becky_signature_token_icon.png",
-    signatureTokenName: "beckysCompactMirror",
-    signatureTokenDescription: "beckysCompactMirrorDescription",
+  group: DealerGroup.JUNIOR,
+  role: DealerRole.REGULAR,
 
-    group: DealerGroup.JUNIOR,
-    role: DealerRole.REGULAR,
+  oddsProfile: BECKY_PROFILE,
 
-    oddsProfile: BECKY_PROFILE,
+  objectiveType: ObjectiveType.INCREASE_BALANCE,
 
-    objectiveType:
-        ObjectiveType.INCREASE_BALANCE,
+  objectiveValue: 250,
 
-    objectiveValue: 250,
+  goldenCoinSettings: {
+    baseChance: 0.0075,
+    chanceMultiplier: 1,
+    maximumGoldenCoins: 3,
+  },
 
-    goldenCoinSettings: {
-        baseChance: 0.0075,
-        chanceMultiplier: 1,
-        maximumGoldenCoins: 3
+  gambleForMoreSettings: {
+    enabled: true,
+    triggerChance: 0.5,
+  },
+
+  skills: [
+    {
+      id: DealerSkillId.OOPS_I_PAID_YOU_TWICE,
+      name: "oopsIPaidYouTwiceSkillName",
+      description: "oopsIPaidYouTwiceSkillDescription",
+      triggerChance: 0.2,
     },
+  ],
 
-    gambleForMoreSettings: {
-        enabled: true,
-        triggerChance: 0.5
-    },
+  dealerDescription: "beckyDescription",
 
-    skills: [
-        {
-
-            id: DealerSkillId.OOPS_I_PAID_YOU_TWICE,
-            name: "oopsIPaidYouTwiceSkillName",
-            description: "oopsIPaidYouTwiceSkillDescription",
-            triggerChance: 0.2
-
-        }
-    ],
-
-    dealerDescription:
-        "beckyDescription",
-
-    saying:
-        "beckySaying"
+  saying: "beckySaying",
 };

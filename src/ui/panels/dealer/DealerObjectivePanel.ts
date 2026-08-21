@@ -1,323 +1,180 @@
-import {
-    Container,
-    Graphics,
-    Text
-} from "pixi.js";
+import { Container, Graphics, Text } from "pixi.js";
 
-import {
-    TooltipCloseButton
-} from "../../buttons/TooltipCloseButton";
+import { TooltipCloseButton } from "../../buttons/TooltipCloseButton";
 
-import {
-    LocalizedText
-} from "../../../localization/LocalizedText";
+import { LocalizedText } from "../../../localization/LocalizedText";
 
-import {
-    DealerData
-} from "../../../game/dealers/DealerData";
+import { DealerData } from "../../../game/dealers/DealerData";
 
-import {
-    ObjectiveType
-} from "../../../game/objectives/ObjectiveTypes";
-
+import { ObjectiveType } from "../../../game/objectives/ObjectiveTypes";
 
 export class DealerObjectivePanel extends Container {
+  private bg: Graphics;
 
-    private bg: Graphics;
+  private objectiveDescription: LocalizedText;
 
-    private objectiveDescription:
-        LocalizedText;
+  private objectiveAmount: Text;
 
-    private objectiveAmount:
-        Text;
+  private targetBalanceDescription: LocalizedText;
 
-    private targetBalanceDescription:
-        LocalizedText;
+  private targetBalanceAmount: Text;
 
-    private targetBalanceAmount:
-        Text;
+  constructor(width: number, height: number) {
+    super();
 
+    this.bg = new Graphics().roundRect(0, 0, width, height, 50).fill({
+      color: 0x000000,
+    });
 
-    constructor(
-        width: number,
-        height: number
-    ) {
+    this.visible = false;
 
-        super();
+    this.eventMode = "static";
+    this.cursor = "default";
 
-        this.bg =
-            new Graphics()
-                .roundRect(
-                    0,
-                    0,
-                    width,
-                    height,
-                    50
-                )
-                .fill({
-                    color: 0x000000
-                });
+    this.addChild(this.bg);
 
-        this.visible = false;
+    // OBJECTIVE HEADER
 
-        this.eventMode = "static";
-        this.cursor = "default";
+    const objectiveLabel = new LocalizedText("objective", {
+      fontFamily: "Oswald-Bold",
+      fontSize: 38,
+      fontWeight: "bold",
+      fill: 0xffde59,
+    });
 
-        this.addChild(
-            this.bg
-        );
+    objectiveLabel.position.set(45, 15);
 
+    // INCREASE BALANCE BY
 
-        // OBJECTIVE HEADER
+    this.objectiveDescription = new LocalizedText("increaseBalanceBy", {
+      font: "Open Sans",
+      fontSize: 24,
+      fontWeight: "bold",
+      fill: 0xffffff,
+    });
 
-        const objectiveLabel =
-            new LocalizedText(
-                "objective",
-                {
-                    fontFamily: "Oswald-Bold",
-                    fontSize: 38,
-                    fontWeight: "bold",
-                    fill: 0xffde59
-                }
-            );
+    this.objectiveDescription.position.set(45, 82);
 
-        objectiveLabel.position.set(
-            45,
-            15
-        );
+    this.objectiveAmount = new Text({
+      text: "0.00",
 
+      style: {
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        fill: 0x4ca626,
+      },
+    });
 
-        // INCREASE BALANCE BY
+    this.objectiveAmount.position.set(45, 118);
 
-        this.objectiveDescription =
-            new LocalizedText(
-                "increaseBalanceBy",
-                {
-                    font: "Open Sans",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    fill: 0xffffff
-                }
-            );
+    // TARGET BALANCE
 
-        this.objectiveDescription.position.set(
-            45,
-            82
-        );
+    this.targetBalanceDescription = new LocalizedText("targetBalance", {
+      font: "Open Sans",
+      fontSize: 24,
+      fontWeight: "bold",
+      fill: 0xffffff,
+    });
 
+    this.targetBalanceDescription.position.set(320, 82);
 
-        this.objectiveAmount =
-            new Text({
-                text: "0.00",
+    this.targetBalanceAmount = new Text({
+      text: "0.00",
 
-                style: {
-                    font: "Open Sans",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    fill: 0x4ca626
-                }
-            });
+      style: {
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        fill: 0xffd21f,
+      },
+    });
 
-        this.objectiveAmount.position.set(
-            45,
-            118
-        );
+    this.targetBalanceAmount.position.set(320, 118);
 
+    this.addChild(
+      objectiveLabel,
+      this.objectiveDescription,
+      this.objectiveAmount,
+      this.targetBalanceDescription,
+      this.targetBalanceAmount,
+    );
 
-        // TARGET BALANCE
+    void this.createCloseButton();
+  }
 
-        this.targetBalanceDescription =
-            new LocalizedText(
-                "targetBalance",
-                {
-                    font: "Open Sans",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    fill: 0xffffff
-                }
-            );
+  setDealer(dealer: DealerData, targetBalance: number) {
+    switch (dealer.objectiveType) {
+      case ObjectiveType.INCREASE_BALANCE:
+        this.objectiveDescription.visible = true;
 
-        this.targetBalanceDescription.position.set(
-            320,
-            82
-        );
+        this.objectiveAmount.visible = true;
 
+        this.targetBalanceDescription.visible = true;
 
-        this.targetBalanceAmount =
-            new Text({
-                text: "0.00",
+        this.targetBalanceAmount.visible = true;
 
-                style: {
-                    font: "Open Sans",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    fill: 0xffd21f
-                }
-            });
+        this.objectiveAmount.text = dealer.objectiveValue.toFixed(2);
 
-        this.targetBalanceAmount.position.set(
-            320,
-            118
-        );
+        this.targetBalanceAmount.text = targetBalance.toFixed(2);
 
+        break;
 
-        this.addChild(
-            objectiveLabel,
-            this.objectiveDescription,
-            this.objectiveAmount,
-            this.targetBalanceDescription,
-            this.targetBalanceAmount
-        );
+      default:
+        console.warn("Unsupported objective type:", dealer.objectiveType);
 
-
-        void this.createCloseButton();
-    }
-
-
-    setDealer(
-        dealer: DealerData,
-        targetBalance: number
-    ) {
-
-        switch (
-            dealer.objectiveType
-        ) {
-
-            case ObjectiveType.INCREASE_BALANCE:
-
-                this.objectiveDescription.visible =
-                    true;
-
-                this.objectiveAmount.visible =
-                    true;
-
-                this.targetBalanceDescription.visible =
-                    true;
-
-                this.targetBalanceAmount.visible =
-                    true;
-
-
-                this.objectiveAmount.text =
-                    dealer.objectiveValue
-                        .toFixed(2);
-
-                this.targetBalanceAmount.text =
-                    targetBalance
-                        .toFixed(2);
-
-                break;
-
-
-            default:
-
-                console.warn(
-                    "Unsupported objective type:",
-                    dealer.objectiveType
-                );
-
-                /*
+        /*
                     Tymczasowy fallback.
 
                     Pokazujemy tylko wartość objective,
                     bez sekcji Target Balance.
                 */
 
-                this.objectiveDescription.visible =
-                    false;
+        this.objectiveDescription.visible = false;
 
-                this.targetBalanceDescription.visible =
-                    false;
+        this.targetBalanceDescription.visible = false;
 
-                this.targetBalanceAmount.visible =
-                    false;
+        this.targetBalanceAmount.visible = false;
 
-                this.objectiveAmount.visible =
-                    true;
+        this.objectiveAmount.visible = true;
 
-                this.objectiveAmount.text =
-                    dealer.objectiveValue
-                        .toString();
+        this.objectiveAmount.text = dealer.objectiveValue.toString();
 
-                break;
-        }
+        break;
     }
+  }
 
+  private async createCloseButton() {
+    const close = new TooltipCloseButton();
 
-    private async createCloseButton() {
+    await close.init();
 
-        const close =
-            new TooltipCloseButton();
+    close.on("pointerdown", () => {
+      close.scale.set(0.95);
+    });
 
-        await close.init();
+    close.on("pointerup", () => {
+      close.scale.set(1);
+    });
 
+    close.on("pointerupoutside", () => {
+      close.scale.set(1);
+    });
 
-        close.on(
-            "pointerdown",
-            () => {
+    close.on("pointertap", () => {
+      this.hide();
+    });
 
-                close.scale.set(
-                    0.95
-                );
+    close.position.set(540, 25);
 
-            }
-        );
+    this.addChild(close);
+  }
 
+  show() {
+    this.visible = true;
+  }
 
-        close.on(
-            "pointerup",
-            () => {
-
-                close.scale.set(
-                    1
-                );
-
-            }
-        );
-
-
-        close.on(
-            "pointerupoutside",
-            () => {
-
-                close.scale.set(
-                    1
-                );
-
-            }
-        );
-
-
-        close.on(
-            "pointertap",
-            () => {
-
-                this.hide();
-
-            }
-        );
-
-
-        close.position.set(
-            540,
-            25
-        );
-
-
-        this.addChild(
-            close
-        );
-    }
-
-
-    show() {
-
-        this.visible = true;
-    }
-
-
-    hide() {
-
-        this.visible = false;
-    }
+  hide() {
+    this.visible = false;
+  }
 }

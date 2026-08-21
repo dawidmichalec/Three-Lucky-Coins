@@ -2,30 +2,30 @@ import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
 export interface RiskTakerConfig {
-    payoutMultiplier: number;
+  payoutMultiplier: number;
 }
 
 export const RISK_TAKER_DATA: PerkData<RiskTakerConfig> = {
+  id: "risk_taker",
 
-    id: "risk_taker",
+  name: "riskTakerName",
 
-    name: "riskTakerName",
+  variants: [
+    {
+      rarity: PerkRarity.UNCOMMON,
 
-    variants: [
-        {
-            rarity: PerkRarity.UNCOMMON,
+      description: "riskTakerDescriptionUncommon",
 
-            description: "riskTakerDescriptionUncommon",
+      assets: {
+        small:
+          "/assets/main/icons/perk_icons/risk_taker/uncommon/risk_taker_small_icon_uncommon.png",
+        mid: "/assets/main/icons/perk_icons/risk_taker/uncommon/risk_taker_mid_icon_uncommon.png",
+        big: "/assets/main/icons/perk_icons/risk_taker/uncommon/risk_taker_big_icon_uncommon.png",
+      },
 
-            assets: {
-                small: "/assets/main/icons/perk_icons/risk_taker/uncommon/risk_taker_small_icon_uncommon.png",
-                mid: "/assets/main/icons/perk_icons/risk_taker/uncommon/risk_taker_mid_icon_uncommon.png",
-                big: "/assets/main/icons/perk_icons/risk_taker/uncommon/risk_taker_big_icon_uncommon.png"
-            },
-
-            config: {
-                payoutMultiplier: 1.125
-            }
-        }
-    ]
+      config: {
+        payoutMultiplier: 1.125,
+      },
+    },
+  ],
 };

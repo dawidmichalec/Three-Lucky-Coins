@@ -1,14 +1,9 @@
-import {
-    GambleForMoreGameId
-} from "./GambleForMoreGameId";
-
+import { GambleForMoreGameId } from "./GambleForMoreGameId";
 
 export interface GambleForMoreSettings {
+  enabled: boolean;
 
-    enabled: boolean;
+  triggerChance: number;
 
-    triggerChance: number;
-
-    availableGames?:
-        readonly GambleForMoreGameId[];
+  availableGames?: readonly GambleForMoreGameId[];
 }

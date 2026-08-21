@@ -1,42 +1,33 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-
 export interface MultiplierBoosterConfig {
-    streakMultiplierIncrease: number;
+  streakMultiplierIncrease: number;
 }
 
+export const MULTIPLIER_BOOSTER_DATA: PerkData<MultiplierBoosterConfig> = {
+  id: "multiplier_booster",
 
-export const MULTIPLIER_BOOSTER_DATA:
-PerkData<MultiplierBoosterConfig> = {
+  name: "multiplierBoosterName",
 
-    id: "multiplier_booster",
+  variants: [
+    {
+      rarity: PerkRarity.COMMON,
 
-    name: "multiplierBoosterName",
+      description: "multiplierBoosterDescriptionCommon",
 
-    variants: [
-        {
-            rarity:
-                PerkRarity.COMMON,
+      assets: {
+        small:
+          "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_small_icon_common.png",
 
-            description:
-                "multiplierBoosterDescriptionCommon",
+        mid: "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_mid_icon_common.png",
 
-            assets: {
-                small:
-                    "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_small_icon_common.png",
+        big: "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_big_icon_common.png",
+      },
 
-                mid:
-                    "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_mid_icon_common.png",
-
-                big:
-                    "/assets/main/icons/perk_icons/multiplier_booster/common/multiplier_booster_big_icon_common.png"
-            },
-
-            config: {
-                streakMultiplierIncrease:
-                    0.25
-            }
-        }
-    ]
+      config: {
+        streakMultiplierIncrease: 0.25,
+      },
+    },
+  ],
 };

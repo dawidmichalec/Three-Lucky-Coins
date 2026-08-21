@@ -5,230 +5,172 @@ import { AudioManager } from "../../../core/AudioManager";
 import { SoundId } from "../../../audio/SoundId";
 
 export class RedBlackCardView extends Container {
+  private redCard!: Sprite;
+  private blackCard!: Sprite;
 
-    private redCard!: Sprite;
-    private blackCard!: Sprite;
+  private redTexture!: Texture;
+  private blackTexture!: Texture;
+  private cardBackTexture!: Texture;
 
-    private redTexture!: Texture;
-    private blackTexture!: Texture;
-    private cardBackTexture!: Texture;
+  private readonly cardWidth = 228.4;
+  private readonly cardHeight = 342.7;
 
-    private readonly cardWidth = 228.4;
-    private readonly cardHeight = 342.7;
+  private readonly redStartX = 220;
+  private readonly blackStartX = 750;
+  private readonly cardY = 90;
+  private readonly centerX = 600;
 
-    private readonly redStartX = 220;
-    private readonly blackStartX = 750;
-    private readonly cardY = 90;
-    private readonly centerX = 600;
+  private audioManager = AudioManager.getInstance();
 
-    private audioManager = AudioManager.getInstance();
+  constructor(width: number) {
+    super();
 
+    const gameName = new LocalizedText("redCardBlackCardLabel", {
+      fontFamily: "Old Standard Regular",
+      fontSize: 48,
+      fill: 0xffd21f,
+    });
 
-    constructor(width: number, height: number) {
-        super();
+    gameName.position.set(width / 2, 20);
+    gameName.anchor.set(0.5);
 
-        const gameName = new LocalizedText(
-            "redCardBlackCardLabel",
-            {
-                fontFamily: "Old Standard Regular",
-                fontSize: 48,
-                fill: 0xffd21f
-            }
-        );
+    this.addChild(gameName);
+  }
 
-        gameName.position.set(width / 2, 20);
-        gameName.anchor.set(0.5);
+  async init(): Promise<void> {
+    await this.createCards();
+  }
 
-        this.addChild(gameName);
-    }
+  private async createCards(): Promise<void> {
+    this.redTexture = await Assets.load(
+      "/assets/main/icons/cards/red_card.png",
+    );
 
+    this.blackTexture = await Assets.load(
+      "/assets/main/icons/cards/black_card.png",
+    );
 
-    async init(): Promise<void> {
-        await this.createCards();
-    }
+    this.cardBackTexture = await Assets.load(
+      "/assets/main/icons/cards/card_back.png",
+    );
 
+    this.redCard = new Sprite(this.redTexture);
+    this.blackCard = new Sprite(this.blackTexture);
 
-    private async createCards(): Promise<void> {
+    this.redCard.width = this.cardWidth;
+    this.redCard.height = this.cardHeight;
 
-        this.redTexture = await Assets.load(
-            "/assets/main/icons/cards/red_card.png"
-        );
+    this.blackCard.width = this.cardWidth;
+    this.blackCard.height = this.cardHeight;
 
-        this.blackTexture = await Assets.load(
-            "/assets/main/icons/cards/black_card.png"
-        );
+    this.redCard.anchor.set(0.5);
+    this.blackCard.anchor.set(0.5);
 
-        this.cardBackTexture = await Assets.load(
-            "/assets/main/icons/cards/card_back.png"
-        );
+    this.redCard.position.set(
+      this.redStartX + this.cardWidth / 2,
+      this.cardY + this.cardHeight / 2,
+    );
 
+    this.blackCard.position.set(
+      this.blackStartX + this.cardWidth / 2,
+      this.cardY + this.cardHeight / 2,
+    );
 
-        this.redCard = new Sprite(this.redTexture);
-        this.blackCard = new Sprite(this.blackTexture);
+    this.addChild(this.redCard, this.blackCard);
+  }
 
-        this.redCard.width = this.cardWidth;
-        this.redCard.height = this.cardHeight;
+  async startShuffle(): Promise<void> {
+    await this.flipToBack();
+    await this.shuffleCards();
+    await this.stackCards();
+  }
 
-        this.blackCard.width = this.cardWidth;
-        this.blackCard.height = this.cardHeight;
+  private async flipToBack(): Promise<void> {
+    const redBaseScaleX = this.redCard.scale.x;
+    const blackBaseScaleX = this.blackCard.scale.x;
 
-        this.redCard.anchor.set(0.5);
-        this.blackCard.anchor.set(0.5);
+    await this.animate(200, (progress) => {
+      this.redCard.scale.x = redBaseScaleX * (1 - progress);
 
-        this.redCard.position.set(
-            this.redStartX + this.cardWidth / 2,
-            this.cardY + this.cardHeight / 2
-        );
+      this.blackCard.scale.x = blackBaseScaleX * (1 - progress);
+    });
 
-        this.blackCard.position.set(
-            this.blackStartX + this.cardWidth / 2,
-            this.cardY + this.cardHeight / 2
-        );
+    this.redCard.texture = this.cardBackTexture;
+    this.blackCard.texture = this.cardBackTexture;
 
-        this.addChild(
-            this.redCard,
-            this.blackCard
-        );
-    }
+    await this.animate(200, (progress) => {
+      this.redCard.scale.x = redBaseScaleX * progress;
 
+      this.blackCard.scale.x = blackBaseScaleX * progress;
+    });
+  }
 
-    async startShuffle(): Promise<void> {
+  private async shuffleCards(): Promise<void> {
+    const redStartX = this.redCard.x;
+    const blackStartX = this.blackCard.x;
 
-        await this.flipToBack();
-        await this.shuffleCards();
-        await this.stackCards();
-    }
+    let soundOnePlayed = false;
+    let soundTwoPlayed = false;
+    let soundThreePlayed = false;
+    let soundFourPlayed = false;
 
+    await this.animate(900, (progress) => {
+      const wave = Math.sin(progress * Math.PI * 8) * 100;
 
-    private async flipToBack(): Promise<void> {
+      this.redCard.x = redStartX + (this.centerX - redStartX) * progress + wave;
 
-        const redBaseScaleX = this.redCard.scale.x;
-        const blackBaseScaleX = this.blackCard.scale.x;
+      this.blackCard.x =
+        blackStartX + (this.centerX - blackStartX) * progress - wave;
 
-        await this.animate(200, progress => {
+      if (!soundOnePlayed && progress >= 0.15) {
+        soundOnePlayed = true;
 
-            this.redCard.scale.x =
-                redBaseScaleX * (1 - progress);
-
-            this.blackCard.scale.x =
-                blackBaseScaleX * (1 - progress);
+        this.audioManager.play(SoundId.CARD_SWIPE, {
+          loop: false,
+          volume: 0.7,
         });
+      }
 
+      if (!soundTwoPlayed && progress >= 0.35) {
+        soundTwoPlayed = true;
 
-        this.redCard.texture = this.cardBackTexture;
-        this.blackCard.texture = this.cardBackTexture;
-
-
-        await this.animate(200, progress => {
-
-            this.redCard.scale.x =
-                redBaseScaleX * progress;
-
-            this.blackCard.scale.x =
-                blackBaseScaleX * progress;
+        this.audioManager.play(SoundId.CARD_SWIPE, {
+          loop: false,
+          volume: 0.7,
         });
-    }
+      }
 
+      if (!soundThreePlayed && progress >= 0.55) {
+        soundThreePlayed = true;
 
-    private async shuffleCards(): Promise<void> {
-
-        const redStartX = this.redCard.x;
-        const blackStartX = this.blackCard.x;
-
-        let soundOnePlayed = false;
-        let soundTwoPlayed = false;
-        let soundThreePlayed = false;
-        let soundFourPlayed = false;
-
-        await this.animate(900, progress => {
-
-            const wave = Math.sin(progress * Math.PI * 8) * 100;
-
-            this.redCard.x =
-                redStartX +
-                (this.centerX - redStartX) * progress +
-                wave;
-
-            this.blackCard.x =
-                blackStartX +
-                (this.centerX - blackStartX) * progress -
-                wave;
-
-
-            if (!soundOnePlayed && progress >= 0.15) {
-                soundOnePlayed = true;
-
-                this.audioManager.play(
-                    SoundId.CARD_SWIPE,
-                    {
-                        loop: false,
-                        volume: 0.7
-                    }
-                );
-            }
-
-
-            if (!soundTwoPlayed && progress >= 0.35) {
-                soundTwoPlayed = true;
-
-                this.audioManager.play(
-                    SoundId.CARD_SWIPE,
-                    {
-                        loop: false,
-                        volume: 0.7
-                    }
-                );
-            }
-
-
-            if (!soundThreePlayed && progress >= 0.55) {
-                soundThreePlayed = true;
-
-                this.audioManager.play(
-                    SoundId.CARD_SWIPE,
-                    {
-                        loop: false,
-                        volume: 0.7
-                    }
-                );
-            }
-
-
-            if (!soundFourPlayed && progress >= 0.75) {
-                soundFourPlayed = true;
-
-                this.audioManager.play(
-                    SoundId.CARD_SWIPE,
-                    {
-                        loop: false,
-                        volume: 0.7
-                    }
-                );
-            }
+        this.audioManager.play(SoundId.CARD_SWIPE, {
+          loop: false,
+          volume: 0.7,
         });
-    }
+      }
 
+      if (!soundFourPlayed && progress >= 0.75) {
+        soundFourPlayed = true;
 
-    private async stackCards(): Promise<void> {
-
-        const redStartX = this.redCard.x;
-        const blackStartX = this.blackCard.x;
-
-        await this.animate(250, progress => {
-
-            this.redCard.x =
-                redStartX +
-                (this.centerX - redStartX) *
-                progress;
-
-            this.blackCard.x =
-                blackStartX +
-                (this.centerX - blackStartX) *
-                progress;
+        this.audioManager.play(SoundId.CARD_SWIPE, {
+          loop: false,
+          volume: 0.7,
         });
+      }
+    });
+  }
 
+  private async stackCards(): Promise<void> {
+    const redStartX = this.redCard.x;
+    const blackStartX = this.blackCard.x;
 
-        /*
+    await this.animate(250, (progress) => {
+      this.redCard.x = redStartX + (this.centerX - redStartX) * progress;
+
+      this.blackCard.x = blackStartX + (this.centerX - blackStartX) * progress;
+    });
+
+    /*
             Obie karty leżą teraz dokładnie
             w tym samym miejscu.
 
@@ -236,97 +178,78 @@ export class RedBlackCardView extends Container {
             pojedynczą zakrytą kartę.
         */
 
-        this.redCard.visible = false;
-        this.blackCard.visible = true;
-    }
+    this.redCard.visible = false;
+    this.blackCard.visible = true;
+  }
 
+  async revealResult(color: CardColor): Promise<void> {
+    const baseScaleX = this.blackCard.scale.x;
 
-    async revealResult(color: CardColor): Promise<void> {
+    await this.animate(200, (progress) => {
+      this.blackCard.scale.x = baseScaleX * (1 - progress);
+    });
 
-        const baseScaleX = this.blackCard.scale.x;
+    this.blackCard.texture =
+      color === CardColor.RED ? this.redTexture : this.blackTexture;
 
-        await this.animate(200, progress => {
+    await this.animate(200, (progress) => {
+      this.blackCard.scale.x = baseScaleX * progress;
+    });
+  }
 
-            this.blackCard.scale.x =
-                baseScaleX * (1 - progress);
-        });
+  reset() {
+    this.redCard.visible = true;
+    this.blackCard.visible = true;
 
-        this.blackCard.texture =
-            color === CardColor.RED
-                ? this.redTexture
-                : this.blackTexture;
+    this.redCard.texture = this.redTexture;
+    this.blackCard.texture = this.blackTexture;
 
-        await this.animate(200, progress => {
+    this.redCard.width = this.cardWidth;
+    this.redCard.height = this.cardHeight;
 
-            this.blackCard.scale.x =
-                baseScaleX * progress;
-        });
-    }
+    this.blackCard.width = this.cardWidth;
+    this.blackCard.height = this.cardHeight;
 
+    this.redCard.position.set(
+      this.redStartX + this.cardWidth / 2,
+      this.cardY + this.cardHeight / 2,
+    );
 
-    reset() {
+    this.blackCard.position.set(
+      this.blackStartX + this.cardWidth / 2,
+      this.cardY + this.cardHeight / 2,
+    );
 
-        this.redCard.visible = true;
-        this.blackCard.visible = true;
+    this.redCard.alpha = 1;
+    this.blackCard.alpha = 1;
 
-        this.redCard.texture = this.redTexture;
-        this.blackCard.texture = this.blackTexture;
+    this.redCard.rotation = 0;
+    this.blackCard.rotation = 0;
+  }
 
-        this.redCard.width = this.cardWidth;
-        this.redCard.height = this.cardHeight;
+  private animate(
+    duration: number,
+    update: (progress: number) => void,
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const startTime = performance.now();
 
-        this.blackCard.width = this.cardWidth;
-        this.blackCard.height = this.cardHeight;
+      const frame = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
 
-        this.redCard.position.set(
-            this.redStartX + this.cardWidth / 2,
-            this.cardY + this.cardHeight / 2
-        );
+        const progress = Math.min(1, elapsed / duration);
 
-        this.blackCard.position.set(
-            this.blackStartX + this.cardWidth / 2,
-            this.cardY + this.cardHeight / 2
-        );
+        update(progress);
 
-        this.redCard.alpha = 1;
-        this.blackCard.alpha = 1;
+        if (progress >= 1) {
+          resolve();
+          return;
+        }
 
-        this.redCard.rotation = 0;
-        this.blackCard.rotation = 0;
-    }
+        requestAnimationFrame(frame);
+      };
 
-
-    private animate(
-        duration: number,
-        update: (progress: number) => void
-    ): Promise<void> {
-
-        return new Promise(resolve => {
-
-            const startTime = performance.now();
-
-            const frame = (currentTime: number) => {
-
-                const elapsed =
-                    currentTime - startTime;
-
-                const progress =
-                    Math.min(
-                        1,
-                        elapsed / duration
-                    );
-
-                update(progress);
-
-                if (progress >= 1) {
-                    resolve();
-                    return;
-                }
-
-                requestAnimationFrame(frame);
-            };
-
-            requestAnimationFrame(frame);
-        });
-    }
+      requestAnimationFrame(frame);
+    });
+  }
 }

@@ -6,137 +6,97 @@ import { BaseScene } from "./scenes/BaseScene";
 import { StatsManager } from "../core/StatsManager";
 
 export class SceneManager {
+  private currentScene?: BaseScene;
 
-    private currentScene?: BaseScene;
+  constructor(
+    private app: Application,
+    private popupManager: PopupManager,
+    private sceneContainer: Container,
+  ) {
+    this.app.ticker.add((ticker) => {
+      this.currentScene?.update(ticker.deltaTime);
+    });
+  }
 
-    constructor(
-        private app: Application,
-        private popupManager: PopupManager,
-        private sceneContainer: Container
-    ) {
+  async changeScene(scene: BaseScene) {
+    if (this.currentScene) {
+      await this.fadeOut(this.currentScene);
 
-        this.app.ticker.add((ticker) => {
+      this.currentScene.cleanup();
 
-            this.currentScene?.update(ticker.deltaTime);
+      this.sceneContainer.removeChild(this.currentScene);
 
-        });
-
+      this.currentScene.destroy({
+        children: true,
+      });
     }
 
-    async changeScene(
-        scene: BaseScene
-    ) {
-
-        if (this.currentScene) {
-
-            await this.fadeOut(
-                this.currentScene
-            );
-
-            this.currentScene.cleanup();
-
-            this.sceneContainer.removeChild(
-                this.currentScene
-            );
-
-            this.currentScene.destroy({
-                children: true
-            });
-        }
-
-        /*
+    /*
             Scena nie znajduje się jeszcze na ekranie.
             Czekamy na avatar, monety i overlay.
         */
-        await scene.init();
+    await scene.init();
 
-        this.currentScene = scene;
+    this.currentScene = scene;
 
-        this.sceneContainer.addChild(
-            scene
-        );
+    this.sceneContainer.addChild(scene);
 
-        await this.fadeIn(
-            scene
-        );
+    await this.fadeIn(scene);
 
-        this.sceneContainer.addChild(
-            this.popupManager
-        );
-    }
+    this.sceneContainer.addChild(this.popupManager);
+  }
 
-    private fadeOut(scene: Container): Promise<void> {
+  private fadeOut(scene: Container): Promise<void> {
+    return new Promise((resolve) => {
+      const ticker = this.app.ticker;
 
-        return new Promise(resolve => {
+      const update = () => {
+        scene.alpha -= 0.02;
 
-            const ticker = this.app.ticker;
+        if (scene.alpha <= 0) {
+          scene.alpha = 0;
 
-            const update = () => {
+          ticker.remove(update);
 
-                scene.alpha -= 0.02;
+          resolve();
+        }
+      };
 
-                if (scene.alpha <= 0) {
+      ticker.add(update);
+    });
+  }
 
-                    scene.alpha = 0;
+  private fadeIn(scene: Container): Promise<void> {
+    return new Promise((resolve) => {
+      scene.alpha = 0;
 
-                    ticker.remove(update);
+      const ticker = this.app.ticker;
 
-                    resolve();
-                }
-            };
+      const update = () => {
+        scene.alpha += 0.02;
 
-            ticker.add(update);
+        if (scene.alpha >= 1) {
+          scene.alpha = 1;
 
-        });
+          ticker.remove(update);
 
-    }
+          resolve();
+        }
+      };
 
-    private fadeIn(scene: Container): Promise<void> {
+      ticker.add(update);
+    });
+  }
 
-        return new Promise(resolve => {
+  showGame() {
+    const statsManager = StatsManager.getInstance();
 
-            scene.alpha = 0;
+    statsManager.startRun();
 
-            const ticker = this.app.ticker;
+    this.changeScene(new GameScene(this.app, this.popupManager, this));
+  }
 
-            const update = () => {
-
-                scene.alpha += 0.02;
-
-                if (scene.alpha >= 1) {
-
-                    scene.alpha = 1;
-
-                    ticker.remove(update);
-
-                    resolve();
-                }
-            };
-
-            ticker.add(update);
-
-        });
-
-    }
-
-    showGame() {
-
-        const statsManager = StatsManager.getInstance();
-
-        statsManager.startRun();
-
-        this.changeScene(
-            new GameScene(
-                this.app,
-                this.popupManager,
-                this
-        ));
-    }
-
-    showMainMenu() {
-        this.changeScene(
-            new MainMenuScene(this)
-        );
-    }
-
+  showMainMenu() {
+    this.changeScene(new MainMenuScene(this));
+  }
 }

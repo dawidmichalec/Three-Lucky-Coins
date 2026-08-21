@@ -6,116 +6,60 @@ export type TranslationKey = keyof typeof en;
 
 type TranslationDictionary = Record<TranslationKey, string>;
 
-
 export class LocalizationManager {
+  private static instance: LocalizationManager;
 
+  private currentLanguage: Language = Language.EN;
 
-    private static instance:LocalizationManager;
+  private translations: Record<Language, TranslationDictionary> = {
+    [Language.EN]: en,
+    [Language.PL]: pl,
+  };
 
+  private listeners: (() => void)[] = [];
 
-    private currentLanguage: Language = Language.EN;
+  private constructor() {}
 
-
-    private translations: Record<Language, TranslationDictionary> = {
-        [Language.EN]: en,
-        [Language.PL]: pl
-    };
-
-
-    private listeners:(()=>void)[] = [];
-
-
-
-    private constructor(){}
-
-
-
-    static getInstance(){
-
-        if(!this.instance){
-
-            this.instance =
-                new LocalizationManager();
-
-        }
-
-        return this.instance;
-
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new LocalizationManager();
     }
 
+    return this.instance;
+  }
 
+  t(key: TranslationKey): string {
+    const value =
+      this.translations[this.currentLanguage][key] ?? this.translations.en[key];
 
-    t(key: TranslationKey): string {
+    if (!value) {
+      console.warn("Missing translation:", key);
 
-        const value =
-            this.translations[this.currentLanguage][key]
-            ??
-            this.translations.en[key];
-
-
-        if(!value){
-
-            console.warn(
-                "Missing translation:",
-                key
-            );
-
-            return key;
-
-        }
-
-
-        return value;
-
+      return key;
     }
 
+    return value;
+  }
 
+  tList(keys: TranslationKey[]): string {
+    return keys.map((key) => this.t(key)).join("\n");
+  }
 
-    tList(keys: TranslationKey[]): string {
+  setLanguage(language: Language) {
+    this.currentLanguage = language;
 
-        return keys
-            .map(key => this.t(key))
-            .join("\n");
+    this.notify();
+  }
 
-    }
+  getLanguage() {
+    return this.currentLanguage;
+  }
 
+  subscribe(callback: () => void) {
+    this.listeners.push(callback);
+  }
 
-
-    setLanguage(language:Language){
-
-        this.currentLanguage = language;
-
-
-        this.notify();
-
-    }
-
-
-
-    getLanguage(){
-
-        return this.currentLanguage;
-
-    }
-
-
-
-    subscribe(
-        callback:()=>void
-    ){
-
-        this.listeners.push(callback);
-
-    }
-
-
-
-    private notify(){
-
-        this.listeners.forEach(
-            listener=>listener()
-        );
-
-    }
-
+  private notify() {
+    this.listeners.forEach((listener) => listener());
+  }
 }

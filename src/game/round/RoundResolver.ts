@@ -4,86 +4,55 @@ import { getCombinationConfig } from "../data/CombinationUtils";
 
 import { roundMoney } from "../util/MoneyUtils";
 
-
 export interface RoundResolution {
+  win: boolean;
 
-    win: boolean;
-
-    winAmount?: number;
+  winAmount?: number;
 }
-
 
 export interface RoundResolutionInput {
+  selected: readonly CoinSide[];
 
-    selected:
-        readonly CoinSide[];
+  result: readonly CoinSide[];
 
-    result:
-        readonly CoinSide[];
+  bet: number;
 
-    bet: number;
+  streakMultiplier: number;
 
-    streakMultiplier: number;
-
-    goldenMultiplier: number;
+  goldenMultiplier: number;
 }
 
-
 export class RoundResolver {
+  static resolve(input: RoundResolutionInput): RoundResolution {
+    const win = this.isWin(input.selected, input.result);
 
-    static resolve(
-        input: RoundResolutionInput
-    ): RoundResolution {
-
-        const win =
-            this.isWin(
-                input.selected,
-                input.result
-            );
-
-
-        if (!win) {
-
-            return {
-                win: false
-            };
-        }
-
-
-        const combinationConfig =
-            getCombinationConfig(
-                input.selected
-            );
-
-
-        const winAmount = roundMoney(
-            input.bet *
-            combinationConfig.baseMultiplier *
-            input.streakMultiplier *
-            input.goldenMultiplier
-        );
-
-
-        return {
-
-            win: true,
-
-            winAmount
-        };
+    if (!win) {
+      return {
+        win: false,
+      };
     }
 
+    const combinationConfig = getCombinationConfig(input.selected);
 
-    private static isWin(
-        selected:
-            readonly CoinSide[],
+    const winAmount = roundMoney(
+      input.bet *
+        combinationConfig.baseMultiplier *
+        input.streakMultiplier *
+        input.goldenMultiplier,
+    );
 
-        result:
-            readonly CoinSide[]
-    ): boolean {
+    return {
+      win: true,
 
-        return selected.every(
-            (side, index) =>
-                side === result[index]
-        );
-    }
+      winAmount,
+    };
+  }
+
+  private static isWin(
+    selected: readonly CoinSide[],
+
+    result: readonly CoinSide[],
+  ): boolean {
+    return selected.every((side, index) => side === result[index]);
+  }
 }

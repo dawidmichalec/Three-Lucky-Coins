@@ -13,1176 +13,725 @@ import { SoundId } from "../audio/SoundId";
 import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkTooltip } from "./components/PerkTooltip";
 
-
 export class GameUI extends Container {
-    private balanceValue: Text;
-    private betValue: Text;
-    private combinationValue: Text;
-    private wonAmount: Text;
-    private multiplierValue: Text;
-    private multiplierContainer: Container;
-
-    private currentMultiplier = 1;
-    private multiplierAnimationId?: number;
-    private probabilityDisplay!: ProbabilityDisplay;
-    private dealerCard!: DealerCard;
-    private dealerSkillsPanel!: DealerSkillsPanel;
-    private dealerObjectivePanel!: DealerObjectivePanel;
-    readonly perkContainer: PerkContainer;
-    private bonusesContainer!: PerkContainer;
-    private effectsContainer!: PerkContainer;
-
-    private multiplierEffect:MultiplierEffect;
-
-    private currentFightTargetBalance = 0;
-
-    private audioManager = AudioManager.getInstance();
-    private activePerkTooltip?: PerkTooltip;
-
-    private freeBetLabel:  LocalizedText;
-
-
-    constructor (
-        private currentDealer: DealerData
-    ) {
-        super();
-
-        // BALANCE TEXT
-
-        const balanceLabel = new LocalizedText(
-            "balance",
-            {
-                font: 'Open Sans',
-                fontSize: 24,
-                fontWeight: 'bold',
-                fill: 0x4ca626,
-                wordWrap: true,
-            },
-        );
-
-        balanceLabel.position.set(367.9, 1043.5);
-
-        // BALANCE VALUE TEXT
-
-        this.balanceValue = new Text({
-            text: '0.00',
-            style: {
-                font: 'Open Sans',
-                fontSize: 24,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-            },
-        });
-
-        this.balanceValue.position.set(497.9, 1043.5);
-
-        // BET LABEL
-
-        const betLabel = new LocalizedText(
-            "betLabel",
-            {
-                font: 'Open Sans',
-                fontSize: 24,
-                fontWeight: 'bold',
-                fill: 0x4ca626,
-                wordWrap: true,
-            },
-        );
-        betLabel.anchor.set(0.25, 0);
-        betLabel.position.set(985, 1043.5);
-
-        // BET VALUE
-
-        this.betValue = new Text({
-            text: '0.00',
-            style: {
-                font: 'Open Sans',
-                fontSize: 24,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-            },
-        });
-
-        this.betValue.anchor.set(0.75, 0);
-        this.betValue.position.set(920, 1043.5);
-
-        // COMBINATION
-
-        const combinationLabel = new LocalizedText(
-            "combinationLabel",
-            {
-                font: 'Open Sans',
-                fontSize: 24,
-                fontWeight: 'bold',
-                fill: 0x4ca626,
-            },
-        );
-
-        combinationLabel.position.set(1345, 1043.5);
-
-        // COMBINATIONS TEXT
-
-        this.combinationValue = new Text({
-            text: 'H - H - H',
-            style: {
-                font: 'Open Sans',
-                fontSize: 24,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-            },
-        });
-
-        this.combinationValue.position.set(1525, 1043.5);
-
-        // WON TEXT
-
-        const wonLabel = new LocalizedText(
-            "winLabel",
-            {
-                font: 'Open Sans',
-                fontSize: 38,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-                wordWrap: true,
-
-                dropShadow: {
-                    alpha: 0.8,
-                    blur: 8,
-                    color: '#00ffcc',
-                    distance: 0,
-                }
-            },
-        );
-
-        wonLabel.anchor.set(1,0.5);
-        wonLabel.position.set(950, 571);
-
-        this.wonAmount = new Text({
-            text: '0.00',
-            style: {
-                font: 'Open Sans',
-                fontSize: 38,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-
-                dropShadow: {
-                    alpha: 1,
-                    blur: 15,
-                    color: '#00ffcc', 
-                    distance: 0,
-                },
-                
-            },
-        });
-
-        this.wonAmount.anchor.set(0, 0.5);
-        this.wonAmount.position.set(980, 571);
-
-
-        // MULTIPLIER TEXT
-
-        const multiplierLabel = new LocalizedText(
-            "multiplier",
-            {
-                fontFamily: 'Anek-Kannada Bold',
-                fontSize: 46,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-                wordWrap: true,
-                dropShadow: {
-                    alpha: 0.8,
-                    blur: 8,
-                    color: '#ffaa00',
-                    distance: 0,
-                }
-            },
-        );
-
-        multiplierLabel.anchor.set(0, 0);
-        multiplierLabel.position.set(329.9, 324.8);
-
-        // MULTIPLIER VALUE
-
-        this.multiplierContainer = new Container();
-
-        this.multiplierContainer.position.set(
-            430,
-            455
-        );
-        
-
-        this.multiplierEffect = new MultiplierEffect();
-
-        this.multiplierContainer.addChildAt(
-            this.multiplierEffect,
-            0
-        );
-
-
-        this.multiplierValue = new Text({
-            text: "x1",
-            style: {
-                fontFamily: "JackCondensed",
-                fontSize: 128,
-                fontWeight: "bold",
-                fill: 0xffffff,
-                wordWrap: true,
-
-                dropShadow: {
-                    alpha: 1,
-                    blur: 15,
-                    color: "#ffaa00",
-                    distance: 0,
-                },
-
-                stroke: {
-                    color: "#331100",
-                    width: 3,
-                }
-            },
-        });
-
-        this.multiplierValue.anchor.set(0.5);
-
-        this.multiplierContainer.addChild(
-            this.multiplierValue
-        );
-
-
-        // PROBABILITY DISPLAY
-
-        this.probabilityDisplay = new ProbabilityDisplay(445, 600);
-        this.probabilityDisplay.position.set(1474.8, 201.6);
-
-        // SKILLS PANEL
-
-        this.dealerSkillsPanel =
-            new DealerSkillsPanel(
-                626,
-                600
-            );
-
-        this.dealerSkillsPanel.position.set(
-            1170,
-            188.4
-        );
-
-        this.dealerSkillsPanel.zIndex =
-            500;
-
-        this.dealerSkillsPanel.setDealer(
-            this.currentDealer
-        );
-
-
-        // OBJECTIVE PANEL
-
-        this.dealerObjectivePanel =
-            new DealerObjectivePanel(
-                626,
-                180.1
-            );
-
-        this.dealerObjectivePanel.position.set(
-            1170,
-            258.4
-        );
-
-        this.dealerObjectivePanel.zIndex =
-            500;
-
-
-        this.sortableChildren = true;
-
-        // PERKS CONTAINER
-
-        const handlePerkClick =
-            (reward: PerkReward) => {
-
-                void this.showPerkTooltip(
-                    reward
-                );
-            };
-
-        this.perkContainer =
-            new PerkContainer(
-                300,
-                180,
-                handlePerkClick
-            );
-        this.perkContainer.position.set(477.9, 656.2);
-
-
-        // PERKS LABEL
-
-        const perksLabel = new LocalizedText(
-            "perks",
-            {
-                fontFamily: "EgyptianSlateBd",
-                fontSize: 28,
-                fontWeight: 'bold',
-                fill: 0xffffff
-            }
-        )
-
-        perksLabel.anchor.set(0,0);
-        perksLabel.position.set(579.8, 844.8);
-
-
-        // BONUSES CONTAINER
-
-        this.bonusesContainer =
-            new PerkContainer(
-                300,
-                180,
-                handlePerkClick
-            );
-        this.bonusesContainer.position.set(822.9, 656.2);
-
-
-        // BONUSES LABEL
-
-        const bonusesLabel = new LocalizedText(
-            "bonuses",
-            {
-                fontFamily: "EgyptianSlateBd",
-                fontSize: 28,
-                fontWeight: 'bold',
-                fill: 0xffffff
-            }
-        );
-
-        bonusesLabel.anchor.set(0,0);
-        bonusesLabel.position.set(917.3, 844.8);
-
-
-        // EFFECTS CONTAINER
-
-        this.effectsContainer =
-            new PerkContainer(
-                300,
-                180,
-                handlePerkClick
-            );
-        this.effectsContainer.position.set(1167.9, 656.2);
-
-        
-        // EFFECTS LABEL
-
-        const effectsLabel = new LocalizedText(
-            "effects",
-            {
-                fontFamily: "EgyptianSlateBd",
-                fontSize: 28,
-                fontWeight: 'bold',
-                fill: 0xffffff
-            }
-        )
-
-        effectsLabel.anchor.set(0, 0);
-        effectsLabel.position.set(1259.5, 844.8);
-
-
-        // FREE BET LABEL
-
-        this.freeBetLabel = new LocalizedText(
-            "freeBet",
-            {
-                fontFamily: 'Anek-Kannada Bold',
-                fontSize: 28,
-                fontWeight: 'bold',
-                fill: 0xffffff,
-                dropShadow: {
-                    alpha: 0.8,
-                    blur: 8,
-                    color: '#ffaa00',
-                    distance: 0,
-                }
-            }
-        );
-
-        this.freeBetLabel.position.set(917.3, 1000);
-        this.freeBetLabel.anchor.set(0, 0);
-
-        this.freeBetLabel.visible = false;
-
-
-        // ADD
-
-        this.addChild(
-            balanceLabel,
-            this.balanceValue,
-            betLabel,
-            this.betValue,
-            combinationLabel,
-            this.combinationValue,
-            wonLabel,
-            this.wonAmount,
-            multiplierLabel,
-            this.multiplierContainer,
-            this.probabilityDisplay,
-            this.dealerSkillsPanel,
-            this.dealerObjectivePanel,
-            this.perkContainer,
-            perksLabel,
-            this.bonusesContainer,
-            bonusesLabel,
-            this.effectsContainer,
-            effectsLabel,
-            this.freeBetLabel
-        );
+  private balanceValue: Text;
+  private betValue: Text;
+  private combinationValue: Text;
+  private wonAmount: Text;
+  private multiplierValue: Text;
+  private multiplierContainer: Container;
+
+  private currentMultiplier = 1;
+  private multiplierAnimationId?: number;
+  private probabilityDisplay!: ProbabilityDisplay;
+  private dealerCard!: DealerCard;
+  private dealerSkillsPanel!: DealerSkillsPanel;
+  private dealerObjectivePanel!: DealerObjectivePanel;
+  readonly perkContainer: PerkContainer;
+  private bonusesContainer!: PerkContainer;
+  private effectsContainer!: PerkContainer;
+
+  private multiplierEffect: MultiplierEffect;
+
+  private currentFightTargetBalance = 0;
+
+  private audioManager = AudioManager.getInstance();
+  private activePerkTooltip?: PerkTooltip;
+
+  private freeBetLabel: LocalizedText;
+
+  constructor(private currentDealer: DealerData) {
+    super();
+
+    // BALANCE TEXT
+
+    const balanceLabel = new LocalizedText("balance", {
+      font: "Open Sans",
+      fontSize: 24,
+      fontWeight: "bold",
+      fill: 0x4ca626,
+      wordWrap: true,
+    });
+
+    balanceLabel.position.set(367.9, 1043.5);
+
+    // BALANCE VALUE TEXT
+
+    this.balanceValue = new Text({
+      text: "0.00",
+      style: {
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        fill: 0xffffff,
+      },
+    });
+
+    this.balanceValue.position.set(497.9, 1043.5);
+
+    // BET LABEL
+
+    const betLabel = new LocalizedText("betLabel", {
+      font: "Open Sans",
+      fontSize: 24,
+      fontWeight: "bold",
+      fill: 0x4ca626,
+      wordWrap: true,
+    });
+    betLabel.anchor.set(0.25, 0);
+    betLabel.position.set(985, 1043.5);
+
+    // BET VALUE
+
+    this.betValue = new Text({
+      text: "0.00",
+      style: {
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        fill: 0xffffff,
+      },
+    });
+
+    this.betValue.anchor.set(0.75, 0);
+    this.betValue.position.set(920, 1043.5);
+
+    // COMBINATION
+
+    const combinationLabel = new LocalizedText("combinationLabel", {
+      font: "Open Sans",
+      fontSize: 24,
+      fontWeight: "bold",
+      fill: 0x4ca626,
+    });
+
+    combinationLabel.position.set(1345, 1043.5);
+
+    // COMBINATIONS TEXT
+
+    this.combinationValue = new Text({
+      text: "H - H - H",
+      style: {
+        font: "Open Sans",
+        fontSize: 24,
+        fontWeight: "bold",
+        fill: 0xffffff,
+      },
+    });
+
+    this.combinationValue.position.set(1525, 1043.5);
+
+    // WON TEXT
+
+    const wonLabel = new LocalizedText("winLabel", {
+      font: "Open Sans",
+      fontSize: 38,
+      fontWeight: "bold",
+      fill: 0xffffff,
+      wordWrap: true,
+
+      dropShadow: {
+        alpha: 0.8,
+        blur: 8,
+        color: "#00ffcc",
+        distance: 0,
+      },
+    });
 
-    }
+    wonLabel.anchor.set(1, 0.5);
+    wonLabel.position.set(950, 571);
 
-    async init(): Promise<void> {
+    this.wonAmount = new Text({
+      text: "0.00",
+      style: {
+        font: "Open Sans",
+        fontSize: 38,
+        fontWeight: "bold",
+        fill: 0xffffff,
 
-        await this.createDealerCard();
-    }
+        dropShadow: {
+          alpha: 1,
+          blur: 15,
+          color: "#00ffcc",
+          distance: 0,
+        },
+      },
+    });
 
+    this.wonAmount.anchor.set(0, 0.5);
+    this.wonAmount.position.set(980, 571);
 
-    async removePerk(
-        perkId: string
-    ): Promise<void> {
+    // MULTIPLIER TEXT
 
-        await this.perkContainer
-            .removePerk(
-                perkId
-            );
-    }
+    const multiplierLabel = new LocalizedText("multiplier", {
+      fontFamily: "Anek-Kannada Bold",
+      fontSize: 46,
+      fontWeight: "bold",
+      fill: 0xffffff,
+      wordWrap: true,
+      dropShadow: {
+        alpha: 0.8,
+        blur: 8,
+        color: "#ffaa00",
+        distance: 0,
+      },
+    });
 
+    multiplierLabel.anchor.set(0, 0);
+    multiplierLabel.position.set(329.9, 324.8);
 
-    async animatePenaltyIntoWon(
-        penaltyAmount: number,
-        finalAmount: number
-    ): Promise<void> {
+    // MULTIPLIER VALUE
 
-        const penaltyText =
-            new Text({
-                text:
-                    `-${penaltyAmount.toFixed(2)}`,
+    this.multiplierContainer = new Container();
 
-                style: {
-                    fontFamily:
-                        "Anek-Kannada Bold",
+    this.multiplierContainer.position.set(430, 455);
 
-                    fontSize:
-                        36,
+    this.multiplierEffect = new MultiplierEffect();
 
-                    fontWeight:
-                        "bold",
+    this.multiplierContainer.addChildAt(this.multiplierEffect, 0);
 
-                    fill:
-                        0xff3131,
+    this.multiplierValue = new Text({
+      text: "x1",
+      style: {
+        fontFamily: "JackCondensed",
+        fontSize: 128,
+        fontWeight: "bold",
+        fill: 0xffffff,
+        wordWrap: true,
 
-                    dropShadow: {
-                        alpha:
-                            1,
+        dropShadow: {
+          alpha: 1,
+          blur: 15,
+          color: "#ffaa00",
+          distance: 0,
+        },
 
-                        blur:
-                            12,
+        stroke: {
+          color: "#331100",
+          width: 3,
+        },
+      },
+    });
 
-                        color:
-                            "#ff0000",
+    this.multiplierValue.anchor.set(0.5);
 
-                        distance:
-                            0,
+    this.multiplierContainer.addChild(this.multiplierValue);
 
-                        angle:
-                            0
-                    }
-                }
-            });
+    // PROBABILITY DISPLAY
 
+    this.probabilityDisplay = new ProbabilityDisplay(445, 600);
+    this.probabilityDisplay.position.set(1474.8, 201.6);
 
-        penaltyText.anchor.set(
-            0.5
-        );
+    // SKILLS PANEL
 
+    this.dealerSkillsPanel = new DealerSkillsPanel(626, 600);
 
-        penaltyText.position.set(
-            1100,
-            650
-        );
+    this.dealerSkillsPanel.position.set(1170, 188.4);
 
+    this.dealerSkillsPanel.zIndex = 500;
 
-        penaltyText.alpha =
-            0;
+    this.dealerSkillsPanel.setDealer(this.currentDealer);
 
-        penaltyText.scale.set(
-            0.8
-        );
+    // OBJECTIVE PANEL
 
+    this.dealerObjectivePanel = new DealerObjectivePanel(626, 180.1);
+
+    this.dealerObjectivePanel.position.set(1170, 258.4);
+
+    this.dealerObjectivePanel.zIndex = 500;
+
+    this.sortableChildren = true;
+
+    // PERKS CONTAINER
+
+    const handlePerkClick = (reward: PerkReward) => {
+      void this.showPerkTooltip(reward);
+    };
+
+    this.perkContainer = new PerkContainer(300, 180, handlePerkClick);
+    this.perkContainer.position.set(477.9, 656.2);
+
+    // PERKS LABEL
+
+    const perksLabel = new LocalizedText("perks", {
+      fontFamily: "EgyptianSlateBd",
+      fontSize: 28,
+      fontWeight: "bold",
+      fill: 0xffffff,
+    });
+
+    perksLabel.anchor.set(0, 0);
+    perksLabel.position.set(579.8, 844.8);
+
+    // BONUSES CONTAINER
+
+    this.bonusesContainer = new PerkContainer(300, 180, handlePerkClick);
+    this.bonusesContainer.position.set(822.9, 656.2);
+
+    // BONUSES LABEL
+
+    const bonusesLabel = new LocalizedText("bonuses", {
+      fontFamily: "EgyptianSlateBd",
+      fontSize: 28,
+      fontWeight: "bold",
+      fill: 0xffffff,
+    });
 
-        this.addChild(
-            penaltyText
-        );
+    bonusesLabel.anchor.set(0, 0);
+    bonusesLabel.position.set(917.3, 844.8);
 
+    // EFFECTS CONTAINER
 
-        await this.animateBonusAppear(
-            penaltyText
-        );
+    this.effectsContainer = new PerkContainer(300, 180, handlePerkClick);
+    this.effectsContainer.position.set(1167.9, 656.2);
 
+    // EFFECTS LABEL
 
-        await this.animateBonusFly(
-            penaltyText
-        );
+    const effectsLabel = new LocalizedText("effects", {
+      fontFamily: "EgyptianSlateBd",
+      fontSize: 28,
+      fontWeight: "bold",
+      fill: 0xffffff,
+    });
 
+    effectsLabel.anchor.set(0, 0);
+    effectsLabel.position.set(1259.5, 844.8);
 
-        penaltyText.destroy();
+    // FREE BET LABEL
 
+    this.freeBetLabel = new LocalizedText("freeBet", {
+      fontFamily: "Anek-Kannada Bold",
+      fontSize: 28,
+      fontWeight: "bold",
+      fill: 0xffffff,
+      dropShadow: {
+        alpha: 0.8,
+        blur: 8,
+        color: "#ffaa00",
+        distance: 0,
+      },
+    });
 
-        this.wonAmount.text =
-            finalAmount.toFixed(
-                2
-            );
+    this.freeBetLabel.position.set(917.3, 1000);
+    this.freeBetLabel.anchor.set(0, 0);
 
+    this.freeBetLabel.visible = false;
 
-        await this.animateWonAmountPulse();
-    }
+    // ADD
 
+    this.addChild(
+      balanceLabel,
+      this.balanceValue,
+      betLabel,
+      this.betValue,
+      combinationLabel,
+      this.combinationValue,
+      wonLabel,
+      this.wonAmount,
+      multiplierLabel,
+      this.multiplierContainer,
+      this.probabilityDisplay,
+      this.dealerSkillsPanel,
+      this.dealerObjectivePanel,
+      this.perkContainer,
+      perksLabel,
+      this.bonusesContainer,
+      bonusesLabel,
+      this.effectsContainer,
+      effectsLabel,
+      this.freeBetLabel,
+    );
+  }
 
-    async animateBonusIntoWon(
-        bonusAmount: number,
-        finalAmount: number
-    ): Promise<void> {
+  async init(): Promise<void> {
+    await this.createDealerCard();
+  }
 
-        const bonusText =
-            new Text({
-                text:
-                    `+${bonusAmount.toFixed(2)}`,
+  async removePerk(perkId: string): Promise<void> {
+    await this.perkContainer.removePerk(perkId);
+  }
 
-                style: {
-                    fontFamily:
-                        "Anek-Kannada Bold",
+  async animatePenaltyIntoWon(
+    penaltyAmount: number,
+    finalAmount: number,
+  ): Promise<void> {
+    const penaltyText = new Text({
+      text: `-${penaltyAmount.toFixed(2)}`,
 
-                    fontSize:
-                        36,
+      style: {
+        fontFamily: "Anek-Kannada Bold",
 
-                    fontWeight:
-                        "bold",
+        fontSize: 36,
 
-                    fill:
-                        0x39ff14,
+        fontWeight: "bold",
 
-                    dropShadow: {
-                        alpha:
-                            1,
+        fill: 0xff3131,
 
-                        blur:
-                            12,
+        dropShadow: {
+          alpha: 1,
 
-                        color:
-                            "#00ff66",
+          blur: 12,
 
-                        distance:
-                            0,
+          color: "#ff0000",
 
-                        angle:
-                            0
-                    }
-                }
-            });
+          distance: 0,
 
+          angle: 0,
+        },
+      },
+    });
 
-        bonusText.anchor.set(
-            0.5
-        );
+    penaltyText.anchor.set(0.5);
 
+    penaltyText.position.set(1100, 650);
 
-        /*
+    penaltyText.alpha = 0;
+
+    penaltyText.scale.set(0.8);
+
+    this.addChild(penaltyText);
+
+    await this.animateBonusAppear(penaltyText);
+
+    await this.animateBonusFly(penaltyText);
+
+    penaltyText.destroy();
+
+    this.wonAmount.text = finalAmount.toFixed(2);
+
+    await this.animateWonAmountPulse();
+  }
+
+  async animateBonusIntoWon(
+    bonusAmount: number,
+    finalAmount: number,
+  ): Promise<void> {
+    const bonusText = new Text({
+      text: `+${bonusAmount.toFixed(2)}`,
+
+      style: {
+        fontFamily: "Anek-Kannada Bold",
+
+        fontSize: 36,
+
+        fontWeight: "bold",
+
+        fill: 0x39ff14,
+
+        dropShadow: {
+          alpha: 1,
+
+          blur: 12,
+
+          color: "#00ff66",
+
+          distance: 0,
+
+          angle: 0,
+        },
+      },
+    });
+
+    bonusText.anchor.set(0.5);
+
+    /*
             Start trochę poniżej / obok WON.
             Potem możesz sobie dopracować pozycję.
         */
 
-        bonusText.position.set(
-            1100,
-            650
-        );
+    bonusText.position.set(1100, 650);
 
+    bonusText.alpha = 0;
 
-        bonusText.alpha =
-            0;
+    bonusText.scale.set(0.8);
 
-        bonusText.scale.set(
-            0.8
-        );
+    this.addChild(bonusText);
 
+    await this.animateBonusAppear(bonusText);
 
-        this.addChild(
-            bonusText
-        );
+    await this.animateBonusFly(bonusText);
 
+    bonusText.destroy();
 
-        await this.animateBonusAppear(
-            bonusText
-        );
+    this.wonAmount.text = finalAmount.toFixed(2);
 
+    await this.animateWonAmountPulse();
+  }
 
-        await this.animateBonusFly(
-            bonusText
-        );
+  private animateBonusAppear(bonusText: Text): Promise<void> {
+    return this.animate(
+      250,
 
+      (progress) => {
+        const eased = 1 - Math.pow(1 - progress, 3);
 
-        bonusText.destroy();
+        bonusText.alpha = eased;
 
+        bonusText.scale.set(0.8 + eased * 0.2);
+      },
+    );
+  }
 
-        this.wonAmount.text =
-            finalAmount.toFixed(
-                2
-            );
+  private animateBonusFly(bonusText: Text): Promise<void> {
+    const startX = bonusText.x;
 
+    const startY = bonusText.y;
 
-        await this.animateWonAmountPulse();
-    }
+    const targetX = this.wonAmount.x + this.wonAmount.width / 2;
 
+    const targetY = this.wonAmount.y;
 
-    private animateBonusAppear(
-        bonusText: Text
-    ): Promise<void> {
+    return this.animate(
+      500,
 
-        return this.animate(
-            250,
+      (progress) => {
+        const eased = progress * progress;
 
-            progress => {
+        bonusText.x = startX + (targetX - startX) * eased;
 
-                const eased =
-                    1 -
-                    Math.pow(
-                        1 - progress,
-                        3
-                    );
+        bonusText.y = startY + (targetY - startY) * eased;
 
-
-                bonusText.alpha =
-                    eased;
-
-
-                bonusText.scale.set(
-                    0.8 +
-                    eased * 0.2
-                );
-            }
-        );
-    }
-
-
-    private animateBonusFly(
-        bonusText: Text
-    ): Promise<void> {
-
-        const startX =
-            bonusText.x;
-
-        const startY =
-            bonusText.y;
-
-
-        const targetX =
-            this.wonAmount.x +
-            this.wonAmount.width / 2;
-
-        const targetY =
-            this.wonAmount.y;
-
-
-        return this.animate(
-            500,
-
-            progress => {
-
-                const eased =
-                    progress *
-                    progress;
-
-
-                bonusText.x =
-                    startX +
-                    (
-                        targetX -
-                        startX
-                    ) *
-                    eased;
-
-
-                bonusText.y =
-                    startY +
-                    (
-                        targetY -
-                        startY
-                    ) *
-                    eased;
-
-
-                /*
+        /*
                     Pod koniec bonus zanika,
                     jakby "wchłaniał się"
                     w WON.
                 */
 
-                if (
-                    progress >
-                    0.7
-                ) {
-
-                    bonusText.alpha =
-                        1 -
-                        (
-                            progress -
-                            0.7
-                        ) /
-                        0.3;
-                }
-
-
-                const scale =
-                    1 -
-                    progress * 0.25;
-
-
-                bonusText.scale.set(
-                    scale
-                );
-            }
-        );
-    }
-
-
-    private animateWonAmountPulse():
-    Promise<void> {
-
-        return this.animate(
-            260,
-
-            progress => {
-
-                const punch =
-                    Math.sin(
-                        progress *
-                        Math.PI
-                    );
-
-
-                const scale =
-                    1 +
-                    punch * 0.22;
-
-
-                this.wonAmount
-                    .scale
-                    .set(
-                        scale
-                    );
-            }
-        ).then(
-            () => {
-
-                this.wonAmount
-                    .scale
-                    .set(
-                        1
-                    );
-            }
-        );
-    }
-
-
-    private animate(
-        duration: number,
-        update:
-            (
-                progress: number
-            ) => void
-    ): Promise<void> {
-
-        return new Promise(
-            resolve => {
-
-                const startTime =
-                    performance.now();
-
-
-                const frame = (
-                    currentTime: number
-                ) => {
-
-                    const progress =
-                        Math.min(
-                            1,
-                            (
-                                currentTime -
-                                startTime
-                            ) /
-                            duration
-                        );
-
-
-                    update(
-                        progress
-                    );
-
-
-                    if (
-                        progress >=
-                        1
-                    ) {
-
-                        resolve();
-
-                        return;
-                    }
-
-
-                    requestAnimationFrame(
-                        frame
-                    );
-                };
-
-
-                requestAnimationFrame(
-                    frame
-                );
-            }
-        );
-    }
-
-
-    async addPerk(
-        reward:
-            PerkReward
-    ): Promise<void> {
-
-        await this.perkContainer
-            .addPerk(
-                reward
-            );
-    }
-
-
-    setFreeBetIndicator(
-        visible: boolean
-    ): void {
-
-        this.freeBetLabel.visible =
-            visible;
-    }
-
-
-    private async showPerkTooltip(
-        reward: PerkReward
-    ): Promise<void> {
-
-        this.hidePerkTooltip();
-
-
-        const tooltip =
-            new PerkTooltip(
-                reward,
-                () => {
-                    this.hidePerkTooltip();
-                }
-            );
-
-
-        await tooltip.init();
-
-
-        tooltip.position.set(
-            500,
-            420
-        );
-
-
-        tooltip.zIndex =
-            5000;
-
-
-        this.activePerkTooltip =
-            tooltip;
-
-
-        this.addChild(
-            tooltip
-        );
-    }
-
-
-    private hidePerkTooltip(): void {
-
-        if (!this.activePerkTooltip) {
-            return;
+        if (progress > 0.7) {
+          bonusText.alpha = 1 - (progress - 0.7) / 0.3;
         }
 
+        const scale = 1 - progress * 0.25;
 
-        this.removeChild(
-            this.activePerkTooltip
-        );
+        bonusText.scale.set(scale);
+      },
+    );
+  }
 
+  private animateWonAmountPulse(): Promise<void> {
+    return this.animate(
+      260,
 
-        this.activePerkTooltip.destroy({
-            children: true
-        });
+      (progress) => {
+        const punch = Math.sin(progress * Math.PI);
 
+        const scale = 1 + punch * 0.22;
 
-        this.activePerkTooltip =
-            undefined;
-    }
+        this.wonAmount.scale.set(scale);
+      },
+    ).then(() => {
+      this.wonAmount.scale.set(1);
+    });
+  }
 
+  private animate(
+    duration: number,
+    update: (progress: number) => void,
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const startTime = performance.now();
 
+      const frame = (currentTime: number) => {
+        const progress = Math.min(1, (currentTime - startTime) / duration);
 
-    private async createDealerCard() {
+        update(progress);
 
-        this.dealerCard =
-            new DealerCard(
-                this.currentDealer,
+        if (progress >= 1) {
+          resolve();
 
-                () => {
-
-                    this.dealerSkillsPanel.show();
-                    this.dealerObjectivePanel.hide();
-
-                },
-
-                () => {
-
-                    this.dealerObjectivePanel.show();
-                    this.dealerSkillsPanel.hide();
-
-                }
-            );
-
-        await this.dealerCard.init();
-
-        this.dealerCard.position.set(
-            697.3,
-            108
-        );
-
-        this.addChild(
-            this.dealerCard
-        );
-    }
-
-
-    async setDealer(
-        dealer: DealerData
-    ): Promise<void> {
-
-        this.currentDealer =
-            dealer;
-
-        this.dealerSkillsPanel.setDealer(
-            dealer
-        );
-
-        if (this.dealerCard) {
-
-            this.removeChild(
-                this.dealerCard
-            );
-
-            this.dealerCard.destroy({
-                children: true
-            });
+          return;
         }
 
-        await this.createDealerCard();
+        requestAnimationFrame(frame);
+      };
+
+      requestAnimationFrame(frame);
+    });
+  }
+
+  async addPerk(reward: PerkReward): Promise<void> {
+    await this.perkContainer.addPerk(reward);
+  }
+
+  setFreeBetIndicator(visible: boolean): void {
+    this.freeBetLabel.visible = visible;
+  }
+
+  private async showPerkTooltip(reward: PerkReward): Promise<void> {
+    this.hidePerkTooltip();
+
+    const tooltip = new PerkTooltip(reward, () => {
+      this.hidePerkTooltip();
+    });
+
+    await tooltip.init();
+
+    tooltip.position.set(500, 420);
+
+    tooltip.zIndex = 5000;
+
+    this.activePerkTooltip = tooltip;
+
+    this.addChild(tooltip);
+  }
+
+  private hidePerkTooltip(): void {
+    if (!this.activePerkTooltip) {
+      return;
     }
 
+    this.removeChild(this.activePerkTooltip);
 
-    updateDealerObjective(
-        dealer: DealerData,
-        targetBalance: number
-    ) {
+    this.activePerkTooltip.destroy({
+      children: true,
+    });
 
-        this.currentFightTargetBalance =
-            targetBalance;
+    this.activePerkTooltip = undefined;
+  }
 
-        this.dealerObjectivePanel.setDealer(
-            dealer,
-            targetBalance
-        );
+  private async createDealerCard() {
+    this.dealerCard = new DealerCard(
+      this.currentDealer,
+
+      () => {
+        this.dealerSkillsPanel.show();
+        this.dealerObjectivePanel.hide();
+      },
+
+      () => {
+        this.dealerObjectivePanel.show();
+        this.dealerSkillsPanel.hide();
+      },
+    );
+
+    await this.dealerCard.init();
+
+    this.dealerCard.position.set(697.3, 108);
+
+    this.addChild(this.dealerCard);
+  }
+
+  async setDealer(dealer: DealerData): Promise<void> {
+    this.currentDealer = dealer;
+
+    this.dealerSkillsPanel.setDealer(dealer);
+
+    if (this.dealerCard) {
+      this.removeChild(this.dealerCard);
+
+      this.dealerCard.destroy({
+        children: true,
+      });
     }
 
+    await this.createDealerCard();
+  }
 
-    setDisabled(value: boolean) {
+  updateDealerObjective(dealer: DealerData, targetBalance: number) {
+    this.currentFightTargetBalance = targetBalance;
 
-        if (this.dealerCard) {
-            this.dealerCard.setDisabled(value);
-        }
+    this.dealerObjectivePanel.setDealer(dealer, targetBalance);
+  }
 
-        if (
-            this.dealerSkillsPanel.visible ||
-            this.dealerObjectivePanel.visible
-        ) {
-            this.dealerSkillsPanel.hide();
-            this.dealerObjectivePanel.hide();
-        }
+  setDisabled(value: boolean) {
+    if (this.dealerCard) {
+      this.dealerCard.setDisabled(value);
     }
 
-    updateBalance(balance: number) {
-        this.balanceValue.text = balance.toFixed(2);
+    if (this.dealerSkillsPanel.visible || this.dealerObjectivePanel.visible) {
+      this.dealerSkillsPanel.hide();
+      this.dealerObjectivePanel.hide();
+    }
+  }
+
+  updateBalance(balance: number) {
+    this.balanceValue.text = balance.toFixed(2);
+  }
+
+  updateBet(bet: number) {
+    this.betValue.text = bet.toFixed(2);
+  }
+
+  updateCombination(combination: string) {
+    this.combinationValue.text = combination;
+  }
+
+  updateWon(value: number) {
+    this.wonAmount.text = value.toFixed(2);
+  }
+
+  updateMultiplier(multiplier: number) {
+    const previousMultiplier = this.currentMultiplier;
+
+    this.currentMultiplier = multiplier;
+
+    this.multiplierValue.text = `x${multiplier}`;
+
+    if (multiplier > previousMultiplier) {
+      this.animateMultiplierIncrease();
+      this.audioManager.play(SoundId.MULTIPLIER_INCREASED, {
+        loop: false,
+        volume: 0.5,
+      });
+
+      this.multiplierEffect.play(previousMultiplier, multiplier);
+    }
+  }
+
+  updateProbability(odds: OddsTable) {
+    this.probabilityDisplay.updateOdds(odds);
+  }
+
+  private animateMultiplierIncrease() {
+    if (this.multiplierAnimationId !== undefined) {
+      cancelAnimationFrame(this.multiplierAnimationId);
     }
 
-    updateBet(bet: number) {
-        this.betValue.text = bet.toFixed(2);
-    }
+    const duration = 320;
 
-    updateCombination(combination: string) {
-        this.combinationValue.text = combination;
-    }
+    const startTime = performance.now();
 
-    updateWon(value: number) {
-        this.wonAmount.text = value.toFixed(2);
-    }
+    const animate = (currentTime: number) => {
+      const progress = Math.min(1, (currentTime - startTime) / duration);
 
-    updateMultiplier(
-        multiplier: number
-    ) {
-
-        const previousMultiplier =
-            this.currentMultiplier;
-
-
-        this.currentMultiplier =
-            multiplier;
-
-
-        this.multiplierValue.text =
-            `x${multiplier}`;
-
-
-        if (
-            multiplier >
-            previousMultiplier
-        ) {
-
-            this.animateMultiplierIncrease();
-            this.audioManager.play(
-                SoundId.MULTIPLIER_INCREASED,
-                {
-                    loop: false,
-                    volume:0.5
-                }
-            );
-
-
-            this.multiplierEffect.play(
-                previousMultiplier,
-                multiplier
-            );
-
-        }
-    }
-
-    updateProbability(
-        odds: OddsTable
-    ) {
-
-        this.probabilityDisplay
-            .updateOdds(odds);
-    }
-
-
-    private animateMultiplierIncrease() {
-
-        if (
-            this.multiplierAnimationId !==
-            undefined
-        ) {
-
-            cancelAnimationFrame(
-                this.multiplierAnimationId
-            );
-
-        }
-
-        const duration = 320;
-
-        const startTime =
-            performance.now();
-
-        const animate = (
-            currentTime: number
-        ) => {
-
-            const progress =
-                Math.min(
-                    1,
-                    (
-                        currentTime -
-                        startTime
-                    ) / duration
-                );
-
-            /*
+      /*
                 Powiększenie:
                 1 → około 1.18 → 1
             */
-            const punch =
-                Math.sin(
-                    progress * Math.PI
-                );
+      const punch = Math.sin(progress * Math.PI);
 
-            const scale =
-                1 + punch * 0.18;
+      const scale = 1 + punch * 0.18;
 
-            this.multiplierContainer.scale.set(
-                scale
-            );
+      this.multiplierContainer.scale.set(scale);
 
-            /*
+      /*
                 Trzęsienie najmocniejsze na początku,
                 a później stopniowo zanika.
             */
-            const shakeStrength =
-                (1 - progress) * 7;
+      const shakeStrength = (1 - progress) * 7;
 
-            const shakeX =
-                Math.sin(
-                    progress *
-                    Math.PI *
-                    12
-                ) * shakeStrength;
+      const shakeX = Math.sin(progress * Math.PI * 12) * shakeStrength;
 
-            const shakeY =
-                Math.cos(
-                    progress *
-                    Math.PI *
-                    16
-                ) * shakeStrength * 0.35;
+      const shakeY = Math.cos(progress * Math.PI * 16) * shakeStrength * 0.35;
 
-            this.multiplierValue.position.set(
-                shakeX,
-                shakeY
-            );
+      this.multiplierValue.position.set(shakeX, shakeY);
 
-            if (progress < 1) {
+      if (progress < 1) {
+        this.multiplierAnimationId = requestAnimationFrame(animate);
 
-                this.multiplierAnimationId =
-                    requestAnimationFrame(
-                        animate
-                    );
+        return;
+      }
 
-                return;
-            }
-
-            /*
+      /*
                 Zawsze przywracamy stan bazowy.
             */
-            this.multiplierContainer.scale.set(1);
+      this.multiplierContainer.scale.set(1);
 
-            this.multiplierValue.position.set(
-                0,
-                0
-            );
+      this.multiplierValue.position.set(0, 0);
 
-            this.multiplierAnimationId =
-                undefined;
-        };
+      this.multiplierAnimationId = undefined;
+    };
 
-        this.multiplierAnimationId =
-            requestAnimationFrame(
-                animate
-            );
-    }
+    this.multiplierAnimationId = requestAnimationFrame(animate);
+  }
 }

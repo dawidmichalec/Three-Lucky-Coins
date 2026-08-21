@@ -1,10 +1,9 @@
 import { GambleForMoreGameId } from "./GambleForMoreGameId";
 
 export interface GambleForMoreOffer {
+  currentWin: number;
 
-    currentWin: number;
+  potentialWin: number;
 
-    potentialWin: number;
-
-    gameId: GambleForMoreGameId;
+  gameId: GambleForMoreGameId;
 }

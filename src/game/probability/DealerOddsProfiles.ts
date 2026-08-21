@@ -1,108 +1,37 @@
-import {
-    DealerOddsProfile,
-    OddsVisibility
-} from "./OddsTypes";
+import { DealerOddsProfile, OddsVisibility } from "./OddsTypes";
 
+export const BEN_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
 
-export const BEN_PROFILE:
-    DealerOddsProfile = {
+  headsProbabilities: [0.02, 0.05, 0.1, 0.9, 0.95, 0.98],
+};
 
-        visibility:
-            OddsVisibility.EXACT,
+export const ZACK_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
 
-        headsProbabilities: [
-            0.02,
-            0.05,
-            0.10,
-            0.90,
-            0.95,
-            0.98
-        ]
-    };
+  headsProbabilities: [0.05, 0.1, 0.15, 0.2, 0.8, 0.85, 0.9, 0.95],
+};
 
+export const BECKY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
 
-export const ZACK_PROFILE:
-    DealerOddsProfile = {
+  headsProbabilities: [0.1, 0.15, 0.2, 0.8, 0.85, 0.9],
+};
 
-        visibility:
-            OddsVisibility.EXACT,
+export const MELANIE_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
 
-        headsProbabilities: [
-            0.05,
-            0.10,
-            0.15,
-            0.20,
-            0.80,
-            0.85,
-            0.90,
-            0.95
-        ]
-    };
+  headsProbabilities: [0.15, 0.2, 0.8, 0.85],
+};
 
+export const HILLARY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
 
-export const BECKY_PROFILE:
-    DealerOddsProfile = {
+  headsProbabilities: [0.1, 0.25, 0.75, 0.9],
+};
 
-        visibility:
-            OddsVisibility.EXACT,
+export const TIMOTHY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
 
-        headsProbabilities: [
-            0.10,
-            0.15,
-            0.20,
-            0.80,
-            0.85,
-            0.90
-        ]
-    };
-
-
-export const MELANIE_PROFILE:
-    DealerOddsProfile = {
-
-        visibility:
-            OddsVisibility.EXACT,
-
-        headsProbabilities: [
-            0.15,
-            0.20,
-            0.80,
-            0.85
-        ]
-    };
-
-
-export const HILLARY_PROFILE:
-    DealerOddsProfile = {
-
-        visibility:
-            OddsVisibility.EXACT,
-
-        headsProbabilities: [
-            0.10,
-            0.25,
-            0.75,
-            0.90
-        ]
-    };
-
-
-export const TIMOTHY_PROFILE:
-    DealerOddsProfile = {
-
-        visibility:
-            OddsVisibility.EXACT,
-
-        headsProbabilities: [
-            0.10,
-            0.15,
-            0.20,
-            0.25,
-            0.30,
-            0.70,
-            0.75,
-            0.80,
-            0.85,
-            0.90
-        ]
-    };
+  headsProbabilities: [0.1, 0.15, 0.2, 0.25, 0.3, 0.7, 0.75, 0.8, 0.85, 0.9],
+};

@@ -1,8 +1,7 @@
 export interface DealerCollectionEntry {
+  dealerId: string;
 
-    dealerId: string;
+  discovered: boolean;
 
-    discovered: boolean;
-
-    signatureTokenUnlocked: boolean;
+  signatureTokenUnlocked: boolean;
 }

@@ -1,19 +1,17 @@
 import { Language } from "../localization/Language";
 
 export interface GameSettings {
+  audioEnabled: boolean;
 
-    audioEnabled: boolean;
+  musicVolume: number;
 
-    musicVolume: number;
+  sfxVolume: number;
 
-    sfxVolume: number;
+  brightness: number;
 
-    brightness: number;
+  language: Language;
 
-    language: Language;
+  spaceToSpin: boolean;
 
-    spaceToSpin: boolean;
-
-    fullScreen: boolean;
-
+  fullScreen: boolean;
 }
