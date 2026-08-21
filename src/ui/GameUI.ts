@@ -440,6 +440,96 @@ export class GameUI extends Container {
     }
 
 
+    async animatePenaltyIntoWon(
+        penaltyAmount: number,
+        finalAmount: number
+    ): Promise<void> {
+
+        const penaltyText =
+            new Text({
+                text:
+                    `-${penaltyAmount.toFixed(2)}`,
+
+                style: {
+                    fontFamily:
+                        "Anek-Kannada Bold",
+
+                    fontSize:
+                        36,
+
+                    fontWeight:
+                        "bold",
+
+                    fill:
+                        0xff3131,
+
+                    dropShadow: {
+                        alpha:
+                            1,
+
+                        blur:
+                            12,
+
+                        color:
+                            "#ff0000",
+
+                        distance:
+                            0,
+
+                        angle:
+                            0
+                    }
+                }
+            });
+
+
+        penaltyText.anchor.set(
+            0.5
+        );
+
+
+        penaltyText.position.set(
+            1100,
+            650
+        );
+
+
+        penaltyText.alpha =
+            0;
+
+        penaltyText.scale.set(
+            0.8
+        );
+
+
+        this.addChild(
+            penaltyText
+        );
+
+
+        await this.animateBonusAppear(
+            penaltyText
+        );
+
+
+        await this.animateBonusFly(
+            penaltyText
+        );
+
+
+        penaltyText.destroy();
+
+
+        this.wonAmount.text =
+            finalAmount.toFixed(
+                2
+            );
+
+
+        await this.animateWonAmountPulse();
+    }
+
+
     async animateBonusIntoWon(
         bonusAmount: number,
         finalAmount: number

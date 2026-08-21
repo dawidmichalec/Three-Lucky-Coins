@@ -36,6 +36,7 @@ import { RunPerkManager } from "../perks/RunPerkManager";
 import { PerkEffectApplier } from '../perks/PerkEffectApplier';
 import { PerkEffectMessageType } from '../../ui/overlays/PerkEffectOverlay';
 import { roundMoney } from '../util/MoneyUtils';
+import { OddsTable } from '../probability/OddsTypes';
 
 
 export class GameScene extends BaseScene {
@@ -70,6 +71,7 @@ export class GameScene extends BaseScene {
     private runPerkManager = new RunPerkManager();
     private perkEffectApplier = new PerkEffectApplier(this.runPerkManager, this.streakMultiplierManager);
     private riskTakerWasActive = false;
+    private preparedCoinSenseResult?: CoinSide[];
 
 
     constructor (
@@ -329,6 +331,100 @@ export class GameScene extends BaseScene {
         ]);
 
         this.lockControls();
+    }
+
+
+    private prepareCoinSense(): void {
+
+        if (
+            !this.perkEffectApplier
+                .isCoinSenseAvailable()
+        ) {
+
+            this.preparedCoinSenseResult =
+                undefined;
+
+            return;
+        }
+
+
+        /*
+            Losujemy PRAWDZIWY wynik
+            według aktualnych oddsów dealera.
+        */
+
+        const result =
+            this.oddsManager
+                .rollResult();
+
+
+        /*
+            Zapamiętujemy go.
+
+            Ten dokładny wynik musi zostać
+            później użyty przez spin.
+        */
+
+        this.preparedCoinSenseResult =
+            result;
+
+
+        /*
+            Tworzymy OddsTable wyłącznie
+            do prezentacji graczowi.
+        */
+
+        const revealedOdds: OddsTable = {
+
+            coin1:
+                this.createRevealedCoinOdds(
+                    result[0]
+                ),
+
+            coin2:
+                this.createRevealedCoinOdds(
+                    result[1]
+                ),
+
+            coin3:
+                this.createRevealedCoinOdds(
+                    result[2]
+                )
+        };
+
+
+        this.view.gameUI
+            .updateProbability(
+                revealedOdds
+            );
+
+
+        console.log(
+            "COIN SENSE RESULT:",
+            result.join("-")
+        );
+    }
+
+
+    private createRevealedCoinOdds(
+        side: CoinSide
+    ) {
+
+        if (
+            side === CoinSide.Heads
+        ) {
+
+            return {
+                heads: 1,
+                tails: 0
+            };
+        }
+
+
+        return {
+            heads: 0,
+            tails: 1
+        };
     }
 
 
@@ -674,6 +770,15 @@ export class GameScene extends BaseScene {
         this.prepareNextRound();
 
         /*
+            Jeżeli mamy Coin Sense,
+            losujemy pierwszy wynik walki
+            i nadpisujemy wyłącznie jego
+            prezentację w Probability Display.
+        */
+
+        this.prepareCoinSense();
+
+        /*
             Tworzymy nowy ekran prezentacji.
         */
 
@@ -758,6 +863,8 @@ export class GameScene extends BaseScene {
 
         const payoutBet = this.perkEffectApplier.resolvePayoutBet(bet);
 
+        const coinSenseActive = this.perkEffectApplier.isCoinSenseAvailable();
+
 
         if (
             this.player.balance < betCost
@@ -777,6 +884,15 @@ export class GameScene extends BaseScene {
 
 
         this.roundState = "spinning";
+
+
+        if (
+            coinSenseActive
+        ) {
+
+            this.perkEffectApplier
+                .consumeCoinSense();
+        }
 
 
         this.lockControls();
@@ -906,14 +1022,29 @@ export class GameScene extends BaseScene {
             const resolvedWinAmount =
                 outcome.wonAmount;
 
+            const coinSenseResult =
+                this.perkEffectApplier
+                    .applyCoinSense(
+                        resolvedWinAmount,
+                        coinSenseActive
+                    );
+
+            
+            console.log(
+                "COIN SENSE:",
+                coinSenseResult.triggered,
+                coinSenseResult.finalWinAmount
+            );
+
 
             const riskTakerResult =
                 this.perkEffectApplier
                     .applyRiskTaker(
-                        resolvedWinAmount,
+                        coinSenseResult.finalWinAmount,
                         bet,
                         highestAffordableBet
                     );
+
 
             const gamblerResult =
                 this.perkEffectApplier
@@ -997,6 +1128,45 @@ export class GameScene extends BaseScene {
                         "nextSpinDoubleDown",
                         "",
                         PerkEffectMessageType.POSITIVE
+                    );
+            }
+
+
+            this.view.gameUI.updateWon(
+                resolvedWinAmount
+            );
+
+
+            if (
+                coinSenseResult.triggered &&
+                coinSenseResult.bonusAmount < 0
+            ) {
+
+                const reductionPercentage =
+                    roundMoney(
+                        (
+                            1 -
+                            coinSenseResult.payoutMultiplier
+                        ) *
+                        100
+                    );
+
+
+                await this.view
+                    .perkEffectMessageOverlay
+                    .play(
+                        "winningsReducedBy",
+                        `${reductionPercentage}%`,
+                        PerkEffectMessageType.NEGATIVE
+                    );
+
+
+                await this.view.gameUI
+                    .animatePenaltyIntoWon(
+                        Math.abs(
+                            coinSenseResult.bonusAmount
+                        ),
+                        coinSenseResult.finalWinAmount
                     );
             }
 
@@ -1426,6 +1596,21 @@ export class GameScene extends BaseScene {
         if (forcedResult) {
 
             return forcedResult;
+        }
+
+        if (
+            this.preparedCoinSenseResult
+        ) {
+
+            const result =
+                this.preparedCoinSenseResult;
+
+
+            this.preparedCoinSenseResult =
+                undefined;
+
+
+            return result;
         }
 
 

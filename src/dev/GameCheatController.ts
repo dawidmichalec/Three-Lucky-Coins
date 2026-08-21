@@ -214,6 +214,17 @@ export class GameCheatController {
         );
 
 
+        this.cheatManager.register(
+            CheatCode.FORCE_COIN_SENSE,
+            () => {
+
+                this.forcePerkReward(
+                    "coin_sense"
+                );
+            }
+        );
+
+
     }
 
 

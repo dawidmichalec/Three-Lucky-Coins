@@ -26,6 +26,8 @@ export enum CheatCode {
 
     FORCE_GAMBLER = "perk_gambler",
 
-    FORCE_DOUBLE_DOWN = "perk_double_down"
+    FORCE_DOUBLE_DOWN = "perk_double_down",
+
+    FORCE_COIN_SENSE = "perk_coin_sense"
 
 }

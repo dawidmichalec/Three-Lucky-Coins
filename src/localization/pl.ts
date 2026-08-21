@@ -206,6 +206,7 @@ export default {
     coinSenseName: "SZÓSTY ZMYSŁ",
 
     coinSenseDescriptionCommon: "Na początku każdej walki ujawnia dokładną kombinację pierwszego rzutu.\n\nWygrana z tego rzutu jest zmniejszona o 25%.",
+    winningsReducedBy: "WYGRANA ZMNIEJSZONA O",
 
 
     // RISK TAKER

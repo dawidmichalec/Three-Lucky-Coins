@@ -33,6 +33,10 @@ interface DoubleDownConfig {
     betMultiplier: number;
 }
 
+interface CoinSenseConfig {
+    payoutMultiplier: number;
+}
+
 
 export interface RiskTakerResult {
 
@@ -59,12 +63,21 @@ export interface GamblerResult {
     payoutMultiplier: number;
 }
 
+export interface CoinSenseResult {
+    triggered: boolean;
+    baseWinAmount: number;
+    bonusAmount: number;
+    finalWinAmount: number;
+    payoutMultiplier: number;
+}
+
 
 export class PerkEffectApplier {
 
     private casinoBonusBetsPlacedThisFight = 0;
     private gamblerBonusActive = false;
     private doubleDownSuccessfulSpins = 0;
+    private coinSenseUsedThisFight = false;
 
 
     constructor(
@@ -159,8 +172,9 @@ export class PerkEffectApplier {
 
     resetFightEffects(): void {
 
-        this.casinoBonusBetsPlacedThisFight =
-            0;
+        this.casinoBonusBetsPlacedThisFight = 0;
+
+        this.coinSenseUsedThisFight = false;
     }
 
 
@@ -562,6 +576,88 @@ export class PerkEffectApplier {
 
         this.doubleDownSuccessfulSpins =
             0;
+    }
+
+
+    isCoinSenseAvailable(): boolean {
+
+        const coinSense =
+            this.runPerkManager.getPerk(
+                "coin_sense"
+            );
+
+
+        return (
+            coinSense !== undefined &&
+            !this.coinSenseUsedThisFight
+        );
+    }
+
+
+    applyCoinSense(
+        winAmount: number,
+        coinSenseWasActive: boolean
+    ): CoinSenseResult {
+
+        const coinSense =
+            this.runPerkManager.getPerk(
+                "coin_sense"
+            );
+
+
+        if (
+            !coinSense ||
+            !coinSenseWasActive
+        ) {
+
+            return {
+                triggered: false,
+                baseWinAmount: winAmount,
+                bonusAmount: 0,
+                finalWinAmount: winAmount,
+                payoutMultiplier: 1
+            };
+        }
+
+
+        const config =
+            coinSense.variant.config as
+                CoinSenseConfig;
+
+
+        const finalWinAmount =
+            roundMoney(
+                winAmount *
+                config.payoutMultiplier
+            );
+
+
+        const bonusAmount =
+            roundMoney(
+                finalWinAmount -
+                winAmount
+            );
+
+
+        return {
+            triggered: true,
+            baseWinAmount: winAmount,
+            bonusAmount,
+            finalWinAmount,
+            payoutMultiplier:
+                config.payoutMultiplier
+        };
+    }
+
+
+    consumeCoinSense(): void {
+
+        if (
+            this.isCoinSenseAvailable()
+        ) {
+            this.coinSenseUsedThisFight =
+                true;
+        }
     }
 
 

@@ -205,7 +205,7 @@ export default {
     coinSenseName: "COIN SENSE",
 
     coinSenseDescriptionCommon: "At the start of every fight, reveals the exact combination for the first toss.\n\nWinnings from that toss are reduced by 25%.",
-
+    winningsReducedBy: "WINNINGS REDUCED BY ",
 
     // RISK TAKER
 
