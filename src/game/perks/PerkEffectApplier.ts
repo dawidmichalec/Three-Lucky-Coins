@@ -28,6 +28,11 @@ interface GamblerConfig {
     payoutMultiplier: number;
 }
 
+interface DoubleDownConfig {
+    requiredSuccessfulSpins: number;
+    betMultiplier: number;
+}
+
 
 export interface RiskTakerResult {
 
@@ -59,6 +64,7 @@ export class PerkEffectApplier {
 
     private casinoBonusBetsPlacedThisFight = 0;
     private gamblerBonusActive = false;
+    private doubleDownSuccessfulSpins = 0;
 
 
     constructor(
@@ -427,6 +433,135 @@ export class PerkEffectApplier {
             payoutMultiplier:
                 config.payoutMultiplier
         };
+    }
+
+
+    isDoubleDownActive(): boolean {
+
+        const doubleDown =
+            this.runPerkManager.getPerk(
+                "double_down"
+            );
+
+
+        if (!doubleDown) {
+            return false;
+        }
+
+
+        const config =
+            doubleDown.variant.config as
+                DoubleDownConfig;
+
+
+        return (
+            this.doubleDownSuccessfulSpins >=
+            config.requiredSuccessfulSpins
+        );
+    }
+
+
+    resolvePayoutBet(
+        bet: number
+    ): number {
+
+        const doubleDown =
+            this.runPerkManager.getPerk(
+                "double_down"
+            );
+
+
+        if (
+            !doubleDown ||
+            !this.isDoubleDownActive()
+        ) {
+            return bet;
+        }
+
+
+        const config =
+            doubleDown.variant.config as
+                DoubleDownConfig;
+
+
+        return (
+            bet *
+            config.betMultiplier
+        );
+    }
+
+
+    recordDoubleDownSpinResult(
+        won: boolean,
+        doubleDownWasActive: boolean
+    ): boolean {
+
+        const doubleDown =
+            this.runPerkManager.getPerk(
+                "double_down"
+            );
+
+
+        if (!doubleDown) {
+            return false;
+        }
+
+
+        /*
+            Jeżeli właśnie wykorzystaliśmy
+            Double Down, zaczynamy progress
+            od nowa.
+        */
+
+        if (
+            doubleDownWasActive
+        ) {
+
+            this.doubleDownSuccessfulSpins =
+                0;
+
+            return false;
+        }
+
+
+        /*
+            Przegrana przerywa serię.
+        */
+
+        if (!won) {
+
+            this.doubleDownSuccessfulSpins =
+                0;
+
+            return false;
+        }
+
+
+        this.doubleDownSuccessfulSpins++;
+
+
+        const config =
+            doubleDown.variant.config as
+                DoubleDownConfig;
+
+
+        /*
+            true TYLKO w rundzie,
+            która właśnie uzbroiła Double Down.
+        */
+
+        return (
+            this.doubleDownSuccessfulSpins ===
+            config.requiredSuccessfulSpins
+        );
+    }
+
+
+    
+    resetDoubleDownProgress(): void {
+
+        this.doubleDownSuccessfulSpins =
+            0;
     }
 
 

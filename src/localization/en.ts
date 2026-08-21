@@ -235,7 +235,9 @@ export default {
 
     doubleDownName: "DOUBLE DOWN",
 
-    doubleDownDescription: "After 3 consecutive wins, your 4th bet counts as double for payout calculations.\n\nOnly the regular bet amount is deducted from your balance.",
+    doubleDownDescription: "After 3 consecutive wins, your 4th bet counts as double for payout calculations.\n\nOnly the regular bet amount is deducted from your balance.\n\nProgress carries over between fights.",
+    doubleDownActive: "DOUBLE DOWN ACTIVE",
+    nextSpinDoubleDown: "NEXT SPIN USES DOUBLE BET FOR PAYOUT",
 
 
     // LUCKY HAND

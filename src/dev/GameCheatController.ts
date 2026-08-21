@@ -202,6 +202,18 @@ export class GameCheatController {
             }
         );
 
+
+        this.cheatManager.register(
+            CheatCode.FORCE_DOUBLE_DOWN,
+            () => {
+
+                this.forcePerkReward(
+                    "double_down"
+                );
+            }
+        );
+
+
     }
 
 

@@ -2,8 +2,8 @@ import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
 interface DoubleDownConfig {
-    requiredConsecutiveWins: number;
-    payoutBetMultiplier: number;
+    requiredSuccessfulSpins: number;
+    betMultiplier: number;
 }
 
 export const DOUBLE_DOWN_DATA: PerkData<DoubleDownConfig> = {
@@ -25,8 +25,8 @@ export const DOUBLE_DOWN_DATA: PerkData<DoubleDownConfig> = {
             },
 
             config: {
-                requiredConsecutiveWins: 3,
-                payoutBetMultiplier: 2
+                requiredSuccessfulSpins: 3,
+                betMultiplier: 2
             }
         }
     ]

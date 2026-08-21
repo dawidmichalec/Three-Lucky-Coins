@@ -752,8 +752,11 @@ export class GameScene extends BaseScene {
 
         const highestAffordableBet = this.controller.getHighestAffordableBet(this.player.balance);
 
-
         const betCost = this.perkEffectApplier.resolveBetCost(bet);
+
+        const doubleDownActive = this.perkEffectApplier.isDoubleDownActive();
+
+        const payoutBet = this.perkEffectApplier.resolvePayoutBet(bet);
 
 
         if (
@@ -779,6 +782,19 @@ export class GameScene extends BaseScene {
         this.lockControls();
 
         this.view.gameUI.updateWon(0);
+
+        if (
+            doubleDownActive
+        ) {
+
+            await this.view
+                .perkEffectMessageOverlay
+                .play(
+                    "doubleDownActive",
+                    "",
+                    PerkEffectMessageType.POSITIVE
+                );
+        }
 
 
         this.player.balance -= betCost;
@@ -829,7 +845,8 @@ export class GameScene extends BaseScene {
                 result:
                     resultSides,
 
-                bet,
+                bet:
+                    payoutBet,
 
                 streakMultiplier:
                     this.streakMultiplierManager.getValue(),
@@ -844,6 +861,14 @@ export class GameScene extends BaseScene {
 
         const winAmount =
             resolution.winAmount;
+
+
+        const doubleDownActivated =
+            this.perkEffectApplier
+                .recordDoubleDownSpinResult(
+                    win,
+                    doubleDownActive
+                );
 
 
         const outcome = this.roundOutcomeHandler.apply({
@@ -960,6 +985,20 @@ export class GameScene extends BaseScene {
                         this.streakMultiplierManager
                             .getValue()
                 });
+
+            
+            if (
+                doubleDownActivated
+            ) {
+
+                await this.view
+                    .perkEffectMessageOverlay
+                    .play(
+                        "nextSpinDoubleDown",
+                        "",
+                        PerkEffectMessageType.POSITIVE
+                    );
+            }
 
             /*
                 RISK TAKER
@@ -1214,6 +1253,8 @@ export class GameScene extends BaseScene {
             });
 
         } else {
+
+            this.perkEffectApplier.resetDoubleDownProgress();
 
             const insuranceResult =
                 this.perkEffectApplier

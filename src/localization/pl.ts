@@ -235,7 +235,9 @@ export default {
 
     doubleDownName: "PODWÓJNA STAWKA",
 
-    doubleDownDescription: "Po 3 wygranych z rzędu czwarty zakład liczy się podwójnie przy obliczaniu wygranej.\n\nZ salda pobierana jest tylko standardowa stawka.",
+    doubleDownDescription: "Po 3 wygranych z rzędu czwarty zakład liczy się podwójnie przy obliczaniu wygranej.\n\nZ salda pobierana jest tylko standardowa stawka.\n\nPostępy są przenoszone między walkami.",
+    doubleDownActive: "PODWÓJNA STAWKA AKTYWNA",
+    nextSpinDoubleDown: "NASTĘPNY RZUT LICZY PODWÓJNĄ WARTOŚĆ ZAKŁADU",
 
 
     // LUCKY HAND
