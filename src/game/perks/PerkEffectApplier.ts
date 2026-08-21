@@ -2,6 +2,7 @@ import { PerkReward } from "./reward/PerkReward";
 import { RunPerkManager } from "./RunPerkManager";
 import { StreakMultiplierManager } from "../streak/StreakMultiplierManager";
 import { roundMoney } from "../util/MoneyUtils";
+import { StreakAction, StreakResolution } from "../streak/StreakResolution";
 
 
 interface MultiplierBoosterConfig {
@@ -16,6 +17,11 @@ interface CasinoBonusConfig {
 
 interface RiskTakerConfig {
     payoutMultiplier: number;
+}
+
+export interface InsuranceResult {
+    triggered: boolean;
+    streakResolution: StreakResolution;
 }
 
 
@@ -259,6 +265,44 @@ export class PerkEffectApplier {
             finalWinAmount,
 
             payoutMultiplier
+        };
+    }
+
+
+    resolveLossStreakResolution(
+        resolution: StreakResolution
+    ): InsuranceResult {
+
+        const insurance =
+            this.runPerkManager.getPerk(
+                "insurance"
+            );
+
+
+        if (
+            !insurance ||
+            resolution.action !==
+                StreakAction.RESET
+        ) {
+
+            return {
+                triggered: false,
+                streakResolution:
+                    resolution
+            };
+        }
+
+
+        return {
+            triggered: true,
+
+            streakResolution: {
+                action:
+                    StreakAction.DECREASE,
+
+                value:
+                    1
+            }
         };
     }
 

@@ -227,6 +227,7 @@ export default {
     insuranceName: "INSURANCE",
 
     insuranceDescription: "A loss reduces your streak multiplier by 1 instead of resetting it.\n\nIt cannot fall below your base streak multiplier.\n\nResets after each fight.",
+    streakMultiplierProtected: "STREAK MULTIPLIER PROTECTED",
 
 
     // DOUBLE DOWN

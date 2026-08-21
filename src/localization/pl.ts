@@ -228,7 +228,7 @@ export default {
     insuranceName: "UBEZPIECZENIE",
 
     insuranceDescription: "Przegrana zmniejsza mnożnik passy o 1 zamiast go resetować.\n\nNie może on spaść poniżej podstawowego mnożnika passy.\n\nEfekt resetuje się po każdej walce.",
-
+    streakMultiplierProtected: "MNOŻNIK PASSY ZABEZPIECZONY",
 
     // DOUBLE DOWN
 

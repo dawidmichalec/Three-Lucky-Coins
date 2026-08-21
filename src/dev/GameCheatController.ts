@@ -181,6 +181,16 @@ export class GameCheatController {
             }
         );
 
+        this.cheatManager.register(
+            CheatCode.FORCE_INSURANCE,
+            () => {
+
+                this.forcePerkReward(
+                    "insurance"
+                );
+            }
+        );
+
     }
 
 

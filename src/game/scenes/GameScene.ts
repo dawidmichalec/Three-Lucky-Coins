@@ -999,9 +999,32 @@ export class GameScene extends BaseScene {
             LOSS
         */
 
-        this.streakMultiplierManager.applyResolution(
-            streakResolution
-        );
+        const insuranceResult =
+            this.perkEffectApplier
+                .resolveLossStreakResolution(
+                    streakResolution
+                );
+
+
+        if (
+            insuranceResult.triggered
+        ) {
+
+            void this.view
+                .perkEffectMessageOverlay
+                .play(
+                    "streakMultiplierProtected",
+                    "",
+                    PerkEffectMessageType.POSITIVE
+                );
+        }
+
+
+        this.streakMultiplierManager
+            .applyResolution(
+                insuranceResult
+                    .streakResolution
+            );
 
         this.view.gameUI.updateMultiplier(
             this.streakMultiplierManager.getValue()
@@ -1146,19 +1169,49 @@ export class GameScene extends BaseScene {
 
         } else {
 
-            this.streakMultiplierManager.applyResolution({
-                action: StreakAction.RESET
-            });
+            const insuranceResult =
+                this.perkEffectApplier
+                    .resolveLossStreakResolution({
+                        action:
+                            StreakAction.RESET
+                    });
 
-            this.view.gameUI.updateWon(
-                0
-            );
 
-            this.runStatsRecorder.finishRound({
-                win: false,
-                streakMultiplier:
-                    this.streakMultiplierManager.getValue()
-            });
+            if (
+                insuranceResult.triggered
+            ) {
+
+                await this.view
+                    .perkEffectMessageOverlay
+                    .play(
+                        "streakMultiplierProtected",
+                        "",
+                        PerkEffectMessageType.POSITIVE
+                    );
+            }
+
+
+            this.streakMultiplierManager
+                .applyResolution(
+                    insuranceResult
+                        .streakResolution
+                );
+
+
+            this.view.gameUI
+                .updateWon(
+                    0
+                );
+
+
+            this.runStatsRecorder
+                .finishRound({
+                    win: false,
+
+                    streakMultiplier:
+                        this.streakMultiplierManager
+                            .getValue()
+                });
         }
 
         this.view.gameUI.updateMultiplier(
