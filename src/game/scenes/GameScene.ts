@@ -35,6 +35,7 @@ import { PerkReward } from '../perks/reward/PerkReward';
 import { RunPerkManager } from "../perks/RunPerkManager";
 import { PerkEffectApplier } from '../perks/PerkEffectApplier';
 import { PerkEffectMessageType } from '../../ui/overlays/PerkEffectOverlay';
+import { roundMoney } from '../util/MoneyUtils';
 
 
 export class GameScene extends BaseScene {
@@ -364,11 +365,11 @@ export class GameScene extends BaseScene {
         ) {
 
             const increasePercentage =
-                (
+                roundMoney((
                     payoutMultiplier! -
                     1
                 ) *
-                100;
+                100);
 
 
             void this.view
@@ -889,10 +890,14 @@ export class GameScene extends BaseScene {
                         highestAffordableBet
                     );
 
+            const gamblerResult =
+                this.perkEffectApplier
+                    .applyGambler(
+                        riskTakerResult.finalWinAmount
+                    );
 
-            const finalWinAmount =
-                riskTakerResult
-                    .finalWinAmount;
+
+            const finalWinAmount = gamblerResult.finalWinAmount;
 
 
             console.log(
@@ -956,30 +961,44 @@ export class GameScene extends BaseScene {
                             .getValue()
                 });
 
+            /*
+                RISK TAKER
+
+                resolvedWinAmount
+                    ↓
+                riskTakerResult.finalWinAmount
+            */
+
             if (
                 riskTakerResult.triggered &&
                 riskTakerResult.bonusAmount > 0
             ) {
 
-                /*
-                    Najpierw pokazujemy bazową wygraną,
-                    jeszcze bez bonusu Risk Takera.
-                */
-
-                this.view.gameUI.updateWon(
-                    resolvedWinAmount
-                );
-
-
-                /*
-                    Następnie bonus wlatuje
-                    do Won Amount.
-                */
-
                 await this.view.gameUI
                     .animateBonusIntoWon(
                         riskTakerResult.bonusAmount,
-                        finalWinAmount
+                        riskTakerResult.finalWinAmount
+                    );
+            }
+
+
+            /*
+                GAMBLER
+
+                wynik po Risk Takerze
+                    ↓
+                gamblerResult.finalWinAmount
+            */
+
+            if (
+                gamblerResult.triggered &&
+                gamblerResult.bonusAmount > 0
+            ) {
+
+                await this.view.gameUI
+                    .animateBonusIntoWon(
+                        gamblerResult.bonusAmount,
+                        gamblerResult.finalWinAmount
                     );
             }
 
@@ -1035,6 +1054,33 @@ export class GameScene extends BaseScene {
             streakMultiplier:
                 this.streakMultiplierManager.getValue()
         });
+
+        const gamblerMultiplier =
+            this.perkEffectApplier
+                .activateGamblerAfterLoss();
+
+
+        if (
+            gamblerMultiplier !==
+            undefined
+        ) {
+
+            const increasePercentage =
+                roundMoney((
+                    gamblerMultiplier -
+                    1
+                ) *
+                100);
+
+
+            await this.view
+                .perkEffectMessageOverlay
+                .play(
+                    "nextWinIncreasedBy",
+                    `${increasePercentage}%`,
+                    PerkEffectMessageType.POSITIVE
+                );
+        }
 
         await this.finishRound();
                 
@@ -1212,6 +1258,36 @@ export class GameScene extends BaseScene {
                         this.streakMultiplierManager
                             .getValue()
                 });
+
+            const gamblerMultiplier =
+                this.perkEffectApplier
+                    .activateGamblerAfterLoss();
+
+
+            if (
+                gamblerMultiplier !==
+                undefined
+            ) {
+
+                const increasePercentage =
+                    roundMoney(
+                        (
+                            gamblerMultiplier -
+                            1
+                        ) *
+                        100
+                    );
+
+
+                await this.view
+                    .perkEffectMessageOverlay
+                    .play(
+                        "nextWinIncreasedBy",
+                        `${increasePercentage}%`,
+                        PerkEffectMessageType.POSITIVE
+                    );
+            }
+
         }
 
         this.view.gameUI.updateMultiplier(

@@ -191,6 +191,17 @@ export class GameCheatController {
             }
         );
 
+
+        this.cheatManager.register(
+            CheatCode.FORCE_GAMBLER,
+            () => {
+
+                this.forcePerkReward(
+                    "gambler"
+                );
+            }
+        );
+
     }
 
 

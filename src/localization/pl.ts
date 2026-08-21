@@ -221,6 +221,7 @@ export default {
     gamblerName: "HAZARDZISTA",
 
     gamblerDescriptionUncommon: "Po przegranej Twoja następna wygrana jest zwiększona o 30%.\n\nEfekt znika po aktywacji.",
+    nextWinIncreasedBy: "NASTĘPNA WYGRANA ZWIĘKSZONA O ",
 
 
     // INSURANCE

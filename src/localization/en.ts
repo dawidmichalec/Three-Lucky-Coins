@@ -220,6 +220,7 @@ export default {
     gamblerName: "GAMBLER",
 
     gamblerDescriptionUncommon: "After a loss, your next win pays 30% more.\n\nConsumed after triggering.",
+    nextWinIncreasedBy: "NEXT WIN INCREASED BY ",
 
 
     // INSURANCE

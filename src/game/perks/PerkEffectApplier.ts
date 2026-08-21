@@ -24,9 +24,25 @@ export interface InsuranceResult {
     streakResolution: StreakResolution;
 }
 
+interface GamblerConfig {
+    payoutMultiplier: number;
+}
+
 
 export interface RiskTakerResult {
 
+    triggered: boolean;
+
+    baseWinAmount: number;
+
+    bonusAmount: number;
+
+    finalWinAmount: number;
+
+    payoutMultiplier: number;
+}
+
+export interface GamblerResult {
     triggered: boolean;
 
     baseWinAmount: number;
@@ -42,6 +58,7 @@ export interface RiskTakerResult {
 export class PerkEffectApplier {
 
     private casinoBonusBetsPlacedThisFight = 0;
+    private gamblerBonusActive = false;
 
 
     constructor(
@@ -303,6 +320,112 @@ export class PerkEffectApplier {
                 value:
                     1
             }
+        };
+    }
+
+
+    activateGamblerAfterLoss():
+    number | undefined {
+
+        const gambler =
+            this.runPerkManager
+                .getPerk(
+                    "gambler"
+                );
+
+
+        if (!gambler) {
+            return undefined;
+        }
+
+
+        const config =
+            gambler.variant.config as
+                GamblerConfig;
+
+
+        this.gamblerBonusActive =
+            true;
+
+
+        return config.payoutMultiplier;
+    }
+
+
+    applyGambler(
+        winAmount: number
+    ): GamblerResult {
+
+        const gambler =
+            this.runPerkManager
+                .getPerk(
+                    "gambler"
+                );
+
+
+        if (
+            !gambler ||
+            !this.gamblerBonusActive
+        ) {
+
+            return {
+                triggered: false,
+
+                baseWinAmount:
+                    winAmount,
+
+                bonusAmount:
+                    0,
+
+                finalWinAmount:
+                    winAmount,
+
+                payoutMultiplier:
+                    1
+            };
+        }
+
+
+        const config =
+            gambler.variant.config as
+                GamblerConfig;
+
+
+        const finalWinAmount =
+            roundMoney(
+                winAmount *
+                config.payoutMultiplier
+            );
+
+
+        const bonusAmount =
+            roundMoney(
+                finalWinAmount -
+                winAmount
+            );
+
+
+        /*
+            Konsumujemy bonus dopiero
+            po faktycznej wygranej.
+        */
+
+        this.gamblerBonusActive =
+            false;
+
+
+        return {
+            triggered: true,
+
+            baseWinAmount:
+                winAmount,
+
+            bonusAmount,
+
+            finalWinAmount,
+
+            payoutMultiplier:
+                config.payoutMultiplier
         };
     }
 
