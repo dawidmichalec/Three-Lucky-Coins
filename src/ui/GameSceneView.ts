@@ -15,6 +15,7 @@ import { GambleForMoreOverlay } from "./gambleForMore/GambleForMoreOverlay";
 import { CardColor } from "../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
 import { PerkRewardOverlay } from "./overlays/PerkRewardOverlay";
 import { PerkReward } from "../game/perks/reward/PerkReward";
+import { PerkEffectMessageOverlay } from "./overlays/PerkEffectOverlay";
 
 
 interface GameSceneViewOptions {
@@ -68,6 +69,8 @@ export class GameSceneView
     readonly gambleForMoreOverlay: GambleForMoreOverlay;
 
     readonly perkRewardOverlay: PerkRewardOverlay;
+
+    readonly perkEffectMessageOverlay: PerkEffectMessageOverlay;
 
 
     constructor(
@@ -258,6 +261,21 @@ export class GameSceneView
 
         this.addChild(
             this.gambleForMoreOverlay
+        );
+
+        // PERK EFFECTS OVERLAY
+
+        this.perkEffectMessageOverlay =
+            new PerkEffectMessageOverlay(
+                layout.DESIGN_WIDTH,
+                layout.DESIGN_HEIGHT
+            );
+
+        this.perkEffectMessageOverlay.zIndex =
+            4000;
+
+        this.addChild(
+            this.perkEffectMessageOverlay
         );
 
 

@@ -18,6 +18,8 @@ export enum CheatCode {
 
     FORCE_MULTIPLIER_BOOSTER = "perk_multiplier_booster",
 
-    FORCE_CASINO_BONUS = "perk_casino_bonus"
+    FORCE_CASINO_BONUS = "perk_casino_bonus",
+
+    FORCE_RISK_TAKER = "perk_risk_taker"
 
 }

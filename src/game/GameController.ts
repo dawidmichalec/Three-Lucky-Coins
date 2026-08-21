@@ -84,17 +84,15 @@ export class GameController {
   }
 
   private syncBet() {
-    const bet = BET_LEVELS[this.betIndex];
 
-    this.config.onBetChange(bet);
+    const bet =
+        BET_LEVELS[
+            this.betIndex
+        ];
 
-    if (this.betIndex === 0) {
-      this.config.onPopup("minimumBet");
-    }
-
-    if (this.betIndex === BET_LEVELS.length - 1) {
-      this.config.onPopup("maximumBet");
-    }
+    this.config.onBetChange(
+        bet
+    );
   }
 
   getBet() {
@@ -135,4 +133,30 @@ export class GameController {
     return COMBINATIONS[this.comboIndex];
   }
 
+
+  getHighestAffordableBet(
+      balance: number
+  ): number {
+
+      for (
+          let index =
+              BET_LEVELS.length - 1;
+
+          index >= 0;
+
+          index--
+      ) {
+
+          if (
+              BET_LEVELS[index] <=
+              balance
+          ) {
+
+              return BET_LEVELS[index];
+          }
+      }
+
+
+      return BET_LEVELS[0];
+  }
 }

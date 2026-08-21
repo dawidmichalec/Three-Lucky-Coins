@@ -212,6 +212,7 @@ export default {
     riskTakerName: "RISK TAKER",
 
     riskTakerDescriptionUncommon: "Betting the maximum available amount increases your winnings by 12.5%.",
+    winningsIncreasedBy: "WINNINGS INCREASED BY ",
 
 
     // GAMBLER

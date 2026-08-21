@@ -171,6 +171,16 @@ export class GameCheatController {
             }
         );
 
+        this.cheatManager.register(
+            CheatCode.FORCE_RISK_TAKER,
+            () => {
+
+                this.forcePerkReward(
+                    "risk_taker"
+                );
+            }
+        );
+
     }
 
 

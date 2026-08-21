@@ -213,6 +213,7 @@ export default {
     riskTakerName: "RYZYKANT",
 
     riskTakerDescriptionUncommon: "Postawienie maksymalnej dostępnej stawki zwiększa wygraną o 12,5%.",
+    winningsIncreasedBy: "WYGRANE ZWIĘKSZONE O ",
 
 
     // GAMBLER

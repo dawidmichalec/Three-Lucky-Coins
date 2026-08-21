@@ -402,6 +402,7 @@ export class GameUI extends Container {
         );
 
         this.freeBetLabel.position.set(917.3, 1000);
+        this.freeBetLabel.anchor.set(0, 0);
 
         this.freeBetLabel.visible = false;
 
@@ -436,6 +437,311 @@ export class GameUI extends Container {
     async init(): Promise<void> {
 
         await this.createDealerCard();
+    }
+
+
+    async animateBonusIntoWon(
+        bonusAmount: number,
+        finalAmount: number
+    ): Promise<void> {
+
+        const bonusText =
+            new Text({
+                text:
+                    `+${bonusAmount.toFixed(2)}`,
+
+                style: {
+                    fontFamily:
+                        "Anek-Kannada Bold",
+
+                    fontSize:
+                        36,
+
+                    fontWeight:
+                        "bold",
+
+                    fill:
+                        0x39ff14,
+
+                    dropShadow: {
+                        alpha:
+                            1,
+
+                        blur:
+                            12,
+
+                        color:
+                            "#00ff66",
+
+                        distance:
+                            0,
+
+                        angle:
+                            0
+                    }
+                }
+            });
+
+
+        bonusText.anchor.set(
+            0.5
+        );
+
+
+        /*
+            Start trochę poniżej / obok WON.
+            Potem możesz sobie dopracować pozycję.
+        */
+
+        bonusText.position.set(
+            1100,
+            650
+        );
+
+
+        bonusText.alpha =
+            0;
+
+        bonusText.scale.set(
+            0.8
+        );
+
+
+        this.addChild(
+            bonusText
+        );
+
+
+        await this.animateBonusAppear(
+            bonusText
+        );
+
+
+        await this.animateBonusFly(
+            bonusText
+        );
+
+
+        bonusText.destroy();
+
+
+        this.wonAmount.text =
+            finalAmount.toFixed(
+                2
+            );
+
+
+        await this.animateWonAmountPulse();
+    }
+
+
+    private animateBonusAppear(
+        bonusText: Text
+    ): Promise<void> {
+
+        return this.animate(
+            250,
+
+            progress => {
+
+                const eased =
+                    1 -
+                    Math.pow(
+                        1 - progress,
+                        3
+                    );
+
+
+                bonusText.alpha =
+                    eased;
+
+
+                bonusText.scale.set(
+                    0.8 +
+                    eased * 0.2
+                );
+            }
+        );
+    }
+
+
+    private animateBonusFly(
+        bonusText: Text
+    ): Promise<void> {
+
+        const startX =
+            bonusText.x;
+
+        const startY =
+            bonusText.y;
+
+
+        const targetX =
+            this.wonAmount.x +
+            this.wonAmount.width / 2;
+
+        const targetY =
+            this.wonAmount.y;
+
+
+        return this.animate(
+            500,
+
+            progress => {
+
+                const eased =
+                    progress *
+                    progress;
+
+
+                bonusText.x =
+                    startX +
+                    (
+                        targetX -
+                        startX
+                    ) *
+                    eased;
+
+
+                bonusText.y =
+                    startY +
+                    (
+                        targetY -
+                        startY
+                    ) *
+                    eased;
+
+
+                /*
+                    Pod koniec bonus zanika,
+                    jakby "wchłaniał się"
+                    w WON.
+                */
+
+                if (
+                    progress >
+                    0.7
+                ) {
+
+                    bonusText.alpha =
+                        1 -
+                        (
+                            progress -
+                            0.7
+                        ) /
+                        0.3;
+                }
+
+
+                const scale =
+                    1 -
+                    progress * 0.25;
+
+
+                bonusText.scale.set(
+                    scale
+                );
+            }
+        );
+    }
+
+
+    private animateWonAmountPulse():
+    Promise<void> {
+
+        return this.animate(
+            260,
+
+            progress => {
+
+                const punch =
+                    Math.sin(
+                        progress *
+                        Math.PI
+                    );
+
+
+                const scale =
+                    1 +
+                    punch * 0.22;
+
+
+                this.wonAmount
+                    .scale
+                    .set(
+                        scale
+                    );
+            }
+        ).then(
+            () => {
+
+                this.wonAmount
+                    .scale
+                    .set(
+                        1
+                    );
+            }
+        );
+    }
+
+
+    private animate(
+        duration: number,
+        update:
+            (
+                progress: number
+            ) => void
+    ): Promise<void> {
+
+        return new Promise(
+            resolve => {
+
+                const startTime =
+                    performance.now();
+
+
+                const frame = (
+                    currentTime: number
+                ) => {
+
+                    const progress =
+                        Math.min(
+                            1,
+                            (
+                                currentTime -
+                                startTime
+                            ) /
+                            duration
+                        );
+
+
+                    update(
+                        progress
+                    );
+
+
+                    if (
+                        progress >=
+                        1
+                    ) {
+
+                        resolve();
+
+                        return;
+                    }
+
+
+                    requestAnimationFrame(
+                        frame
+                    );
+                };
+
+
+                requestAnimationFrame(
+                    frame
+                );
+            }
+        );
     }
 
 

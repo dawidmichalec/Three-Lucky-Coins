@@ -34,6 +34,7 @@ import { RunPerkRewardState } from '../perks/reward/RunPerkRewardState';
 import { PerkReward } from '../perks/reward/PerkReward';
 import { RunPerkManager } from "../perks/RunPerkManager";
 import { PerkEffectApplier } from '../perks/PerkEffectApplier';
+import { PerkEffectMessageType } from '../../ui/overlays/PerkEffectOverlay';
 
 
 export class GameScene extends BaseScene {
@@ -67,6 +68,7 @@ export class GameScene extends BaseScene {
     private runPerkRewardState = new RunPerkRewardState();
     private runPerkManager = new RunPerkManager();
     private perkEffectApplier = new PerkEffectApplier(this.runPerkManager, this.streakMultiplierManager);
+    private riskTakerWasActive = false;
 
 
     constructor (
@@ -216,6 +218,8 @@ export class GameScene extends BaseScene {
                         );
                     
                     this.refreshFreeBetIndicator();
+
+                    this.refreshRiskTakerState();
                 },
 
                 onComboChange: combo => {
@@ -225,14 +229,6 @@ export class GameScene extends BaseScene {
                             combo
                         );
                 },
-
-                onPopup: msg => {
-
-                    this.popupManager
-                        .show(
-                            msg
-                        );
-                }
             });
 
         // INITIAL UI STATE
@@ -332,6 +328,64 @@ export class GameScene extends BaseScene {
         ]);
 
         this.lockControls();
+    }
+
+
+    private refreshRiskTakerState():
+    void {
+
+        const currentBet =
+            this.controller.getBet();
+
+
+        const highestAffordableBet =
+            this.controller
+                .getHighestAffordableBet(
+                    this.player.balance
+                );
+
+
+        const payoutMultiplier =
+            this.perkEffectApplier
+                .getRiskTakerPayoutMultiplier(
+                    currentBet,
+                    highestAffordableBet
+                );
+
+
+        const active =
+            payoutMultiplier !==
+            undefined;
+
+
+        if (
+            active &&
+            !this.riskTakerWasActive
+        ) {
+
+            const increasePercentage =
+                (
+                    payoutMultiplier! -
+                    1
+                ) *
+                100;
+
+
+            void this.view
+                .perkEffectMessageOverlay
+                .play(
+                    "winningsIncreasedBy",
+
+                    `${increasePercentage}%`,
+
+                    PerkEffectMessageType
+                        .POSITIVE
+                );
+        }
+
+
+        this.riskTakerWasActive =
+            active;
     }
 
 
@@ -510,6 +564,8 @@ export class GameScene extends BaseScene {
 
         this.refreshFreeBetIndicator();
 
+        this.refreshRiskTakerState();
+
 
         this.view.perkRewardOverlay.hide();
 
@@ -581,13 +637,11 @@ export class GameScene extends BaseScene {
 
         this.dealerCollectionManager.discoverDealer(dealer.id);
 
-        /*
-            Nowa walka zaczyna się od x1.
-            Dzięki temu passa nie przechodzi
-            automatycznie między dealerami.
-        */
-
         this.perkEffectApplier.resetFightEffects();
+
+        this.riskTakerWasActive = false;
+
+        this.refreshRiskTakerState();
 
         this.streakMultiplierManager.reset();
 
@@ -694,6 +748,8 @@ export class GameScene extends BaseScene {
     private async startRound() {
 
         const bet = this.controller.getBet();
+
+        const highestAffordableBet = this.controller.getHighestAffordableBet(this.player.balance);
 
 
         const betCost = this.perkEffectApplier.resolveBetCost(bet);
@@ -816,49 +872,122 @@ export class GameScene extends BaseScene {
             WIN
         */
 
-        if (win && winAmount !== undefined) {
+        if (
+            win &&
+            winAmount !== undefined
+        ) {
 
-            const resolvedWinAmount = outcome.wonAmount;
+            const resolvedWinAmount =
+                outcome.wonAmount;
+
+
+            const riskTakerResult =
+                this.perkEffectApplier
+                    .applyRiskTaker(
+                        resolvedWinAmount,
+                        bet,
+                        highestAffordableBet
+                    );
+
+
+            const finalWinAmount =
+                riskTakerResult
+                    .finalWinAmount;
+
 
             console.log(
                 "BASE WIN:",
                 winAmount,
+
                 "RESOLVED WIN:",
-                resolvedWinAmount
+                resolvedWinAmount,
+
+                "RISK TAKER BONUS:",
+                riskTakerResult.bonusAmount,
+
+                "FINAL WIN:",
+                finalWinAmount
             );
 
-            const gambleTriggered = this.gambleForMoreManager.shouldTrigger();
+
+            const gambleTriggered =
+                this.gambleForMoreManager
+                    .shouldTrigger();
+
 
             if (gambleTriggered) {
 
-                this.pendingStreakResolution = outcome.streakResolution;
+                this.pendingStreakResolution =
+                    outcome.streakResolution;
+
 
                 this.startGambleForMore(
-                    resolvedWinAmount,
+                    finalWinAmount,
                     bet
                 );
+
 
                 return;
             }
 
-            this.streakMultiplierManager.applyResolution(
-                streakResolution
-            );
 
-            this.view.gameUI.updateMultiplier(
-                this.streakMultiplierManager.getValue()
-            );
+            this.streakMultiplierManager
+                .applyResolution(
+                    streakResolution
+                );
 
-            this.runStatsRecorder.finishRound({
-                win: true,
-                winAmount: resolvedWinAmount,
-                streakMultiplier:
-                    this.streakMultiplierManager.getValue()
-            });
+
+            this.view.gameUI
+                .updateMultiplier(
+                    this.streakMultiplierManager
+                        .getValue()
+                );
+
+
+            this.runStatsRecorder
+                .finishRound({
+                    win: true,
+
+                    winAmount:
+                        finalWinAmount,
+
+                    streakMultiplier:
+                        this.streakMultiplierManager
+                            .getValue()
+                });
+
+            if (
+                riskTakerResult.triggered &&
+                riskTakerResult.bonusAmount > 0
+            ) {
+
+                /*
+                    Najpierw pokazujemy bazową wygraną,
+                    jeszcze bez bonusu Risk Takera.
+                */
+
+                this.view.gameUI.updateWon(
+                    resolvedWinAmount
+                );
+
+
+                /*
+                    Następnie bonus wlatuje
+                    do Won Amount.
+                */
+
+                await this.view.gameUI
+                    .animateBonusIntoWon(
+                        riskTakerResult.bonusAmount,
+                        finalWinAmount
+                    );
+            }
+
 
             this.commitWin(
-                resolvedWinAmount
+                finalWinAmount
             );
+
 
             await this.finishRound();
 
@@ -1111,6 +1240,8 @@ export class GameScene extends BaseScene {
         this.view.gameUI.updateWon(
             amount
         );
+
+        this.refreshRiskTakerState();
     }
 
 
