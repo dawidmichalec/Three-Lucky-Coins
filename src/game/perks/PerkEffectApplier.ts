@@ -390,9 +390,14 @@ export class PerkEffectApplier {
   }
 
   consumeCoinSense(): void {
-    if (this.isCoinSenseAvailable()) {
-      this.coinSenseUsedThisFight = true;
+    if (
+        !this.isCoinSenseAvailable()
+    ) {
+        return;
     }
+
+
+    this.coinSenseTossesUsedThisFight++;
   }
 
   recordLuckyHandToss(won: boolean): boolean {
