@@ -33,13 +33,14 @@ import { PerkRewardGenerator } from "../perks/reward/PerkRewardGenerator";
 import { RunPerkRewardState } from "../perks/reward/RunPerkRewardState";
 import { PerkReward } from "../perks/reward/PerkReward";
 import { RunPerkManager } from "../perks/RunPerkManager";
-import { CoinSenseResult, GamblerResult, LuckyHandResult, PerkEffectApplier, RiskTakerResult,} from "../perks/PerkEffectApplier";
+import { PerkEffectApplier,} from "../perks/PerkEffectApplier";
 import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
 import { roundMoney } from "../util/MoneyUtils";
 import { OddsTable } from "../probability/OddsTypes";
 import { GAME_CONFIG } from "../../config/GameConfig";
 import { RoundPayoutResolver } from "../round/RoundPayoutResolver";
 import { RoundBetResolver } from "../round/RoundBetResolver";
+import { RoundPayoutPresentationController } from "../../ui/controllers/RoundPayoutPresentationController";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -75,6 +76,7 @@ export class GameScene extends BaseScene {
   private roundBetResolver = new RoundBetResolver(this.perkEffectApplier,);
   private riskTakerWasActive = false;
   private preparedCoinSenseResult?: CoinSide[];
+  private roundPayoutPresentationController!: RoundPayoutPresentationController;
   
 
   constructor(
@@ -159,6 +161,14 @@ export class GameScene extends BaseScene {
     this.view.zIndex = 1000;
 
     this.addChild(this.view);
+
+    // ROUND PAYOUT PRESENTATION CONTROLLER
+
+    this.roundPayoutPresentationController =
+      new RoundPayoutPresentationController(
+        this.view.gameUI,
+        this.view.perkEffectMessageOverlay,
+      );
 
     // DEALER SKILL FEEDBACK HANDLER
 
@@ -609,104 +619,6 @@ export class GameScene extends BaseScene {
   }
 
 
-
-  private async presentWin(
-    resolvedWinAmount: number,
-    coinSenseResult: CoinSenseResult,
-    riskTakerResult: RiskTakerResult,
-    gamblerResult: GamblerResult,
-    luckyHandResult: LuckyHandResult,
-  ): Promise<void> {
-    /*
-        Najpierw pokazujemy wygraną po efektach dealera,
-        ale przed perkami payoutowymi gracza.
-    */
-
-    this.view.gameUI.updateWon(
-      resolvedWinAmount,
-    );
-
-    /*
-        COIN SENSE
-    */
-
-    if (
-      coinSenseResult.triggered &&
-      coinSenseResult.bonusAmount < 0
-    ) {
-      const reductionPercentage =
-        roundMoney(
-          (
-            1 -
-            coinSenseResult.payoutMultiplier
-          ) * 100,
-        );
-
-      await this.view.perkEffectMessageOverlay.play(
-        "winningsReducedBy",
-        `${reductionPercentage}%`,
-        PerkEffectMessageType.NEGATIVE,
-      );
-
-      await this.view.gameUI.animatePenaltyIntoWon(
-        Math.abs(
-          coinSenseResult.bonusAmount,
-        ),
-        coinSenseResult.finalWinAmount,
-      );
-    }
-
-    /*
-        RISK TAKER
-    */
-
-    if (
-      riskTakerResult.triggered &&
-      riskTakerResult.bonusAmount > 0
-    ) {
-      await this.view.gameUI.animateBonusIntoWon(
-        riskTakerResult.bonusAmount,
-        riskTakerResult.finalWinAmount,
-      );
-    }
-
-    /*
-        GAMBLER
-    */
-
-    if (
-      gamblerResult.triggered &&
-      gamblerResult.bonusAmount > 0
-    ) {
-      await this.view.gameUI.animateBonusIntoWon(
-        gamblerResult.bonusAmount,
-        gamblerResult.finalWinAmount,
-      );
-    }
-
-    /*
-        LUCKY HAND
-    */
-
-    if (
-      luckyHandResult.triggered &&
-      luckyHandResult.bonusAmount > 0
-    ) {
-      await this.view.perkEffectMessageOverlay.play(
-        "payoutDoubled",
-        "",
-        PerkEffectMessageType.POSITIVE,
-      );
-
-      await this.view.gameUI.animateBonusIntoWon(
-        luckyHandResult.bonusAmount,
-        luckyHandResult.finalWinAmount,
-      );
-    }
-  }
-
-
-
   // START ROUND - FUNCTION RESPONSIBLE FOR THE GAME LOOP
 
   private async startRound() {
@@ -862,7 +774,7 @@ export class GameScene extends BaseScene {
         finalWinAmount,
       );
 
-      await this.presentWin(
+      await this.roundPayoutPresentationController.present(
         resolvedWinAmount,
         coinSenseResult,
         riskTakerResult,
