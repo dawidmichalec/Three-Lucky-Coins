@@ -23,7 +23,6 @@ import { GameSceneView } from "../../ui/GameSceneView";
 import { RunDealerGenerator } from "../run/RunDealerGenerator";
 import { GambleForMoreManager } from "../gambleForMore/GambleForMoreManager";
 import { CardColor } from "../gambleForMore/games/redBlackCard/RedBlackCardTypes";
-import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCardGame";
 import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandler";
 import { DealerCollectionManager } from "../dealers/collection/DealerCollectionManager";
 import { StreakMultiplierManager } from "../streak/StreakMultiplierManager";
@@ -64,7 +63,6 @@ export class GameScene extends BaseScene {
   private gambleForMoreManager = new GambleForMoreManager();
   private gambleForMoreController = new GambleForMoreController(this.gambleForMoreManager,);
   private pendingStreakResolution?: StreakResolution;
-  private redBlackCardGame = new RedBlackCardGame();
   private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
   private dealerCollectionManager = DealerCollectionManager.getInstance();
   private streakMultiplierManager = new StreakMultiplierManager();
@@ -871,137 +869,135 @@ export class GameScene extends BaseScene {
   }
 
   private async handleGambleForMoreNo() {
-    const offer = this.gambleForMoreController.getPendingOffer();
 
-    if (!offer) {
-      return;
-    }
+    const result = this.gambleForMoreController.decline();
 
     this.view.gambleForMoreOverlay.hide();
 
-    this.commitWin(offer.currentWin);
+    this.commitWin(
+      result.winAmount,
+    );
 
-    if (this.pendingStreakResolution) {
-      this.streakMultiplierManager.applyResolution(
-        this.pendingStreakResolution,
-      );
+    if (
+      this.pendingStreakResolution
+    ) {
+      this.streakMultiplierManager
+        .applyResolution(
+          this.pendingStreakResolution,
+        );
 
-      this.view.gameUI.updateMultiplier(
-        this.streakMultiplierManager.getValue(),
-      );
+      this.view.gameUI
+        .updateMultiplier(
+          this.streakMultiplierManager
+            .getValue(),
+        );
     }
 
     this.runStatsRecorder.finishRound({
       win: true,
-      winAmount: offer.currentWin,
-      streakMultiplier: this.streakMultiplierManager.getValue(),
+
+      winAmount:
+        result.winAmount,
+
+      streakMultiplier:
+        this.streakMultiplierManager
+          .getValue(),
     });
 
-    this.gambleForMoreController.clearPendingOffer();
-    this.pendingStreakResolution = undefined;
+    this.pendingStreakResolution =
+      undefined;
 
     await this.finishRound();
   }
 
   private async handleGambleForMoreYes() {
-    const offer = this.gambleForMoreController.getPendingOffer();
-
-    if (!offer) {
+    if (!this.gambleForMoreController.hasPendingOffer()) {
       return;
     }
-
-    console.log("START GAMBLE FOR MORE:", offer);
 
     await this.view.gambleForMoreOverlay.startGame();
   }
 
-  private async handleGambleForMoreColorSelected(selectedColor: CardColor) {
-    const offer = this.gambleForMoreController.getPendingOffer();
-
-    if (!offer) {
-      return;
-    }
-
-    const result = this.redBlackCardGame.play(selectedColor);
+  private async handleGambleForMoreColorSelected(
+    selectedColor: CardColor,
+  ) {
+    const result =
+      this.gambleForMoreController.play(selectedColor);
 
     console.log("RED BLACK RESULT:", result);
 
-    /*
-            Najpierw pokazujemy graczowi,
-            co faktycznie wylosował.
-        */
-
-    await this.view.gambleForMoreOverlay.revealResult(result.resultColor);
-
-    /*
-            Chwila na zobaczenie rezultatu.
-        */
+    await this.view.gambleForMoreOverlay.revealResult(
+      result.resultColor,
+    );
 
     await this.wait(1200);
 
-    /*
-            Dopiero teraz rozliczamy wynik.
-        */
-
     if (result.won) {
-      const nextOffer = this.gambleForMoreController.start(
-        offer.potentialWin,
-        offer.bet,
-      );
+      const nextOffer =
+        this.gambleForMoreController.continueAfterWin();
 
       this.view.gambleForMoreOverlay.showOffer(nextOffer);
 
       return;
-    } else {
-      this.perkEffectApplier.resetDoubleDownProgress();
-
-      const insuranceResult =
-        this.perkEffectApplier.resolveLossStreakResolution({
-          action: StreakAction.RESET,
-        });
-
-      if (insuranceResult.triggered) {
-        await this.view.perkEffectMessageOverlay.play(
-          "streakMultiplierProtected",
-          "",
-          PerkEffectMessageType.POSITIVE,
-        );
-      }
-
-      this.streakMultiplierManager.applyResolution(
-        insuranceResult.streakResolution,
-      );
-
-      this.view.gameUI.updateWon(0);
-
-      this.runStatsRecorder.finishRound({
-        win: false,
-
-        streakMultiplier: this.streakMultiplierManager.getValue(),
-      });
-
-      const gamblerMultiplier =
-        this.perkEffectApplier.activateGamblerAfterLoss();
-
-      if (gamblerMultiplier !== undefined) {
-        const increasePercentage = roundMoney((gamblerMultiplier - 1) * 100);
-
-        await this.view.perkEffectMessageOverlay.play(
-          "nextWinIncreasedBy",
-          `${increasePercentage}%`,
-          PerkEffectMessageType.POSITIVE,
-        );
-      }
     }
 
-    this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
+    await this.handleGambleForMoreLoss();
+
+    this.view.gameUI.updateMultiplier(
+      this.streakMultiplierManager.getValue(),
+    );
 
     this.view.gambleForMoreOverlay.hide();
 
-    this.gambleForMoreController.clearPendingOffer();
     this.pendingStreakResolution = undefined;
 
     await this.finishRound();
+  }
+
+
+  private async handleGambleForMoreLoss() {
+    this.gambleForMoreController.lose();
+
+    this.perkEffectApplier.resetDoubleDownProgress();
+
+    const insuranceResult =
+      this.perkEffectApplier.resolveLossStreakResolution({
+        action: StreakAction.RESET,
+      });
+
+    if (insuranceResult.triggered) {
+      await this.view.perkEffectMessageOverlay.play(
+        "streakMultiplierProtected",
+        "",
+        PerkEffectMessageType.POSITIVE,
+      );
+    }
+
+    this.streakMultiplierManager.applyResolution(
+      insuranceResult.streakResolution,
+    );
+
+    this.view.gameUI.updateWon(0);
+
+    this.runStatsRecorder.finishRound({
+      win: false,
+      streakMultiplier: this.streakMultiplierManager.getValue(),
+    });
+
+    const gamblerMultiplier =
+      this.perkEffectApplier.activateGamblerAfterLoss();
+
+    if (gamblerMultiplier !== undefined) {
+      const increasePercentage = roundMoney(
+        (gamblerMultiplier - 1) * 100,
+      );
+
+      await this.view.perkEffectMessageOverlay.play(
+        "nextWinIncreasedBy",
+        `${increasePercentage}%`,
+        PerkEffectMessageType.POSITIVE,
+      );
+    }
   }
 
   private wait(milliseconds: number): Promise<void> {
