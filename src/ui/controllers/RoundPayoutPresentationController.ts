@@ -1,5 +1,5 @@
 import { GameUI } from "../GameUI";
-import { PerkEffectOverlay, PerkEffectMessageType } from "../overlays/PerkEffectOverlay";
+import { PerkEffectMessageOverlay, PerkEffectMessageType } from "../overlays/PerkEffectOverlay";
 import {
   CoinSenseResult,
   GamblerResult,
@@ -11,7 +11,7 @@ import { roundMoney } from "../../game/util/MoneyUtils";
 export class RoundPayoutPresentationController {
   constructor(
     private gameUI: GameUI,
-    private perkEffectMessageOverlay: PerkEffectOverlay,
+    private perkEffectMessageOverlay: PerkEffectMessageOverlay,
   ) {}
 
   async present(

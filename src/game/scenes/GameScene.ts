@@ -22,7 +22,6 @@ import { RoundOutcomeHandler } from "../round/RoundOutcomeHandler";
 import { GameSceneView } from "../../ui/GameSceneView";
 import { RunDealerGenerator } from "../run/RunDealerGenerator";
 import { GambleForMoreManager } from "../gambleForMore/GambleForMoreManager";
-import { GambleForMoreOffer } from "../gambleForMore/GambleForMoreTypes";
 import { CardColor } from "../gambleForMore/games/redBlackCard/RedBlackCardTypes";
 import { RedBlackCardGame } from "../gambleForMore/games/redBlackCard/RedBlackCardGame";
 import { DealerSkillFeedbackHandler } from "../dealers/DealerSkillFeedbackHandler";
@@ -41,6 +40,7 @@ import { GAME_CONFIG } from "../../config/GameConfig";
 import { RoundPayoutResolver } from "../round/RoundPayoutResolver";
 import { RoundBetResolver } from "../round/RoundBetResolver";
 import { RoundPayoutPresentationController } from "../../ui/controllers/RoundPayoutPresentationController";
+import { GambleForMoreController } from "../gambleForMore/GambleForMoreController";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -62,7 +62,7 @@ export class GameScene extends BaseScene {
   private roundOutcomeHandler = new RoundOutcomeHandler();
   private view: GameSceneView;
   private gambleForMoreManager = new GambleForMoreManager();
-  private pendingGambleOffer?: GambleForMoreOffer;
+  private gambleForMoreController = new GambleForMoreController(this.gambleForMoreManager,);
   private pendingStreakResolution?: StreakResolution;
   private redBlackCardGame = new RedBlackCardGame();
   private dealerSkillFeedbackHandler!: DealerSkillFeedbackHandler;
@@ -863,9 +863,7 @@ export class GameScene extends BaseScene {
   }
 
   private startGambleForMore(winAmount: number, bet: number) {
-    const offer = this.gambleForMoreManager.createOffer(winAmount, bet);
-
-    this.pendingGambleOffer = offer;
+    const offer = this.gambleForMoreController.start(winAmount, bet);
 
     this.roundState = "result";
 
@@ -873,7 +871,7 @@ export class GameScene extends BaseScene {
   }
 
   private async handleGambleForMoreNo() {
-    const offer = this.pendingGambleOffer;
+    const offer = this.gambleForMoreController.getPendingOffer();
 
     if (!offer) {
       return;
@@ -899,14 +897,14 @@ export class GameScene extends BaseScene {
       streakMultiplier: this.streakMultiplierManager.getValue(),
     });
 
-    this.pendingGambleOffer = undefined;
+    this.gambleForMoreController.clearPendingOffer();
     this.pendingStreakResolution = undefined;
 
     await this.finishRound();
   }
 
   private async handleGambleForMoreYes() {
-    const offer = this.pendingGambleOffer;
+    const offer = this.gambleForMoreController.getPendingOffer();
 
     if (!offer) {
       return;
@@ -918,7 +916,7 @@ export class GameScene extends BaseScene {
   }
 
   private async handleGambleForMoreColorSelected(selectedColor: CardColor) {
-    const offer = this.pendingGambleOffer;
+    const offer = this.gambleForMoreController.getPendingOffer();
 
     if (!offer) {
       return;
@@ -946,12 +944,10 @@ export class GameScene extends BaseScene {
         */
 
     if (result.won) {
-      const nextOffer = this.gambleForMoreManager.createOffer(
+      const nextOffer = this.gambleForMoreController.start(
         offer.potentialWin,
-        offer.potentialWin,
+        offer.bet,
       );
-
-      this.pendingGambleOffer = nextOffer;
 
       this.view.gambleForMoreOverlay.showOffer(nextOffer);
 
@@ -1002,7 +998,7 @@ export class GameScene extends BaseScene {
 
     this.view.gambleForMoreOverlay.hide();
 
-    this.pendingGambleOffer = undefined;
+    this.gambleForMoreController.clearPendingOffer();
     this.pendingStreakResolution = undefined;
 
     await this.finishRound();
