@@ -9,7 +9,8 @@ import { RiskTakerConfig } from "./data/RiskTaker";
 import { GamblerConfig } from "./data/Gambler";
 import { DoubleDownConfig } from "./data/DoubleDown";
 import { LuckyHandConfig } from "./data/LuckyHand";
-import { CoinSenseConfig } from "./data/CoinSense";
+import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
+import { CoinSide } from "../../ui/Coin";
 
 export interface InsuranceResult {
   triggered: boolean;
@@ -40,14 +41,6 @@ export interface GamblerResult {
   payoutMultiplier: number;
 }
 
-export interface CoinSenseResult {
-  triggered: boolean;
-  baseWinAmount: number;
-  bonusAmount: number;
-  finalWinAmount: number;
-  payoutMultiplier: number;
-}
-
 export interface LuckyHandResult {
   triggered: boolean;
   baseWinAmount: number;
@@ -67,14 +60,20 @@ export class PerkEffectApplier {
   private casinoBonusBetsPlacedThisFight = 0;
   private gamblerBonusActive = false;
   private doubleDownSuccessfulSpins = 0;
-  private coinSenseTossesUsedThisFight = 0;
   private luckyHandTossCount = 0;
+  private readonly coinSenseEffect: CoinSenseEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
 
     private readonly streakMultiplierManager: StreakMultiplierManager,
-  ) {}
+  ) {
+
+    this.coinSenseEffect = new CoinSenseEffect(
+      this.runPerkManager,
+    );
+
+  }
 
   applyPerk(reward: PerkReward): void {
     switch (reward.perk.id) {
@@ -121,7 +120,7 @@ export class PerkEffectApplier {
   resetFightEffects(): void {
     this.casinoBonusBetsPlacedThisFight = 0;
 
-    this.coinSenseTossesUsedThisFight = 0;
+    this.coinSenseEffect.resetFight();
   }
 
   private applyMultiplierBooster(reward: PerkReward): void {
@@ -347,57 +346,30 @@ export class PerkEffectApplier {
   }
 
   isCoinSenseAvailable(): boolean {
-    const coinSense = this.runPerkManager.getPerk("coin_sense");
+    return this.coinSenseEffect.isAvailable();
+  }
 
-    if (!coinSense) {
-      return false;
-    }
 
-    const config = coinSense.variant.config as CoinSenseConfig;
+  prepareCoinSenseResult(result: CoinSide[]): void {
+    this.coinSenseEffect.prepareResult(result);
+  }
 
-    return this.coinSenseTossesUsedThisFight < config.revealedTossesPerFight;
+  consumePreparedCoinSenseResult(): CoinSide[] | undefined {
+      return this.coinSenseEffect.consumePreparedResult();
   }
 
   applyCoinSense(
     winAmount: number,
     coinSenseWasActive: boolean,
   ): CoinSenseResult {
-    const coinSense = this.runPerkManager.getPerk("coin_sense");
-
-    if (!coinSense || !coinSenseWasActive) {
-      return {
-        triggered: false,
-        baseWinAmount: winAmount,
-        bonusAmount: 0,
-        finalWinAmount: winAmount,
-        payoutMultiplier: 1,
-      };
-    }
-
-    const config = coinSense.variant.config as CoinSenseConfig;
-
-    const finalWinAmount = roundMoney(winAmount * config.payoutMultiplier);
-
-    const bonusAmount = roundMoney(finalWinAmount - winAmount);
-
-    return {
-      triggered: true,
-      baseWinAmount: winAmount,
-      bonusAmount,
-      finalWinAmount,
-      payoutMultiplier: config.payoutMultiplier,
-    };
+    return this.coinSenseEffect.apply(
+      winAmount,
+      coinSenseWasActive,
+    );
   }
 
   consumeCoinSense(): void {
-    if (
-        !this.isCoinSenseAvailable()
-    ) {
-        return;
-    }
-
-
-    this.coinSenseTossesUsedThisFight++;
+    this.coinSenseEffect.consume();
   }
 
   recordLuckyHandToss(won: boolean): boolean {

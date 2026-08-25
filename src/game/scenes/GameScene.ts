@@ -34,12 +34,12 @@ import { RunPerkManager } from "../perks/RunPerkManager";
 import { PerkEffectApplier,} from "../perks/PerkEffectApplier";
 import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
 import { roundMoney } from "../util/MoneyUtils";
-import { OddsTable } from "../probability/OddsTypes";
 import { GAME_CONFIG } from "../../config/GameConfig";
 import { RoundPayoutResolver } from "../round/RoundPayoutResolver";
 import { RoundBetResolver } from "../round/RoundBetResolver";
 import { RoundPayoutPresentationController } from "../../ui/controllers/RoundPayoutPresentationController";
 import { GambleForMoreController } from "../gambleForMore/GambleForMoreController";
+import { PerkGameplayController } from "../perks/controllers/PerkGameplayController";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -73,8 +73,8 @@ export class GameScene extends BaseScene {
   private roundPayoutResolver = new RoundPayoutResolver(this.perkEffectApplier);
   private roundBetResolver = new RoundBetResolver(this.perkEffectApplier,);
   private riskTakerWasActive = false;
-  private preparedCoinSenseResult?: CoinSide[];
   private roundPayoutPresentationController!: RoundPayoutPresentationController;
+  private perkGameplayController: PerkGameplayController;
   
 
   constructor(
@@ -167,6 +167,14 @@ export class GameScene extends BaseScene {
         this.view.gameUI,
         this.view.perkEffectMessageOverlay,
       );
+
+    // PERK GAMEPLAY CONTROLLER
+
+    this.perkGameplayController = new PerkGameplayController(
+      this.perkEffectApplier,
+      this.oddsManager,
+      this.view.gameUI,
+    );
 
     // DEALER SKILL FEEDBACK HANDLER
 
@@ -310,60 +318,6 @@ export class GameScene extends BaseScene {
     return true;
   }
 
-  private prepareCoinSense(): void {
-    if (!this.perkEffectApplier.isCoinSenseAvailable()) {
-      this.preparedCoinSenseResult = undefined;
-
-      return;
-    }
-
-    /*
-            Losujemy PRAWDZIWY wynik
-            według aktualnych oddsów dealera.
-        */
-
-    const result = this.oddsManager.rollResult();
-
-    /*
-            Zapamiętujemy go.
-
-            Ten dokładny wynik musi zostać
-            później użyty przez spin.
-        */
-
-    this.preparedCoinSenseResult = result;
-
-    /*
-            Tworzymy OddsTable wyłącznie
-            do prezentacji graczowi.
-        */
-
-    const revealedOdds: OddsTable = {
-      coin1: this.createRevealedCoinOdds(result[0]),
-
-      coin2: this.createRevealedCoinOdds(result[1]),
-
-      coin3: this.createRevealedCoinOdds(result[2]),
-    };
-
-    this.view.gameUI.updateProbability(revealedOdds);
-
-    console.log("COIN SENSE RESULT:", result.join("-"));
-  }
-
-  private createRevealedCoinOdds(side: CoinSide) {
-    if (side === CoinSide.Heads) {
-      return {
-        heads: 1,
-        tails: 0,
-      };
-    }
-
-    return {
-      heads: 0,
-      tails: 1,
-    };
-  }
 
   private refreshRiskTakerState(): void {
     const currentBet = this.controller.getBet();
@@ -418,9 +372,7 @@ export class GameScene extends BaseScene {
   private prepareNextRoundWithPerks(): void {
     this.prepareNextRound();
 
-    if (this.perkEffectApplier.isCoinSenseAvailable()) {
-      this.prepareCoinSense();
-    }
+    this.perkGameplayController.prepareNextRound();
   }
 
   private get currentDealer(): DealerData {
@@ -567,7 +519,7 @@ export class GameScene extends BaseScene {
             prezentację w Probability Display.
         */
 
-    this.prepareCoinSense();
+    this.perkGameplayController.prepareNextRound();
 
     /*
             Tworzymy nowy ekran prezentacji.
@@ -1060,22 +1012,22 @@ export class GameScene extends BaseScene {
   }
 
   private generateResult(): CoinSide[] {
-    const forcedResult = this.gameCheatController.consumeForcedResult();
+    const forcedResult =
+        this.gameCheatController.consumeForcedResult();
 
     if (forcedResult) {
-      return forcedResult;
+        return forcedResult;
     }
 
-    if (this.preparedCoinSenseResult) {
-      const result = this.preparedCoinSenseResult;
+    const coinSenseResult =
+        this.perkEffectApplier.consumePreparedCoinSenseResult();
 
-      this.preparedCoinSenseResult = undefined;
-
-      return result;
+    if (coinSenseResult) {
+        return coinSenseResult;
     }
 
     return this.oddsManager.rollResult();
-  }
+  } 
 
   private lockControls() {
     this.view.controls.setDisabled(true);
