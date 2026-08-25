@@ -39,6 +39,7 @@ import { roundMoney } from "../util/MoneyUtils";
 import { OddsTable } from "../probability/OddsTypes";
 import { GAME_CONFIG } from "../../config/GameConfig";
 import { RoundPayoutResolver } from "../round/RoundPayoutResolver";
+import { RoundBetResolver } from "../round/RoundBetResolver";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -69,14 +70,9 @@ export class GameScene extends BaseScene {
   private perkRewardGenerator = new PerkRewardGenerator();
   private runPerkRewardState = new RunPerkRewardState();
   private runPerkManager = new RunPerkManager();
-  private perkEffectApplier = new PerkEffectApplier(
-    this.runPerkManager,
-    this.streakMultiplierManager,
-  );
-  private roundPayoutResolver =
-    new RoundPayoutResolver(
-        this.perkEffectApplier
-    );
+  private perkEffectApplier = new PerkEffectApplier(this.runPerkManager, this.streakMultiplierManager,);
+  private roundPayoutResolver = new RoundPayoutResolver(this.perkEffectApplier);
+  private roundBetResolver = new RoundBetResolver(this.perkEffectApplier,);
   private riskTakerWasActive = false;
   private preparedCoinSenseResult?: CoinSide[];
   
@@ -621,13 +617,14 @@ export class GameScene extends BaseScene {
       this.player.balance,
     );
 
-    const betCost = this.perkEffectApplier.resolveBetCost(bet);
+    const betResult = this.roundBetResolver.resolve({bet,});
 
-    const doubleDownActive = this.perkEffectApplier.isDoubleDownActive();
-
-    const payoutBet = this.perkEffectApplier.resolvePayoutBet(bet);
-
-    const coinSenseActive = this.perkEffectApplier.isCoinSenseAvailable();
+    const {
+      betCost,
+      payoutBet,
+      doubleDownActive,
+      coinSenseActive,
+    } = betResult;
 
     if (this.player.balance < betCost) {
       this.popupManager.show("insufficientBalance");
