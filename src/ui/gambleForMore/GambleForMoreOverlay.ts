@@ -168,6 +168,9 @@ export class GambleForMoreOverlay extends Container {
   }
 
   async startGame(): Promise<void> {
+
+    this.redBlackCardView.stopOfferAnimation();
+
     this.leftButton.visible = false;
     this.rightButton.visible = false;
 
@@ -186,6 +189,8 @@ export class GambleForMoreOverlay extends Container {
     this.gameStarted = false;
 
     this.redBlackCardView.reset();
+
+    this.redBlackCardView.startOfferAnimation();
 
     this.leftButton.setText("yesButtonText");
     this.rightButton.setText("noButtonText");
@@ -207,6 +212,7 @@ export class GambleForMoreOverlay extends Container {
   }
 
   hide() {
+    this.redBlackCardView.stopOfferAnimation();
     this.gameStarted = false;
     this.visible = false;
   }

@@ -1,4 +1,4 @@
-import { Assets, Container, Sprite, Texture } from "pixi.js";
+import { Assets, Container, Sprite, Texture, Graphics } from "pixi.js";
 import { LocalizedText } from "../../../localization/LocalizedText";
 import { CardColor } from "../../../game/gambleForMore/games/redBlackCard/RedBlackCardTypes";
 import { AudioManager } from "../../../core/AudioManager";
@@ -7,6 +7,12 @@ import { SoundId } from "../../../audio/SoundId";
 export class RedBlackCardView extends Container {
   private redCard!: Sprite;
   private blackCard!: Sprite;
+
+  private redHighlight!: Graphics;
+  private blackHighlight!: Graphics
+
+  private offerAnimationActive = false;
+  private offerAnimationFrame?: number;
 
   private redTexture!: Texture;
   private blackTexture!: Texture;
@@ -76,10 +82,135 @@ export class RedBlackCardView extends Container {
       this.cardY + this.cardHeight / 2,
     );
 
-    this.addChild(this.redCard, this.blackCard);
+
+    this.redHighlight = this.createCardHighlight();
+    this.blackHighlight = this.createCardHighlight();
+
+    this.redHighlight.position.copyFrom(
+      this.redCard.position,
+    );
+
+    this.blackHighlight.position.copyFrom(
+      this.blackCard.position,
+    );
+
+    this.redHighlight.alpha = 0;
+    this.blackHighlight.alpha = 0;
+
+    this.addChild(
+      this.redHighlight,
+      this.blackHighlight,
+      this.redCard,
+      this.blackCard,
+    );
   }
 
+
+  private createCardHighlight(): Graphics {
+    const padding = 12;
+
+    return new Graphics()
+      .roundRect(
+        -(this.cardWidth + padding * 2) / 2,
+        -(this.cardHeight + padding * 2) / 2,
+        this.cardWidth + padding * 2,
+        this.cardHeight + padding * 2,
+        14,
+      )
+      .stroke({
+        color: 0xffd21f,
+        width: 8,
+        alpha: 1,
+      });
+  }
+
+
+  startOfferAnimation() {
+    this.stopOfferAnimation();
+
+    this.offerAnimationActive = true;
+
+    const cycleDuration = 1200;
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      if (!this.offerAnimationActive) {
+        return;
+      }
+
+      const elapsed =
+        (currentTime - startTime) % cycleDuration;
+
+      const progress =
+        elapsed / cycleDuration;
+
+      /*
+        0.00 - 0.50 → RED
+        0.50 - 1.00 → BLACK
+      */
+
+      if (progress < 0.5) {
+        const localProgress =
+          progress / 0.5;
+
+        const pulse =
+          Math.sin(localProgress * Math.PI);
+
+        this.redHighlight.alpha = pulse;
+        this.blackHighlight.alpha = 0;
+
+        this.redHighlight.scale.set(
+          1 + pulse * 0.04,
+        );
+
+        this.blackHighlight.scale.set(1);
+      } else {
+        const localProgress =
+          (progress - 0.5) / 0.5;
+
+        const pulse =
+          Math.sin(localProgress * Math.PI);
+
+        this.blackHighlight.alpha = pulse;
+        this.redHighlight.alpha = 0;
+
+        this.blackHighlight.scale.set(
+          1 + pulse * 0.04,
+        );
+
+        this.redHighlight.scale.set(1);
+      }
+
+      this.offerAnimationFrame =
+        requestAnimationFrame(animate);
+    };
+
+    this.offerAnimationFrame =
+      requestAnimationFrame(animate);
+  }
+
+
+  stopOfferAnimation() {
+    this.offerAnimationActive = false;
+
+    if (this.offerAnimationFrame !== undefined) {
+      cancelAnimationFrame(
+        this.offerAnimationFrame,
+      );
+
+      this.offerAnimationFrame = undefined;
+    }
+
+    this.redHighlight.alpha = 0;
+    this.blackHighlight.alpha = 0;
+
+    this.redHighlight.scale.set(1);
+    this.blackHighlight.scale.set(1);
+  }
+
+
   async startShuffle(): Promise<void> {
+    this.stopOfferAnimation();
     await this.flipToBack();
     await this.shuffleCards();
     await this.stackCards();

@@ -49,6 +49,7 @@ export class GambleForMoreManager {
     return {
       currentWin,
       potentialWin,
+      bet,
       gameId,
     };
   }

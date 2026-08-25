@@ -33,7 +33,7 @@ import { PerkRewardGenerator } from "../perks/reward/PerkRewardGenerator";
 import { RunPerkRewardState } from "../perks/reward/RunPerkRewardState";
 import { PerkReward } from "../perks/reward/PerkReward";
 import { RunPerkManager } from "../perks/RunPerkManager";
-import { PerkEffectApplier } from "../perks/PerkEffectApplier";
+import { CoinSenseResult, GamblerResult, LuckyHandResult, PerkEffectApplier, RiskTakerResult,} from "../perks/PerkEffectApplier";
 import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
 import { roundMoney } from "../util/MoneyUtils";
 import { OddsTable } from "../probability/OddsTypes";
@@ -608,6 +608,105 @@ export class GameScene extends BaseScene {
     this.addChild(this.coinRow);
   }
 
+
+
+  private async presentWin(
+    resolvedWinAmount: number,
+    coinSenseResult: CoinSenseResult,
+    riskTakerResult: RiskTakerResult,
+    gamblerResult: GamblerResult,
+    luckyHandResult: LuckyHandResult,
+  ): Promise<void> {
+    /*
+        Najpierw pokazujemy wygraną po efektach dealera,
+        ale przed perkami payoutowymi gracza.
+    */
+
+    this.view.gameUI.updateWon(
+      resolvedWinAmount,
+    );
+
+    /*
+        COIN SENSE
+    */
+
+    if (
+      coinSenseResult.triggered &&
+      coinSenseResult.bonusAmount < 0
+    ) {
+      const reductionPercentage =
+        roundMoney(
+          (
+            1 -
+            coinSenseResult.payoutMultiplier
+          ) * 100,
+        );
+
+      await this.view.perkEffectMessageOverlay.play(
+        "winningsReducedBy",
+        `${reductionPercentage}%`,
+        PerkEffectMessageType.NEGATIVE,
+      );
+
+      await this.view.gameUI.animatePenaltyIntoWon(
+        Math.abs(
+          coinSenseResult.bonusAmount,
+        ),
+        coinSenseResult.finalWinAmount,
+      );
+    }
+
+    /*
+        RISK TAKER
+    */
+
+    if (
+      riskTakerResult.triggered &&
+      riskTakerResult.bonusAmount > 0
+    ) {
+      await this.view.gameUI.animateBonusIntoWon(
+        riskTakerResult.bonusAmount,
+        riskTakerResult.finalWinAmount,
+      );
+    }
+
+    /*
+        GAMBLER
+    */
+
+    if (
+      gamblerResult.triggered &&
+      gamblerResult.bonusAmount > 0
+    ) {
+      await this.view.gameUI.animateBonusIntoWon(
+        gamblerResult.bonusAmount,
+        gamblerResult.finalWinAmount,
+      );
+    }
+
+    /*
+        LUCKY HAND
+    */
+
+    if (
+      luckyHandResult.triggered &&
+      luckyHandResult.bonusAmount > 0
+    ) {
+      await this.view.perkEffectMessageOverlay.play(
+        "payoutDoubled",
+        "",
+        PerkEffectMessageType.POSITIVE,
+      );
+
+      await this.view.gameUI.animateBonusIntoWon(
+        luckyHandResult.bonusAmount,
+        luckyHandResult.finalWinAmount,
+      );
+    }
+  }
+
+
+
   // START ROUND - FUNCTION RESPONSIBLE FOR THE GAME LOOP
 
   private async startRound() {
@@ -763,6 +862,14 @@ export class GameScene extends BaseScene {
         finalWinAmount,
       );
 
+      await this.presentWin(
+        resolvedWinAmount,
+        coinSenseResult,
+        riskTakerResult,
+        gamblerResult,
+        luckyHandResult,
+      );
+
       const gambleTriggered = this.gambleForMoreManager.shouldTrigger();
 
       if (gambleTriggered) {
@@ -792,68 +899,6 @@ export class GameScene extends BaseScene {
           "nextSpinDoubleDown",
           "",
           PerkEffectMessageType.POSITIVE,
-        );
-      }
-
-      this.view.gameUI.updateWon(resolvedWinAmount);
-
-      if (coinSenseResult.triggered && coinSenseResult.bonusAmount < 0) {
-        const reductionPercentage = roundMoney(
-          (1 - coinSenseResult.payoutMultiplier) * 100,
-        );
-
-        await this.view.perkEffectMessageOverlay.play(
-          "winningsReducedBy",
-          `${reductionPercentage}%`,
-          PerkEffectMessageType.NEGATIVE,
-        );
-
-        await this.view.gameUI.animatePenaltyIntoWon(
-          Math.abs(coinSenseResult.bonusAmount),
-          coinSenseResult.finalWinAmount,
-        );
-      }
-
-      /*
-                RISK TAKER
-
-                resolvedWinAmount
-                    ↓
-                riskTakerResult.finalWinAmount
-            */
-
-      if (riskTakerResult.triggered && riskTakerResult.bonusAmount > 0) {
-        await this.view.gameUI.animateBonusIntoWon(
-          riskTakerResult.bonusAmount,
-          riskTakerResult.finalWinAmount,
-        );
-      }
-
-      /*
-                GAMBLER
-
-                wynik po Risk Takerze
-                    ↓
-                gamblerResult.finalWinAmount
-            */
-
-      if (gamblerResult.triggered && gamblerResult.bonusAmount > 0) {
-        await this.view.gameUI.animateBonusIntoWon(
-          gamblerResult.bonusAmount,
-          gamblerResult.finalWinAmount,
-        );
-      }
-
-      if (luckyHandResult.triggered && luckyHandResult.bonusAmount > 0) {
-        await this.view.perkEffectMessageOverlay.play(
-          "payoutDoubled",
-          "",
-          PerkEffectMessageType.POSITIVE,
-        );
-
-        await this.view.gameUI.animateBonusIntoWon(
-          luckyHandResult.bonusAmount,
-          luckyHandResult.finalWinAmount,
         );
       }
 
@@ -989,19 +1034,16 @@ export class GameScene extends BaseScene {
         */
 
     if (result.won) {
-      this.commitWin(offer.potentialWin);
+      const nextOffer = this.gambleForMoreManager.createOffer(
+        offer.potentialWin,
+        offer.potentialWin,
+      );
 
-      if (this.pendingStreakResolution) {
-        this.streakMultiplierManager.applyResolution(
-          this.pendingStreakResolution,
-        );
-      }
+      this.pendingGambleOffer = nextOffer;
 
-      this.runStatsRecorder.finishRound({
-        win: true,
-        winAmount: offer.potentialWin,
-        streakMultiplier: this.streakMultiplierManager.getValue(),
-      });
+      this.view.gambleForMoreOverlay.showOffer(nextOffer);
+
+      return;
     } else {
       this.perkEffectApplier.resetDoubleDownProgress();
 

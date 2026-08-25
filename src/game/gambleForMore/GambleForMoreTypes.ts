@@ -5,5 +5,7 @@ export interface GambleForMoreOffer {
 
   potentialWin: number;
 
+  bet: number;
+
   gameId: GambleForMoreGameId;
 }
