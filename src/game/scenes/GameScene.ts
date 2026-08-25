@@ -38,6 +38,7 @@ import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
 import { roundMoney } from "../util/MoneyUtils";
 import { OddsTable } from "../probability/OddsTypes";
 import { GAME_CONFIG } from "../../config/GameConfig";
+import { RoundPayoutResolver } from "../round/RoundPayoutResolver";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -72,8 +73,13 @@ export class GameScene extends BaseScene {
     this.runPerkManager,
     this.streakMultiplierManager,
   );
+  private roundPayoutResolver =
+    new RoundPayoutResolver(
+        this.perkEffectApplier
+    );
   private riskTakerWasActive = false;
   private preparedCoinSenseResult?: CoinSide[];
+  
 
   constructor(
     private app: Application,
@@ -723,33 +729,28 @@ export class GameScene extends BaseScene {
     if (win && winAmount !== undefined) {
       const resolvedWinAmount = outcome.wonAmount;
 
-      const coinSenseResult = this.perkEffectApplier.applyCoinSense(
-        resolvedWinAmount,
-        coinSenseActive,
-      );
+      const payoutResult =
+        this.roundPayoutResolver
+            .resolve({
+                winAmount:
+                    resolvedWinAmount,
 
-      console.log(
-        "COIN SENSE:",
-        coinSenseResult.triggered,
-        coinSenseResult.finalWinAmount,
-      );
+                bet,
 
-      const riskTakerResult = this.perkEffectApplier.applyRiskTaker(
-        coinSenseResult.finalWinAmount,
-        bet,
-        highestAffordableBet,
-      );
+                highestAffordableBet,
 
-      const gamblerResult = this.perkEffectApplier.applyGambler(
-        riskTakerResult.finalWinAmount,
-      );
+                coinSenseActive,
 
-      const luckyHandResult = this.perkEffectApplier.applyLuckyHand(
-        gamblerResult.finalWinAmount,
-        luckyHandTriggered,
-      );
+                luckyHandTriggered
+            });
 
-      const finalWinAmount = luckyHandResult.finalWinAmount;
+      const {
+          coinSenseResult,
+          riskTakerResult,
+          gamblerResult,
+          luckyHandResult,
+          finalWinAmount
+      } = payoutResult;
 
       console.log(
         "BASE WIN:",

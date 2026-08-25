@@ -59,7 +59,7 @@ export class RoundOutcomeHandler {
       streakResolution: {
         action: StreakAction.INCREASE,
 
-        value: this.getStreakMultiplierGrowth(data.currentDealer),
+        growthModifier: this.getStreakMultiplierGrowth(data.currentDealer),
       },
     };
   }
