@@ -1,10 +1,8 @@
 import { PerkReward } from "./reward/PerkReward";
 import { RunPerkManager } from "./RunPerkManager";
 import { StreakMultiplierManager } from "../streak/StreakMultiplierManager";
-import { roundMoney } from "../util/MoneyUtils";
 import { StreakResolution } from "../streak/StreakResolution";
 import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
-import { CasinoBonusConfig } from "./data/CasinoBonus";
 import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
 import { CoinSide } from "../../ui/Coin";
 import { RiskTakerEffect, RiskTakerResult } from "./effects/RiskTakerEffect";
@@ -13,10 +11,10 @@ import { InsuranceEffect, InsuranceResult, } from "./effects/InsuranceEffect";
 import { LuckyHandEffect, LuckyHandResult, } from "./effects/LuckyHandEffect";
 import { DoubleDownEffect } from "./effects/DoubleDownEffect";
 import { PiggyBankEffect, PiggyBankResult, } from "./effects/PiggyBankEffect";
+import { CasinoBonusEffect } from "./effects/CasinoBonusEffect";
 
 
 export class PerkEffectApplier {
-  private casinoBonusBetsPlacedThisFight = 0;
   private readonly coinSenseEffect: CoinSenseEffect;
   private readonly riskTakerEffect: RiskTakerEffect;
   private readonly gamblerEffect: GamblerEffect;
@@ -24,6 +22,7 @@ export class PerkEffectApplier {
   private readonly luckyHandEffect: LuckyHandEffect;
   private readonly doubleDownEffect: DoubleDownEffect;
   private readonly piggyBankEffect: PiggyBankEffect;
+  private readonly casinoBonusEffect: CasinoBonusEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -59,6 +58,10 @@ export class PerkEffectApplier {
       this.runPerkManager,
     );
 
+    this.casinoBonusEffect = new CasinoBonusEffect(
+      this.runPerkManager,
+    );
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -71,40 +74,19 @@ export class PerkEffectApplier {
   }
 
   isCurrentBetFree(bet: number): boolean {
-    const casinoBonus = this.runPerkManager.getPerk("casino_bonus");
-
-    if (!casinoBonus) {
-      return false;
-    }
-
-    const config = casinoBonus.variant.config as CasinoBonusConfig;
-
-    return (
-      this.casinoBonusBetsPlacedThisFight < config.freeBetsPerFight &&
-      bet <= config.maximumFreeBet
-    );
+    return this.casinoBonusEffect.isCurrentBetFree(bet);
   }
 
   resolveBetCost(bet: number): number {
-    if (this.isCurrentBetFree(bet)) {
-      return 0;
-    }
-
-    return bet;
+    return this.casinoBonusEffect.resolveBetCost(bet);
   }
 
   recordBet(): void {
-    const casinoBonus = this.runPerkManager.getPerk("casino_bonus");
-
-    if (!casinoBonus) {
-      return;
-    }
-
-    this.casinoBonusBetsPlacedThisFight++;
+    this.casinoBonusEffect.recordBet();
   }
 
   resetFightEffects(): void {
-    this.casinoBonusBetsPlacedThisFight = 0;
+    this.casinoBonusEffect.resetFight();
 
     this.coinSenseEffect.resetFight();
   }

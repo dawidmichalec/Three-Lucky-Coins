@@ -224,4 +224,12 @@ export class PerkGameplayController {
 
     return true;
   }
+
+  refreshBetState(): void {
+    const bet = this.gameController.getBet();
+
+    const isFree = this.perkEffectApplier.isCurrentBetFree(bet);
+
+    this.gameUI.setFreeBetIndicator(isFree);
+  }
 }

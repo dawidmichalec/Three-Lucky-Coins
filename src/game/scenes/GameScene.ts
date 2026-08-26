@@ -181,7 +181,7 @@ export class GameScene extends BaseScene {
       onBetChange: (bet, source) => {
         this.view.gameUI.updateBet(bet);
 
-        this.refreshFreeBetIndicator();
+        this.perkGameplayController.refreshBetState();
 
         if (source === BetChangeSource.PLAYER) {
           this.perkGameplayController.onBetChanged(bet);
@@ -288,14 +288,6 @@ export class GameScene extends BaseScene {
     this.lockControls();
   }
 
-  private refreshFreeBetIndicator(): void {
-    const bet = this.controller.getBet();
-
-    const isFree = this.perkEffectApplier.isCurrentBetFree(bet);
-
-    this.view.gameUI.setFreeBetIndicator(isFree);
-  }
-
   private applyDealerSettings(dealer: DealerData) {
     this.goldenCoinManager.configure(dealer.goldenCoinSettings);
 
@@ -382,7 +374,7 @@ export class GameScene extends BaseScene {
 
     this.perkEffectApplier.applyPerk(reward);
 
-    this.refreshFreeBetIndicator();
+    this.perkGameplayController.refreshBetState();
 
     this.view.perkRewardOverlay.hide();
 
@@ -426,7 +418,7 @@ export class GameScene extends BaseScene {
 
     this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
 
-    this.refreshFreeBetIndicator();
+    this.perkGameplayController.refreshBetState();
 
     this.view.gameUI.updateWon(0);
 
@@ -546,7 +538,7 @@ export class GameScene extends BaseScene {
 
     this.perkEffectApplier.recordBet();
 
-    this.refreshFreeBetIndicator();
+    this.perkGameplayController.refreshBetState();
 
     this.view.gameUI.updateBalance(this.player.balance);
 
