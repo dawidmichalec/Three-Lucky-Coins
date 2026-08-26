@@ -32,8 +32,6 @@ import { RunPerkRewardState } from "../perks/reward/RunPerkRewardState";
 import { PerkReward } from "../perks/reward/PerkReward";
 import { RunPerkManager } from "../perks/RunPerkManager";
 import { PerkEffectApplier,} from "../perks/PerkEffectApplier";
-import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
-import { roundMoney } from "../util/MoneyUtils";
 import { GAME_CONFIG } from "../../config/GameConfig";
 import { RoundPayoutResolver } from "../round/RoundPayoutResolver";
 import { RoundBetResolver } from "../round/RoundBetResolver";
@@ -288,40 +286,6 @@ export class GameScene extends BaseScene {
     ]);
 
     this.lockControls();
-  }
-
-  private async tryTriggerPiggyBank(): Promise<boolean> {
-    const minimumBet = this.controller.getMinBet();
-
-    const result = this.perkEffectApplier.applyPiggyBank(
-      this.player.balance,
-      minimumBet,
-    );
-
-    if (!result.triggered) {
-      return false;
-    }
-
-    /*
-            Uzupełniamy saldo dokładnie
-            do wartości minimum bet.
-        */
-
-    this.player.balance = result.finalBalance;
-
-    this.view.gameUI.updateBalance(this.player.balance);
-
-    await this.view.perkEffectMessageOverlay.play(
-      "piggyBankActivated",
-      `+${result.amountGranted.toFixed(2)}`,
-      PerkEffectMessageType.POSITIVE,
-    );
-
-    if (result.consumed) {
-      await this.view.gameUI.removePerk("piggy_bank");
-    }
-
-    return true;
   }
 
   private refreshFreeBetIndicator(): void {
@@ -875,14 +839,9 @@ export class GameScene extends BaseScene {
     }
 
     if (!this.canPlay()) {
-      await this.tryTriggerPiggyBank();
+      await this.perkGameplayController.tryRecoverFromInsufficientBalance(this.controller.getMinBet(),);
 
-      this.controller.adjustBetToBalance(this.player.balance);
-
-      console.log(
-        "PIGGY BANK CONSUMED:",
-        !this.runPerkManager.hasPerk("piggy_bank"),
-      );
+      this.controller.adjustBetToBalance(this.player.balance,);
     }
 
     if (!this.canPlay()) {

@@ -190,4 +190,38 @@ export class PerkGameplayController {
       PerkEffectMessageType.POSITIVE,
     );
   }
+
+  async tryRecoverFromInsufficientBalance(
+    minimumBet: number,
+  ): Promise<boolean> {
+    const result =
+      this.perkEffectApplier.applyPiggyBank(
+        this.player.balance,
+        minimumBet,
+      );
+
+    if (!result.triggered) {
+      return false;
+    }
+
+    this.player.balance = result.finalBalance;
+
+    this.gameUI.updateBalance(
+      this.player.balance,
+    );
+
+    await this.perkEffectMessageOverlay.play(
+      "piggyBankActivated",
+      `+${result.amountGranted.toFixed(2)}`,
+      PerkEffectMessageType.POSITIVE,
+    );
+
+    if (result.consumed) {
+      await this.gameUI.removePerk(
+        "piggy_bank",
+      );
+    }
+
+    return true;
+  }
 }

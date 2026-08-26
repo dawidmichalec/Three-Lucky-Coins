@@ -12,24 +12,18 @@ import { GamblerEffect, GamblerResult } from "./effects/GamblerEffect";
 import { InsuranceEffect, InsuranceResult, } from "./effects/InsuranceEffect";
 import { LuckyHandEffect, LuckyHandResult, } from "./effects/LuckyHandEffect";
 import { DoubleDownEffect } from "./effects/DoubleDownEffect";
+import { PiggyBankEffect, PiggyBankResult, } from "./effects/PiggyBankEffect";
 
-
-export interface PiggyBankResult {
-  triggered: boolean;
-  amountGranted: number;
-  finalBalance: number;
-  consumed: boolean;
-}
 
 export class PerkEffectApplier {
   private casinoBonusBetsPlacedThisFight = 0;
-  private doubleDownSuccessfulSpins = 0;
   private readonly coinSenseEffect: CoinSenseEffect;
   private readonly riskTakerEffect: RiskTakerEffect;
   private readonly gamblerEffect: GamblerEffect;
   private readonly insuranceEffect: InsuranceEffect;
   private readonly luckyHandEffect: LuckyHandEffect;
   private readonly doubleDownEffect: DoubleDownEffect;
+  private readonly piggyBankEffect: PiggyBankEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -58,6 +52,10 @@ export class PerkEffectApplier {
     );
 
     this.doubleDownEffect = new DoubleDownEffect(
+      this.runPerkManager,
+    );
+
+    this.piggyBankEffect = new PiggyBankEffect(
       this.runPerkManager,
     );
 
@@ -224,38 +222,13 @@ export class PerkEffectApplier {
     );
   }
 
-  applyPiggyBank(balance: number, minimumBet: number): PiggyBankResult {
-    const piggyBank = this.runPerkManager.getPerk("piggy_bank");
-
-    if (!piggyBank || balance >= minimumBet) {
-      return {
-        triggered: false,
-        amountGranted: 0,
-        finalBalance: balance,
-        consumed: false,
-      };
-    }
-
-    const amountGranted = roundMoney(minimumBet - balance);
-
-    /*
-            Piggy Bank jest consumable.
-
-            Skoro właśnie się aktywował,
-            natychmiast usuwamy go
-            z aktywnych perków runa.
-        */
-
-    this.runPerkManager.removePerk("piggy_bank");
-
-    return {
-      triggered: true,
-
-      amountGranted,
-
-      finalBalance: minimumBet,
-
-      consumed: true,
-    };
+  applyPiggyBank(
+    balance: number,
+    minimumBet: number,
+  ): PiggyBankResult {
+    return this.piggyBankEffect.apply(
+      balance,
+      minimumBet,
+    );
   }
 }
