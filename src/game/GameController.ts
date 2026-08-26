@@ -1,10 +1,21 @@
 import { BET_LEVELS } from "./data/BetLevels";
 import { COMBINATIONS } from "./data/CoinCombinations";
 
+export enum BetChangeSource {
+  PLAYER = "player",
+  AUTO_ADJUST = "auto_adjust",
+}
+
+
 type ControllerConfig = {
-  onBetChange: (bet: number) => void;
+  onBetChange: (
+    bet: number,
+    source: BetChangeSource,
+  ) => void;
+
   onComboChange: (combo: string) => void;
 };
+
 
 export class GameController {
   private betIndex = 3;
@@ -46,11 +57,10 @@ export class GameController {
 
     this.betIndex = affordableBetIndex;
 
-    /*
-          Aktualizujemy UI bez wyświetlania popupu
-          minimumBet / maximumBet.
-      */
-    this.config.onBetChange(this.getBet());
+    this.config.onBetChange(
+      this.getBet(),
+      BetChangeSource.AUTO_ADJUST,
+    );
 
     return true;
   }
@@ -72,7 +82,10 @@ export class GameController {
   private syncBet() {
     const bet = BET_LEVELS[this.betIndex];
 
-    this.config.onBetChange(bet);
+    this.config.onBetChange(
+      bet,
+      BetChangeSource.PLAYER,
+    );
   }
 
   getBet() {

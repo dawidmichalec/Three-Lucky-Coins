@@ -3,12 +3,23 @@ import { GameUI } from "../../../ui/GameUI";
 import { OddsManager } from "../../probability/OddsManager";
 import { OddsTable } from "../../probability/OddsTypes";
 import { PerkEffectApplier } from "../PerkEffectApplier";
+import { PerkEffectMessageOverlay, PerkEffectMessageType, } from "../../../ui/overlays/PerkEffectOverlay";
+import { roundMoney } from "../../util/MoneyUtils";
+import { GameController } from "../../GameController";
+import { Player } from "../../Player";
+
 
 export class PerkGameplayController {
+
+  private riskTakerWasActive = false;
+
   constructor(
     private readonly perkEffectApplier: PerkEffectApplier,
     private readonly oddsManager: OddsManager,
     private readonly gameUI: GameUI,
+    private readonly perkEffectMessageOverlay: PerkEffectMessageOverlay,
+    private readonly gameController: GameController,
+    private readonly player: Player,
   ) {}
 
   prepareNextRound(): void {
@@ -36,5 +47,49 @@ export class PerkGameplayController {
       heads: side === CoinSide.Heads ? 1 : 0,
       tails: side === CoinSide.Tails ? 1 : 0,
     };
+  }
+
+  onBetChanged(bet: number): void {
+
+    console.log("RISK TAKER BET CHANGE", {
+      bet,
+      balance: this.player.balance,
+      highestAffordableBet:
+        this.gameController.getHighestAffordableBet(
+          this.player.balance,
+        ),
+      payoutMultiplier:
+        this.perkEffectApplier.getRiskTakerPayoutMultiplier(
+          bet,
+          this.gameController.getHighestAffordableBet(
+            this.player.balance,
+          ),
+        ),
+    });
+    
+    const highestAffordableBet =
+      this.gameController.getHighestAffordableBet(
+        this.player.balance,
+      );
+
+    const payoutMultiplier =
+      this.perkEffectApplier.getRiskTakerPayoutMultiplier(
+        bet,
+        highestAffordableBet,
+      );
+
+    if (payoutMultiplier === undefined) {
+      return;
+    }
+
+    const increasePercentage = roundMoney(
+      (payoutMultiplier - 1) * 100,
+    );
+
+    void this.perkEffectMessageOverlay.play(
+      "winningsIncreasedBy",
+      `${increasePercentage}%`,
+      PerkEffectMessageType.POSITIVE,
+    );
   }
 }

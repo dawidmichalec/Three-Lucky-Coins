@@ -5,28 +5,16 @@ import { roundMoney } from "../util/MoneyUtils";
 import { StreakAction, StreakResolution } from "../streak/StreakResolution";
 import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
 import { CasinoBonusConfig } from "./data/CasinoBonus";
-import { RiskTakerConfig } from "./data/RiskTaker";
 import { GamblerConfig } from "./data/Gambler";
 import { DoubleDownConfig } from "./data/DoubleDown";
 import { LuckyHandConfig } from "./data/LuckyHand";
 import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
 import { CoinSide } from "../../ui/Coin";
+import { RiskTakerEffect, RiskTakerResult } from "./effects/RiskTakerEffect";
 
 export interface InsuranceResult {
   triggered: boolean;
   streakResolution: StreakResolution;
-}
-
-export interface RiskTakerResult {
-  triggered: boolean;
-
-  baseWinAmount: number;
-
-  bonusAmount: number;
-
-  finalWinAmount: number;
-
-  payoutMultiplier: number;
 }
 
 export interface GamblerResult {
@@ -62,6 +50,7 @@ export class PerkEffectApplier {
   private doubleDownSuccessfulSpins = 0;
   private luckyHandTossCount = 0;
   private readonly coinSenseEffect: CoinSenseEffect;
+  private readonly riskTakerEffect: RiskTakerEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -70,6 +59,10 @@ export class PerkEffectApplier {
   ) {
 
     this.coinSenseEffect = new CoinSenseEffect(
+      this.runPerkManager,
+    );
+
+    this.riskTakerEffect = new RiskTakerEffect(
       this.runPerkManager,
     );
 
@@ -139,19 +132,10 @@ export class PerkEffectApplier {
     currentBet: number,
     highestAffordableBet: number,
   ): number | undefined {
-    const riskTaker = this.runPerkManager.getPerk("risk_taker");
-
-    if (!riskTaker) {
-      return undefined;
-    }
-
-    if (currentBet !== highestAffordableBet) {
-      return undefined;
-    }
-
-    const config = riskTaker.variant.config as RiskTakerConfig;
-
-    return config.payoutMultiplier;
+    return this.riskTakerEffect.getPayoutMultiplier(
+      currentBet,
+      highestAffordableBet,
+    );
   }
 
   applyRiskTaker(
@@ -159,40 +143,11 @@ export class PerkEffectApplier {
     currentBet: number,
     highestAffordableBet: number,
   ): RiskTakerResult {
-    const payoutMultiplier = this.getRiskTakerPayoutMultiplier(
+    return this.riskTakerEffect.apply(
+      winAmount,
       currentBet,
       highestAffordableBet,
     );
-
-    if (payoutMultiplier === undefined) {
-      return {
-        triggered: false,
-
-        baseWinAmount: winAmount,
-
-        bonusAmount: 0,
-
-        finalWinAmount: winAmount,
-
-        payoutMultiplier: 1,
-      };
-    }
-
-    const finalWinAmount = roundMoney(winAmount * payoutMultiplier);
-
-    const bonusAmount = roundMoney(finalWinAmount - winAmount);
-
-    return {
-      triggered: true,
-
-      baseWinAmount: winAmount,
-
-      bonusAmount,
-
-      finalWinAmount,
-
-      payoutMultiplier,
-    };
   }
 
   resolveLossStreakResolution(resolution: StreakResolution): InsuranceResult {

@@ -1,6 +1,6 @@
 import { Application, Ticker } from "pixi.js";
 import { Player } from "../Player";
-import { GameController } from "../GameController";
+import { GameController, BetChangeSource } from "../GameController";
 import { CoinRow } from "../../ui/CoinRow";
 import { CoinSide } from "../../ui/Coin";
 import { CheatPanel } from "../../dev/CheatPanel";
@@ -72,7 +72,6 @@ export class GameScene extends BaseScene {
   private perkEffectApplier = new PerkEffectApplier(this.runPerkManager, this.streakMultiplierManager,);
   private roundPayoutResolver = new RoundPayoutResolver(this.perkEffectApplier);
   private roundBetResolver = new RoundBetResolver(this.perkEffectApplier,);
-  private riskTakerWasActive = false;
   private roundPayoutPresentationController!: RoundPayoutPresentationController;
   private perkGameplayController: PerkGameplayController;
   
@@ -168,13 +167,6 @@ export class GameScene extends BaseScene {
         this.view.perkEffectMessageOverlay,
       );
 
-    // PERK GAMEPLAY CONTROLLER
-
-    this.perkGameplayController = new PerkGameplayController(
-      this.perkEffectApplier,
-      this.oddsManager,
-      this.view.gameUI,
-    );
 
     // DEALER SKILL FEEDBACK HANDLER
 
@@ -188,18 +180,32 @@ export class GameScene extends BaseScene {
 
     // CONTROLLER
     this.controller = new GameController({
-      onBetChange: (bet) => {
+      onBetChange: (bet, source) => {
         this.view.gameUI.updateBet(bet);
 
         this.refreshFreeBetIndicator();
 
-        this.refreshRiskTakerState();
+        if (source === BetChangeSource.PLAYER) {
+          this.perkGameplayController.onBetChanged(bet);
+        }
       },
 
       onComboChange: (combo) => {
         this.view.gameUI.updateCombination(combo);
       },
     });
+
+
+    // PERK GAMEPLAY CONTROLLER
+
+    this.perkGameplayController = new PerkGameplayController(
+      this.perkEffectApplier,
+      this.oddsManager,
+      this.view.gameUI,
+      this.view.perkEffectMessageOverlay,
+      this.controller,
+      this.player,
+    );
 
     // INITIAL UI STATE
 
@@ -318,37 +324,6 @@ export class GameScene extends BaseScene {
     return true;
   }
 
-
-  private refreshRiskTakerState(): void {
-    const currentBet = this.controller.getBet();
-
-    const highestAffordableBet = this.controller.getHighestAffordableBet(
-      this.player.balance,
-    );
-
-    const payoutMultiplier =
-      this.perkEffectApplier.getRiskTakerPayoutMultiplier(
-        currentBet,
-        highestAffordableBet,
-      );
-
-    const active = payoutMultiplier !== undefined;
-
-    if (active && !this.riskTakerWasActive) {
-      const increasePercentage = roundMoney((payoutMultiplier! - 1) * 100);
-
-      void this.view.perkEffectMessageOverlay.play(
-        "winningsIncreasedBy",
-
-        `${increasePercentage}%`,
-
-        PerkEffectMessageType.POSITIVE,
-      );
-    }
-
-    this.riskTakerWasActive = active;
-  }
-
   private refreshFreeBetIndicator(): void {
     const bet = this.controller.getBet();
 
@@ -445,8 +420,6 @@ export class GameScene extends BaseScene {
 
     this.refreshFreeBetIndicator();
 
-    this.refreshRiskTakerState();
-
     this.view.perkRewardOverlay.hide();
 
     await this.view.gameUI.addPerk(reward);
@@ -484,10 +457,6 @@ export class GameScene extends BaseScene {
     this.dealerCollectionManager.discoverDealer(dealer.id);
 
     this.perkEffectApplier.resetFightEffects();
-
-    this.riskTakerWasActive = false;
-
-    this.refreshRiskTakerState();
 
     this.streakMultiplierManager.reset();
 
@@ -1007,8 +976,6 @@ export class GameScene extends BaseScene {
     this.view.gameUI.updateBalance(this.player.balance);
 
     this.view.gameUI.updateWon(amount);
-
-    this.refreshRiskTakerState();
   }
 
   private generateResult(): CoinSide[] {
