@@ -5,13 +5,13 @@ import { roundMoney } from "../util/MoneyUtils";
 import { StreakResolution } from "../streak/StreakResolution";
 import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
 import { CasinoBonusConfig } from "./data/CasinoBonus";
-import { DoubleDownConfig } from "./data/DoubleDown";
 import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
 import { CoinSide } from "../../ui/Coin";
 import { RiskTakerEffect, RiskTakerResult } from "./effects/RiskTakerEffect";
 import { GamblerEffect, GamblerResult } from "./effects/GamblerEffect";
 import { InsuranceEffect, InsuranceResult, } from "./effects/InsuranceEffect";
 import { LuckyHandEffect, LuckyHandResult, } from "./effects/LuckyHandEffect";
+import { DoubleDownEffect } from "./effects/DoubleDownEffect";
 
 
 export interface PiggyBankResult {
@@ -29,6 +29,7 @@ export class PerkEffectApplier {
   private readonly gamblerEffect: GamblerEffect;
   private readonly insuranceEffect: InsuranceEffect;
   private readonly luckyHandEffect: LuckyHandEffect;
+  private readonly doubleDownEffect: DoubleDownEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -53,6 +54,10 @@ export class PerkEffectApplier {
     );
 
     this.luckyHandEffect = new LuckyHandEffect(
+      this.runPerkManager,
+    );
+
+    this.doubleDownEffect = new DoubleDownEffect(
       this.runPerkManager,
     );
 
@@ -157,75 +162,25 @@ export class PerkEffectApplier {
   }
 
   isDoubleDownActive(): boolean {
-    const doubleDown = this.runPerkManager.getPerk("double_down");
-
-    if (!doubleDown) {
-      return false;
-    }
-
-    const config = doubleDown.variant.config as DoubleDownConfig;
-
-    return this.doubleDownSuccessfulSpins >= config.requiredSuccessfulSpins;
+    return this.doubleDownEffect.isActive();
   }
 
   resolvePayoutBet(bet: number): number {
-    const doubleDown = this.runPerkManager.getPerk("double_down");
-
-    if (!doubleDown || !this.isDoubleDownActive()) {
-      return bet;
-    }
-
-    const config = doubleDown.variant.config as DoubleDownConfig;
-
-    return bet * config.betMultiplier;
+    return this.doubleDownEffect.resolvePayoutBet(bet);
   }
 
   recordDoubleDownSpinResult(
     won: boolean,
     doubleDownWasActive: boolean,
   ): boolean {
-    const doubleDown = this.runPerkManager.getPerk("double_down");
-
-    if (!doubleDown) {
-      return false;
-    }
-
-    /*
-            Jeżeli właśnie wykorzystaliśmy
-            Double Down, zaczynamy progress
-            od nowa.
-        */
-
-    if (doubleDownWasActive) {
-      this.doubleDownSuccessfulSpins = 0;
-
-      return false;
-    }
-
-    /*
-            Przegrana przerywa serię.
-        */
-
-    if (!won) {
-      this.doubleDownSuccessfulSpins = 0;
-
-      return false;
-    }
-
-    this.doubleDownSuccessfulSpins++;
-
-    const config = doubleDown.variant.config as DoubleDownConfig;
-
-    /*
-            true TYLKO w rundzie,
-            która właśnie uzbroiła Double Down.
-        */
-
-    return this.doubleDownSuccessfulSpins === config.requiredSuccessfulSpins;
+    return this.doubleDownEffect.recordSpinResult(
+      won,
+      doubleDownWasActive,
+    );
   }
 
   resetDoubleDownProgress(): void {
-    this.doubleDownSuccessfulSpins = 0;
+    this.doubleDownEffect.resetProgress();
   }
 
   isCoinSenseAvailable(): boolean {

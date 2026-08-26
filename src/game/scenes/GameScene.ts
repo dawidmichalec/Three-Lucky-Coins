@@ -576,13 +576,7 @@ export class GameScene extends BaseScene {
 
     this.view.gameUI.updateWon(0);
 
-    if (doubleDownActive) {
-      await this.view.perkEffectMessageOverlay.play(
-        "doubleDownActive",
-        "",
-        PerkEffectMessageType.POSITIVE,
-      );
-    }
+    await this.perkGameplayController.handleRoundStart(doubleDownActive,);
 
     this.player.balance -= betCost;
 
@@ -626,8 +620,6 @@ export class GameScene extends BaseScene {
     const perkRoundResult = this.perkGameplayController.recordRoundResult(win);
 
     const winAmount = resolution.winAmount;
-
-    const doubleDownActivated = this.perkEffectApplier.recordDoubleDownSpinResult(win, doubleDownActive);
 
     const outcome = this.roundOutcomeHandler.apply({
       win,
@@ -719,15 +711,9 @@ export class GameScene extends BaseScene {
         streakMultiplier: this.streakMultiplierManager.getValue(),
       });
 
-      if (doubleDownActivated) {
-        await this.view.perkEffectMessageOverlay.play(
-          "nextSpinDoubleDown",
-          "",
-          PerkEffectMessageType.POSITIVE,
-        );
-      }
-
       this.commitWin(finalWinAmount);
+
+      await this.perkGameplayController.handleWinCommitted();
 
       await this.finishRound();
 
@@ -769,6 +755,8 @@ export class GameScene extends BaseScene {
     this.commitWin(
       result.winAmount,
     );
+
+    await this.perkGameplayController.handleWinCommitted();
 
     if (
       this.pendingStreakResolution
@@ -849,8 +837,6 @@ export class GameScene extends BaseScene {
 
   private async handleGambleForMoreLoss() {
     this.gambleForMoreController.lose();
-
-    this.perkEffectApplier.resetDoubleDownProgress();
 
     const finalStreakResolution = await this.perkGameplayController.handleLoss({action: StreakAction.RESET,});
 

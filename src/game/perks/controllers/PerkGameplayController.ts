@@ -12,6 +12,9 @@ import { StreakResolution } from "../../streak/StreakResolution";
 
 export class PerkGameplayController {
 
+  private doubleDownActivatedPending = false;
+  private doubleDownWasActiveThisRound = false;
+
   constructor(
     private readonly perkEffectApplier: PerkEffectApplier,
     private readonly oddsManager: OddsManager,
@@ -96,6 +99,11 @@ export class PerkGameplayController {
   async handleLoss(
     streakResolution: StreakResolution,
   ): Promise<StreakResolution> {
+
+    this.perkEffectApplier.resetDoubleDownProgress();
+
+    this.doubleDownActivatedPending = false;
+
     const insuranceResult =
       this.perkEffectApplier.resolveLossStreakResolution(
         streakResolution,
@@ -127,14 +135,59 @@ export class PerkGameplayController {
     return insuranceResult.streakResolution;
   }
 
-  recordRoundResult(won: boolean): {
+  recordRoundResult(
+    won: boolean,
+  ): {
     luckyHandTriggered: boolean;
   } {
     const luckyHandTriggered =
       this.perkEffectApplier.recordLuckyHandToss(won);
 
+    const doubleDownActivated =
+      this.perkEffectApplier.recordDoubleDownSpinResult(
+        won,
+        this.doubleDownWasActiveThisRound,
+      );
+
+    this.doubleDownWasActiveThisRound = false;
+
+    if (doubleDownActivated) {
+      this.doubleDownActivatedPending = true;
+    }
+
     return {
       luckyHandTriggered,
     };
+  }
+
+  async handleWinCommitted(): Promise<void> {
+    if (!this.doubleDownActivatedPending) {
+      return;
+    }
+
+    this.doubleDownActivatedPending = false;
+
+    await this.perkEffectMessageOverlay.play(
+      "nextSpinDoubleDown",
+      "",
+      PerkEffectMessageType.POSITIVE,
+    );
+  }
+
+  async handleRoundStart(
+    doubleDownActive: boolean,
+  ): Promise<void> {
+    this.doubleDownWasActiveThisRound =
+      doubleDownActive;
+
+    if (!doubleDownActive) {
+      return;
+    }
+
+    await this.perkEffectMessageOverlay.play(
+      "doubleDownActive",
+      "",
+      PerkEffectMessageType.POSITIVE,
+    );
   }
 }
