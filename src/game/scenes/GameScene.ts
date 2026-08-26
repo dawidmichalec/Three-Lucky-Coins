@@ -172,10 +172,6 @@ export class GameScene extends BaseScene {
       this.view.gameMessageOverlay,
     );
 
-    // NEW ROUND
-
-    this.prepareNextRound();
-
     // CONTROLLER
     this.controller = new GameController({
       onBetChange: (bet, source) => {
@@ -275,6 +271,10 @@ export class GameScene extends BaseScene {
         onUnlockControls: () => this.unlockControls(),
       },
     );
+
+    // INITAL GAME STATE
+
+    this.prepareNextRound();
   }
 
   override async init(): Promise<void> {

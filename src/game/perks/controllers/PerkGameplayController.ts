@@ -52,23 +52,7 @@ export class PerkGameplayController {
   }
 
   onBetChanged(bet: number): void {
-
-    console.log("RISK TAKER BET CHANGE", {
-      bet,
-      balance: this.player.balance,
-      highestAffordableBet:
-        this.gameController.getHighestAffordableBet(
-          this.player.balance,
-        ),
-      payoutMultiplier:
-        this.perkEffectApplier.getRiskTakerPayoutMultiplier(
-          bet,
-          this.gameController.getHighestAffordableBet(
-            this.player.balance,
-          ),
-        ),
-    });
-
+    
     const highestAffordableBet =
       this.gameController.getHighestAffordableBet(
         this.player.balance,
