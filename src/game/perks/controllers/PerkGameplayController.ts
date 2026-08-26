@@ -7,11 +7,10 @@ import { PerkEffectMessageOverlay, PerkEffectMessageType, } from "../../../ui/ov
 import { roundMoney } from "../../util/MoneyUtils";
 import { GameController } from "../../GameController";
 import { Player } from "../../Player";
+import { StreakResolution } from "../../streak/StreakResolution";
 
 
 export class PerkGameplayController {
-
-  private riskTakerWasActive = false;
 
   constructor(
     private readonly perkEffectApplier: PerkEffectApplier,
@@ -94,22 +93,37 @@ export class PerkGameplayController {
   }
 
 
-  async handleLoss(): Promise<void> {
+  async handleLoss(
+    streakResolution: StreakResolution,
+  ): Promise<StreakResolution> {
+    const insuranceResult =
+      this.perkEffectApplier.resolveLossStreakResolution(
+        streakResolution,
+      );
+
+    if (insuranceResult.triggered) {
+      await this.perkEffectMessageOverlay.play(
+        "streakMultiplierProtected",
+        "",
+        PerkEffectMessageType.POSITIVE,
+      );
+    }
+
     const gamblerMultiplier =
       this.perkEffectApplier.activateGamblerAfterLoss();
 
-    if (gamblerMultiplier === undefined) {
-      return;
+    if (gamblerMultiplier !== undefined) {
+      const increasePercentage = roundMoney(
+        (gamblerMultiplier - 1) * 100,
+      );
+
+      await this.perkEffectMessageOverlay.play(
+        "nextWinIncreasedBy",
+        `${increasePercentage}%`,
+        PerkEffectMessageType.POSITIVE,
+      );
     }
 
-    const increasePercentage = roundMoney(
-      (gamblerMultiplier - 1) * 100,
-    );
-
-    await this.perkEffectMessageOverlay.play(
-      "nextWinIncreasedBy",
-      `${increasePercentage}%`,
-      PerkEffectMessageType.POSITIVE,
-    );
+    return insuranceResult.streakResolution;
   }
 }

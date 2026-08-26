@@ -744,20 +744,9 @@ export class GameScene extends BaseScene {
       LOSS
     */
 
-    const insuranceResult =
-      this.perkEffectApplier.resolveLossStreakResolution(streakResolution);
+    const finalStreakResolution = await this.perkGameplayController.handleLoss(streakResolution,);
 
-    if (insuranceResult.triggered) {
-      void this.view.perkEffectMessageOverlay.play(
-        "streakMultiplierProtected",
-        "",
-        PerkEffectMessageType.POSITIVE,
-      );
-    }
-
-    this.streakMultiplierManager.applyResolution(
-      insuranceResult.streakResolution,
-    );
+    this.streakMultiplierManager.applyResolution(finalStreakResolution,);
 
     this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
 
@@ -765,8 +754,6 @@ export class GameScene extends BaseScene {
       win: false,
       streakMultiplier: this.streakMultiplierManager.getValue(),
     });
-
-    await this.perkGameplayController.handleLoss();
 
     await this.finishRound();
   }
@@ -871,22 +858,9 @@ export class GameScene extends BaseScene {
 
     this.perkEffectApplier.resetDoubleDownProgress();
 
-    const insuranceResult =
-      this.perkEffectApplier.resolveLossStreakResolution({
-        action: StreakAction.RESET,
-      });
+    const finalStreakResolution = await this.perkGameplayController.handleLoss({action: StreakAction.RESET,});
 
-    if (insuranceResult.triggered) {
-      await this.view.perkEffectMessageOverlay.play(
-        "streakMultiplierProtected",
-        "",
-        PerkEffectMessageType.POSITIVE,
-      );
-    }
-
-    this.streakMultiplierManager.applyResolution(
-      insuranceResult.streakResolution,
-    );
+    this.streakMultiplierManager.applyResolution(finalStreakResolution,);
 
     this.view.gameUI.updateWon(0);
 
@@ -895,7 +869,6 @@ export class GameScene extends BaseScene {
       streakMultiplier: this.streakMultiplierManager.getValue(),
     });
 
-    await this.perkGameplayController.handleLoss();
   }
 
   private wait(milliseconds: number): Promise<void> {

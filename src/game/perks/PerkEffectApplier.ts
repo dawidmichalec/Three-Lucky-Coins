@@ -2,7 +2,7 @@ import { PerkReward } from "./reward/PerkReward";
 import { RunPerkManager } from "./RunPerkManager";
 import { StreakMultiplierManager } from "../streak/StreakMultiplierManager";
 import { roundMoney } from "../util/MoneyUtils";
-import { StreakAction, StreakResolution } from "../streak/StreakResolution";
+import { StreakResolution } from "../streak/StreakResolution";
 import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
 import { CasinoBonusConfig } from "./data/CasinoBonus";
 import { DoubleDownConfig } from "./data/DoubleDown";
@@ -11,11 +11,7 @@ import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
 import { CoinSide } from "../../ui/Coin";
 import { RiskTakerEffect, RiskTakerResult } from "./effects/RiskTakerEffect";
 import { GamblerEffect, GamblerResult } from "./effects/GamblerEffect";
-
-export interface InsuranceResult {
-  triggered: boolean;
-  streakResolution: StreakResolution;
-}
+import { InsuranceEffect, InsuranceResult, } from "./effects/InsuranceEffect";
 
 export interface LuckyHandResult {
   triggered: boolean;
@@ -39,6 +35,7 @@ export class PerkEffectApplier {
   private readonly coinSenseEffect: CoinSenseEffect;
   private readonly riskTakerEffect: RiskTakerEffect;
   private readonly gamblerEffect: GamblerEffect;
+  private readonly insuranceEffect: InsuranceEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -55,6 +52,10 @@ export class PerkEffectApplier {
     );
 
     this.gamblerEffect = new GamblerEffect(
+      this.runPerkManager,
+    );
+
+    this.insuranceEffect = new InsuranceEffect(
       this.runPerkManager,
     );
 
@@ -142,25 +143,12 @@ export class PerkEffectApplier {
     );
   }
 
-  resolveLossStreakResolution(resolution: StreakResolution): InsuranceResult {
-    const insurance = this.runPerkManager.getPerk("insurance");
-
-    if (!insurance || resolution.action !== StreakAction.RESET) {
-      return {
-        triggered: false,
-        streakResolution: resolution,
-      };
-    }
-
-    return {
-      triggered: true,
-
-      streakResolution: {
-        action: StreakAction.DECREASE,
-
-        value: 1,
-      },
-    };
+  resolveLossStreakResolution(
+    resolution: StreakResolution,
+  ): InsuranceResult {
+    return this.insuranceEffect.resolveLossStreakResolution(
+      resolution,
+    );
   }
 
   activateGamblerAfterLoss(): number | undefined {

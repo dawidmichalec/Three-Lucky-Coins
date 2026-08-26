@@ -1,7 +1,7 @@
 import { PerkData } from "../PerkData";
 import { PerkRarity } from "../PerkRarity";
 
-interface InsuranceConfig {
+export interface InsuranceConfig {
   streakReductionOnLoss: number;
 }
 
