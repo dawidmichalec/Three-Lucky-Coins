@@ -5,28 +5,16 @@ import { roundMoney } from "../util/MoneyUtils";
 import { StreakAction, StreakResolution } from "../streak/StreakResolution";
 import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
 import { CasinoBonusConfig } from "./data/CasinoBonus";
-import { GamblerConfig } from "./data/Gambler";
 import { DoubleDownConfig } from "./data/DoubleDown";
 import { LuckyHandConfig } from "./data/LuckyHand";
 import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
 import { CoinSide } from "../../ui/Coin";
 import { RiskTakerEffect, RiskTakerResult } from "./effects/RiskTakerEffect";
+import { GamblerEffect, GamblerResult } from "./effects/GamblerEffect";
 
 export interface InsuranceResult {
   triggered: boolean;
   streakResolution: StreakResolution;
-}
-
-export interface GamblerResult {
-  triggered: boolean;
-
-  baseWinAmount: number;
-
-  bonusAmount: number;
-
-  finalWinAmount: number;
-
-  payoutMultiplier: number;
 }
 
 export interface LuckyHandResult {
@@ -46,11 +34,11 @@ export interface PiggyBankResult {
 
 export class PerkEffectApplier {
   private casinoBonusBetsPlacedThisFight = 0;
-  private gamblerBonusActive = false;
   private doubleDownSuccessfulSpins = 0;
   private luckyHandTossCount = 0;
   private readonly coinSenseEffect: CoinSenseEffect;
   private readonly riskTakerEffect: RiskTakerEffect;
+  private readonly gamblerEffect: GamblerEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -63,6 +51,10 @@ export class PerkEffectApplier {
     );
 
     this.riskTakerEffect = new RiskTakerEffect(
+      this.runPerkManager,
+    );
+
+    this.gamblerEffect = new GamblerEffect(
       this.runPerkManager,
     );
 
@@ -172,60 +164,11 @@ export class PerkEffectApplier {
   }
 
   activateGamblerAfterLoss(): number | undefined {
-    const gambler = this.runPerkManager.getPerk("gambler");
-
-    if (!gambler) {
-      return undefined;
-    }
-
-    const config = gambler.variant.config as GamblerConfig;
-
-    this.gamblerBonusActive = true;
-
-    return config.payoutMultiplier;
+    return this.gamblerEffect.activateAfterLoss();
   }
 
   applyGambler(winAmount: number): GamblerResult {
-    const gambler = this.runPerkManager.getPerk("gambler");
-
-    if (!gambler || !this.gamblerBonusActive) {
-      return {
-        triggered: false,
-
-        baseWinAmount: winAmount,
-
-        bonusAmount: 0,
-
-        finalWinAmount: winAmount,
-
-        payoutMultiplier: 1,
-      };
-    }
-
-    const config = gambler.variant.config as GamblerConfig;
-
-    const finalWinAmount = roundMoney(winAmount * config.payoutMultiplier);
-
-    const bonusAmount = roundMoney(finalWinAmount - winAmount);
-
-    /*
-            Konsumujemy bonus dopiero
-            po faktycznej wygranej.
-        */
-
-    this.gamblerBonusActive = false;
-
-    return {
-      triggered: true,
-
-      baseWinAmount: winAmount,
-
-      bonusAmount,
-
-      finalWinAmount,
-
-      payoutMultiplier: config.payoutMultiplier,
-    };
+    return this.gamblerEffect.apply(winAmount);
   }
 
   isDoubleDownActive(): boolean {

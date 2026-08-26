@@ -66,7 +66,7 @@ export class PerkGameplayController {
           ),
         ),
     });
-    
+
     const highestAffordableBet =
       this.gameController.getHighestAffordableBet(
         this.player.balance,
@@ -88,6 +88,26 @@ export class PerkGameplayController {
 
     void this.perkEffectMessageOverlay.play(
       "winningsIncreasedBy",
+      `${increasePercentage}%`,
+      PerkEffectMessageType.POSITIVE,
+    );
+  }
+
+
+  async handleLoss(): Promise<void> {
+    const gamblerMultiplier =
+      this.perkEffectApplier.activateGamblerAfterLoss();
+
+    if (gamblerMultiplier === undefined) {
+      return;
+    }
+
+    const increasePercentage = roundMoney(
+      (gamblerMultiplier - 1) * 100,
+    );
+
+    await this.perkEffectMessageOverlay.play(
+      "nextWinIncreasedBy",
       `${increasePercentage}%`,
       PerkEffectMessageType.POSITIVE,
     );

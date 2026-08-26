@@ -741,8 +741,8 @@ export class GameScene extends BaseScene {
     }
 
     /*
-            LOSS
-        */
+      LOSS
+    */
 
     const insuranceResult =
       this.perkEffectApplier.resolveLossStreakResolution(streakResolution);
@@ -766,17 +766,7 @@ export class GameScene extends BaseScene {
       streakMultiplier: this.streakMultiplierManager.getValue(),
     });
 
-    const gamblerMultiplier = this.perkEffectApplier.activateGamblerAfterLoss();
-
-    if (gamblerMultiplier !== undefined) {
-      const increasePercentage = roundMoney((gamblerMultiplier - 1) * 100);
-
-      await this.view.perkEffectMessageOverlay.play(
-        "nextWinIncreasedBy",
-        `${increasePercentage}%`,
-        PerkEffectMessageType.POSITIVE,
-      );
-    }
+    await this.perkGameplayController.handleLoss();
 
     await this.finishRound();
   }
@@ -905,20 +895,7 @@ export class GameScene extends BaseScene {
       streakMultiplier: this.streakMultiplierManager.getValue(),
     });
 
-    const gamblerMultiplier =
-      this.perkEffectApplier.activateGamblerAfterLoss();
-
-    if (gamblerMultiplier !== undefined) {
-      const increasePercentage = roundMoney(
-        (gamblerMultiplier - 1) * 100,
-      );
-
-      await this.view.perkEffectMessageOverlay.play(
-        "nextWinIncreasedBy",
-        `${increasePercentage}%`,
-        PerkEffectMessageType.POSITIVE,
-      );
-    }
+    await this.perkGameplayController.handleLoss();
   }
 
   private wait(milliseconds: number): Promise<void> {
