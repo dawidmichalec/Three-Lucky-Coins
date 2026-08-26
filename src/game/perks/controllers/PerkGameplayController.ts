@@ -126,4 +126,15 @@ export class PerkGameplayController {
 
     return insuranceResult.streakResolution;
   }
+
+  recordRoundResult(won: boolean): {
+    luckyHandTriggered: boolean;
+  } {
+    const luckyHandTriggered =
+      this.perkEffectApplier.recordLuckyHandToss(won);
+
+    return {
+      luckyHandTriggered,
+    };
+  }
 }

@@ -6,20 +6,13 @@ import { StreakResolution } from "../streak/StreakResolution";
 import { MultiplierBoosterConfig } from "./data/MultiplierBooster";
 import { CasinoBonusConfig } from "./data/CasinoBonus";
 import { DoubleDownConfig } from "./data/DoubleDown";
-import { LuckyHandConfig } from "./data/LuckyHand";
 import { CoinSenseEffect, CoinSenseResult } from "./effects/CoinSenseEffect";
 import { CoinSide } from "../../ui/Coin";
 import { RiskTakerEffect, RiskTakerResult } from "./effects/RiskTakerEffect";
 import { GamblerEffect, GamblerResult } from "./effects/GamblerEffect";
 import { InsuranceEffect, InsuranceResult, } from "./effects/InsuranceEffect";
+import { LuckyHandEffect, LuckyHandResult, } from "./effects/LuckyHandEffect";
 
-export interface LuckyHandResult {
-  triggered: boolean;
-  baseWinAmount: number;
-  bonusAmount: number;
-  finalWinAmount: number;
-  payoutMultiplier: number;
-}
 
 export interface PiggyBankResult {
   triggered: boolean;
@@ -31,11 +24,11 @@ export interface PiggyBankResult {
 export class PerkEffectApplier {
   private casinoBonusBetsPlacedThisFight = 0;
   private doubleDownSuccessfulSpins = 0;
-  private luckyHandTossCount = 0;
   private readonly coinSenseEffect: CoinSenseEffect;
   private readonly riskTakerEffect: RiskTakerEffect;
   private readonly gamblerEffect: GamblerEffect;
   private readonly insuranceEffect: InsuranceEffect;
+  private readonly luckyHandEffect: LuckyHandEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -56,6 +49,10 @@ export class PerkEffectApplier {
     );
 
     this.insuranceEffect = new InsuranceEffect(
+      this.runPerkManager,
+    );
+
+    this.luckyHandEffect = new LuckyHandEffect(
       this.runPerkManager,
     );
 
@@ -259,57 +256,17 @@ export class PerkEffectApplier {
   }
 
   recordLuckyHandToss(won: boolean): boolean {
-    const luckyHand = this.runPerkManager.getPerk("lucky_hand");
-
-    if (!luckyHand) {
-      return false;
-    }
-
-    const config = luckyHand.variant.config as LuckyHandConfig;
-
-    this.luckyHandTossCount++;
-
-    if (this.luckyHandTossCount < config.triggerEvery) {
-      return false;
-    }
-
-    /*
-            Osiągnęliśmy piąty toss.
-            Po nim cykl zaczyna się od nowa,
-            niezależnie od wyniku.
-        */
-
-    this.luckyHandTossCount = 0;
-
-    return won;
+    return this.luckyHandEffect.recordToss(won);
   }
 
-  applyLuckyHand(winAmount: number, triggered: boolean): LuckyHandResult {
-    const luckyHand = this.runPerkManager.getPerk("lucky_hand");
-
-    if (!luckyHand || !triggered) {
-      return {
-        triggered: false,
-        baseWinAmount: winAmount,
-        bonusAmount: 0,
-        finalWinAmount: winAmount,
-        payoutMultiplier: 1,
-      };
-    }
-
-    const config = luckyHand.variant.config as LuckyHandConfig;
-
-    const finalWinAmount = roundMoney(winAmount * config.payoutMultiplier);
-
-    const bonusAmount = roundMoney(finalWinAmount - winAmount);
-
-    return {
-      triggered: true,
-      baseWinAmount: winAmount,
-      bonusAmount,
-      finalWinAmount,
-      payoutMultiplier: config.payoutMultiplier,
-    };
+  applyLuckyHand(
+    winAmount: number,
+    triggered: boolean,
+  ): LuckyHandResult {
+    return this.luckyHandEffect.apply(
+      winAmount,
+      triggered,
+    );
   }
 
   applyPiggyBank(balance: number, minimumBet: number): PiggyBankResult {

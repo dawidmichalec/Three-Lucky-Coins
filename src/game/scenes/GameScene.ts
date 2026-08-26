@@ -623,12 +623,11 @@ export class GameScene extends BaseScene {
 
     const win = resolution.win;
 
-    const luckyHandTriggered = this.perkEffectApplier.recordLuckyHandToss(win);
+    const perkRoundResult = this.perkGameplayController.recordRoundResult(win);
 
     const winAmount = resolution.winAmount;
 
-    const doubleDownActivated =
-      this.perkEffectApplier.recordDoubleDownSpinResult(win, doubleDownActive);
+    const doubleDownActivated = this.perkEffectApplier.recordDoubleDownSpinResult(win, doubleDownActive);
 
     const outcome = this.roundOutcomeHandler.apply({
       win,
@@ -657,19 +656,14 @@ export class GameScene extends BaseScene {
       const resolvedWinAmount = outcome.wonAmount;
 
       const payoutResult =
-        this.roundPayoutResolver
-            .resolve({
-                winAmount:
-                    resolvedWinAmount,
-
-                bet,
-
-                highestAffordableBet,
-
-                coinSenseActive,
-
-                luckyHandTriggered
-            });
+        this.roundPayoutResolver.resolve({
+          winAmount: resolvedWinAmount,
+          bet,
+          highestAffordableBet,
+          coinSenseActive,
+          luckyHandTriggered:
+            perkRoundResult.luckyHandTriggered,
+        });
 
       const {
           coinSenseResult,
