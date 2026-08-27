@@ -33,8 +33,6 @@ export class GameUI extends Container {
 
   private multiplierEffect: MultiplierEffect;
 
-  private currentFightTargetBalance = 0;
-
   private audioManager = AudioManager.getInstance();
   private activePerkTooltip?: PerkTooltip;
 
@@ -161,30 +159,12 @@ export class GameUI extends Container {
     this.wonAmount.anchor.set(0, 0.5);
     this.wonAmount.position.set(980, 571);
 
-    // MULTIPLIER TEXT
-
-    const multiplierLabel = new LocalizedText("multiplier", {
-      fontFamily: "Anek-Kannada Bold",
-      fontSize: 46,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-      dropShadow: {
-        alpha: 0.8,
-        blur: 8,
-        color: "#ffaa00",
-        distance: 0,
-      },
-    });
-
-    multiplierLabel.anchor.set(0, 0);
-    multiplierLabel.position.set(329.9, 324.8);
 
     // MULTIPLIER VALUE
 
     this.multiplierContainer = new Container();
 
-    this.multiplierContainer.position.set(430, 455);
+    this.multiplierContainer.position.set(0, 705.5);
 
     this.multiplierEffect = new MultiplierEffect();
 
@@ -194,7 +174,7 @@ export class GameUI extends Container {
       text: "x1",
       style: {
         fontFamily: "JackCondensed",
-        fontSize: 128,
+        fontSize: 100,
         fontWeight: "bold",
         fill: 0xffffff,
         wordWrap: true,
@@ -213,7 +193,7 @@ export class GameUI extends Container {
       },
     });
 
-    this.multiplierValue.anchor.set(0.5);
+    
 
     this.multiplierContainer.addChild(this.multiplierValue);
 
@@ -328,7 +308,6 @@ export class GameUI extends Container {
       this.combinationValue,
       wonLabel,
       this.wonAmount,
-      multiplierLabel,
       this.multiplierContainer,
       this.probabilityDisplay,
       this.dealerSkillsPanel,
