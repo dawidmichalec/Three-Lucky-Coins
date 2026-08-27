@@ -90,7 +90,7 @@ export class TriangleButton extends Container {
         style: {
           font: "Open Sans",
           fontWeight: "bold",
-          fontSize: 36,
+          fontSize: 40,
           fill: 0xffffff,
         },
       });
@@ -98,9 +98,9 @@ export class TriangleButton extends Container {
       text.anchor.set(0.5);
 
       if (label === "+") {
-        text.position.set(20, 30);
+        text.position.set(20, 26);
       } else {
-        text.position.set(50, 30);
+        text.position.set(50, 24);
       }
 
       this.addChild(text);

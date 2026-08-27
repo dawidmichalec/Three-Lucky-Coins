@@ -240,7 +240,7 @@ export class OptionsPanel extends Container {
       },
     });
 
-    this.audioToggle.position.set(1327.4, 248.2);
+    this.audioToggle.position.set(1335.4, 248.2);
 
     this.addChild(this.audioToggle);
   }
@@ -266,7 +266,7 @@ export class OptionsPanel extends Container {
       this.settingsManager.setFullScreen(enabled);
     });
 
-    this.fullScreenToggle.position.set(1327.4, 610.2);
+    this.fullScreenToggle.position.set(1335.4, 610.2);
 
     this.addChild(this.fullScreenToggle);
   }
@@ -291,7 +291,7 @@ export class OptionsPanel extends Container {
 
     this.languageLabel.anchor.set(0.5);
 
-    this.languageLabel.position.set(1385, 735.2);
+    this.languageLabel.position.set(1390, 740.2);
 
     this.addChild(this.languageLabel);
   }
@@ -331,7 +331,7 @@ export class OptionsPanel extends Container {
       },
     });
 
-    left.position.set(1239.3, 714.2);
+    left.position.set(1219.3, 714.2);
     right.position.set(1499.5, 714.2);
 
     this.left = left;

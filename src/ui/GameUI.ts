@@ -42,13 +42,13 @@ export class GameUI extends Container {
 
     const balanceLabel = new LocalizedText("balance", {
       font: "Open Sans",
-      fontSize: 24,
+      fontSize: 40,
       fontWeight: "bold",
       fill: 0x4ca626,
       wordWrap: true,
     });
 
-    balanceLabel.position.set(367.9, 1043.5);
+    balanceLabel.position.set(384.9, 1033.5);
 
     // BALANCE VALUE TEXT
 
@@ -56,25 +56,25 @@ export class GameUI extends Container {
       text: "0.00",
       style: {
         font: "Open Sans",
-        fontSize: 24,
+        fontSize: 40,
         fontWeight: "bold",
         fill: 0xffffff,
       },
     });
 
-    this.balanceValue.position.set(497.9, 1043.5);
+    this.balanceValue.position.set(600.9, 1033.5);
 
     // BET LABEL
 
     const betLabel = new LocalizedText("betLabel", {
       font: "Open Sans",
-      fontSize: 24,
+      fontSize: 40,
       fontWeight: "bold",
       fill: 0x4ca626,
       wordWrap: true,
     });
     betLabel.anchor.set(0.25, 0);
-    betLabel.position.set(985, 1043.5);
+    betLabel.position.set(1364.5, 1033.5);
 
     // BET VALUE
 
@@ -82,14 +82,14 @@ export class GameUI extends Container {
       text: "0.00",
       style: {
         font: "Open Sans",
-        fontSize: 24,
+        fontSize: 40,
         fontWeight: "bold",
         fill: 0xffffff,
       },
     });
 
     this.betValue.anchor.set(0.75, 0);
-    this.betValue.position.set(920, 1043.5);
+    this.betValue.position.set(1255, 1033.5);
 
     // WON TEXT
 

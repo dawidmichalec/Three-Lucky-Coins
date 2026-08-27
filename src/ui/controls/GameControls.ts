@@ -53,8 +53,8 @@ export class GameControls extends Container {
       },
     });
 
-    betDown.position.set(805, 1038.4);
-    betUp.position.set(1080, 1038.4);
+    betDown.position.set(1060.8, 1030.4);
+    betUp.position.set(1527.5, 1030.4);
 
     this.betDown = betDown;
     this.betUp = betUp;
