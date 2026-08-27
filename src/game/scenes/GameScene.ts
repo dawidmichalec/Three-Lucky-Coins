@@ -122,9 +122,15 @@ export class GameScene extends BaseScene {
 
         onBetUp: () => this.handleBetUp(),
 
-        onPrevCombo: () => this.controller.prevCombo(),
-
-        onNextCombo: () => this.controller.nextCombo(),
+        onCombinationSideChange: (
+          index,
+          side,
+        ) => {
+          this.controller.setCombinationSide(
+            index,
+            side,
+          );
+        },
 
         onToss: () => this.handleToss(),
 
@@ -486,7 +492,7 @@ export class GameScene extends BaseScene {
 
     await this.coinRow.init();
 
-    this.coinRow.position.set(750, 424.7);
+    this.coinRow.position.set(625.5, 472.6);
 
     this.coinRow.zIndex = 0;
 

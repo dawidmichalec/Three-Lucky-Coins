@@ -94,6 +94,8 @@ export default {
   gameOver: "GAME OVER",
   youWon: "YOU WON",
   start: "START",
+  headsSelector: "Heads",
+  tailsSelector: "Tails",
 
   // GAMBLE FOR MORE
 

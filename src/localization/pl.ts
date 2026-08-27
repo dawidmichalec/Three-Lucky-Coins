@@ -91,6 +91,8 @@ export default {
   gameOver: "KONIEC GRY",
   youWon: "WYGRAŁEŚ",
   start: "START",
+  headsSelector: "Orzeł",
+  tailsSelector: "Reszka",
 
   // GAMBLE FOR MORE
 

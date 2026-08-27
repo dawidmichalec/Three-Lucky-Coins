@@ -16,7 +16,6 @@ import { PerkTooltip } from "./components/PerkTooltip";
 export class GameUI extends Container {
   private balanceValue: Text;
   private betValue: Text;
-  private combinationValue: Text;
   private wonAmount: Text;
   private multiplierValue: Text;
   private multiplierContainer: Container;
@@ -28,8 +27,6 @@ export class GameUI extends Container {
   private dealerSkillsPanel!: DealerSkillsPanel;
   private dealerObjectivePanel!: DealerObjectivePanel;
   readonly perkContainer: PerkContainer;
-  private bonusesContainer!: PerkContainer;
-  private effectsContainer!: PerkContainer;
 
   private multiplierEffect: MultiplierEffect;
 
@@ -94,70 +91,45 @@ export class GameUI extends Container {
     this.betValue.anchor.set(0.75, 0);
     this.betValue.position.set(920, 1043.5);
 
-    // COMBINATION
-
-    const combinationLabel = new LocalizedText("combinationLabel", {
-      font: "Open Sans",
-      fontSize: 24,
-      fontWeight: "bold",
-      fill: 0x4ca626,
-    });
-
-    combinationLabel.position.set(1345, 1043.5);
-
-    // COMBINATIONS TEXT
-
-    this.combinationValue = new Text({
-      text: "H - H - H",
-      style: {
-        font: "Open Sans",
-        fontSize: 24,
-        fontWeight: "bold",
-        fill: 0xffffff,
-      },
-    });
-
-    this.combinationValue.position.set(1525, 1043.5);
-
     // WON TEXT
 
     const wonLabel = new LocalizedText("winLabel", {
       font: "Open Sans",
-      fontSize: 38,
+      fontSize: 47.2,
       fontWeight: "bold",
       fill: 0xffffff,
       wordWrap: true,
 
       dropShadow: {
-        alpha: 0.8,
-        blur: 8,
-        color: "#00ffcc",
-        distance: 0,
-      },
+          alpha: 1,
+          blur: 15,
+          color: "#ffde59",
+          distance: 0,
+        },
     });
 
     wonLabel.anchor.set(1, 0.5);
-    wonLabel.position.set(950, 571);
+    wonLabel.position.set(930, 712.8);
 
     this.wonAmount = new Text({
       text: "0.00",
       style: {
         font: "Open Sans",
-        fontSize: 38,
+        fontSize: 47.2,
         fontWeight: "bold",
         fill: 0xffffff,
 
         dropShadow: {
           alpha: 1,
           blur: 15,
-          color: "#00ffcc",
+          color: "#ffde59",
           distance: 0,
         },
       },
     });
 
     this.wonAmount.anchor.set(0, 0.5);
-    this.wonAmount.position.set(980, 571);
+    this.wonAmount.position.set(980, 712.8);
 
 
     // MULTIPLIER VALUE
@@ -228,54 +200,8 @@ export class GameUI extends Container {
       void this.showPerkTooltip(reward);
     };
 
-    this.perkContainer = new PerkContainer(300, 180, handlePerkClick);
-    this.perkContainer.position.set(477.9, 656.2);
-
-    // PERKS LABEL
-
-    const perksLabel = new LocalizedText("perks", {
-      fontFamily: "EgyptianSlateBd",
-      fontSize: 28,
-      fontWeight: "bold",
-      fill: 0xffffff,
-    });
-
-    perksLabel.anchor.set(0, 0);
-    perksLabel.position.set(579.8, 844.8);
-
-    // BONUSES CONTAINER
-
-    this.bonusesContainer = new PerkContainer(300, 180, handlePerkClick);
-    this.bonusesContainer.position.set(822.9, 656.2);
-
-    // BONUSES LABEL
-
-    const bonusesLabel = new LocalizedText("bonuses", {
-      fontFamily: "EgyptianSlateBd",
-      fontSize: 28,
-      fontWeight: "bold",
-      fill: 0xffffff,
-    });
-
-    bonusesLabel.anchor.set(0, 0);
-    bonusesLabel.position.set(917.3, 844.8);
-
-    // EFFECTS CONTAINER
-
-    this.effectsContainer = new PerkContainer(300, 180, handlePerkClick);
-    this.effectsContainer.position.set(1167.9, 656.2);
-
-    // EFFECTS LABEL
-
-    const effectsLabel = new LocalizedText("effects", {
-      fontFamily: "EgyptianSlateBd",
-      fontSize: 28,
-      fontWeight: "bold",
-      fill: 0xffffff,
-    });
-
-    effectsLabel.anchor.set(0, 0);
-    effectsLabel.position.set(1259.5, 844.8);
+    this.perkContainer = new PerkContainer(924, 119, handlePerkClick);
+    this.perkContainer.position.set(497.6, 770.8);
 
     // FREE BET LABEL
 
@@ -304,8 +230,6 @@ export class GameUI extends Container {
       this.balanceValue,
       betLabel,
       this.betValue,
-      combinationLabel,
-      this.combinationValue,
       wonLabel,
       this.wonAmount,
       this.multiplierContainer,
@@ -313,11 +237,6 @@ export class GameUI extends Container {
       this.dealerSkillsPanel,
       this.dealerObjectivePanel,
       this.perkContainer,
-      perksLabel,
-      this.bonusesContainer,
-      bonusesLabel,
-      this.effectsContainer,
-      effectsLabel,
       this.freeBetLabel,
     );
   }
@@ -585,7 +504,7 @@ export class GameUI extends Container {
 
     await this.dealerCard.init();
 
-    this.dealerCard.position.set(697.3, 108);
+    this.dealerCard.position.set(697.3, 98.7);
 
     this.addChild(this.dealerCard);
   }
@@ -629,10 +548,6 @@ export class GameUI extends Container {
 
   updateBet(bet: number) {
     this.betValue.text = bet.toFixed(2);
-  }
-
-  updateCombination(combination: string) {
-    this.combinationValue.text = combination;
   }
 
   updateWon(value: number) {

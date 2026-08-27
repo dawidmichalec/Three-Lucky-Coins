@@ -6,7 +6,7 @@ import { SoundId } from "../audio/SoundId";
 import { AUDIO_TIMINGS } from "../audio/AudioTimings";
 
 export class CoinRow extends Container {
-  private readonly spacing = 220;
+  private readonly spacing = 320;
 
   private coins: Coin[] = [];
 

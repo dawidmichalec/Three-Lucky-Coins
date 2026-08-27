@@ -1,5 +1,7 @@
 import { BET_LEVELS } from "./data/BetLevels";
-import { COMBINATIONS } from "./data/CoinCombinations";
+import { CoinCombination, COMBINATION_CONFIGS, } from "./data/CoinCombinations";
+import { CombinationId } from "./data/CombinationId";
+import { CoinSide } from "../ui/Coin";
 
 export enum BetChangeSource {
   PLAYER = "player",
@@ -13,13 +15,16 @@ type ControllerConfig = {
     source: BetChangeSource,
   ) => void;
 
-  onComboChange: (combo: string) => void;
+  onComboChange: (
+    combo: CoinCombination,
+  ) => void;
 };
 
 
 export class GameController {
   private betIndex = 3;
-  private comboIndex = 0;
+  private currentCombination: CoinCombination =
+    COMBINATION_CONFIGS[CombinationId.HHH].sides;
 
   constructor(private config: ControllerConfig) {}
 
@@ -104,25 +109,28 @@ export class GameController {
     return BET_LEVELS[0]; // albo jak masz strukturę
   }
 
-  private formatCombo(index: number): string {
-    return COMBINATIONS[index].join(" - ");
+  setCombinationSide(
+    index: 0 | 1 | 2,
+    side: CoinSide,
+  ): void {
+    const nextCombination: [
+      CoinSide,
+      CoinSide,
+      CoinSide,
+    ] = [...this.currentCombination];
+
+    nextCombination[index] = side;
+
+    this.currentCombination =
+      nextCombination;
+
+    this.config.onComboChange(
+      this.currentCombination,
+    );
   }
 
-  prevCombo() {
-    this.comboIndex =
-      (this.comboIndex - 1 + COMBINATIONS.length) % COMBINATIONS.length;
-
-    this.config.onComboChange(this.formatCombo(this.comboIndex));
-  }
-
-  nextCombo() {
-    this.comboIndex = (this.comboIndex + 1) % COMBINATIONS.length;
-
-    this.config.onComboChange(this.formatCombo(this.comboIndex));
-  }
-
-  getCurrentCombo() {
-    return COMBINATIONS[this.comboIndex];
+  getCurrentCombo(): CoinCombination {
+    return this.currentCombination;
   }
 
   getHighestAffordableBet(balance: number): number {

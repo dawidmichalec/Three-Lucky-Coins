@@ -1,12 +1,20 @@
 import { Container } from "pixi.js";
 import { TriangleButton } from "../buttons/TriangleButton";
 import { TossButton } from "../buttons/TossButton";
+import { CoinSide } from "../Coin";
+import { CoinCombination } from "../../game/data/CoinCombinations";
+import { CombinationSelector } from "./combination/CombinationSelector";
 
 interface GameControlsOptions {
   onBetDown: () => void;
   onBetUp: () => void;
-  onPrevCombo: () => void;
-  onNextCombo: () => void;
+
+  initialCombination: CoinCombination;
+
+  onCombinationSideChange: (
+    index: 0 | 1 | 2,
+    side: CoinSide,
+  ) => void;
   onToss: () => void;
 }
 
@@ -14,8 +22,7 @@ export class GameControls extends Container {
   private betDown!: TriangleButton;
   private betUp!: TriangleButton;
 
-  private prevCombo!: TriangleButton;
-  private nextCombo!: TriangleButton;
+  private combinationSelector!: CombinationSelector;
 
   private tossButton!: TossButton;
 
@@ -23,7 +30,7 @@ export class GameControls extends Container {
     super();
 
     this.createBetButtons();
-    this.createCombinationButtons();
+    this.createCombinationSelector();
     this.createTossButton();
   }
 
@@ -57,30 +64,26 @@ export class GameControls extends Container {
 
   // COMBINATIONS
 
-  private createCombinationButtons() {
-    const prevCombo = new TriangleButton({
-      direction: "left",
-      label: "-",
-      onClick: () => {
-        this.options.onPrevCombo();
-      },
-    });
+  private createCombinationSelector() {
+    this.combinationSelector =
+      new CombinationSelector({
+        initialCombination:
+          this.options.initialCombination,
 
-    const nextCombo = new TriangleButton({
-      direction: "right",
-      label: "+",
-      onClick: () => {
-        this.options.onNextCombo();
-      },
-    });
+        onSideChange: (
+          index,
+          side,
+        ) => {
+          this.options.onCombinationSideChange(
+            index,
+            side,
+          );
+        },
+      });
 
-    prevCombo.position.set(1280.1, 1038.4);
-    nextCombo.position.set(1637.3, 1038.4);
-
-    this.prevCombo = prevCombo;
-    this.nextCombo = nextCombo;
-
-    this.addChild(prevCombo, nextCombo);
+    this.addChild(
+      this.combinationSelector,
+    );
   }
 
   // TOSS BUTTON
@@ -103,8 +106,7 @@ export class GameControls extends Container {
     this.betDown.setDisabled(value);
     this.betUp.setDisabled(value);
 
-    this.prevCombo.setDisabled(value);
-    this.nextCombo.setDisabled(value);
+    this.combinationSelector.setDisabled(value);
 
     this.tossButton.setDisabled(value);
   }

@@ -17,15 +17,17 @@ import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkEffectMessageOverlay } from "./overlays/PerkEffectOverlay";
 import { SettingsButton } from "./buttons/SettingsButton";
 import { InGameMenu } from "./menus/InGameMenu";
+import { CoinSide } from "./Coin";
 
 interface GameSceneViewOptions {
   onBetDown: () => void;
 
   onBetUp: () => void;
 
-  onPrevCombo: () => void;
-
-  onNextCombo: () => void;
+  onCombinationSideChange: (
+    index: 0 | 1 | 2,
+    side: CoinSide,
+  ) => void;
 
   onToss: () => void;
 
@@ -54,8 +56,6 @@ export class GameSceneView extends Container {
   readonly statsPanel: StatsPanel;
 
   readonly runSummaryPanel: RunSummaryPanel;
-
-  readonly hamburgerMenu: HamburgerMenu;
 
   readonly gameMessageOverlay: GameMessageOverlay;
 
@@ -98,12 +98,16 @@ export class GameSceneView extends Container {
 
     this.controls = new GameControls({
       onBetDown: options.onBetDown,
-
       onBetUp: options.onBetUp,
 
-      onPrevCombo: options.onPrevCombo,
+      initialCombination: [
+        CoinSide.Heads,
+        CoinSide.Heads,
+        CoinSide.Heads,
+      ],
 
-      onNextCombo: options.onNextCombo,
+      onCombinationSideChange:
+        options.onCombinationSideChange,
 
       onToss: options.onToss,
     });
