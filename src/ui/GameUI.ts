@@ -1,4 +1,4 @@
-import { Container, Text } from "pixi.js";
+import { Container, Text, Sprite } from "pixi.js";
 import { LocalizedText } from "../localization/LocalizedText";
 import { ProbabilityDisplay } from "./components/ProbabilityDisplay";
 import { DealerCard } from "./components/dealerCard/DealerCard";
@@ -196,8 +196,14 @@ export class GameUI extends Container {
 
     // PERKS CONTAINER
 
-    const handlePerkClick = (reward: PerkReward) => {
-      void this.showPerkTooltip(reward);
+    const handlePerkClick = (
+      reward: PerkReward,
+      icon: Sprite,
+    ) => {
+      void this.showPerkTooltip(
+        reward,
+        icon,
+      );
     };
 
     this.perkContainer = new PerkContainer(924, 119, handlePerkClick);
@@ -455,20 +461,47 @@ export class GameUI extends Container {
     this.freeBetLabel.visible = visible;
   }
 
-  private async showPerkTooltip(reward: PerkReward): Promise<void> {
+  private async showPerkTooltip(
+    reward: PerkReward,
+    icon: Sprite,
+  ): Promise<void> {
     this.hidePerkTooltip();
 
-    const tooltip = new PerkTooltip(reward, () => {
-      this.hidePerkTooltip();
-    });
+    const tooltip = new PerkTooltip(
+      reward,
+      () => {
+        this.hidePerkTooltip();
+      },
+    );
 
     await tooltip.init();
 
-    tooltip.position.set(500, 420);
+    /*
+      Pozycja ikony w globalnym układzie.
+    */
+
+    const iconGlobalPosition =
+      icon.getGlobalPosition();
+
+    /*
+      Zamieniamy globalną pozycję
+      z powrotem na lokalne współrzędne GameUI.
+    */
+
+    const iconLocalPosition =
+      this.toLocal(
+        iconGlobalPosition,
+      );
+
+    tooltip.position.set(
+      iconLocalPosition.x - 20,
+      iconLocalPosition.y - 260,
+    );
 
     tooltip.zIndex = 5000;
 
-    this.activePerkTooltip = tooltip;
+    this.activePerkTooltip =
+      tooltip;
 
     this.addChild(tooltip);
   }
