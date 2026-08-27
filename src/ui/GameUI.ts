@@ -171,8 +171,8 @@ export class GameUI extends Container {
 
     // PROBABILITY DISPLAY
 
-    this.probabilityDisplay = new ProbabilityDisplay(445, 600);
-    this.probabilityDisplay.position.set(1474.8, 201.6);
+    this.probabilityDisplay = new ProbabilityDisplay();
+    this.probabilityDisplay.position.set(220, 130);
 
     // SKILLS PANEL
 

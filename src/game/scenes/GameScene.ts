@@ -492,7 +492,7 @@ export class GameScene extends BaseScene {
 
     await this.coinRow.init();
 
-    this.coinRow.position.set(625.5, 472.6);
+    this.coinRow.position.set(625.5, 482.6);
 
     this.coinRow.zIndex = 0;
 

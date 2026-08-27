@@ -1,247 +1,178 @@
-import { Container, Graphics, Text } from "pixi.js";
+import {
+  Container,
+  Text,
+} from "pixi.js";
 
 import { LocalizedText } from "../../localization/LocalizedText";
-import { OddsTable } from "../../game/probability/OddsTypes";
+
+import {
+  CoinOdds,
+  OddsTable,
+} from "../../game/probability/OddsTypes";
+
+import {
+  TranslationKey,
+} from "../../core/LocalizationManager";
+
+interface CoinProbabilityDisplay {
+  sideLabel: LocalizedText;
+  valueLabel: Text;
+}
 
 export class ProbabilityDisplay extends Container {
-  private bg: Graphics;
+  private coinDisplays: [
+    CoinProbabilityDisplay,
+    CoinProbabilityDisplay,
+    CoinProbabilityDisplay,
+  ];
 
-  private coinOneHeadsValue!: Text;
-  private coinOneTailsValue!: Text;
-
-  private coinTwoHeadsValue!: Text;
-  private coinTwoTailsValue!: Text;
-
-  private coinThreeHeadsValue!: Text;
-  private coinThreeTailsValue!: Text;
-
-  constructor(width: number, height: number) {
+  constructor() {
     super();
 
-    this.bg = new Graphics()
-      .roundRect(0, 0, width, height, 50)
-      .fill({ color: 0x000000 });
-
-    this.addChild(this.bg);
-
-    const probabilityLabel = new LocalizedText("probability", {
-      fontFamily: "Anek-Kannada Bold",
-      fontSize: 38,
-      fontWeight: "bold",
-      fill: 0xffde59,
-      wordWrap: true,
-    });
-
-    probabilityLabel.position.set(35, 25);
-
-    const coinOneLabel = new LocalizedText("coinOne", {
-      font: "Open Sans",
-      fontSize: 24,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-      wordWrapWidth: 150,
-    });
-
-    coinOneLabel.position.set(35, 140);
-
-    const coinOneHeadsLabel = new LocalizedText("heads", {
-      font: "Open Sans",
-      fontSize: 22,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-    });
-
-    coinOneHeadsLabel.position.set(35, 170);
-
-    this.coinOneHeadsValue = new Text({
-      text: "—",
-      style: {
-        font: "Open Sans",
-        fontSize: 22,
-        fontWeight: "bold",
-        fill: 0xffffff,
-      },
-    });
-
-    this.coinOneHeadsValue.position.set(125, 170);
-
-    const coinOneTailsLabel = new LocalizedText("tails", {
-      font: "Open Sans",
-      fontSize: 22,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-    });
-
-    coinOneTailsLabel.position.set(35, 200);
-
-    this.coinOneTailsValue = new Text({
-      text: "-",
-      style: {
-        font: "Open Sans",
-        fontSize: 22,
-        fontWeight: "bold",
-        fill: 0xffffff,
-        wordWrap: true,
-      },
-    });
-
-    this.coinOneTailsValue.position.set(125, 200);
-
-    const coinTwoLabel = new LocalizedText("coinTwo", {
-      font: "Open Sans",
-      fontSize: 24,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-      wordWrapWidth: 150,
-    });
-
-    coinTwoLabel.position.set(35, 275);
-
-    const coinTwoHeadsLabel = new LocalizedText("heads", {
-      font: "Open Sans",
-      fontSize: 22,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-    });
-
-    coinTwoHeadsLabel.position.set(35, 305);
-
-    this.coinTwoHeadsValue = new Text({
-      text: "-",
-      style: {
-        font: "Open Sans",
-        fontSize: 22,
-        fontWeight: "bold",
-        fill: 0xffffff,
-        wordWrap: true,
-      },
-    });
-
-    this.coinTwoHeadsValue.position.set(125, 305);
-
-    const coinTwoTailsLabel = new LocalizedText("tails", {
-      font: "Open Sans",
-      fontSize: 22,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-    });
-
-    coinTwoTailsLabel.position.set(35, 335);
-
-    this.coinTwoTailsValue = new Text({
-      text: "-",
-      style: {
-        font: "Open Sans",
-        fontSize: 22,
-        fontWeight: "bold",
-        fill: 0xffffff,
-        wordWrap: true,
-      },
-    });
-
-    this.coinTwoTailsValue.position.set(125, 335);
-
-    const coinThreeLabel = new LocalizedText("coinThree", {
-      font: "Open Sans",
-      fontSize: 24,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-      wordWrapWidth: 150,
-    });
-
-    coinThreeLabel.position.set(35, 405);
-
-    const coinThreeHeadsLabel = new LocalizedText("heads", {
-      font: "Open Sans",
-      fontSize: 22,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-    });
-
-    coinThreeHeadsLabel.position.set(35, 435);
-
-    this.coinThreeHeadsValue = new Text({
-      text: "-",
-      style: {
-        font: "Open Sans",
-        fontSize: 22,
-        fontWeight: "bold",
-        fill: 0xffffff,
-        wordWrap: true,
-      },
-    });
-
-    this.coinThreeHeadsValue.position.set(125, 435);
-
-    const coinThreeTailsLabel = new LocalizedText("tails", {
-      font: "Open Sans",
-      fontSize: 22,
-      fontWeight: "bold",
-      fill: 0xffffff,
-      wordWrap: true,
-    });
-
-    coinThreeTailsLabel.position.set(35, 465);
-
-    this.coinThreeTailsValue = new Text({
-      text: "-",
-      style: {
-        font: "Open Sans",
-        fontSize: 22,
-        fontWeight: "bold",
-        fill: 0xffffff,
-        wordWrap: true,
-      },
-    });
-
-    this.coinThreeTailsValue.position.set(125, 465);
+    this.coinDisplays = [
+      this.createCoinDisplay(0),
+      this.createCoinDisplay(1),
+      this.createCoinDisplay(2),
+    ];
 
     this.addChild(
-      probabilityLabel,
-
-      coinOneLabel,
-      coinOneHeadsLabel,
-      this.coinOneHeadsValue,
-      coinOneTailsLabel,
-      this.coinOneTailsValue,
-
-      coinTwoLabel,
-      coinTwoHeadsLabel,
-      this.coinTwoHeadsValue,
-      coinTwoTailsLabel,
-      this.coinTwoTailsValue,
-
-      coinThreeLabel,
-      coinThreeHeadsLabel,
-      this.coinThreeHeadsValue,
-      coinThreeTailsLabel,
-      this.coinThreeTailsValue,
+      this.coinDisplays[0].sideLabel,
+      this.coinDisplays[0].valueLabel,
+      this.coinDisplays[1].sideLabel,
+      this.coinDisplays[1].valueLabel,
+      this.coinDisplays[2].sideLabel,
+      this.coinDisplays[2].valueLabel,
     );
   }
 
-  updateOdds(odds: OddsTable) {
-    this.coinOneHeadsValue.text = this.formatPercentage(odds.coin1.heads);
+  private createCoinDisplay(
+    index: 0 | 1 | 2,
+  ): CoinProbabilityDisplay {
+    const positions = [
+      { x: 425, y: 216 },
+      { x: 750, y: 216 },
+      { x: 1075, y: 216 },
+    ];
 
-    this.coinOneTailsValue.text = this.formatPercentage(odds.coin1.tails);
+    const position = positions[index];
 
-    this.coinTwoHeadsValue.text = this.formatPercentage(odds.coin2.heads);
+    const sideLabel =
+      new LocalizedText(
+        "heads",
+        {
+          fontFamily:
+            "EgyptianSlateBd",
 
-    this.coinTwoTailsValue.text = this.formatPercentage(odds.coin2.tails);
+          fontSize: 34,
 
-    this.coinThreeHeadsValue.text = this.formatPercentage(odds.coin3.heads);
+          fontWeight:
+            "bold",
 
-    this.coinThreeTailsValue.text = this.formatPercentage(odds.coin3.tails);
+          fill:
+            0xffffff,
+        },
+      );
+
+    const valueLabel =
+      new Text({
+        text: "—",
+
+        style: {
+          fontFamily:
+            "EgyptianSlateBd",
+
+          fontSize: 34,
+
+          fontWeight:
+            "bold",
+
+          fill:
+            0xffffff,
+        },
+      });
+
+    sideLabel.anchor.set(
+      1,
+      0.5,
+    );
+
+    valueLabel.anchor.set(
+      0,
+      0.5,
+    );
+
+    sideLabel.position.set(
+      position.x,
+      position.y,
+    );
+
+    valueLabel.position.set(
+      position.x + 8,
+      position.y,
+    );
+
+    return {
+      sideLabel,
+      valueLabel,
+    };
   }
 
-  private formatPercentage(probability: number): string {
-    return `${Math.round(probability * 100)}%`;
+  updateOdds(
+    odds: OddsTable,
+  ): void {
+    this.updateCoinDisplay(
+      this.coinDisplays[0],
+      odds.coin1,
+    );
+
+    this.updateCoinDisplay(
+      this.coinDisplays[1],
+      odds.coin2,
+    );
+
+    this.updateCoinDisplay(
+      this.coinDisplays[2],
+      odds.coin3,
+    );
+  }
+
+  private updateCoinDisplay(
+    display:
+      CoinProbabilityDisplay,
+
+    odds:
+      CoinOdds,
+  ): void {
+    const headsIsMoreLikely =
+      odds.heads >=
+      odds.tails;
+
+    const translationKey:
+      TranslationKey =
+      headsIsMoreLikely
+        ? "heads"
+        : "tails";
+
+    const probability =
+      headsIsMoreLikely
+        ? odds.heads
+        : odds.tails;
+
+    display.sideLabel.setKey(
+      translationKey,
+    );
+
+    display.valueLabel.text =
+      this.formatPercentage(
+        probability,
+      );
+  }
+
+  private formatPercentage(
+    probability: number,
+  ): string {
+    return `${Math.round(
+      probability * 100,
+    )}%`;
   }
 }
