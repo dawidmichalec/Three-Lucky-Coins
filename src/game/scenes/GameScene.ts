@@ -879,13 +879,13 @@ export class GameScene extends BaseScene {
 
   private lockControls() {
     this.view.controls.setDisabled(true);
-    this.view.hamburgerMenu.setDisabled(true);
+    this.view.setDisabled(true);
     this.view.gameUI.setDisabled(true);
   }
 
   private unlockControls() {
     this.view.controls.setDisabled(false);
-    this.view.hamburgerMenu.setDisabled(false);
+    this.view.setDisabled(false);
     this.view.gameUI.setDisabled(false);
   }
 

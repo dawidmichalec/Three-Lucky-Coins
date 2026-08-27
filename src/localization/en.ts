@@ -69,9 +69,16 @@ export default {
   language: "Language",
   save: "SAVE",
 
+  // IN GAME MENU
+
+  runStatistics: "RUN STATISTICS",
+  restartRun: "RESTART RUN",
+  quitToMainMenu: "QUIT TO MAIN MENU",
+
+
+
   // GAMESCENE TEXTS
 
-  multiplier: "Multiplier",
   winLabel: "WIN",
   balance: "BALANCE",
   betLabel: "BET",

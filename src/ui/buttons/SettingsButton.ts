@@ -8,9 +8,9 @@ export class SettingsButton extends Container {
   constructor() {
     super();
 
-    this.buttonWidth = 65;
-    this.buttonHeight = 65;
-    this.visible = false;
+    this.buttonWidth = 90;
+    this.buttonHeight = 90
+    this.visible = true;
 
     this.eventMode = "static";
     this.cursor = "pointer";

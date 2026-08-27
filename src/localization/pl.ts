@@ -68,9 +68,14 @@ export default {
   language: "Język",
   save: "ZAPISZ",
 
+  // IN GAME MENU
+
+  runStatistics: "STATYSTYKI PODEJŚCIA",
+  restartRun: "RESTART PODEJŚCIA",
+  quitToMainMenu: "WYJDŹ DO GŁÓWNEGO MENU",
+
   // GAMESCENE TEXTS
 
-  multiplier: "Mnożnik",
   winLabel: "WYGRANA",
   balance: "SALDO",
   betLabel: "STAWKA",

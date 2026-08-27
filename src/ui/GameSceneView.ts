@@ -1,7 +1,6 @@
 import { Container } from "pixi.js";
 import { GameUI } from "./GameUI";
 import { GameControls } from "./controls/GameControls";
-import { HamburgerMenu } from "./menus/HamburgerMenu";
 import { OptionsPanel } from "./panels/OptionsPanel";
 import { StatsPanel } from "./panels/StatsPanel";
 import { RunSummaryPanel } from "./panels/RunSummaryPanel";
@@ -16,6 +15,8 @@ import { CardColor } from "../game/gambleForMore/games/redBlackCard/RedBlackCard
 import { PerkRewardOverlay } from "./overlays/PerkRewardOverlay";
 import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkEffectMessageOverlay } from "./overlays/PerkEffectOverlay";
+import { SettingsButton } from "./buttons/SettingsButton";
+import { InGameMenu } from "./menus/InGameMenu";
 
 interface GameSceneViewOptions {
   onBetDown: () => void;
@@ -65,6 +66,10 @@ export class GameSceneView extends Container {
   readonly perkRewardOverlay: PerkRewardOverlay;
 
   readonly perkEffectMessageOverlay: PerkEffectMessageOverlay;
+
+  readonly inGameMenu: InGameMenu;
+
+  private settingsButton!: SettingsButton;
 
   constructor(
     dealer: DealerData,
@@ -117,7 +122,7 @@ export class GameSceneView extends Container {
 
     this.optionsPanel.visible = false;
 
-    this.optionsPanel.zIndex = 1000;
+    this.optionsPanel.zIndex = 1700;
 
     this.addChild(this.optionsPanel);
 
@@ -133,7 +138,7 @@ export class GameSceneView extends Container {
 
     this.statsPanel.visible = false;
 
-    this.statsPanel.zIndex = 1000;
+    this.statsPanel.zIndex = 1700;
 
     this.addChild(this.statsPanel);
 
@@ -152,9 +157,9 @@ export class GameSceneView extends Container {
 
     this.addChild(this.runSummaryPanel);
 
-    // HAMBURGER MENU
+    // IN GAME MENU
 
-    this.hamburgerMenu = new HamburgerMenu(
+    this.inGameMenu = new InGameMenu(
       sceneManager,
       popupManager,
 
@@ -167,7 +172,9 @@ export class GameSceneView extends Container {
       },
     );
 
-    this.addChild(this.hamburgerMenu);
+    this.addChild(this.inGameMenu);
+    this.inGameMenu.zIndex = 1600;
+    this.inGameMenu.visible = false;
 
     // DEALER VICTORY
 
@@ -224,12 +231,55 @@ export class GameSceneView extends Container {
     );
     this.perkRewardOverlay.zIndex = 4000;
     this.addChild(this.perkRewardOverlay);
+
   }
 
   async init(): Promise<void> {
     await Promise.all([
       this.gambleForMoreOverlay.init(),
       this.perkRewardOverlay.init(),
+      this.inGameMenu.init()
     ]);
+
+    await this.createSettingsButton()
+  }
+
+  private async createSettingsButton(){
+
+    this.settingsButton = new SettingsButton();
+
+    await this.settingsButton.init();
+
+    this.settingsButton.position.set(1815.8, 24.7);
+
+    this.settingsButton.on("pointerdown", () => {
+      this.settingsButton.scale.set(0.95);
+    });
+
+    this.settingsButton.on("pointerup", () => {
+      this.settingsButton.scale.set(1);
+    });
+
+    this.settingsButton.on("pointerupoutside", () => {
+      this.settingsButton.scale.set(1);
+    });
+
+    this.settingsButton.on("pointertap", () => {
+      this.openInGameMenu();
+    });
+
+    this.settingsButton.zIndex = 1100;
+
+    this.addChild(this.settingsButton);
+
+  }
+
+  private async openInGameMenu(){
+    this.inGameMenu.visible = true;
+  }
+
+  setDisabled(value: boolean) {
+    this.settingsButton.setDisabled(value)
+
   }
 }
