@@ -4,7 +4,6 @@ import { ProbabilityDisplay } from "./components/ProbabilityDisplay";
 import { DealerCard } from "./components/dealerCard/DealerCard";
 import { DealerData } from "../game/dealers/DealerData";
 import { DealerSkillsPanel } from "./panels/dealer/DealerSkillsPanel";
-import { DealerObjectivePanel } from "./panels/dealer/DealerObjectivePanel";
 import { PerkContainer } from "./components/PerkContainer";
 import { OddsTable } from "../game/probability/OddsTypes";
 import { MultiplierEffect } from "./effects/MultiplierEffect";
@@ -25,7 +24,6 @@ export class GameUI extends Container {
   private probabilityDisplay!: ProbabilityDisplay;
   private dealerCard!: DealerCard;
   private dealerSkillsPanel!: DealerSkillsPanel;
-  private dealerObjectivePanel!: DealerObjectivePanel;
   readonly perkContainer: PerkContainer;
 
   private multiplierEffect: MultiplierEffect;
@@ -129,7 +127,7 @@ export class GameUI extends Container {
     });
 
     this.wonAmount.anchor.set(0, 0.5);
-    this.wonAmount.position.set(980, 712.8);
+    this.wonAmount.position.set(970, 712.8);
 
 
     // MULTIPLIER VALUE
@@ -178,19 +176,8 @@ export class GameUI extends Container {
 
     this.dealerSkillsPanel = new DealerSkillsPanel(626, 600);
 
-    this.dealerSkillsPanel.position.set(1170, 188.4);
-
     this.dealerSkillsPanel.zIndex = 500;
 
-    this.dealerSkillsPanel.setDealer(this.currentDealer);
-
-    // OBJECTIVE PANEL
-
-    this.dealerObjectivePanel = new DealerObjectivePanel(626, 180.1);
-
-    this.dealerObjectivePanel.position.set(1170, 258.4);
-
-    this.dealerObjectivePanel.zIndex = 500;
 
     this.sortableChildren = true;
 
@@ -212,8 +199,8 @@ export class GameUI extends Container {
     // FREE BET LABEL
 
     this.freeBetLabel = new LocalizedText("freeBet", {
-      fontFamily: "Anek-Kannada Bold",
-      fontSize: 28,
+      font: "Open Sans",
+      fontSize: 40,
       fontWeight: "bold",
       fill: 0xffffff,
       dropShadow: {
@@ -224,7 +211,7 @@ export class GameUI extends Container {
       },
     });
 
-    this.freeBetLabel.position.set(917.3, 1000);
+    this.freeBetLabel.position.set(1135.3, 980);
     this.freeBetLabel.anchor.set(0, 0);
 
     this.freeBetLabel.visible = false;
@@ -241,7 +228,6 @@ export class GameUI extends Container {
       this.multiplierContainer,
       this.probabilityDisplay,
       this.dealerSkillsPanel,
-      this.dealerObjectivePanel,
       this.perkContainer,
       this.freeBetLabel,
     );
@@ -521,34 +507,68 @@ export class GameUI extends Container {
   }
 
   private async createDealerCard() {
-    this.dealerCard = new DealerCard(
-      this.currentDealer,
+    this.dealerCard =
+      new DealerCard(
+        this.currentDealer,
 
-      () => {
-        this.dealerSkillsPanel.show();
-        this.dealerObjectivePanel.hide();
-      },
+        // NORMAL SKILL
+        (skill, globalPosition) => {
+          const localPosition =
+            this.toLocal(
+              globalPosition,
+            );
 
-      () => {
-        this.dealerObjectivePanel.show();
-        this.dealerSkillsPanel.hide();
-      },
-    );
+          this.dealerSkillsPanel.setSkill(
+            skill,
+          );
+
+          this.dealerSkillsPanel.position.set(
+            localPosition.x - 626 / 2 + 77 / 2,
+            localPosition.y + 80,
+          );
+
+          this.dealerSkillsPanel.show();
+        },
+
+        // NO SKILLS
+        (globalPosition) => {
+          const localPosition =
+            this.toLocal(
+              globalPosition,
+            );
+
+          this.dealerSkillsPanel.showNoSkills();
+
+          this.dealerSkillsPanel.position.set(
+            localPosition.x - 626 / 2 + 77 / 2,
+            localPosition.y + 80,
+          );
+        },
+      );
 
     await this.dealerCard.init();
 
-    this.dealerCard.position.set(697.3, 98.7);
+    this.dealerCard.position.set(
+      289.3,
+      70,
+    );
 
-    this.addChild(this.dealerCard);
+    this.addChild(
+      this.dealerCard,
+    );
   }
 
-  async setDealer(dealer: DealerData): Promise<void> {
+  async setDealer(
+    dealer: DealerData,
+  ): Promise<void> {
     this.currentDealer = dealer;
 
-    this.dealerSkillsPanel.setDealer(dealer);
+    this.dealerSkillsPanel.hide();
 
     if (this.dealerCard) {
-      this.removeChild(this.dealerCard);
+      this.removeChild(
+        this.dealerCard,
+      );
 
       this.dealerCard.destroy({
         children: true,
@@ -558,20 +578,26 @@ export class GameUI extends Container {
     await this.createDealerCard();
   }
 
-  updateDealerObjective(dealer: DealerData, targetBalance: number) {
-    this.currentFightTargetBalance = targetBalance;
-
-    this.dealerObjectivePanel.setDealer(dealer, targetBalance);
+  updateDealerObjective(
+    dealer: DealerData,
+    targetBalance: number,
+  ): void {
+    this.dealerCard.updateObjective(dealer,targetBalance);
   }
 
-  setDisabled(value: boolean) {
+  setDisabled(
+    value: boolean,
+  ): void {
     if (this.dealerCard) {
-      this.dealerCard.setDisabled(value);
+      this.dealerCard.setDisabled(
+        value,
+      );
     }
 
-    if (this.dealerSkillsPanel.visible || this.dealerObjectivePanel.visible) {
+    if (
+      this.dealerSkillsPanel.visible
+    ) {
       this.dealerSkillsPanel.hide();
-      this.dealerObjectivePanel.hide();
     }
   }
 

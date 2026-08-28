@@ -113,10 +113,6 @@ export default {
 
   // PROBABILITY DISPLAY TEXTS
 
-  probability: "Probability",
-  coinOne: "Coin 1",
-  coinTwo: "Coin 2",
-  coinThree: "Coin 3",
   heads: "Heads:",
   tails: "Tails:",
 
@@ -134,9 +130,15 @@ export default {
   skills: "Skills",
   objective: "Objective",
   increaseBalanceBy: "Increase Balance By",
+  reachMultiplier: "Reach Multiplier",
+  collectGoldenCoins: "Collect Golden Coins",
+  winBets: "Win Bets",
+  winGambleForMore: "Win Gamble For More",
+  surviveRounds: "Survive Rounds",
   targetBalance: "Target Balance",
   nextOpponent: "NEXT OPPONENT",
   dealerDescription: "Description",
+  noSkillsLabel: "No Skills",
   noSkills: "This opponent has no special skills.",
 
   // JUNIOR DEALERS

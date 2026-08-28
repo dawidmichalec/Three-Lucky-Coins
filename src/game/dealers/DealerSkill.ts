@@ -14,5 +14,6 @@ export interface DealerSkillData {
   id: DealerSkillId;
   name: TranslationKey;
   description: TranslationKey;
+  icon: string;
   triggerChance?: number;
 }

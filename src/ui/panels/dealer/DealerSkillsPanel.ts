@@ -1,27 +1,25 @@
 import { Container, Graphics } from "pixi.js";
-
 import { TooltipCloseButton } from "../../buttons/TooltipCloseButton";
-
 import { LocalizedText } from "../../../localization/LocalizedText";
-
 import { ScrollableContainer } from "../../components/ScrollableContainer";
-
-import { DealerData } from "../../../game/dealers/DealerData";
+import { DealerSkillData } from "../../../game/dealers/DealerSkill";
 
 export class DealerSkillsPanel extends Container {
-  private readonly headerHeight = 90;
+  private readonly topPadding = 30;
+  private readonly contentGap = 18;
   private readonly bottomPadding = 30;
+
   private readonly minHeight = 180;
 
   private bg: Graphics;
 
-  private skillsContent!: Container;
+  private content!: Container;
 
-  private skillsDescriptionContainer?: ScrollableContainer;
+  private scrollableContainer?: ScrollableContainer;
 
   constructor(
-    private panelWidth: number,
-    private maxHeight: number,
+    private readonly panelWidth: number,
+    private readonly maxHeight: number,
   ) {
     super();
 
@@ -34,155 +32,298 @@ export class DealerSkillsPanel extends Container {
 
     this.addChild(this.bg);
 
-    const skillsLabel = new LocalizedText("skills", {
-      fontFamily: "Oswald-Bold",
-      fontSize: 38,
-      fontWeight: "bold",
-      fill: 0xffde59,
-    });
-
-    skillsLabel.position.set(45, 15);
-
-    this.addChild(skillsLabel);
-
     void this.createCloseButton();
   }
 
-  setDealer(dealer: DealerData) {
-    console.log("SETTING DEALER SKILLS:", dealer.name, dealer.skills);
+  setSkill(skill: DealerSkillData): void {
+    this.content = new Container();
 
-    this.skillsContent = new Container();
-
-    const contentHeight = this.createSkillsContent(dealer);
+    const contentHeight =
+      this.createSkillContent(skill);
 
     const requiredPanelHeight =
-      this.headerHeight + contentHeight + this.bottomPadding;
+      this.topPadding +
+      contentHeight +
+      this.bottomPadding;
 
     const panelHeight = Math.min(
       this.maxHeight,
-      Math.max(this.minHeight, requiredPanelHeight),
+      Math.max(
+        this.minHeight,
+        requiredPanelHeight,
+      ),
     );
 
-    this.redrawBackground(panelHeight);
+    this.redrawBackground(
+      panelHeight,
+    );
 
-    const viewportHeight = panelHeight - this.headerHeight - this.bottomPadding;
+    const viewportHeight =
+      panelHeight -
+      this.topPadding -
+      this.bottomPadding;
 
-    this.rebuildScrollableContainer(viewportHeight);
+    this.rebuildScrollableContainer(
+      viewportHeight,
+    );
   }
 
-  private createSkillsContent(dealer: DealerData): number {
-    let currentY = 0;
+  private createSkillContent(
+    skill: DealerSkillData,
+  ): number {
+    const contentWidth =
+      this.panelWidth - 90;
 
-    // NO SKILLS
+    // SKILL NAME
 
-    if (dealer.skills.length === 0) {
-      const noSkillsText = new LocalizedText("noSkills", {
-        font: "Open Sans",
-        fontSize: 24,
-        fill: 0xffffff,
-        wordWrap: true,
-        wordWrapWidth: 500,
-      });
+    const skillName =
+      new LocalizedText(
+        skill.name,
+        {
+          fontFamily: "Oswald-Bold",
 
-      noSkillsText.position.set(0, 0);
+          fontSize: 32,
 
-      this.skillsContent.addChild(noSkillsText);
+          fontWeight: "bold",
 
-      return noSkillsText.height;
-    }
+          fill: 0xffde59,
 
-    // SKILLS
+          wordWrap: true,
 
-    for (const skill of dealer.skills) {
-      const skillName = new LocalizedText(skill.name, {
-        font: "Open Sans",
-        fontSize: 24,
-        fontWeight: "bold",
-        fill: 0xffffff,
-        wordWrap: true,
-        wordWrapWidth: 500,
-      });
+          wordWrapWidth:
+            contentWidth - 50,
+        },
+      );
 
-      skillName.position.set(0, currentY);
+    skillName.position.set(
+      0,
+      0,
+    );
 
-      const skillDescription = new LocalizedText(skill.description, {
-        font: "Open Sans",
-        fontSize: 22,
-        fill: 0xffffff,
-        wordWrap: true,
-        wordWrapWidth: 500,
-      });
+    // SKILL DESCRIPTION
 
-      skillDescription.position.set(0, skillName.y + skillName.height + 6);
+    const skillDescription =
+      new LocalizedText(
+        skill.description,
+        {
+          font: "Open Sans",
 
-      this.skillsContent.addChild(skillName, skillDescription);
+          fontSize: 22,
 
-      currentY = skillDescription.y + skillDescription.height + 28;
-    }
+          fill: 0xffffff,
 
-    return Math.max(0, currentY - 28);
+          wordWrap: true,
+
+          wordWrapWidth:
+            contentWidth,
+        },
+      );
+
+    skillDescription.position.set(
+      0,
+      skillName.height +
+        this.contentGap,
+    );
+
+    this.content.addChild(
+      skillName,
+      skillDescription,
+    );
+
+    return (
+      skillDescription.y +
+      skillDescription.height
+    );
   }
 
-  private rebuildScrollableContainer(viewportHeight: number) {
-    if (this.skillsDescriptionContainer) {
-      this.removeChild(this.skillsDescriptionContainer);
+  private rebuildScrollableContainer(
+    viewportHeight: number,
+  ): void {
+    if (this.scrollableContainer) {
+      this.removeChild(
+        this.scrollableContainer,
+      );
 
-      this.skillsDescriptionContainer.destroy({
+      this.scrollableContainer.destroy({
         children: false,
       });
     }
 
-    this.skillsDescriptionContainer = new ScrollableContainer(
-      530,
-      Math.max(1, viewportHeight),
+    this.scrollableContainer =
+      new ScrollableContainer(
+        this.panelWidth - 90,
+        Math.max(
+          1,
+          viewportHeight,
+        ),
+      );
+
+    this.scrollableContainer.position.set(
+      45,
+      this.topPadding,
     );
 
-    this.skillsDescriptionContainer.position.set(45, this.headerHeight);
+    this.scrollableContainer.addChild(
+      this.content,
+    );
 
-    this.skillsDescriptionContainer.addChild(this.skillsContent);
-
-    this.addChild(this.skillsDescriptionContainer);
+    this.addChild(
+      this.scrollableContainer,
+    );
   }
 
-  private redrawBackground(panelHeight: number) {
+  private redrawBackground(
+    panelHeight: number,
+  ): void {
     this.bg.clear();
 
-    this.bg.roundRect(0, 0, this.panelWidth, panelHeight, 50).fill({
-      color: 0x000000,
-    });
+    this.bg
+      .roundRect(
+        0,
+        0,
+        this.panelWidth,
+        panelHeight,
+        30,
+      )
+      .fill({
+        color: 0x000000,
+        alpha: 0.97,
+      })
+      .stroke({
+        color: 0xffde59,
+        width: 3,
+      });
   }
 
-  private async createCloseButton() {
-    const close = new TooltipCloseButton();
+  private async createCloseButton(): Promise<void> {
+    const close =
+      new TooltipCloseButton();
 
     await close.init();
 
-    close.on("pointerdown", () => {
-      close.scale.set(0.95);
-    });
+    close.on(
+      "pointerdown",
+      () => {
+        close.scale.set(0.95);
+      },
+    );
 
-    close.on("pointerup", () => {
-      close.scale.set(1);
-    });
+    close.on(
+      "pointerup",
+      () => {
+        close.scale.set(1);
+      },
+    );
 
-    close.on("pointerupoutside", () => {
-      close.scale.set(1);
-    });
+    close.on(
+      "pointerupoutside",
+      () => {
+        close.scale.set(1);
+      },
+    );
 
-    close.on("pointertap", () => {
-      this.hide();
-    });
+    close.on(
+      "pointertap",
+      () => {
+        this.hide();
+      },
+    );
 
-    close.position.set(this.panelWidth - 86, 25);
+    close.position.set(
+      this.panelWidth - 70,
+      28,
+    );
 
     this.addChild(close);
   }
 
-  show() {
+  show(): void {
     this.visible = true;
   }
 
-  hide() {
+  hide(): void {
     this.visible = false;
+  }
+
+  showNoSkills(): void {
+    this.content = new Container();
+
+    const contentWidth =
+      this.panelWidth - 90;
+
+    // LABEL
+
+    const noSkillsLabel = new LocalizedText(
+      "noSkillsLabel",
+      {
+        fontFamily: "Oswald-Bold",
+        fontSize: 32,
+        fontWeight: "bold",
+        fill: 0xffde59,
+        wordWrap: true,
+        wordWrapWidth: contentWidth - 50,
+      },
+    );
+
+    noSkillsLabel.position.set(
+      0,
+      0,
+    );
+
+    // DESCRIPTION
+
+    const noSkillsDescription = new LocalizedText(
+      "noSkills",
+      {
+        font: "Open Sans",
+        fontSize: 22,
+        fill: 0xffffff,
+        wordWrap: true,
+        wordWrapWidth: contentWidth,
+      },
+    );
+
+    noSkillsDescription.position.set(
+      0,
+      noSkillsLabel.height +
+        this.contentGap,
+    );
+
+    this.content.addChild(
+      noSkillsLabel,
+      noSkillsDescription,
+    );
+
+    const contentHeight =
+      noSkillsDescription.y +
+      noSkillsDescription.height;
+
+    const requiredPanelHeight =
+      this.topPadding +
+      contentHeight +
+      this.bottomPadding;
+
+    const panelHeight = Math.min(
+      this.maxHeight,
+      Math.max(
+        this.minHeight,
+        requiredPanelHeight,
+      ),
+    );
+
+    this.redrawBackground(
+      panelHeight,
+    );
+
+    const viewportHeight =
+      panelHeight -
+      this.topPadding -
+      this.bottomPadding;
+
+    this.rebuildScrollableContainer(
+      viewportHeight,
+    );
+
+    this.show();
   }
 }

@@ -48,6 +48,7 @@ export const BECKY_DATA: DealerData = {
       id: DealerSkillId.OOPS_I_PAID_YOU_TWICE,
       name: "oopsIPaidYouTwiceSkillName",
       description: "oopsIPaidYouTwiceSkillDescription",
+      icon: "/assets/main/icons/dealer_skill_icons/junior_dealers/becky/oops_i_paid_you_twice.png",
       triggerChance: 0.2,
     },
   ],

@@ -7,8 +7,9 @@ export class DealerCardBackground extends Container {
     super();
 
     this.bg = new Graphics()
-      .roundRect(0, 0, width, height, 50)
-      .fill({ color: 0x000000 });
+      .roundRect(0, 0, width, height, 10)
+      .fill({ color: 0x000000 })
+      .stroke({ color: 0xffde59, width: 6 });
 
     this.addChild(this.bg);
   }

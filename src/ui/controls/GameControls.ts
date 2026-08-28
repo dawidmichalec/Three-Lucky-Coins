@@ -93,7 +93,7 @@ export class GameControls extends Container {
 
     await this.tossButton.init();
 
-    this.tossButton.position.set(1710, 861.8);
+    this.tossButton.position.set(1711.8, 685.7);
 
     this.addChild(this.tossButton);
 

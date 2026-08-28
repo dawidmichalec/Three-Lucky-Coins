@@ -109,10 +109,6 @@ export default {
 
   // PROBABILITY DISPLAY TEXTS
 
-  probability: "Prawdopodobieństwo",
-  coinOne: "Moneta 1",
-  coinTwo: "Moneta 2",
-  coinThree: "Moneta 3",
   heads: "Orzeł:",
   tails: "Reszka:",
 
@@ -130,9 +126,15 @@ export default {
   skills: "Umiejętności",
   objective: "Cel",
   increaseBalanceBy: "Zwiększ saldo o",
+  reachMultiplier: "Osiągnij mnożnik",
+  collectGoldenCoins: "Zbierz złote monety",
+  winBets: "Wygraj zakłady",
+  winGambleForMore: "Zagraj o więcej i wygraj",
+  surviveRounds: "Przetrwaj rundy",
   targetBalance: "Docelowe saldo",
   nextOpponent: "NASTĘPNY PRZECIWNIK",
   dealerDescription: "Opis",
+  noSkillsLabel: "Brak umiejętności",
   noSkills: "Ten przeciwnik nie ma żadnych specjalnych umiejętności.",
 
   // JUNIOR DEALERS
