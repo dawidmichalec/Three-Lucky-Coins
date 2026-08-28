@@ -1,21 +1,32 @@
-import { Container, Sprite, Assets, Graphics } from "pixi.js";
+import {
+  Container,
+  Sprite,
+  Assets,
+  Graphics,
+  Texture,
+} from "pixi.js";
+
 import { AudioManager } from "../../core/AudioManager";
 import { SoundId } from "../../audio/SoundId";
 
 export class TossButton extends Container {
   private bg!: Sprite;
 
+  private idleTexture!: Texture;
+
+  private animationTextures: Texture[] = [];
+
   private buttonWidth: number;
   private buttonHeight: number;
 
-  private phase: "idle" | "kickback" | "spin" = "idle";
-  private startRotation = 0;
-  private targetRotation = 0;
+  private isAnimating = false;
 
-  private isAnimating!: boolean;
-  private speed = 0.2;
+  private currentFrame = 0;
+  private frameTimer = 0;
+  private frameSpeed = 2;
 
-  private audioManager = AudioManager.getInstance();
+  private audioManager =
+    AudioManager.getInstance();
 
   constructor() {
     super();
@@ -28,80 +39,146 @@ export class TossButton extends Container {
   }
 
   async init() {
-    const texture = await Assets.load(
-      "/assets/main/icons/new_toss_button_icon.png",
+    this.idleTexture =
+      await Assets.load(
+        "/assets/main/icons/new_toss_button_icon.png",
+      );
+
+    for (let i = 1; i <= 16; i++) {
+      this.animationTextures.push(
+        await Assets.load(
+          `/assets/main/icons/toss_button_animation_assets/coin_asset_${i}.png`,
+        ),
+      );
+    }
+
+    this.bg = new Sprite(
+      this.idleTexture,
     );
 
-    this.bg = new Sprite(texture);
+    const scaleX =
+      this.buttonWidth /
+      this.bg.texture.width;
 
-    const scaleX = this.buttonWidth / this.bg.texture.width;
-    const scaleY = this.buttonHeight / this.bg.texture.height;
+    const scaleY =
+      this.buttonHeight /
+      this.bg.texture.height;
 
-    this.bg.scale.set(scaleX, scaleY);
+    this.bg.scale.set(
+      scaleX,
+      scaleY,
+    );
+
+    this.bg.anchor.set(
+      0.5,
+      0.5,
+    );
+
+    this.bg.position.set(
+      this.buttonWidth / 2,
+      this.buttonHeight / 2,
+    );
 
     this.addChild(this.bg);
 
-    this.bg.anchor.set(0.5, 0.5);
-    this.bg.position.set(this.buttonWidth / 2, this.buttonHeight / 2);
+    const hit =
+      new Graphics()
+        .rect(
+          0,
+          0,
+          this.buttonWidth,
+          this.buttonHeight,
+        )
+        .fill(0x000000);
 
-    const hit = new Graphics()
-      .rect(0, 0, this.buttonWidth, this.buttonHeight)
-      .fill(0x000000);
+    hit.alpha = 0.001;
 
-    hit.alpha = 0.001; // niewidoczny ale klikalny
     hit.eventMode = "static";
     hit.cursor = "pointer";
 
-    hit.on("pointertap", () => {
-      this.startAnimation();
-      this.emit("toss");
-      this.audioManager.play(SoundId.TOSS_BUTTON_CLICKED, {
-        loop: false,
-        volume: 0.5,
-      });
-    });
+    hit.on(
+      "pointertap",
+      () => {
+        this.startAnimation();
+
+        this.emit("toss");
+
+        this.audioManager.play(
+          SoundId.TOSS_BUTTON_CLICKED,
+          {
+            loop: false,
+            volume: 0.5,
+          },
+        );
+      },
+    );
 
     this.addChild(hit);
   }
 
-  setDisabled(value: boolean) {
-    this.eventMode = value ? "none" : "static";
-    this.alpha = value ? 0.85 : 1;
+  setDisabled(
+    value: boolean,
+  ) {
+    this.eventMode =
+      value
+        ? "none"
+        : "static";
+
+    this.alpha =
+      value
+        ? 0.85
+        : 1;
   }
 
   startAnimation() {
-    if (this.phase !== "idle") return;
+    if (this.isAnimating) {
+      return;
+    }
 
-    this.startRotation = this.bg.rotation;
+    this.isAnimating = true;
 
-    this.targetRotation = this.startRotation - 0.3;
+    this.currentFrame = 0;
+    this.frameTimer = 0;
 
-    this.phase = "kickback";
+    this.bg.texture =
+      this.animationTextures[0];
   }
 
-  update(delta: number) {
-    if (this.phase === "idle") return;
+  update(
+    delta: number,
+  ) {
+    if (!this.isAnimating) {
+      return;
+    }
 
-    if (this.phase === "kickback") {
-      this.bg.rotation += -0.15 * this.speed * delta;
+    this.frameTimer += delta;
 
-      if (this.bg.rotation <= this.targetRotation) {
-        this.phase = "spin";
+    if (
+      this.frameTimer <
+      this.frameSpeed
+    ) {
+      return;
+    }
 
-        this.targetRotation = this.startRotation + Math.PI * 4;
-      }
+    this.frameTimer = 0;
+
+    this.currentFrame++;
+
+    if (
+      this.currentFrame >=
+      this.animationTextures.length
+    ) {
+      this.bg.texture =
+        this.idleTexture;
+
+      this.isAnimating = false;
 
       return;
     }
 
-    if (this.phase === "spin") {
-      this.bg.rotation += 1 * this.speed * delta;
-
-      if (this.bg.rotation >= this.targetRotation) {
-        this.bg.rotation = this.targetRotation;
-        this.phase = "idle";
-        this.isAnimating = false;
-      }
-    }
+    this.bg.texture =
+      this.animationTextures[
+        this.currentFrame
+      ];
   }
 }
