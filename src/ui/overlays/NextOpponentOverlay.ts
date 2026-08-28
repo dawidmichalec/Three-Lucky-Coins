@@ -5,6 +5,7 @@ import { LayoutManager } from "../../core/LayoutManager";
 import { RoundedButton } from "../buttons/RoundedButton";
 import { ButtonTheme } from "../buttons/ButtonTheme";
 import { ScrollableContainer } from "../components/ScrollableContainer";
+import { OBJECTIVE_DISPLAY_CONFIG } from "../../game/objectives/ObjectiveDisplayConfig";
 
 export class NextOpponentOverlay extends Container {
   private bg: Graphics;
@@ -153,28 +154,58 @@ export class NextOpponentOverlay extends Container {
 
     currentY = titleLabel.y + titleLabel.height + 24;
 
-    const descriptionLabel = new LocalizedText("dealerDescription", {
+    const objectiveLabel = new LocalizedText("objective", {
       font: "Open Sans",
       fontWeight: "bold",
       fontSize: 38,
       fill: 0xffd21f,
     });
 
-    descriptionLabel.position.set(0, currentY);
+    objectiveLabel.position.set(0, currentY);
 
-    currentY = descriptionLabel.y + descriptionLabel.height + 12;
+    currentY = objectiveLabel.y + objectiveLabel.height + 12;
 
-    const dealerDescription = new LocalizedText(dealer.dealerDescription, {
-      font: "Open Sans",
-      fontSize: 24,
-      fill: 0xffffff,
-      wordWrap: true,
-      wordWrapWidth: 520,
-    });
+    const objectiveConfig = OBJECTIVE_DISPLAY_CONFIG[dealer.objectiveType];
 
-    dealerDescription.position.set(0, currentY);
+    const objectiveDescription =
+      new LocalizedText(
+        objectiveConfig.descriptionKey,
+        {
+          font: "Open Sans",
+          fontSize: 24,
+          fill: 0xffffff,
+          wordWrap: true,
+          wordWrapWidth: 520,
+        },
+      );
 
-    currentY = dealerDescription.y + dealerDescription.height + 24;
+    objectiveDescription.position.set(0,currentY,);
+
+    currentY = objectiveDescription.y + objectiveDescription.height + 6;
+
+    const objectiveValue =
+      new Text({
+        text: objectiveConfig.formatValue(
+          dealer.objectiveValue,
+        ),
+
+        style: {
+          font: "Open Sans",
+          fontWeight: "bold",
+          fontSize: 24,
+          fill: 0xffffff,
+        },
+      });
+
+    objectiveValue.position.set(
+      0,
+      currentY,
+    );
+
+    currentY =
+      objectiveValue.y +
+      objectiveValue.height +
+      24;
 
     const skillsLabel = new LocalizedText("skills", {
       font: "Open Sans",
@@ -190,8 +221,9 @@ export class NextOpponentOverlay extends Container {
     this.scrollContent.addChild(
       nameLabel,
       titleLabel,
-      descriptionLabel,
-      dealerDescription,
+      objectiveLabel,
+      objectiveDescription,
+      objectiveValue,
       skillsLabel,
     );
 
