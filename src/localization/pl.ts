@@ -195,6 +195,18 @@ export default {
   multiplierBoosterDescriptionCommon:
     "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+0,25",
 
+  multiplierBoosterDescriptionUncommon:
+    "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+0,5",
+
+  multiplierBoosterDescriptionRare:
+    "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+0,75",
+
+  multiplierBoosterDescriptionEpic:
+    "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+1",
+
+  multiplierBoosterDescriptionLegendary:
+    "Zwiększa podstawowy mnożnik passy i jego wzrost.\n\n+1.25",
+
   // CASINO BONUS
 
   casinoBonusName: "BONUS KASYNA",

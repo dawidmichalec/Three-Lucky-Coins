@@ -63,8 +63,30 @@ export class GameCheatController {
       this.options.onGameOver();
     });
 
-    this.cheatManager.register(CheatCode.FORCE_MULTIPLIER_BOOSTER, () => {
-      this.forcePerkReward("multiplier_booster");
+    // ===================================================
+    // CHEATS FOR PERKS
+    // ===================================================
+
+    // MULTIPLIER BOOSTER
+
+    this.cheatManager.register(CheatCode.FORCE_MULTIPLIER_BOOSTER_COMMON, () => {
+      this.forcePerkReward("multiplier_booster", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_MULTIPLIER_BOOSTER_UNCOMMON, () => {
+      this.forcePerkReward("multiplier_booster", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_MULTIPLIER_BOOSTER_RARE, () => {
+      this.forcePerkReward("multiplier_booster", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_MULTIPLIER_BOOSTER_EPIC, () => {
+      this.forcePerkReward("multiplier_booster", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_MULTIPLIER_BOOSTER_LEGENDARY, () => {
+      this.forcePerkReward("multiplier_booster", PerkRarity.LEGENDARY);
     });
 
     // CASINO BONUS

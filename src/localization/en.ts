@@ -198,6 +198,18 @@ export default {
   multiplierBoosterDescriptionCommon:
     "Increases your base streak multiplier and streak growth.\n\n+0.25",
 
+  multiplierBoosterDescriptionUncommon:
+    "Increases your base streak multiplier and streak growth.\n\n+0.5",
+
+  multiplierBoosterDescriptionRare:
+    "Increases your base streak multiplier and streak growth.\n\n+0.75",
+
+  multiplierBoosterDescriptionEpic:
+    "Increases your base streak multiplier and streak growth.\n\n+1",
+
+  multiplierBoosterDescriptionLegendary:
+    "Increases your base streak multiplier and streak growth.\n\n+1.25",
+
   // CASINO BONUS
 
   casinoBonusName: "CASINO BONUS",

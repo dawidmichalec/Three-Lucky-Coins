@@ -15,7 +15,18 @@ export enum CheatCode {
 
   GAME_OVER = "gameover",
 
-  FORCE_MULTIPLIER_BOOSTER = "perk_multiplier_booster",
+  // ===================================================
+  // CHEATS FOR PERKS
+  // ===================================================
+
+  // MULTIPLIER BOOSTER
+
+  FORCE_MULTIPLIER_BOOSTER_COMMON = "perk_multiplier_booster_common",
+  FORCE_MULTIPLIER_BOOSTER_UNCOMMON = "perk_multiplier_booster_uncommon",
+  FORCE_MULTIPLIER_BOOSTER_RARE = "perk_multiplier_booster_rare",
+  FORCE_MULTIPLIER_BOOSTER_EPIC = "perk_multiplier_booster_epic",
+  FORCE_MULTIPLIER_BOOSTER_LEGENDARY = "perk_multiplier_booster_legendary",
+
 
   // CASINO BONUS CHEATS
 
