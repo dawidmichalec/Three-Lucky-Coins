@@ -128,9 +128,27 @@ export class GameCheatController {
 
     // RISK TAKER
 
-    this.cheatManager.register(CheatCode.FORCE_RISK_TAKER, () => {
-      this.forcePerkReward("risk_taker");
+    this.cheatManager.register(CheatCode.FORCE_RISK_TAKER_COMMON, () => {
+      this.forcePerkReward("risk_taker", PerkRarity.COMMON);
     });
+
+    this.cheatManager.register(CheatCode.FORCE_RISK_TAKER_UNCOMMON, () => {
+      this.forcePerkReward("risk_taker", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISK_TAKER_RARE, () => {
+      this.forcePerkReward("risk_taker", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISK_TAKER_EPIC, () => {
+      this.forcePerkReward("risk_taker", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISK_TAKER_LEGENDARY, () => {
+      this.forcePerkReward("risk_taker", PerkRarity.LEGENDARY);
+    });
+
+    // INSURANCE
 
     this.cheatManager.register(CheatCode.FORCE_INSURANCE, () => {
       this.forcePerkReward("insurance");

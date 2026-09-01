@@ -38,7 +38,11 @@ export enum CheatCode {
 
   // RISK TAKER
 
-  FORCE_RISK_TAKER = "perk_risk_taker",
+  FORCE_RISK_TAKER_COMMON = "perk_risk_taker_common",
+  FORCE_RISK_TAKER_UNCOMMON = "perk_risk_taker_uncommon",
+  FORCE_RISK_TAKER_RARE = "perk_risk_taker_rare",
+  FORCE_RISK_TAKER_EPIC = "perk_risk_taker_epic",
+  FORCE_RISK_TAKER_LEGENDARY = "perk_risk_taker_legendary",
 
   // INSURANCE
 

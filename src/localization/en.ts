@@ -262,8 +262,21 @@ export default {
 
   riskTakerName: "RISK TAKER",
 
+  riskTakerDescriptionCommon:
+    "Betting the maximum available amount increases your winnings by 10%.",
+
   riskTakerDescriptionUncommon:
     "Betting the maximum available amount increases your winnings by 12.5%.",
+
+  riskTakerDescriptionRare:
+    "Betting the maximum available amount increases your winnings by 15%.",
+
+  riskTakerDescriptionEpic:
+    "Betting the maximum available amount increases your winnings by 20%.",
+
+  riskTakerDescriptionLegendary:
+    "Betting the maximum available amount increases your winnings by 25%.",
+
   winningsIncreasedBy: "WINNINGS INCREASED BY ",
 
   // GAMBLER
