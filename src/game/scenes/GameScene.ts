@@ -189,10 +189,6 @@ export class GameScene extends BaseScene {
           this.perkGameplayController.onBetChanged(bet);
         }
       },
-
-      onComboChange: (combo) => {
-        this.view.gameUI.updateCombination(combo);
-      },
     });
 
 

@@ -17,7 +17,11 @@ export enum CheatCode {
 
   FORCE_MULTIPLIER_BOOSTER = "perk_multiplier_booster",
 
-  FORCE_CASINO_BONUS = "perk_casino_bonus",
+  FORCE_CASINO_BONUS_COMMON = "perk_casino_bonus_common",
+  FORCE_CASINO_BONUS_UNCOMMON = "perk_casino_bonus_uncommon",
+  FORCE_CASINO_BONUS_RARE = "perk_casino_bonus_rare",
+  FORCE_CASINO_BONUS_EPIC = "perk_casino_bonus_epic",
+  FORCE_CASINO_BONUS_LEGENDARY = "perk_casino_bonus_legendary",
 
   FORCE_RISK_TAKER = "perk_risk_taker",
 

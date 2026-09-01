@@ -202,6 +202,18 @@ export default {
   casinoBonusDescriptionCommon:
     "Pierwszy zakład w każdej walce jest darmowy.\n\nMaksymalna darmowa stawka: 10,00.",
 
+  casinoBonusDescriptionUncommon:
+    "Pierwsze dwa zakłady w każdej walce są darmowe.\n\nMaksymalna darmowa stawka: 10,00.",
+
+  casinoBonusDescriptionRare:
+    "Pierwsze trzy zakłady w każdej walce są darmowe.\n\nMaksymalna darmowa stawka: 10,00.",
+
+  casinoBonusDescriptionEpic:
+    "Pierwsze cztery zakłady w każdej walce są darmowe.\n\nMaksymalna darmowa stawka: 10,00.",
+
+  casinoBonusDescriptionLegendary:
+    "Pierwsze pięć zakładów w każdej walce jest darmowych.\n\nMaksymalna darmowa stawka: 10,00.",
+
   // PIGGY BANK
 
   piggyBankName: "ŚWINKA SKARBONKA",

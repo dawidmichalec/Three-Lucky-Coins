@@ -43,7 +43,10 @@ export class RunPerkManager {
       return false;
     }
 
-    if (perkId !== reward.perk.id && this.activePerks.has(reward.perk.id)) {
+    if (
+      perkId !== reward.perk.id &&
+      this.activePerks.has(reward.perk.id)
+    ) {
       return false;
     }
 
@@ -57,8 +60,12 @@ export class RunPerkManager {
     return true;
   }
 
-  upgradePerk(perkId: string, variant: PerkVariant): boolean {
-    const activePerk = this.activePerks.get(perkId);
+  upgradePerk(
+    perkId: string,
+    variant: PerkVariant,
+  ): boolean {
+    const activePerk =
+      this.activePerks.get(perkId);
 
     if (!activePerk) {
       return false;
@@ -72,7 +79,7 @@ export class RunPerkManager {
     return true;
   }
 
-  clear() {
+  clear(): void {
     this.activePerks.clear();
   }
 }

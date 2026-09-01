@@ -1,9 +1,15 @@
 import { PERKS } from "../PerkRegistry";
+import { PerkRarity } from "../PerkRarity";
 import { PerkReward } from "./PerkReward";
 import { RunPerkRewardState } from "./RunPerkRewardState";
 
+interface ForcedPerkReward {
+  perkId: string;
+  rarity?: PerkRarity;
+}
+
 export class PerkRewardGenerator {
-  private forcedPerkId?: string;
+  private forcedPerkReward?: ForcedPerkReward;
 
   generate(state: RunPerkRewardState, count = 3): readonly PerkReward[] {
     const availableRewards = this.getAvailableRewards(state);
@@ -16,20 +22,24 @@ export class PerkRewardGenerator {
 
     const selectedRewards: PerkReward[] = [];
 
-    if (this.forcedPerkId) {
+    if (this.forcedPerkReward) {
+      const { perkId, rarity } = this.forcedPerkReward;
+
       const forcedReward = availableRewards.find(
-        (reward) => reward.perk.id === this.forcedPerkId,
+        (reward) =>
+          reward.perk.id === perkId &&
+          (rarity === undefined || reward.variant.rarity === rarity),
       );
 
       if (!forcedReward) {
         console.warn(
-          `Forced perk reward "${this.forcedPerkId}" is not available.`,
+          `Forced perk reward "${perkId}"${rarity ? ` (${rarity})` : ""} is not available.`,
         );
       } else {
         selectedRewards.push(forcedReward);
       }
 
-      this.forcedPerkId = undefined;
+      this.forcedPerkReward = undefined;
     }
 
     const remainingRewards = availableRewards.filter(
@@ -49,12 +59,23 @@ export class PerkRewardGenerator {
     return selectedRewards;
   }
 
-  private getAvailableRewards(state: RunPerkRewardState): PerkReward[] {
+  private getAvailableRewards(
+    state: RunPerkRewardState,
+  ): PerkReward[] {
     const rewards: PerkReward[] = [];
 
     for (const perk of PERKS) {
+      if (state.hasBeenAcquired(perk.id)) {
+        continue;
+      }
+
       for (const variant of perk.variants) {
-        if (state.hasBeenShown(perk.id, variant.rarity)) {
+        if (
+          state.hasBeenShown(
+            perk.id,
+            variant.rarity,
+          )
+        ) {
           continue;
         }
 
@@ -80,7 +101,10 @@ export class PerkRewardGenerator {
     return result;
   }
 
-  forceNextPerk(perkId: string): void {
-    this.forcedPerkId = perkId;
+  forceNextPerk(perkId: string, rarity?: PerkRarity): void {
+    this.forcedPerkReward = {
+      perkId,
+      rarity,
+    };
   }
 }

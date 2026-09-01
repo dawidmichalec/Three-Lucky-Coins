@@ -205,6 +205,18 @@ export default {
   casinoBonusDescriptionCommon:
     "Your first bet in every fight is free.\n\nMaximum free bet: 10.00.",
 
+  casinoBonusDescriptionUncommon:
+    "First two bets every fight are free.\n\nMaximum bet value is 10.00.",
+
+  casinoBonusDescriptionRare:
+    "First three bets every fight are free.\n\nMaximum bet value is 10.00.",
+  
+  casinoBonusDescriptionEpic:
+    "First four bets every fight are free.\n\nMaximum bet value is 10.00.",
+
+  casinoBonusDescriptionLegendary:
+    "First five bets every fight are free.\n\nMaximum bet value is 10.00.",
+
   // PIGGY BANK
 
   piggyBankName: "PIGGY BANK",

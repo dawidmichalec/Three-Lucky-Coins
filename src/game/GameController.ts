@@ -14,10 +14,6 @@ type ControllerConfig = {
     bet: number,
     source: BetChangeSource,
   ) => void;
-
-  onComboChange: (
-    combo: CoinCombination,
-  ) => void;
 };
 
 
@@ -121,12 +117,7 @@ export class GameController {
 
     nextCombination[index] = side;
 
-    this.currentCombination =
-      nextCombination;
-
-    this.config.onComboChange(
-      this.currentCombination,
-    );
+    this.currentCombination = nextCombination;
   }
 
   getCurrentCombo(): CoinCombination {

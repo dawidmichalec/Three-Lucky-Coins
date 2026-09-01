@@ -1,16 +1,11 @@
 import { CoinSide } from "../ui/Coin";
-
 import { CheatManager } from "./CheatManager";
-
 import { CheatActions } from "./CheatActions";
-
 import { CheatCode } from "./CheatCodes";
-
 import { GameController } from "../game/GameController";
-
 import { GoldenCoinManager } from "../game/goldenCoins/GoldenCoinManager";
-
 import { PerkRewardGenerator } from "../game/perks/reward/PerkRewardGenerator";
+import { PerkRarity } from "../game/perks/PerkRarity";
 
 interface GameCheatControllerOptions {
   onDealerWin: () => void;
@@ -72,9 +67,44 @@ export class GameCheatController {
       this.forcePerkReward("multiplier_booster");
     });
 
-    this.cheatManager.register(CheatCode.FORCE_CASINO_BONUS, () => {
-      this.forcePerkReward("casino_bonus");
+    // CASINO BONUS
+
+    this.cheatManager.register(CheatCode.FORCE_CASINO_BONUS_COMMON, () => {
+      this.forcePerkReward(
+        "casino_bonus",
+        PerkRarity.COMMON,
+      );
     });
+
+    this.cheatManager.register(CheatCode.FORCE_CASINO_BONUS_UNCOMMON, () => {
+      this.forcePerkReward(
+        "casino_bonus",
+        PerkRarity.UNCOMMON,
+      );
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_CASINO_BONUS_RARE, () => {
+      this.forcePerkReward(
+        "casino_bonus",
+        PerkRarity.RARE,
+      );
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_CASINO_BONUS_EPIC, () => {
+      this.forcePerkReward(
+        "casino_bonus",
+        PerkRarity.EPIC,
+      );
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_CASINO_BONUS_LEGENDARY, () => {
+      this.forcePerkReward(
+        "casino_bonus",
+        PerkRarity.LEGENDARY,
+      );
+    });
+
+    // RISK TAKER
 
     this.cheatManager.register(CheatCode.FORCE_RISK_TAKER, () => {
       this.forcePerkReward("risk_taker");
@@ -143,9 +173,19 @@ export class GameCheatController {
     );
   }
 
-  private forcePerkReward(perkId: string): void {
-    this.perkRewardGenerator.forceNextPerk(perkId);
+  private forcePerkReward(
+    perkId: string,
+    rarity?: PerkRarity,
+  ): void {
+    this.perkRewardGenerator.forceNextPerk(
+      perkId,
+      rarity,
+    );
 
-    console.log("FORCED PERK REWARD:", perkId);
+    console.log(
+      "FORCED PERK REWARD:",
+      perkId,
+      rarity ?? "ANY",
+    );
   }
 }
