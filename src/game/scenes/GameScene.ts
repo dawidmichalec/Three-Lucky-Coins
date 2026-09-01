@@ -38,6 +38,7 @@ import { RoundBetResolver } from "../round/RoundBetResolver";
 import { RoundPayoutPresentationController } from "../../ui/controllers/RoundPayoutPresentationController";
 import { GambleForMoreController } from "../gambleForMore/GambleForMoreController";
 import { PerkGameplayController } from "../perks/controllers/PerkGameplayController";
+import { ObjectiveType } from "../objectives/ObjectiveTypes";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -677,7 +678,7 @@ export class GameScene extends BaseScene {
 
       await this.perkGameplayController.handleWinCommitted();
 
-      await this.finishRound();
+      await this.finishRound(true);
 
       return;
     }
@@ -697,7 +698,7 @@ export class GameScene extends BaseScene {
       streakMultiplier: this.streakMultiplierManager.getValue(),
     });
 
-    await this.finishRound();
+    await this.finishRound(false);
   }
 
   private startGambleForMore(winAmount: number, bet: number) {
@@ -749,7 +750,7 @@ export class GameScene extends BaseScene {
     this.pendingStreakResolution =
       undefined;
 
-    await this.finishRound();
+    await this.finishRound(true);
   }
 
   private async handleGambleForMoreYes() {
@@ -793,7 +794,7 @@ export class GameScene extends BaseScene {
 
     this.pendingStreakResolution = undefined;
 
-    await this.finishRound();
+    await this.finishRound(false);
   }
 
 
@@ -819,7 +820,21 @@ export class GameScene extends BaseScene {
     });
   }
 
-  private async finishRound() {
+  private async finishRound(win: boolean) {
+    if (
+      this.currentDealer.objectiveType ===
+      ObjectiveType.WIN_BETS
+    ) {
+      if (win) {
+        this.dealerFightManager.recordWonBet();
+      }
+
+      this.view.gameUI.dealerCard.updateObjectiveProgress(
+        this.dealerFightManager.getFightWins(),
+        this.dealerFightManager.getFightTargetWins(),
+      );
+    }
+
     const currentBetCost = this.perkEffectApplier.resolveBetCost(
       this.controller.getBet(),
     );
@@ -837,9 +852,13 @@ export class GameScene extends BaseScene {
     }
 
     if (!this.canPlay()) {
-      await this.perkGameplayController.tryRecoverFromInsufficientBalance(this.controller.getMinBet(),);
+      await this.perkGameplayController.tryRecoverFromInsufficientBalance(
+        this.controller.getMinBet(),
+      );
 
-      this.controller.adjustBetToBalance(this.player.balance,);
+      this.controller.adjustBetToBalance(
+        this.player.balance,
+      );
     }
 
     if (!this.canPlay()) {

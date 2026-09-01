@@ -22,7 +22,7 @@ export class GameUI extends Container {
   private currentMultiplier = 1;
   private multiplierAnimationId?: number;
   private probabilityDisplay!: ProbabilityDisplay;
-  private dealerCard!: DealerCard;
+  readonly dealerCard!: DealerCard;
   private dealerSkillsPanel!: DealerSkillsPanel;
   readonly perkContainer: PerkContainer;
 
