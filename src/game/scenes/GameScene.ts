@@ -372,6 +372,10 @@ export class GameScene extends BaseScene {
       return;
     }
 
+    this.runPerkRewardState.markAsAcquired(
+      reward.perk.id,
+    );
+
     console.log("PERK ACQUIRED:", reward.perk.id, reward.variant.rarity);
 
     this.perkEffectApplier.applyPerk(reward);
@@ -488,7 +492,7 @@ export class GameScene extends BaseScene {
 
     await this.coinRow.init();
 
-    this.coinRow.position.set(625.5, 482.6);
+    this.coinRow.position.set(625.5, 386.6);
 
     this.coinRow.zIndex = 0;
 

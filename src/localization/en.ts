@@ -231,6 +231,19 @@ export default {
 
   coinSenseDescriptionCommon:
     "At the start of every fight, reveals the exact combination for the first toss.\n\nWinnings from that toss are reduced by 25%.",
+  
+  coinSenseDescriptionUncommon:
+    "At the start of every fight, reveals the exact combination for the first toss.\n\nWinnings from that toss are reduced by 20%.",
+  
+  coinSenseDescriptionRare:  
+    "At the start of every fight, reveals the exact combination for the first toss.\n\nWinnings from that toss are reduced by 15%.",
+
+  coinSenseDescriptionEpic:
+    "At the start of every fight, reveals the exact combination for the first two tosses.\n\nWinnings from those tosses are reduced by 20%.",
+
+  coinSenseDescriptionLegendary:
+    "At the start of every fight, reveals the exact combination for the first three tosses.\n\nWinnings from those tosses are reduced by 25%.",
+
   winningsReducedBy: "WINNINGS REDUCED BY ",
 
   // RISK TAKER

@@ -49,9 +49,9 @@ export class ProbabilityDisplay extends Container {
     index: 0 | 1 | 2,
   ): CoinProbabilityDisplay {
     const positions = [
-      { x: 425, y: 216 },
-      { x: 750, y: 216 },
-      { x: 1075, y: 216 },
+      { x: 425, y: 396 },
+      { x: 745, y: 396 },
+      { x: 1075, y: 396 },
     ];
 
     const position = positions[index];

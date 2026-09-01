@@ -122,9 +122,29 @@ export class GameCheatController {
       this.forcePerkReward("double_down");
     });
 
-    this.cheatManager.register(CheatCode.FORCE_COIN_SENSE, () => {
-      this.forcePerkReward("coin_sense");
+    // COIN SENSE
+
+    this.cheatManager.register(CheatCode.FORCE_COIN_SENSE_COMMON, () => {
+      this.forcePerkReward("coin_sense", PerkRarity.COMMON);
     });
+
+    this.cheatManager.register(CheatCode.FORCE_COIN_SENSE_UNCOMMON, () => {
+      this.forcePerkReward("coin_sense", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_COIN_SENSE_RARE, () => {
+      this.forcePerkReward("coin_sense", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_COIN_SENSE_EPIC, () => {
+      this.forcePerkReward("coin_sense", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_COIN_SENSE_LEGENDARY, () => {
+      this.forcePerkReward("coin_sense", PerkRarity.LEGENDARY);
+    });
+
+    // LUCKY HAND
 
     this.cheatManager.register(CheatCode.FORCE_LUCKY_HAND, () => {
       this.forcePerkReward("lucky_hand");

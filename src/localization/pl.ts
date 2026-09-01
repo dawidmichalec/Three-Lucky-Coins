@@ -228,6 +228,19 @@ export default {
 
   coinSenseDescriptionCommon:
     "Na początku każdej walki ujawnia dokładną kombinację pierwszego rzutu.\n\nWygrana z tego rzutu jest zmniejszona o 25%.",
+  
+  coinSenseDescriptionUncommon:
+    "Na początku każdej walki ujawnia dokładną kombinację pierwszego rzutu.\n\nWygrana z tego rzutu jest zmniejszona o 20%.",
+  
+  coinSenseDescriptionRare:
+    "Na początku każdej walki ujawnia dokładną kombinację pierwszego rzutu.\n\nWygrana z tego rzutu jest zmniejszona o 15%.",
+
+  coinSenseDescriptionEpic:
+    "Na początku każdej walki ujawnia dokładną kombinację dwóch pierwszych rzutów.\n\nWygrane z tych rzutów są zmniejszone o 20%.",
+
+  coinSenseDescriptionLegendary:
+    "Na początku każdej walki ujawnia dokładną kombinację trzech pierwszych rzutów.\n\nWygrane z tych rzutów są zmniejszone o 25%.",
+
   winningsReducedBy: "WYGRANA ZMNIEJSZONA O",
 
   // RISK TAKER
