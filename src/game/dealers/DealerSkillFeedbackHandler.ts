@@ -11,6 +11,10 @@ export class DealerSkillFeedbackHandler {
           await this.gameMessageOverlay.play("oopsIPaidYouTwiceSkillName");
           break;
 
+        case DealerSkillId.ALMOST:
+          await this.gameMessageOverlay.play("almostSkillName");
+          break;
+
         case DealerSkillId.MANDATORY_TIP:
           await this.gameMessageOverlay.play("mandatoryTipSkillName");
           break;

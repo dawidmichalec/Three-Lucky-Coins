@@ -584,9 +584,15 @@ export class GameScene extends BaseScene {
 
     const winAmount = resolution.winAmount;
 
+    const correctGuesses = selected.filter(
+      (side, index) => side === resultSides[index],
+    ).length;
+
     const outcome = this.roundOutcomeHandler.apply({
       win,
       winAmount,
+      correctGuesses,
+      bet: payoutBet,
       currentDealer: this.currentDealer,
     });
 
@@ -687,15 +693,22 @@ export class GameScene extends BaseScene {
       LOSS
     */
 
-    const finalStreakResolution = await this.perkGameplayController.handleLoss(streakResolution,);
+    const finalStreakResolution = await this.perkGameplayController.handleLoss(streakResolution);
 
-    this.streakMultiplierManager.applyResolution(finalStreakResolution,);
+    this.streakMultiplierManager.applyResolution(finalStreakResolution);
 
     this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
 
+    if (outcome.wonAmount > 0) {
+      this.commitPartialPayout(
+        outcome.wonAmount,
+      );
+    }
+
     this.runStatsRecorder.finishRound({
       win: false,
-      streakMultiplier: this.streakMultiplierManager.getValue(),
+      streakMultiplier:
+        this.streakMultiplierManager.getValue(),
     });
 
     await this.finishRound(false);
@@ -880,6 +893,18 @@ export class GameScene extends BaseScene {
     this.player.addWin(amount);
 
     this.view.gameUI.updateBalance(this.player.balance);
+
+    this.view.gameUI.updateWon(amount);
+  }
+
+  private commitPartialPayout(
+    amount: number,
+  ): void {
+    this.player.addBalance(amount);
+
+    this.view.gameUI.updateBalance(
+      this.player.balance,
+    );
 
     this.view.gameUI.updateWon(amount);
   }

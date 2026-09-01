@@ -23,4 +23,9 @@ export class Player {
     this.totalLost += amount;
     this.losses++;
   }
+
+   addBalance(amount: number) {
+    this.balance += amount;
+    this.totalWon += amount;
+  }
 }

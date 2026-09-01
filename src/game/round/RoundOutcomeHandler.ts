@@ -8,6 +8,8 @@ import { StreakAction, StreakResolution } from "../streak/StreakResolution";
 export interface RoundOutcomeData {
   win: boolean;
   winAmount?: number;
+  correctGuesses: number;
+  bet: number;
   currentDealer: DealerData;
 }
 
@@ -22,15 +24,21 @@ interface WinModifierResult {
   triggeredSkills: DealerSkillId[];
 }
 
+
 export class RoundOutcomeHandler {
   private audioManager = AudioManager.getInstance();
 
   apply(data: RoundOutcomeData): RoundOutcomeResult {
     if (!data.win) {
-      return {
-        wonAmount: 0,
-        triggeredSkills: [],
+      const almostResult = this.applyAlmost(
+        data.correctGuesses,
+        data.bet,
+        data.currentDealer,
+      );
 
+      return {
+        wonAmount: almostResult.winAmount,
+        triggeredSkills: almostResult.triggeredSkills,
         streakResolution: {
           action: StreakAction.RESET,
         },
@@ -89,6 +97,42 @@ export class RoundOutcomeHandler {
     return {
       winAmount: finalWinAmount,
       triggeredSkills,
+    };
+  }
+
+  private applyAlmost(
+    correctGuesses: number,
+    bet: number,
+    dealer: DealerData,
+  ): WinModifierResult {
+    const almostSkill = dealer.skills.find(
+      (skill) => skill.id === DealerSkillId.ALMOST,
+    );
+
+    if (!almostSkill) {
+      return {
+        winAmount: 0,
+        triggeredSkills: [],
+      };
+    }
+
+    if (correctGuesses === 1) {
+      return {
+        winAmount: roundMoney(bet * 0.25),
+        triggeredSkills: [DealerSkillId.ALMOST],
+      };
+    }
+
+    if (correctGuesses === 2) {
+      return {
+        winAmount: roundMoney(bet * 0.4),
+        triggeredSkills: [DealerSkillId.ALMOST],
+      };
+    }
+
+    return {
+      winAmount: 0,
+      triggeredSkills: [],
     };
   }
 

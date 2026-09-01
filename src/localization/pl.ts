@@ -24,6 +24,8 @@ export default {
   zackStudentIdDescription: "Każda zmiana finansuje jego przyszłość.",
   beckysCompactMirror: "Przenośne lusterko Becky",
   beckysCompactMirrorDescription: "Najpierw piękno. Potem liczenie żetonów.",
+  johnnysSharkToothBracelet: "Bransoletka z zębami rekina Johnny'ego",
+  johnnysSharkToothBraceletDescription: "Prosta bransoletka, którą Johnny przywiózł z obozu surfingowego.",
   melanieReadingGlasses: "Okulary do czytania Melanie",
   melanieReadingGlassesDescription: "Widzi więcej, niż kasyno by chciało.",
   hillarySilverStopWatch: "Srebrny stoper Hillary",
@@ -148,6 +150,9 @@ export default {
   beckyDescription:
     "Koleżanka Zacka ze studiów.\n\nZawsze radosna, trochę roztrzepana i niezbyt dobra w śledzeniu wypłat.",
   beckySaying: "Nigdy nie lubiłam matmy",
+  johnnyDescription:
+    "Johnny podjął tymczasową pracę w kasynie, żeby zarobić na obóz surfingowy.\n\nPo obozie zdał sobie sprawę, że tęskni za kasynem i wrócił.\n\nTo, co zaczęło się jako szybki sposób na zarobienie pieniędzy, niespodziewanie stało się karierą, którą lubi.",
+  johnnySaying:"Po prostu daj się ponieść. U mnie się sprawdziło.",
   melanieDescription:
     "Melanie jest młodszą kierowniczką.\n\nPracuje w kasynie, ale nie lubi tego.",
   melanieSaying: "To koniec Twojego szczęścia",
@@ -168,6 +173,9 @@ export default {
 
   oopsIPaidYouTwiceSkillDescription:
     "Czasami trochę się gubi i przypadkiem płaci graczowi dwa razy.",
+
+  almostSkillName: "Prawie",
+  almostSkillDescription: "Zwraca część zakładu w przypadku częściowo poprawnych odpowiedzi.",
 
   slowerMultiplierGrowthSkillName: "Wolniejszy wzrost mnożnika",
 

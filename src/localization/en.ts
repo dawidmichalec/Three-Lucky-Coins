@@ -24,6 +24,8 @@ export default {
   zackStudentIdDescription: "Every shift pays for another page of his future.",
   beckysCompactMirror: "Becky's Compact Mirror",
   beckysCompactMirrorDescription: "Beauty first. Counting chips second.",
+  johnnysSharkToothBracelet: "Johnny's Shark Tooth Bracelet",
+  johnnysSharkToothBraceletDescription: " A simple bracelet Johnny brought back from the surfing camp.",
   melanieReadingGlasses: "Melanie's Reading Glasses",
   melanieReadingGlassesDescription:
     "She sees more than the casino would like her to.",
@@ -152,6 +154,9 @@ export default {
   beckyDescription:
     "Zack’s university friend.\n\nAlways cheerful, a little silly, and not particularly good at keeping track of payouts.",
   beckySaying: "Math was never my favorite subject",
+  johnnyDescription: 
+    "Johnny took a temporary casino job to fund a surfing camp.\n\nAfter the camp, he realized he missed the casino and came back.\n\nWhat started as a quick way to make money unexpectedly became a career he enjoys.",
+  johnnySaying:"Just go with the flow. Worked for me.",
   melanieDescription:
     "Melanie is a Junior Supervisor.\n\nShe works at a casino but doesn't like this. ",
   melanieSaying: "Your luck ends here",
@@ -171,6 +176,9 @@ export default {
 
   oopsIPaidYouTwiceSkillDescription:
     "Sometimes gets a little mixed up and accidentally pays the player twice.",
+
+  almostSkillName: "Almost",
+  almostSkillDescription: "Returns a fraction of bet for partially correct guesses.",
 
   slowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
 

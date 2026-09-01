@@ -580,9 +580,12 @@ export class GameUI extends Container {
 
   updateDealerObjective(
     dealer: DealerData,
-    targetBalance: number,
+    targetBalance?: number,
   ): void {
-    this.dealerCard.updateObjective(dealer,targetBalance);
+    this.dealerCard.updateObjective(
+      dealer,
+      targetBalance,
+    );
   }
 
   setDisabled(
