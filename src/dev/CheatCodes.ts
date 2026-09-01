@@ -50,7 +50,11 @@ export enum CheatCode {
 
   // GAMBLER
 
-  FORCE_GAMBLER = "perk_gambler",
+  FORCE_GAMBLER_COMMON = "perk_gambler_common",
+  FORCE_GAMBLER_UNCOMMON = "perk_gambler_uncommon",
+  FORCE_GAMBLER_RARE = "perk_gambler_rare",
+  FORCE_GAMBLER_EPIC = "perk_gambler_epic",
+  FORCE_GAMBLER_LEGENDARY = "perk_gambler_legendary",
 
   // DOUBLE DOWN
 

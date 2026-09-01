@@ -154,9 +154,30 @@ export class GameCheatController {
       this.forcePerkReward("insurance");
     });
 
-    this.cheatManager.register(CheatCode.FORCE_GAMBLER, () => {
-      this.forcePerkReward("gambler");
+    // GAMBLER
+
+    this.cheatManager.register(CheatCode.FORCE_GAMBLER_COMMON, () => {
+      this.forcePerkReward("gambler", PerkRarity.COMMON);
     });
+
+    this.cheatManager.register(CheatCode.FORCE_GAMBLER_UNCOMMON, () => {
+      this.forcePerkReward("gambler", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GAMBLER_RARE, () => {
+      this.forcePerkReward("gambler", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GAMBLER_EPIC, () => {
+      this.forcePerkReward("gambler", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GAMBLER_LEGENDARY, () => {
+      this.forcePerkReward("gambler", PerkRarity.LEGENDARY);
+    });
+
+
+    //DOUBLE DOWN
 
     this.cheatManager.register(CheatCode.FORCE_DOUBLE_DOWN, () => {
       this.forcePerkReward("double_down");
@@ -189,6 +210,8 @@ export class GameCheatController {
     this.cheatManager.register(CheatCode.FORCE_LUCKY_HAND, () => {
       this.forcePerkReward("lucky_hand");
     });
+
+    // PIGGY BANK
 
     this.cheatManager.register(CheatCode.FORCE_PIGGY_BANK, () => {
       this.forcePerkReward("piggy_bank");

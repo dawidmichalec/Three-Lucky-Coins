@@ -283,8 +283,21 @@ export default {
 
   gamblerName: "GAMBLER",
 
+  gamblerDescriptionCommon: 
+    "After a loss, your next win pays 20% more.\n\nConsumed after triggering.",
+
   gamblerDescriptionUncommon:
     "After a loss, your next win pays 30% more.\n\nConsumed after triggering.",
+
+  gamblerDescriptionRare:
+    "After a loss, your next win pays 40% more.\n\nConsumed after triggering.",
+
+  gamblerDescriptionEpic:
+    "After a loss, your next win pays 50% more.\n\nConsumed after triggering.",
+
+  gamblerDescriptionLegendary:
+    "After a loss, your next win pays 75% more.\n\nConsumed after triggering.",
+
   nextWinIncreasedBy: "NEXT WIN INCREASED BY ",
 
   // INSURANCE
