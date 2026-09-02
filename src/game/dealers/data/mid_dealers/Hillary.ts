@@ -28,9 +28,9 @@ export const HILLARY_DATA: DealerData = {
 
   oddsProfile: HILLARY_PROFILE,
 
-  objectiveType: ObjectiveType.INCREASE_BALANCE,
+  objectiveType: ObjectiveType.REACH_MULTIPLIER,
 
-  objectiveValue: 500,
+  objectiveValue: 2,
 
   goldenCoinSettings: {
     baseChance: 0.0075,
@@ -50,6 +50,8 @@ export const HILLARY_DATA: DealerData = {
       name: "slowerMultiplierGrowthSkillName",
 
       description: "slowerMultiplierGrowthSkillDescription",
+
+      icon: "/assets/main/icons/dealer_skill_icons/mid_dealers/hillary/slower_multiplier_growth.png"
     },
   ],
 

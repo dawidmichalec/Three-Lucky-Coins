@@ -10,35 +10,21 @@ import {
 
 export class RunDealerGenerator {
   static generateRun(): DealerData[] {
-    return [...this.generateJuniorStage()];
+    return [
+      ...this.generateJuniorStage(),
+      ...this.generateMidStage(),
+    ];
   }
 
   private static generateJuniorStage(): DealerData[] {
-    /*
-            Pobieramy wszystkich zwykłych
-            Junior Dealerów.
-        */
 
     const regularDealers = getRegularDealersByGroup(DealerGroup.JUNIOR);
-
-    /*
-            Ben jest gwarantowanym
-            pierwszym przeciwnikiem.
-
-            Dlatego nie może zostać
-            ponownie wylosowany.
-        */
 
     const randomPool = regularDealers.filter(
       (dealer) => dealer.id !== BEN_DATA.id,
     );
 
     const randomDealer = this.pickRandomDealer(randomPool);
-
-    /*
-            Junior stage kończy się
-            walką z Supervisorem.
-        */
 
     const supervisor = getSupervisorByGroup(DealerGroup.JUNIOR);
 
@@ -49,6 +35,18 @@ export class RunDealerGenerator {
     return [BEN_DATA, randomDealer, supervisor];
   }
 
+  private static generateMidStage(): DealerData[] {
+    const regularDealers =
+      getRegularDealersByGroup(
+        DealerGroup.MID,
+      );
+
+    return this.pickRandomDealers(
+      regularDealers,
+      2,
+    );
+  }
+
   private static pickRandomDealer(dealers: readonly DealerData[]): DealerData {
     if (dealers.length === 0) {
       throw new Error("Cannot select a random dealer from an empty pool.");
@@ -57,5 +55,30 @@ export class RunDealerGenerator {
     const randomIndex = Math.floor(Math.random() * dealers.length);
 
     return dealers[randomIndex];
+  }
+
+  private static pickRandomDealers(
+    dealers: readonly DealerData[],
+    count: number,
+  ): DealerData[] {
+    if (dealers.length < count) {
+      throw new Error(
+        `Cannot select ${count} dealers from a pool of ${dealers.length}.`,
+      );
+    }
+
+    const pool = [...dealers];
+    const selected: DealerData[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const randomIndex =
+        Math.floor(Math.random() * pool.length);
+
+      selected.push(
+        pool.splice(randomIndex, 1)[0],
+      );
+    }
+
+    return selected;
   }
 }

@@ -2,9 +2,9 @@ import { DealerData } from "./DealerData";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
 
 export interface DealerFightState {
-  startingBalance: number;
   targetBalance?: number;
   targetWins?: number;
+  targetMultiplier?: number;
 }
 
 export class DealerFightManager {
@@ -46,7 +46,6 @@ export class DealerFightManager {
           dealer.objectiveValue;
 
         return {
-          startingBalance: this.fightStartingBalance,
           targetBalance: this.fightTargetBalance,
         };
 
@@ -55,8 +54,12 @@ export class DealerFightManager {
           dealer.objectiveValue;
 
         return {
-          startingBalance: this.fightStartingBalance,
           targetWins: this.fightTargetWins,
+        };
+
+      case ObjectiveType.REACH_MULTIPLIER:
+        return {
+          targetMultiplier: dealer.objectiveValue,
         };
 
       default:
@@ -81,6 +84,7 @@ export class DealerFightManager {
 
   isCurrentDealerDefeated(
     playerBalance: number,
+    currentMultiplier: number,
   ): boolean {
     const dealer = this.getCurrentDealer();
 
@@ -95,6 +99,12 @@ export class DealerFightManager {
         return (
           this.fightWins >=
           this.fightTargetWins
+        );
+
+      case ObjectiveType.REACH_MULTIPLIER:
+        return (
+          currentMultiplier >=
+          dealer.objectiveValue
         );
 
       default:

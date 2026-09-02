@@ -324,7 +324,10 @@ export class GameScene extends BaseScene {
   }
 
   private isCurrentDealerDefeated(): boolean {
-    return this.dealerFightManager.isCurrentDealerDefeated(this.player.balance);
+    return this.dealerFightManager.isCurrentDealerDefeated(
+      this.player.balance,
+      this.streakMultiplierManager.getValue(),
+    );
   }
 
   private async handleDealerDefeated(): Promise<void> {
