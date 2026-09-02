@@ -11,6 +11,8 @@ interface GameCheatControllerOptions {
   onDealerWin: () => void;
 
   onGameOver: () => void;
+
+  onNextDealer: () => void;
 }
 
 export class GameCheatController {
@@ -61,6 +63,12 @@ export class GameCheatController {
 
     this.cheatManager.register(CheatCode.GAME_OVER, () => {
       this.options.onGameOver();
+    });
+
+    // NEXT DEALER
+
+    this.cheatManager.register(CheatCode.NEXT_DEALER, () => {
+      this.options.onNextDealer();
     });
 
     // ===================================================

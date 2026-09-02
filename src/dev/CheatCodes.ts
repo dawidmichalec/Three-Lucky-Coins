@@ -15,6 +15,8 @@ export enum CheatCode {
 
   GAME_OVER = "gameover",
 
+  NEXT_DEALER = "nextdealer",
+
   // ===================================================
   // CHEATS FOR PERKS
   // ===================================================

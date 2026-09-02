@@ -228,6 +228,10 @@ export class GameScene extends BaseScene {
         onGameOver: () => {
           this.triggerGameOver();
         },
+
+        onNextDealer: () => {
+          void this.cheatNextDealer();
+        },
       },
     );
 
@@ -1025,6 +1029,37 @@ export class GameScene extends BaseScene {
 
   private async showDealerVictory() {
     await this.runEndController.showDealerVictory();
+  }
+
+  // NEXT DEALER CHEAT
+
+  private async cheatNextDealer(): Promise<void> {
+    if (
+      this.roundState !== "ready" ||
+      this.isChangingDealer
+    ) {
+      return;
+    }
+
+    const nextDealer =
+      this.dealerFightManager.advanceToNextDealer();
+
+    if (!nextDealer) {
+      console.log("No next dealer.");
+
+      return;
+    }
+
+    this.isChangingDealer = true;
+
+    this.lockControls();
+
+    console.log(
+      "CHEAT - NEXT DEALER:",
+      nextDealer.name,
+    );
+
+    await this.loadDealer(nextDealer);
   }
 
   // CLEANUP
