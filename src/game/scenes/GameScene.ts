@@ -39,6 +39,7 @@ import { RoundPayoutPresentationController } from "../../ui/controllers/RoundPay
 import { GambleForMoreController } from "../gambleForMore/GambleForMoreController";
 import { PerkGameplayController } from "../perks/controllers/PerkGameplayController";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
+import { DealerRole } from "../dealers/DealerRole";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -343,7 +344,11 @@ export class GameScene extends BaseScene {
 
     await this.view.gameMessageOverlay.play("youWon");
 
-    // TEMP - PERK REWARD GENERATOR TEST
+    if (defeatedDealer.role !== DealerRole.SUPERVISOR) {
+      await this.continueToNextDealer();
+
+      return;
+    }
 
     const perkRewards = this.perkRewardGenerator.generate(
       this.runPerkRewardState,
@@ -389,7 +394,7 @@ export class GameScene extends BaseScene {
 
     await this.wait(900);
 
-    await this.continueAfterPerkReward();
+    await this.continueToNextDealer();
   }
 
   private async handlePerkRewardSkip(): Promise<void> {
@@ -397,10 +402,10 @@ export class GameScene extends BaseScene {
 
     this.view.perkRewardOverlay.hide();
 
-    await this.continueAfterPerkReward();
+    await this.continueToNextDealer();
   }
 
-  private async continueAfterPerkReward(): Promise<void> {
+  private async continueToNextDealer(): Promise<void> {
     const nextDealer = this.dealerFightManager.advanceToNextDealer();
 
     if (!nextDealer) {
