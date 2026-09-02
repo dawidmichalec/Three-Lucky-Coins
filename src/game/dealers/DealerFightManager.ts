@@ -1,5 +1,6 @@
 import { DealerData } from "./DealerData";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
+import { DealerSkillId } from "./DealerSkill";
 
 export interface DealerFightState {
   targetBalance?: number;
@@ -15,6 +16,8 @@ export class DealerFightManager {
 
   private fightWins = 0;
   private fightTargetWins = 0;
+
+  private mandatoryTipWinCounter = 0;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -38,6 +41,7 @@ export class DealerFightManager {
     this.fightTargetBalance = 0;
     this.fightWins = 0;
     this.fightTargetWins = 0;
+    this.mandatoryTipWinCounter = 0;
 
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
@@ -80,6 +84,30 @@ export class DealerFightManager {
     }
 
     this.fightWins++;
+  }
+
+  recordMandatoryTipWin(): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasMandatoryTip = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.MANDATORY_TIP,
+    );
+
+    if (!hasMandatoryTip) {
+      return false;
+    }
+
+    this.mandatoryTipWinCounter++;
+
+    if (this.mandatoryTipWinCounter < 3) {
+      return false;
+    }
+
+    this.mandatoryTipWinCounter = 0;
+
+    return true;
   }
 
   isCurrentDealerDefeated(

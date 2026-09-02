@@ -1,10 +1,9 @@
-import {
-    CoinSenseResult,
-    GamblerResult,
-    LuckyHandResult,
-    PerkEffectApplier,
-    RiskTakerResult
-} from "../perks/PerkEffectApplier";
+import { PerkEffectApplier } from "../perks/PerkEffectApplier";
+import { CoinSenseResult } from "../perks/effects/CoinSenseEffect";
+import { RiskTakerResult } from "../perks/effects/RiskTakerEffect";
+import { GamblerResult } from "../perks/effects/GamblerEffect";
+import { LuckyHandResult } from "../perks/effects/LuckyHandEffect";
+import { roundMoney } from "../util/MoneyUtils";
 
 
 export interface RoundPayoutInput {
@@ -46,6 +45,19 @@ export class RoundPayoutResolver {
         private readonly perkEffectApplier:
             PerkEffectApplier
     ) {}
+
+    resolveFinalWin(
+        winAmount: number,
+        mandatoryTipTriggered: boolean,
+    ): number {
+        if (!mandatoryTipTriggered) {
+            return winAmount;
+        }
+
+        return roundMoney(
+            winAmount * 0.5,
+        );
+    }
 
 
     resolve(

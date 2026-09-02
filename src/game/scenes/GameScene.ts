@@ -40,6 +40,8 @@ import { GambleForMoreController } from "../gambleForMore/GambleForMoreControlle
 import { PerkGameplayController } from "../perks/controllers/PerkGameplayController";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerRole } from "../dealers/DealerRole";
+import { DealerSkillId } from "../dealers/DealerSkill";
+import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -680,15 +682,41 @@ export class GameScene extends BaseScene {
         this.streakMultiplierManager.getValue(),
       );
 
+      const mandatoryTipTriggered =
+        this.dealerFightManager.recordMandatoryTipWin();
+
+      const finalRoundWinAmount =
+        this.roundPayoutResolver.resolveFinalWin(
+          finalWinAmount,
+          mandatoryTipTriggered,
+        );
+
+      if (mandatoryTipTriggered) {
+        await this.dealerSkillFeedbackHandler.handle([
+          DealerSkillId.MANDATORY_TIP,
+        ]);
+
+        await this.view.perkEffectMessageOverlay.play(
+          "winningsReducedBy",
+          "-50%",
+          PerkEffectMessageType.NEGATIVE,
+        );
+
+        await this.view.gameUI.animatePenaltyIntoWon(
+          finalWinAmount - finalRoundWinAmount,
+          finalRoundWinAmount,
+        );
+      }
+
       this.runStatsRecorder.finishRound({
         win: true,
 
-        winAmount: finalWinAmount,
+        winAmount: finalRoundWinAmount,
 
         streakMultiplier: this.streakMultiplierManager.getValue(),
       });
 
-      this.commitWin(finalWinAmount);
+      this.commitWin(finalRoundWinAmount);
 
       await this.perkGameplayController.handleWinCommitted();
 
@@ -731,45 +759,59 @@ export class GameScene extends BaseScene {
   }
 
   private async handleGambleForMoreNo() {
-
-    const result = this.gambleForMoreController.decline();
+    const result =
+      this.gambleForMoreController.decline();
 
     this.view.gambleForMoreOverlay.hide();
 
+    const mandatoryTipTriggered =
+      this.dealerFightManager.recordMandatoryTipWin();
+
+    const finalRoundWinAmount =
+      this.roundPayoutResolver.resolveFinalWin(
+        result.winAmount,
+        mandatoryTipTriggered,
+      );
+
+    if (mandatoryTipTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.MANDATORY_TIP,
+      ]);
+
+      await this.view.perkEffectMessageOverlay.play(
+        // dokładnie ten sam call co Coin Sense
+      );
+
+      await this.view.gameUI.animatePenaltyIntoWon(
+        result.winAmount - finalRoundWinAmount,
+        finalRoundWinAmount,
+      );
+    }
+
     this.commitWin(
-      result.winAmount,
+      finalRoundWinAmount,
     );
 
     await this.perkGameplayController.handleWinCommitted();
 
-    if (
-      this.pendingStreakResolution
-    ) {
-      this.streakMultiplierManager
-        .applyResolution(
-          this.pendingStreakResolution,
-        );
+    if (this.pendingStreakResolution) {
+      this.streakMultiplierManager.applyResolution(
+        this.pendingStreakResolution,
+      );
 
-      this.view.gameUI
-        .updateMultiplier(
-          this.streakMultiplierManager
-            .getValue(),
-        );
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
     }
 
     this.runStatsRecorder.finishRound({
       win: true,
-
-      winAmount:
-        result.winAmount,
-
+      winAmount: finalRoundWinAmount,
       streakMultiplier:
-        this.streakMultiplierManager
-          .getValue(),
+        this.streakMultiplierManager.getValue(),
     });
 
-    this.pendingStreakResolution =
-      undefined;
+    this.pendingStreakResolution = undefined;
 
     await this.finishRound(true);
   }

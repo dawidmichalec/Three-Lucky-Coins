@@ -50,6 +50,8 @@ export const TIMOTHY_DATA: DealerData = {
       name: "mandatoryTipSkillName",
 
       description: "mandatoryTipSkillDescription",
+
+      icon: "/assets/main/icons/dealer_skill_icons/mid_dealers/timothy/mandatory_tip.png"
     },
   ],
 
