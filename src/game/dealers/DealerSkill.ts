@@ -9,6 +9,8 @@ export enum DealerSkillId {
 
   MANDATORY_TIP = "mandatory_tip",
 
+  MULTIPLIER_KNOCKOUT = "multiplier_knockout"
+
   // Kolejne skille w przyszłości...
 }
 

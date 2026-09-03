@@ -30,7 +30,7 @@ export const HILLARY_DATA: DealerData = {
 
   objectiveType: ObjectiveType.REACH_MULTIPLIER,
 
-  objectiveValue: 2,
+  objectiveValue: 5,
 
   goldenCoinSettings: {
     baseChance: 0.0075,

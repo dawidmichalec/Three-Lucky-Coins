@@ -19,6 +19,8 @@ export class DealerFightManager {
 
   private mandatoryTipWinCounter = 0;
 
+  private multiplierKnockoutBlockedRounds = 0;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -42,6 +44,8 @@ export class DealerFightManager {
     this.fightWins = 0;
     this.fightTargetWins = 0;
     this.mandatoryTipWinCounter = 0;
+
+    this.multiplierKnockoutBlockedRounds = 3;
 
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
@@ -106,6 +110,39 @@ export class DealerFightManager {
     }
 
     this.mandatoryTipWinCounter = 0;
+
+    return true;
+  }
+
+  rollMultiplierKnockout(
+    currentMultiplier: number,
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const skill = dealer.skills.find(
+      (skill) =>
+        skill.id === DealerSkillId.MULTIPLIER_KNOCKOUT,
+    );
+
+    if (!skill) {
+      return false;
+    }
+
+    if (this.multiplierKnockoutBlockedRounds > 0) {
+      this.multiplierKnockoutBlockedRounds--;
+
+      return false;
+    }
+
+    if (currentMultiplier <= 1) {
+      return false;
+    }
+
+    if (Math.random() >= (skill.triggerChance ?? 0)) {
+      return false;
+    }
+
+    this.multiplierKnockoutBlockedRounds = 3;
 
     return true;
   }

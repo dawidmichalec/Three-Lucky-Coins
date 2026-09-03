@@ -918,6 +918,25 @@ export class GameScene extends BaseScene {
       return;
     }
 
+    const multiplierKnockoutTriggered =
+      this.dealerFightManager.rollMultiplierKnockout(
+        this.streakMultiplierManager.getValue(),
+      );
+
+    if (multiplierKnockoutTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.MULTIPLIER_KNOCKOUT,
+      ]);
+
+      await this.view.playImpactShake();
+
+      this.streakMultiplierManager.knockOut();
+
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
+    }
+
     if (!this.canPlay()) {
       await this.perkGameplayController.tryRecoverFromInsufficientBalance(
         this.controller.getMinBet(),

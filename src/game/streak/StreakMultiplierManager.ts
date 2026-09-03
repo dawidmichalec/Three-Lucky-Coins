@@ -59,11 +59,19 @@ export class StreakMultiplierManager {
   }
 
   decrease(amount: number) {
-    this.currentValue = Math.max(this.baseValue, this.currentValue - amount);
+    this.currentValue = Math.max(
+      Math.min(this.baseValue, this.currentValue),
+      this.currentValue - amount,
+    );
   }
 
   reset() {
     this.currentValue = this.baseValue;
+  }
+
+  knockOut() {
+    this.currentValue =
+      DEFAULT_STREAK_MULTIPLIER_SETTINGS.baseValue;
   }
 
   resetAll() {

@@ -31,8 +31,9 @@ export default {
   hillarySilverStopWatch: "Srebrny stoper Hillary",
   hillarySilverStopWatchDescription: "Z Hillary wszystko trwa dłużej.",
   timothyTipJar: "Słoik na napiwki Timothy'ego",
-  timothyTipJarDescription:
-    "Każda moneta w środku ma swoją historię. Większość z nich dotyczy alimentów.",
+  timothyTipJarDescription:"Każda moneta w środku ma swoją historię. Większość z nich dotyczy alimentów.",
+  alexBoxingGloves: "Rękawice bokserskie Alexa",
+  alexBoxingGlovesDescription: "Alex twierdzi, że kasyna i boks mają jedną wspólną cechę... tylko jedna osoba odchodzi z uśmiechem.",
 
   // PLAYER STATS LABELS
 
@@ -166,6 +167,10 @@ export default {
     "Praca w kasynie to jego druga praca. Musi tu pracować, bo potrzebuje pieniędzy na alimenty.\n\nDlatego tak chętnie wymusza na graczach napiwki.",
   timothySaying:
     "Co powiesz na ładny napiwek dla ciężko pracującego człowieka?",
+  alexDescription:
+    "W wolnym czasie trenuje boks. Twój mnożnik to dobry trening.",
+  alexSaying:
+    "Nie próbuj mnie oszukać, bo poczujesz smak mojego lewego prostego.",
 
   // SKILL
 
@@ -186,6 +191,12 @@ export default {
 
   mandatoryTipSkillDescription:
     "Co trzecią zwycięską rundę Timothy zgarnia połowę wygranej z tej rundy.",
+
+  multiplierKnockoutSkillName:
+    "Nokaut mnożnika",
+
+  multiplierKnockoutSkillDescription:
+    "Alex może obniżyć mnożnik passy gracza do x1, niezależnie od perków, które na niego wpływają.\n\nNokaut mnożnika nie może się aktywować w ciągu pierwszych 3 rund ani przez 3 rundy po aktywacji.\n\nW przeciwnym razie szansa na jego wywołanie wynosi 15% w każdej rundzie.",
 
   // PERKS
 

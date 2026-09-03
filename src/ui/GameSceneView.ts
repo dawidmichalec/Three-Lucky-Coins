@@ -1,4 +1,4 @@
-import { Container } from "pixi.js";
+import { Container, Graphics } from "pixi.js";
 import { GameUI } from "./GameUI";
 import { GameControls } from "./controls/GameControls";
 import { OptionsPanel } from "./panels/OptionsPanel";
@@ -280,6 +280,106 @@ export class GameSceneView extends Container {
 
   private async openInGameMenu(){
     this.inGameMenu.visible = true;
+  }
+
+  async playImpactShake(): Promise<void> {
+  const originalX = this.x;
+  const originalY = this.y;
+
+  const flash = new Graphics()
+    .rect(
+      -originalX,
+      -originalY,
+      this.width,
+      this.height,
+    )
+    .fill({
+      color: 0xffffff,
+      alpha: 0.65,
+    });
+
+  flash.zIndex = 9999;
+
+  this.addChild(flash);
+
+  const moveTo = async (
+      offsetX: number,
+      offsetY: number,
+      duration: number,
+    ) => {
+      const startX = this.x;
+      const startY = this.y;
+
+      const targetX = originalX + offsetX;
+      const targetY = originalY + offsetY;
+
+      const startTime = performance.now();
+
+      while (true) {
+        const elapsed =
+          performance.now() - startTime;
+
+        const progress =
+          Math.min(elapsed / duration, 1);
+
+        this.position.set(
+          startX +
+            (targetX - startX) * progress,
+
+          startY +
+            (targetY - startY) * progress,
+        );
+
+        if (progress >= 1) {
+          break;
+        }
+
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve());
+        });
+      }
+    };
+
+    const fadeFlash = async () => {
+      const duration = 100;
+      const startTime = performance.now();
+
+      while (true) {
+        const elapsed =
+          performance.now() - startTime;
+
+        const progress =
+          Math.min(elapsed / duration, 1);
+
+        flash.alpha = 1 - progress;
+
+        if (progress >= 1) {
+          break;
+        }
+
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve());
+        });
+      }
+
+      flash.destroy();
+    };
+
+    const flashPromise = fadeFlash();
+
+    await moveTo(-40, 3, 60);
+    await moveTo(30, -2, 85);
+    await moveTo(-20, 1, 105);
+    await moveTo(10, 0, 125);
+    await moveTo(-4, 0, 110);
+    await moveTo(0, 0, 90);
+
+    await flashPromise;
+
+    this.position.set(
+      originalX,
+      originalY,
+    );
   }
 
   setDisabled(value: boolean) {

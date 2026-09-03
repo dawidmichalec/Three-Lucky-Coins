@@ -18,6 +18,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.MANDATORY_TIP:
           await this.gameMessageOverlay.play("mandatoryTipSkillName");
           break;
+
+        case DealerSkillId.MULTIPLIER_KNOCKOUT:
+          await this.gameMessageOverlay.play("multiplierKnockoutSkillName");
+          break;
       }
     }
   }

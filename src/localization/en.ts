@@ -32,8 +32,9 @@ export default {
   hillarySilverStopWatch: "Hillary's Silver Stopwatch",
   hillarySilverStopWatchDescription: "Everything takes longer with Hillary",
   timothyTipJar: "Timothy's Tip Jar",
-  timothyTipJarDescription:
-    "Every coin inside has a story. Most of them are about alimony.",
+  timothyTipJarDescription: "Every coin inside has a story. Most of them are about alimony.",
+  alexBoxingGloves: "Alex's Boxing Gloves",
+  alexBoxingGlovesDescription: "Alex says casinos and boxing have one thing in common... only one walks away smiling.",
 
   // PLAYER STATS LABELS
 
@@ -157,8 +158,7 @@ export default {
   johnnyDescription: 
     "Johnny took a temporary casino job to fund a surfing camp.\n\nAfter the camp, he realized he missed the casino and came back.\n\nWhat started as a quick way to make money unexpectedly became a career he enjoys.",
   johnnySaying:"Just go with the flow. Worked for me.",
-  melanieDescription:
-    "Melanie is a Junior Supervisor.\n\nShe works at a casino but doesn't like this. ",
+  melanieDescription: "Melanie is a Junior Supervisor.\n\nShe works at a casino but doesn't like this. ",
   melanieSaying: "Your luck ends here",
 
   // MID DEALERS
@@ -169,6 +169,10 @@ export default {
   timothyDescription:
     "Working at a casino is his second job. He needs to work here because he needs money for alimony. \n\nThat’s why he’s eagerly forcing tips on the players.",
   timothySaying: "How about a nice tip for a hard working man?",
+  alexDescription:
+    "He trains boxing in his spare time. Your multiplier makes for good practice.",
+  alexSaying:
+    "Don't try to trick me or you're gonna get a taste of my left jab.",
 
   // SKILLS
 
@@ -189,6 +193,12 @@ export default {
 
   mandatoryTipSkillDescription:
     "Every third winning round, Timothy takes 50% of that round's winnings.",
+
+  multiplierKnockoutSkillName:
+    "Multiplier Knockout",
+
+  multiplierKnockoutSkillDescription:
+    "Alex can knock the player's streak multiplier down to x1, regardless of perks that affect the streak multiplier.\n\nMultiplier Knockout cannot trigger during the first 3 rounds or for 3 rounds after being triggered.\n\nOtherwise, it has a 15% chance to trigger each round.",
 
   // PERKS
 
