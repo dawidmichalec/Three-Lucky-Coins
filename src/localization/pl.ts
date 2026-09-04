@@ -36,6 +36,8 @@ export default {
   alexBoxingGlovesDescription: "Alex twierdzi, że kasyna i boks mają jedną wspólną cechę... tylko jedna osoba odchodzi z uśmiechem.",
   anthonySlotMachine: "Automat Anthony'ego",
   anthonySlotMachineDescription: "Po co zadowalać się tym, co masz, skoro możesz zagrać o więcej?",
+  bobbysGoldChain: "Złoty łańcuszek Bobby'ego.",
+  bobbysGoldChainDescription: "Nie za dużo błysku. W sam raz",
 
   // PLAYER STATS LABELS
 
@@ -177,6 +179,10 @@ export default {
     "Od dłuższego czasu pracuje w różnych kasynach.\n\nMa duże doświadczenie, dzięki czemu zna wiele sztuczek.\n\nZachęca graczy do częstszego grania.",
   anthonySaying:
     "Może zagrasz o więcej?",
+  bobbyDescription:
+    "Bobby nie lubi komplikować rzeczy.\n\nJeśli twój zakład jest wystarczająco bliski, to zazwyczaj mu to wystarczy.\n\nTylko nie oczekuj, że będzie w tej kwestii specjalnie hojny.",
+  bobbySaying: 
+    "Cóż... Było blisko.",
 
   // SKILL
 
@@ -209,6 +215,9 @@ export default {
 
   mandatoryGambleForMoreSkillDescription:
     "Raz na pięć rund musisz obowiązkowo zagrać o więcej.",
+
+  closeEnoughSkillName: "Było blisko",
+  closeEnoughSkillDescription: "Zwraca część zakładu w przypadku częściowo poprawnych odpowiedzi.",
 
   // PERKS
 

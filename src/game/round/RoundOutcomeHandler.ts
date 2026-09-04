@@ -30,15 +30,17 @@ export class RoundOutcomeHandler {
 
   apply(data: RoundOutcomeData): RoundOutcomeResult {
     if (!data.win) {
-      const almostResult = this.applyAlmost(
-        data.correctGuesses,
-        data.bet,
-        data.currentDealer,
-      );
+      const partialLossPayout =
+        this.applyPartialLossPayout(
+          data.correctGuesses,
+          data.bet,
+          data.currentDealer,
+        );
 
       return {
-        wonAmount: almostResult.winAmount,
-        triggeredSkills: almostResult.triggeredSkills,
+        wonAmount: partialLossPayout.winAmount,
+        triggeredSkills:
+          partialLossPayout.triggeredSkills,
         streakResolution: {
           action: StreakAction.RESET,
         },
@@ -100,7 +102,7 @@ export class RoundOutcomeHandler {
     };
   }
 
-  private applyAlmost(
+  private applyPartialLossPayout(
     correctGuesses: number,
     bet: number,
     dealer: DealerData,
@@ -109,25 +111,40 @@ export class RoundOutcomeHandler {
       (skill) => skill.id === DealerSkillId.ALMOST,
     );
 
-    if (!almostSkill) {
-      return {
-        winAmount: 0,
-        triggeredSkills: [],
-      };
+    if (almostSkill) {
+      if (correctGuesses === 1) {
+        return {
+          winAmount: roundMoney(bet * 0.25),
+          triggeredSkills: [DealerSkillId.ALMOST],
+        };
+      }
+
+      if (correctGuesses === 2) {
+        return {
+          winAmount: roundMoney(bet * 0.4),
+          triggeredSkills: [DealerSkillId.ALMOST],
+        };
+      }
     }
 
-    if (correctGuesses === 1) {
-      return {
-        winAmount: roundMoney(bet * 0.25),
-        triggeredSkills: [DealerSkillId.ALMOST],
-      };
-    }
+    const closeEnoughSkill = dealer.skills.find(
+      (skill) => skill.id === DealerSkillId.CLOSE_ENOUGH,
+    );
 
-    if (correctGuesses === 2) {
-      return {
-        winAmount: roundMoney(bet * 0.4),
-        triggeredSkills: [DealerSkillId.ALMOST],
-      };
+    if (closeEnoughSkill) {
+      if (correctGuesses === 1) {
+        return {
+          winAmount: roundMoney(bet * 0.1),
+          triggeredSkills: [DealerSkillId.CLOSE_ENOUGH],
+        };
+      }
+
+      if (correctGuesses === 2) {
+        return {
+          winAmount: roundMoney(bet * 0.3),
+          triggeredSkills: [DealerSkillId.CLOSE_ENOUGH],
+        };
+      }
     }
 
     return {

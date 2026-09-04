@@ -11,7 +11,9 @@ export enum DealerSkillId {
 
   MULTIPLIER_KNOCKOUT = "multiplier_knockout",
 
-  MANDATORY_GAMBLE_FOR_MORE = "mandatory_gamble_for_more"
+  MANDATORY_GAMBLE_FOR_MORE = "mandatory_gamble_for_more",
+
+  CLOSE_ENOUGH = "close_enough"
 
   // Kolejne skille w przyszłości...
 }

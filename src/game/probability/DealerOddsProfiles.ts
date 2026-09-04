@@ -71,3 +71,11 @@ export const ANTHONY_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.12, 0.15, 0.18, 0.22, 0.25, 0.75, 0.78, 0.82, 0.85, 0.88],
 };
+
+// BOBBY
+
+export const BOBBY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.12, 0.14, 0.17, 0.23, 0.3, 0.7, 0.77, 0.83, 0.86, 0.88],
+};

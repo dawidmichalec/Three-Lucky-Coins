@@ -37,6 +37,8 @@ export default {
   alexBoxingGlovesDescription: "Alex says casinos and boxing have one thing in common... only one walks away smiling.",
   anthonySlotMachine: "Anthony's Slot Machine",
   anthonySlotMachineDescription: "Why settle for enough when you can gamble for more?",
+  bobbysGoldChain: "Bobby's Gold Chain",
+  bobbysGoldChainDescription: "Not too flashy. Just flashy enough.",
 
   // PLAYER STATS LABELS
 
@@ -179,6 +181,10 @@ export default {
     "He's been working at various casinos for a long time.\n\nVery experienced and as a result he has a lot of tricks up his sleeve.\n\nHe encourages players to gamble more.",
   anthonySaying:
     "How about you gamble for more?",
+  bobbyDescription:
+    "Bobby doesn't like to overcomplicate things.\n\nIf your bet is close enough, that's usually good enough for him.\n\nJust don't expect him to be too generous about it.",
+  bobbySaying: 
+    "Eh... Close enough.",
 
   // SKILLS
 
@@ -211,6 +217,10 @@ export default {
 
   mandatoryGambleForMoreSkillDescription:
     "Once per five rounds mandatory Gamble For More.",
+
+  closeEnoughSkillName: "Close Enough",
+  closeEnoughSkillDescription: "Returns a fraction of bet for partially correct guesses.",
+
 
   // PERKS
 

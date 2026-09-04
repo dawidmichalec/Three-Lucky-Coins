@@ -22,6 +22,14 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.MULTIPLIER_KNOCKOUT:
           await this.gameMessageOverlay.play("multiplierKnockoutSkillName");
           break;
+
+        case DealerSkillId.MANDATORY_GAMBLE_FOR_MORE:
+          await this.gameMessageOverlay.play("mandatoryGambleForMoreSkillName");
+          break;
+
+        case DealerSkillId.CLOSE_ENOUGH:
+          await this.gameMessageOverlay.play("closeEnoughSkillName");
+          break;
       }
     }
   }
