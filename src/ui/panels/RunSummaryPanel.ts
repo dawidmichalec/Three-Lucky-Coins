@@ -65,7 +65,7 @@ export class RunSummaryPanel extends Container {
   refresh() {
     const stats = this.statsManager.getRunStats();
 
-    this.statsValues.text = `   ${stats.bestWinStreak}
+    this.statsValues.text = `    ${stats.bestWinStreak}
     ${stats.biggestLoseStreak}
     ${stats.highestWin.toFixed(2)}
     ${this.statsManager.getAccuracyCurrentRun().toFixed(2)}%

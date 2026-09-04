@@ -35,6 +35,8 @@ export default {
   timothyTipJarDescription: "Every coin inside has a story. Most of them are about alimony.",
   alexBoxingGloves: "Alex's Boxing Gloves",
   alexBoxingGlovesDescription: "Alex says casinos and boxing have one thing in common... only one walks away smiling.",
+  anthonySlotMachine: "Anthony's Slot Machine",
+  anthonySlotMachineDescription: "Why settle for enough when you can gamble for more?",
 
   // PLAYER STATS LABELS
 
@@ -173,6 +175,10 @@ export default {
     "He trains boxing in his spare time. Your multiplier makes for good practice.",
   alexSaying:
     "Don't try to trick me or you're gonna get a taste of my left jab.",
+  anthonyDescription:
+    "He's been working at various casinos for a long time.\n\nVery experienced and as a result he has a lot of tricks up his sleeve.\n\nHe encourages players to gamble more.",
+  anthonySaying:
+    "How about you gamble for more?",
 
   // SKILLS
 
@@ -199,6 +205,12 @@ export default {
 
   multiplierKnockoutSkillDescription:
     "Alex can knock the player's streak multiplier down to x1, regardless of perks that affect the streak multiplier.\n\nMultiplier Knockout cannot trigger during the first 3 rounds or for 3 rounds after being triggered.\n\nOtherwise, it has a 15% chance to trigger each round.",
+
+  mandatoryGambleForMoreSkillName:
+    "Mandatory Gamble For More",
+
+  mandatoryGambleForMoreSkillDescription:
+    "Once per five rounds mandatory Gamble For More.",
 
   // PERKS
 

@@ -34,6 +34,8 @@ export default {
   timothyTipJarDescription:"Każda moneta w środku ma swoją historię. Większość z nich dotyczy alimentów.",
   alexBoxingGloves: "Rękawice bokserskie Alexa",
   alexBoxingGlovesDescription: "Alex twierdzi, że kasyna i boks mają jedną wspólną cechę... tylko jedna osoba odchodzi z uśmiechem.",
+  anthonySlotMachine: "Automat Anthony'ego",
+  anthonySlotMachineDescription: "Po co zadowalać się tym, co masz, skoro możesz zagrać o więcej?",
 
   // PLAYER STATS LABELS
 
@@ -171,6 +173,10 @@ export default {
     "W wolnym czasie trenuje boks. Twój mnożnik to dobry trening.",
   alexSaying:
     "Nie próbuj mnie oszukać, bo poczujesz smak mojego lewego prostego.",
+  anthonyDescription:
+    "Od dłuższego czasu pracuje w różnych kasynach.\n\nMa duże doświadczenie, dzięki czemu zna wiele sztuczek.\n\nZachęca graczy do częstszego grania.",
+  anthonySaying:
+    "Może zagrasz o więcej?",
 
   // SKILL
 
@@ -197,6 +203,12 @@ export default {
 
   multiplierKnockoutSkillDescription:
     "Alex może obniżyć mnożnik passy gracza do x1, niezależnie od perków, które na niego wpływają.\n\nNokaut mnożnika nie może się aktywować w ciągu pierwszych 3 rund ani przez 3 rundy po aktywacji.\n\nW przeciwnym razie szansa na jego wywołanie wynosi 15% w każdej rundzie.",
+
+  mandatoryGambleForMoreSkillName:
+    "Obowiązkowy hazard",
+
+  mandatoryGambleForMoreSkillDescription:
+    "Raz na pięć rund musisz obowiązkowo zagrać o więcej.",
 
   // PERKS
 

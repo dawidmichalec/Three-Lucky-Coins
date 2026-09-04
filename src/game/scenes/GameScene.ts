@@ -76,6 +76,7 @@ export class GameScene extends BaseScene {
   private roundBetResolver = new RoundBetResolver(this.perkEffectApplier,);
   private roundPayoutPresentationController!: RoundPayoutPresentationController;
   private perkGameplayController: PerkGameplayController;
+  private mandatoryGambleForMoreActive = false;
   
 
   constructor(
@@ -670,12 +671,30 @@ export class GameScene extends BaseScene {
         luckyHandResult,
       );
 
-      const gambleTriggered = this.gambleForMoreManager.shouldTrigger();
+      const mandatoryGambleForMoreTriggered =
+        this.dealerFightManager.shouldTriggerMandatoryGambleForMore();
+
+      const gambleTriggered =
+        mandatoryGambleForMoreTriggered ||
+        this.gambleForMoreManager.shouldTrigger();
 
       if (gambleTriggered) {
-        this.pendingStreakResolution = outcome.streakResolution;
+        this.pendingStreakResolution =
+          outcome.streakResolution;
 
-        this.startGambleForMore(finalWinAmount, bet);
+        if (mandatoryGambleForMoreTriggered) {
+          this.dealerFightManager.consumeMandatoryGambleForMore();
+
+          await this.dealerSkillFeedbackHandler.handle([
+            DealerSkillId.MANDATORY_GAMBLE_FOR_MORE,
+          ]);
+        }
+
+        this.startGambleForMore(
+          finalWinAmount,
+          bet,
+          mandatoryGambleForMoreTriggered,
+        );
 
         return;
       }
@@ -754,11 +773,22 @@ export class GameScene extends BaseScene {
     await this.finishRound(false);
   }
 
-  private startGambleForMore(winAmount: number, bet: number) {
-    const offer = this.gambleForMoreController.start(winAmount, bet);
+  private startGambleForMore(
+    winAmount: number,
+    bet: number,
+    mandatory = false,
+  ) {
+    const offer =
+      this.gambleForMoreController.start(
+        winAmount,
+        bet,
+      );
+
+    this.mandatoryGambleForMoreActive = mandatory;
 
     this.roundState = "result";
 
+    this.view.gambleForMoreOverlay.setMandatory(mandatory);
     this.view.gambleForMoreOverlay.showOffer(offer);
   }
 
@@ -842,7 +872,25 @@ export class GameScene extends BaseScene {
 
     await this.wait(1200);
 
+    if (this.mandatoryGambleForMoreActive) {
+      this.mandatoryGambleForMoreActive = false;
+
+      this.view.gambleForMoreOverlay.setMandatory(false);
+    }
+
     if (result.won) {
+      this.dealerFightManager.recordGambleForMoreWin();
+
+      if (
+        this.currentDealer.objectiveType ===
+        ObjectiveType.WIN_GAMBLE_FOR_MORE
+      ) {
+        this.view.gameUI.dealerCard.updateObjectiveProgress(
+          this.dealerFightManager.getFightGambleForMoreWins(),
+          this.dealerFightManager.getFightTargetGambleForMoreWins(),
+        );
+      }
+
       const nextOffer =
         this.gambleForMoreController.continueAfterWin();
 
@@ -888,6 +936,9 @@ export class GameScene extends BaseScene {
   }
 
   private async finishRound(win: boolean) {
+
+    this.dealerFightManager.recordMandatoryGambleForMoreRound();
+
     if (
       this.currentDealer.objectiveType ===
       ObjectiveType.WIN_BETS

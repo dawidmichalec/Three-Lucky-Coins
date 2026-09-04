@@ -6,6 +6,7 @@ export interface DealerFightState {
   targetBalance?: number;
   targetWins?: number;
   targetMultiplier?: number;
+  targetGambleForMoreWins?: number;
 }
 
 export class DealerFightManager {
@@ -20,6 +21,14 @@ export class DealerFightManager {
   private mandatoryTipWinCounter = 0;
 
   private multiplierKnockoutBlockedRounds = 0;
+
+  private mandatoryGambleForMoreRoundCounter = 0;
+  private mandatoryGambleForMorePending = false;
+
+  private fightGambleForMoreWins = 0;
+  private fightTargetGambleForMoreWins = 0;
+
+  private skipNextMandatoryGambleForMoreRoundRecord = false;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -47,6 +56,14 @@ export class DealerFightManager {
 
     this.multiplierKnockoutBlockedRounds = 3;
 
+    this.mandatoryGambleForMoreRoundCounter = 0;
+    this.mandatoryGambleForMorePending = false;
+
+    this.fightGambleForMoreWins = 0;
+    this.fightTargetGambleForMoreWins = 0;
+
+    this.skipNextMandatoryGambleForMoreRoundRecord = false;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -70,11 +87,110 @@ export class DealerFightManager {
           targetMultiplier: dealer.objectiveValue,
         };
 
+      case ObjectiveType.WIN_GAMBLE_FOR_MORE:
+        this.fightTargetGambleForMoreWins =
+          dealer.objectiveValue;
+
+        return {};
+
       default:
         throw new Error(
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordGambleForMoreWin(): void {
+    const dealer = this.getCurrentDealer();
+
+    if (
+      dealer.objectiveType !==
+      ObjectiveType.WIN_GAMBLE_FOR_MORE
+    ) {
+      return;
+    }
+
+    this.fightGambleForMoreWins++;
+  }
+
+  recordMandatoryGambleForMoreRound(): void {
+    const dealer = this.getCurrentDealer();
+
+    const hasMandatoryGambleForMore =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MANDATORY_GAMBLE_FOR_MORE,
+      );
+
+    console.log(
+      "MANDATORY GFM ROUND:",
+      {
+        dealer: dealer.name,
+        hasSkill: hasMandatoryGambleForMore,
+        counter: this.mandatoryGambleForMoreRoundCounter,
+        pending: this.mandatoryGambleForMorePending,
+      },
+    );
+
+    if (!hasMandatoryGambleForMore) {
+      return;
+    }
+
+    if (this.skipNextMandatoryGambleForMoreRoundRecord) {
+      this.skipNextMandatoryGambleForMoreRoundRecord = false;
+
+      return;
+    }
+
+    if (this.mandatoryGambleForMorePending) {
+      return;
+    }
+
+    this.mandatoryGambleForMoreRoundCounter++;
+
+    if (
+      this.mandatoryGambleForMoreRoundCounter >= 5
+    ) {
+      this.mandatoryGambleForMorePending = true;
+    }
+  }
+
+  consumeMandatoryGambleForMore(): void {
+    this.mandatoryGambleForMorePending = false;
+    this.mandatoryGambleForMoreRoundCounter = 0;
+    this.skipNextMandatoryGambleForMoreRoundRecord = true;
+  }
+
+  shouldTriggerMandatoryGambleForMore(): boolean {
+    console.log(
+      "CHECK MANDATORY GFM:",
+      {
+        counter: this.mandatoryGambleForMoreRoundCounter,
+        pending: this.mandatoryGambleForMorePending,
+      },
+    );
+
+    const dealer = this.getCurrentDealer();
+
+    const hasMandatoryGambleForMore =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MANDATORY_GAMBLE_FOR_MORE,
+      );
+
+    if (!hasMandatoryGambleForMore) {
+      return false;
+    }
+
+    if (this.mandatoryGambleForMorePending) {
+      return true;
+    }
+
+    return (
+      this.mandatoryGambleForMoreRoundCounter === 4
+    );
   }
 
   recordWonBet(): void {
@@ -172,6 +288,12 @@ export class DealerFightManager {
           dealer.objectiveValue
         );
 
+      case ObjectiveType.WIN_GAMBLE_FOR_MORE:
+        return (
+          this.fightGambleForMoreWins >=
+          dealer.objectiveValue
+        );
+
       default:
         console.warn(
           "Unsupported objective type:",
@@ -209,5 +331,13 @@ export class DealerFightManager {
 
   getFightTargetWins(): number {
     return this.fightTargetWins;
+  }
+
+  getFightGambleForMoreWins(): number {
+    return this.fightGambleForMoreWins;
+  }
+
+  getFightTargetGambleForMoreWins(): number {
+    return this.fightTargetGambleForMoreWins;
   }
 }

@@ -16,6 +16,7 @@ export class GambleForMoreOverlay extends Container {
   private leftButton: RoundedButton;
   private rightButton: RoundedButton;
   private gameStarted = false;
+  private mandatory = false;
 
   constructor(
     private onYes: () => void,
@@ -167,6 +168,14 @@ export class GambleForMoreOverlay extends Container {
     this.onColorSelected(CardColor.RED);
   }
 
+  setMandatory(mandatory: boolean): void {
+    this.mandatory = mandatory;
+
+    if (!this.gameStarted) {
+      this.rightButton.visible = !mandatory;
+    }
+  }
+
   async startGame(): Promise<void> {
 
     this.redBlackCardView.stopOfferAnimation();
@@ -196,7 +205,7 @@ export class GambleForMoreOverlay extends Container {
     this.rightButton.setText("noButtonText");
 
     this.leftButton.visible = true;
-    this.rightButton.visible = true;
+    this.rightButton.visible = !this.mandatory;
 
     this.currentWinValue.text = offer.currentWin.toFixed(2);
     this.potentialWinValue.text = offer.potentialWin.toFixed(2);
