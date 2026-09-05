@@ -527,6 +527,7 @@ export class GameScene extends BaseScene {
 
   private async startRound() {
     const bet = this.controller.getBet();
+    const selected = this.controller.getCurrentCombo();
 
     const highestAffordableBet = this.controller.getHighestAffordableBet(
       this.player.balance,
@@ -572,6 +573,23 @@ export class GameScene extends BaseScene {
       );
     }
 
+    const noRepeatsTriggered =
+      this.dealerFightManager.recordCombinationForNoRepeats(
+        selected,
+      );
+
+    if (noRepeatsTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.NO_REPEATS,
+      ]);
+
+      this.streakMultiplierManager.reset();
+
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
+    }
+
     if (coinSenseActive) {
       this.perkEffectApplier.consumeCoinSense();
     }
@@ -595,8 +613,6 @@ export class GameScene extends BaseScene {
     const goldenResult = this.goldenCoinManager.applyGoldenCoins(baseResult);
 
     const resultSides = goldenResult.map((outcome) => outcome.side);
-
-    const selected = this.controller.getCurrentCombo();
 
     await this.coinRow.spin(goldenResult, selected);
 

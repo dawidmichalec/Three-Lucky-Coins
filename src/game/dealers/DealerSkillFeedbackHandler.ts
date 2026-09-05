@@ -34,6 +34,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.BET_VARIETY:
           await this.gameMessageOverlay.play("betVarietySkillName");
           break;
+
+        case DealerSkillId.NO_REPEATS:
+          await this.gameMessageOverlay.play("noRepeatsSkillName");
+          break;
       }
     }
   }

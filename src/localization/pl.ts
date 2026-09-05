@@ -42,6 +42,8 @@ export default {
   lizEyelinerDescription: "Zmień zakład, nie wygląd.",
   sarahPerfume: "Perfumy Sarah'y",
   sarahPerfumeDescription: "Lekki, elegancki zapach, który utrzymuje się wystarczająco długo, by go zapamiętać.",
+  mikeGummyBears: "Żelki Mike's",
+  mikeGummyBearsDescription: "Zawsze trzyma paczkę za stołem. Tylko nie proś, żeby się podzielił.",
 
   // PLAYER STATS LABELS
 
@@ -195,6 +197,10 @@ export default {
     "Sarah jest słodka, czarująca i zaskakująco łatwo się z nią dogadać.\n\nTylko nie myl jej przyjaznego uśmiechu z brakiem uwagi. Zauważa, kiedy gracze popadają w nawyki.\n\nA Sarah uważa powtarzalność za okropnie nudną.",
   sarahSaying: 
     "Zaskocz mnie.",
+  mikeDescription: 
+    "Mike to wyluzowany facet, który nie wymaga wiele od graczy przy swoim stole.\n\nPo prostu zadbaj o to, by gra była interesująca. Ma dobre oko do schematów i jeszcze lepszą pamięć do tych, które już widział.\n\nPowtarzalność działa mu na nerwy.",
+  mikeSaying: 
+    "Już to widziałem.",
 
   // SKILL
 
@@ -230,10 +236,15 @@ export default {
 
   closeEnoughSkillName: "Było blisko",
   closeEnoughSkillDescription: "Zwraca część zakładu w przypadku częściowo poprawnych odpowiedzi.",
+
   noSameBetsSkillName: "Bez powtarzania stawek",
   noSameBetsSkillDescription: "W każdej rundzie musisz wybrać inną stawkę.\n\nKażda wykorzystana stawka staje się niedostępna, dopóki nie wykorzystasz wszystkich pozostałych.\n\nWtedy wszystkie stawki stają się ponownie dostępne.",
+  
   betVarietySkillName: "Dla odmiany",
   betVarietySkillDescription: "Jeżeli postawisz tą samą stawkę pod rząd, mnożnik passy spada do podstawowej wartości.",
+
+  noRepeatsSkillName: "Żadnych powtórzeń",
+  noRepeatsSkillDescription: "Jeżeli użyjesz tej samej kombinacji pod rząd, mnożnik passy spada do podstawowej wartości.", 
 
   // PERKS
 

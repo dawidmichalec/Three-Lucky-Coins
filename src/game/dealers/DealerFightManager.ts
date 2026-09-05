@@ -31,6 +31,7 @@ export class DealerFightManager {
   private skipNextMandatoryGambleForMoreRoundRecord = false;
 
   private previousBet: number | null = null;
+  private previousCombination: string | null = null;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -67,6 +68,7 @@ export class DealerFightManager {
     this.skipNextMandatoryGambleForMoreRoundRecord = false;
 
     this.previousBet = null;
+    this.previousCombination = null;
 
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
@@ -102,6 +104,30 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordCombinationForNoRepeats(
+    combination: readonly string[],
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasNoRepeats = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.NO_REPEATS,
+    );
+
+    if (!hasNoRepeats) {
+      return false;
+    }
+
+    const combinationKey = combination.join("-");
+
+    const repeatedCombination =
+      this.previousCombination === combinationKey;
+
+    this.previousCombination = combinationKey;
+
+    return repeatedCombination;
   }
 
   recordBetForVariety(bet: number): boolean {

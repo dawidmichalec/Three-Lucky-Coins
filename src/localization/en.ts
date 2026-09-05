@@ -43,6 +43,8 @@ export default {
   lizEyelinerDescription: "Change the bet, not the look.",
   sarahPerfume: "Sarah's Perfume",
   sarahPerfumeDescription: "A light, elegant fragrance that lingers just long enough to be remembered.",
+  mikeGummyBears: "Mike's Gummy Bears",
+  mikeGummyBearsDescription: "He always keeps a pack behind the table. Just don't ask him to share.",
 
   // PLAYER STATS LABELS
 
@@ -197,6 +199,10 @@ export default {
     "Sarah is sweet, charming, and surprisingly easy to get along with.\n\nJust don't mistake her friendly smile for a lack of attention. She notices when players fall into habits.\n\nAnd Sarah finds repetition terribly boring.",
   sarahSaying: 
     "Surprise me.",
+  mikeDescription: 
+    "Mike is an easygoing guy who doesn't ask much from the players at his table.\n\nJust keep the game interesting. He has a good eye for patterns and an even better memory for the ones he's already seen.\n\nRepetition tends to get on his nerves.",
+  mikeSaying: 
+    "I've seen that one already.",
 
   // SKILLS
 
@@ -210,25 +216,19 @@ export default {
 
   slowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
 
-  slowerMultiplierGrowthSkillDescription:
-    "Every win increases the streak multiplier by 0.5.",
+  slowerMultiplierGrowthSkillDescription: "Every win increases the streak multiplier by 0.5.",
 
   mandatoryTipSkillName: "Mandatory Tip",
 
-  mandatoryTipSkillDescription:
-    "Every third winning round, Timothy takes 50% of that round's winnings.",
+  mandatoryTipSkillDescription: "Every third winning round, Timothy takes 50% of that round's winnings.",
 
-  multiplierKnockoutSkillName:
-    "Multiplier Knockout",
+  multiplierKnockoutSkillName: "Multiplier Knockout",
 
   multiplierKnockoutSkillDescription:
     "Alex can knock the player's streak multiplier down to x1, regardless of perks that affect the streak multiplier.\n\nMultiplier Knockout cannot trigger during the first 3 rounds or for 3 rounds after being triggered.\n\nOtherwise, it has a 15% chance to trigger each round.",
 
-  mandatoryGambleForMoreSkillName:
-    "Mandatory Gamble For More",
-
-  mandatoryGambleForMoreSkillDescription:
-    "Once per five rounds mandatory Gamble For More.",
+  mandatoryGambleForMoreSkillName: "Mandatory Gamble For More",
+  mandatoryGambleForMoreSkillDescription:"Once per five rounds mandatory Gamble For More.",
 
   closeEnoughSkillName: "Close Enough",
   closeEnoughSkillDescription: "Returns a fraction of bet for partially correct guesses.",
@@ -238,6 +238,9 @@ export default {
 
   betVarietySkillName: "Bet Variety",
   betVarietySkillDescription: "If you use the same bet stake in a row the streak multiplier goes to the basic value.",
+
+  noRepeatsSkillName: "No Repeats",
+  noRepeatsSkillDescription: "If you use the same combination in a row the streak multiplier goes to the basic value.",
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
