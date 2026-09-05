@@ -41,6 +41,8 @@ export default {
   bobbysGoldChainDescription: "Not too flashy. Just flashy enough.",
   lizEyeliner: "Liz's Eyeliner",
   lizEyelinerDescription: "Change the bet, not the look.",
+  sarahPerfume: "Sarah's Perfume",
+  sarahPerfumeDescription: "A light, elegant fragrance that lingers just long enough to be remembered.",
 
   // PLAYER STATS LABELS
 
@@ -191,6 +193,10 @@ export default {
     "Liz gets bored easily.\n\nShe hates repetition and expects players to keep things interesting.\n\nIf you're going to play at her table, don't get too comfortable.",
   lizSaying: 
     "Same bet again? How boring.",
+  sarahDescription: 
+    "Sarah is sweet, charming, and surprisingly easy to get along with.\n\nJust don't mistake her friendly smile for a lack of attention. She notices when players fall into habits.\n\nAnd Sarah finds repetition terribly boring.",
+  sarahSaying: 
+    "Surprise me.",
 
   // SKILLS
 
@@ -230,7 +236,8 @@ export default {
   noSameBetsSkillName: "No Same Bets",
   noSameBetsSkillDescription: "Every round, you must choose a different bet value.\n\nEach used bet value becomes unavailable until all bet values have been used.\n\nThen, they all become available again.",
 
-
+  betVarietySkillName: "Bet Variety",
+  betVarietySkillDescription: "If you use the same bet stake in a row the streak multiplier goes to the basic value.",
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

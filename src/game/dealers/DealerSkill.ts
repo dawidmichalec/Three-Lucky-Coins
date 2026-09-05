@@ -15,7 +15,9 @@ export enum DealerSkillId {
 
   CLOSE_ENOUGH = "close_enough",
 
-  NO_SAME_BETS = "no_same_bets"
+  NO_SAME_BETS = "no_same_bets",
+
+  BET_VARIETY = "bet_variety"
 
   // Kolejne skille w przyszłości...
 }

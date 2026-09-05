@@ -30,6 +30,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.CLOSE_ENOUGH:
           await this.gameMessageOverlay.play("closeEnoughSkillName");
           break;
+        
+        case DealerSkillId.BET_VARIETY:
+          await this.gameMessageOverlay.play("betVarietySkillName");
+          break;
       }
     }
   }

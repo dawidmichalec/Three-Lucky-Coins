@@ -30,6 +30,8 @@ export class DealerFightManager {
 
   private skipNextMandatoryGambleForMoreRoundRecord = false;
 
+  private previousBet: number | null = null;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -63,6 +65,8 @@ export class DealerFightManager {
     this.fightTargetGambleForMoreWins = 0;
 
     this.skipNextMandatoryGambleForMoreRoundRecord = false;
+
+    this.previousBet = null;
 
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
@@ -98,6 +102,26 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordBetForVariety(bet: number): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasBetVariety = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.BET_VARIETY,
+    );
+
+    if (!hasBetVariety) {
+      return false;
+    }
+
+    const repeatedBet =
+      this.previousBet === bet;
+
+    this.previousBet = bet;
+
+    return repeatedBet;
   }
 
   recordGambleForMoreWin(): void {

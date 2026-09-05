@@ -29,7 +29,7 @@ export const MELANIE_DATA: DealerData = {
 
   objectiveType: ObjectiveType.WIN_BETS,
 
-  objectiveValue: 1,
+  objectiveValue: 10,
 
   goldenCoinSettings: {
     baseChance: 0.0075,

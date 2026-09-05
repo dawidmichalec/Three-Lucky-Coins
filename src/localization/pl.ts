@@ -40,6 +40,8 @@ export default {
   bobbysGoldChainDescription: "Nie za dużo błysku. W sam raz",
   lizEyeliner: "Eyeliner Liz",
   lizEyelinerDescription: "Zmień zakład, nie wygląd.",
+  sarahPerfume: "Perfumy Sarah'y",
+  sarahPerfumeDescription: "Lekki, elegancki zapach, który utrzymuje się wystarczająco długo, by go zapamiętać.",
 
   // PLAYER STATS LABELS
 
@@ -189,6 +191,10 @@ export default {
     "Liz łatwo się nudzi.\n\nNie znosi powtarzalności i oczekuje od graczy, że będą urozmaicać grę.\n\nJeżeli zamierzasz grać przy jej stole, lepiej nie przyzwyczajaj się do jednego sposobu gry.",
   lizSaying: 
     "Znowu ten sam zakład? Nuda.",
+  sarahDescription: 
+    "Sarah jest słodka, czarująca i zaskakująco łatwo się z nią dogadać.\n\nTylko nie myl jej przyjaznego uśmiechu z brakiem uwagi. Zauważa, kiedy gracze popadają w nawyki.\n\nA Sarah uważa powtarzalność za okropnie nudną.",
+  sarahSaying: 
+    "Zaskocz mnie.",
 
   // SKILL
 
@@ -226,6 +232,8 @@ export default {
   closeEnoughSkillDescription: "Zwraca część zakładu w przypadku częściowo poprawnych odpowiedzi.",
   noSameBetsSkillName: "Bez powtarzania stawek",
   noSameBetsSkillDescription: "W każdej rundzie musisz wybrać inną stawkę.\n\nKażda wykorzystana stawka staje się niedostępna, dopóki nie wykorzystasz wszystkich pozostałych.\n\nWtedy wszystkie stawki stają się ponownie dostępne.",
+  betVarietySkillName: "Dla odmiany",
+  betVarietySkillDescription: "Jeżeli postawisz tą samą stawkę pod rząd, mnożnik passy spada do podstawowej wartości.",
 
   // PERKS
 

@@ -528,8 +528,6 @@ export class GameScene extends BaseScene {
   private async startRound() {
     const bet = this.controller.getBet();
 
-    this.betRestrictionManager.recordBetUsed(bet);
-
     const highestAffordableBet = this.controller.getHighestAffordableBet(
       this.player.balance,
     );
@@ -555,11 +553,28 @@ export class GameScene extends BaseScene {
 
     this.roundState = "spinning";
 
+    this.lockControls();
+
+    this.betRestrictionManager.recordBetUsed(bet);
+
+    const betVarietyTriggered =
+    this.dealerFightManager.recordBetForVariety(bet);
+
+    if (betVarietyTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.BET_VARIETY,
+      ]);
+
+      this.streakMultiplierManager.reset();
+
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
+    }
+
     if (coinSenseActive) {
       this.perkEffectApplier.consumeCoinSense();
     }
-
-    this.lockControls();
 
     this.view.gameUI.updateWon(0);
 
