@@ -79,3 +79,11 @@ export const BOBBY_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.12, 0.14, 0.17, 0.23, 0.3, 0.7, 0.77, 0.83, 0.86, 0.88],
 };
+
+// LIZ
+
+export const LIZ_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.13, 0.15, 0.17, 0.21, 0.23, 0.25, 0.3, 0.7, 0.75, 0.77, 0.79, 0.83, 0.85, 0.87],
+};

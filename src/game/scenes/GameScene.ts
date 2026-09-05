@@ -42,6 +42,7 @@ import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerRole } from "../dealers/DealerRole";
 import { DealerSkillId } from "../dealers/DealerSkill";
 import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
+import { BetRestrictionManager } from "../BetRestrictionManager";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -77,6 +78,7 @@ export class GameScene extends BaseScene {
   private roundPayoutPresentationController!: RoundPayoutPresentationController;
   private perkGameplayController: PerkGameplayController;
   private mandatoryGambleForMoreActive = false;
+  private betRestrictionManager = new BetRestrictionManager();
   
 
   constructor(
@@ -186,15 +188,17 @@ export class GameScene extends BaseScene {
     // CONTROLLER
     this.controller = new GameController({
       onBetChange: (bet, source) => {
-        this.view.gameUI.updateBet(bet);
+          this.view.gameUI.updateBet(bet);
 
-        this.perkGameplayController.refreshBetState();
+          this.perkGameplayController.refreshBetState();
 
-        if (source === BetChangeSource.PLAYER) {
-          this.perkGameplayController.onBetChanged(bet);
-        }
+          if (source === BetChangeSource.PLAYER) {
+            this.perkGameplayController.onBetChanged(bet);
+          }
+        },
       },
-    });
+      this.betRestrictionManager,
+    );
 
 
     // PERK GAMEPLAY CONTROLLER
@@ -432,6 +436,9 @@ export class GameScene extends BaseScene {
   }
 
   private async loadDealer(dealer: DealerData): Promise<void> {
+
+    this.betRestrictionManager.setDealer(dealer);
+
     this.dealerCollectionManager.discoverDealer(dealer.id);
 
     this.perkEffectApplier.resetFightEffects();
@@ -520,6 +527,8 @@ export class GameScene extends BaseScene {
 
   private async startRound() {
     const bet = this.controller.getBet();
+
+    this.betRestrictionManager.recordBetUsed(bet);
 
     const highestAffordableBet = this.controller.getHighestAffordableBet(
       this.player.balance,
@@ -957,16 +966,20 @@ export class GameScene extends BaseScene {
       this.controller.getBet(),
     );
 
-    if (currentBetCost > this.player.balance) {
-      this.controller.adjustBetToBalance(this.player.balance);
-    }
-
     if (this.isCurrentDealerDefeated()) {
       this.roundState = "result";
 
       await this.handleDealerDefeated();
 
       return;
+    }
+
+    this.controller.adjustBetToRestrictions();
+
+    if (currentBetCost > this.player.balance) {
+      this.controller.adjustBetToBalance(
+        (bet) => this.isBetAffordable(bet),
+      );
     }
 
     const multiplierKnockoutTriggered =
@@ -989,12 +1002,18 @@ export class GameScene extends BaseScene {
     }
 
     if (!this.canPlay()) {
-      await this.perkGameplayController.tryRecoverFromInsufficientBalance(
-        this.controller.getMinBet(),
-      );
+      const minAvailableBet =
+        this.controller.getMinAvailableBet();
+
+      if (minAvailableBet !== null) {
+        await this.perkGameplayController
+          .tryRecoverFromInsufficientBalance(
+            minAvailableBet,
+          );
+      }
 
       this.controller.adjustBetToBalance(
-        this.player.balance,
+        (bet) => this.isBetAffordable(bet),
       );
     }
 
@@ -1082,11 +1101,22 @@ export class GameScene extends BaseScene {
   // IS PLAYER ABLE TO PLAY?
 
   canPlay(): boolean {
-    const minBet = this.controller.getMinBet();
+    const availableBets =
+      this.controller.getAvailableBets();
 
-    const minBetCost = this.perkEffectApplier.resolveBetCost(minBet);
+    return availableBets.some((bet) => {
+      const betCost =
+        this.perkEffectApplier.resolveBetCost(bet);
 
-    return this.player.balance >= minBetCost;
+      return betCost <= this.player.balance;
+    });
+  }
+
+  private isBetAffordable(bet: number): boolean {
+    const betCost =
+      this.perkEffectApplier.resolveBetCost(bet);
+
+    return betCost <= this.player.balance;
   }
 
   // TRIGGER GAME OVER

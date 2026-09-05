@@ -38,6 +38,8 @@ export default {
   anthonySlotMachineDescription: "Po co zadowalać się tym, co masz, skoro możesz zagrać o więcej?",
   bobbysGoldChain: "Złoty łańcuszek Bobby'ego.",
   bobbysGoldChainDescription: "Nie za dużo błysku. W sam raz",
+  lizEyeliner: "Eyeliner Liz",
+  lizEyelinerDescription: "Zmień zakład, nie wygląd.",
 
   // PLAYER STATS LABELS
 
@@ -183,6 +185,10 @@ export default {
     "Bobby nie lubi komplikować rzeczy.\n\nJeśli twój zakład jest wystarczająco bliski, to zazwyczaj mu to wystarczy.\n\nTylko nie oczekuj, że będzie w tej kwestii specjalnie hojny.",
   bobbySaying: 
     "Cóż... Było blisko.",
+  lizDescription:
+    "Liz łatwo się nudzi.\n\nNie znosi powtarzalności i oczekuje od graczy, że będą urozmaicać grę.\n\nJeżeli zamierzasz grać przy jej stole, lepiej nie przyzwyczajaj się do jednego sposobu gry.",
+  lizSaying: 
+    "Znowu ten sam zakład? Nuda.",
 
   // SKILL
 
@@ -218,6 +224,8 @@ export default {
 
   closeEnoughSkillName: "Było blisko",
   closeEnoughSkillDescription: "Zwraca część zakładu w przypadku częściowo poprawnych odpowiedzi.",
+  noSameBetsSkillName: "Bez powtarzania stawek",
+  noSameBetsSkillDescription: "W każdej rundzie musisz wybrać inną stawkę.\n\nKażda wykorzystana stawka staje się niedostępna, dopóki nie wykorzystasz wszystkich pozostałych.\n\nWtedy wszystkie stawki stają się ponownie dostępne.",
 
   // PERKS
 

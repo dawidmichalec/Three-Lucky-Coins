@@ -39,6 +39,8 @@ export default {
   anthonySlotMachineDescription: "Why settle for enough when you can gamble for more?",
   bobbysGoldChain: "Bobby's Gold Chain",
   bobbysGoldChainDescription: "Not too flashy. Just flashy enough.",
+  lizEyeliner: "Liz's Eyeliner",
+  lizEyelinerDescription: "Change the bet, not the look.",
 
   // PLAYER STATS LABELS
 
@@ -185,6 +187,10 @@ export default {
     "Bobby doesn't like to overcomplicate things.\n\nIf your bet is close enough, that's usually good enough for him.\n\nJust don't expect him to be too generous about it.",
   bobbySaying: 
     "Eh... Close enough.",
+  lizDescription:
+    "Liz gets bored easily.\n\nShe hates repetition and expects players to keep things interesting.\n\nIf you're going to play at her table, don't get too comfortable.",
+  lizSaying: 
+    "Same bet again? How boring.",
 
   // SKILLS
 
@@ -220,6 +226,9 @@ export default {
 
   closeEnoughSkillName: "Close Enough",
   closeEnoughSkillDescription: "Returns a fraction of bet for partially correct guesses.",
+
+  noSameBetsSkillName: "No Same Bets",
+  noSameBetsSkillDescription: "Every round, you must choose a different bet value.\n\nEach used bet value becomes unavailable until all bet values have been used.\n\nThen, they all become available again.",
 
 
   // PERKS
