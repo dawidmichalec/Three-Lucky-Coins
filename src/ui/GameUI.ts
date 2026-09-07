@@ -1,4 +1,4 @@
-import { Container, Text, Sprite } from "pixi.js";
+import { Container, Text, Sprite, Assets } from "pixi.js";
 import { LocalizedText } from "../localization/LocalizedText";
 import { ProbabilityDisplay } from "./components/ProbabilityDisplay";
 import { DealerCard } from "./components/dealerCard/DealerCard";
@@ -32,6 +32,9 @@ export class GameUI extends Container {
   private activePerkTooltip?: PerkTooltip;
 
   private freeBetLabel: LocalizedText;
+
+  public clockIcon!: Sprite;
+  public timeLabel!: Text;
 
   constructor(private currentDealer: DealerData) {
     super();
@@ -216,6 +219,22 @@ export class GameUI extends Container {
 
     this.freeBetLabel.visible = false;
 
+    // TIME LABEL
+
+    this.timeLabel = new Text({
+      text: "10",
+      style: {
+        font: "Open Sans",
+        fontSize: 72,
+        fontWeight: "bold",
+        fill: 0xff3131,
+      }
+    });
+
+    this.timeLabel.position.set(126, 170);
+
+    this.timeLabel.visible = false;
+
     // ADD
 
     this.addChild(
@@ -230,15 +249,30 @@ export class GameUI extends Container {
       this.dealerSkillsPanel,
       this.perkContainer,
       this.freeBetLabel,
+      this.timeLabel
     );
   }
 
   async init(): Promise<void> {
     await this.createDealerCard();
+    await this.createClockIcon();
   }
 
   async removePerk(perkId: string): Promise<void> {
     await this.perkContainer.removePerk(perkId);
+  }
+
+  private async createClockIcon() {
+    const texture = await Assets.load("/assets/main/icons/blake_skill_clock_icon.png");
+    this.clockIcon = new Sprite(texture);
+
+    this.clockIcon.width = 85;
+    this.clockIcon.height = 85;
+    this.clockIcon.position.set(126.5, 70);
+
+    this.clockIcon.visible = false;
+
+    this.addChild(this.clockIcon);
   }
 
   async animatePenaltyIntoWon(
