@@ -44,6 +44,8 @@ export default {
   sarahPerfumeDescription: "Lekki, elegancki zapach, który utrzymuje się wystarczająco długo, by go zapamiętać.",
   mikeGummyBears: "Żelki Mike's",
   mikeGummyBearsDescription: "Zawsze trzyma paczkę za stołem. Tylko nie proś, żeby się podzielił.",
+  kirkWristwatch: "Zegarek Kirka",
+  kirkWristwatchDescription: "Zawsze pięć minut za szybko. Kirk woli czekać na innych, niż się spóźniać.",
 
   // PLAYER STATS LABELS
 
@@ -201,6 +203,8 @@ export default {
     "Mike to wyluzowany facet, który nie wymaga wiele od graczy przy swoim stole.\n\nPo prostu zadbaj o to, by gra była interesująca. Ma dobre oko do schematów i jeszcze lepszą pamięć do tych, które już widział.\n\nPowtarzalność działa mu na nerwy.",
   mikeSaying: 
     "Już to widziałem.",
+  kirkSaying: "Takie są zasady.",
+  kirkDescription: "Kirk jest czarujący, bystry i niemal nie sposób go złapać w złym humorze.\n\nNawet gdy gracz popełni błąd, jego przyjazny uśmiech rzadko schodzi z twarzy.\n\nOczywiście nie oznacza to, że nie każe im za to zapłacić.",
 
   // SKILL
 
@@ -245,6 +249,9 @@ export default {
 
   noRepeatsSkillName: "Żadnych powtórzeń",
   noRepeatsSkillDescription: "Jeżeli użyjesz tej samej kombinacji pod rząd, mnożnik passy spada do podstawowej wartości.", 
+
+  noDuplicatesSkillName: "Bez duplikatów",
+  noDuplicatesSkillDescription: "Użycie tej samej kombinacji dwa razy z rzędu unieważnia zakład. Stawka jest nadal pobierana.",
 
   // PERKS
 

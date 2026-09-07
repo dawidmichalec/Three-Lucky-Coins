@@ -38,6 +38,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.NO_REPEATS:
           await this.gameMessageOverlay.play("noRepeatsSkillName");
           break;
+
+        case DealerSkillId.NO_DUPLICATES:
+          await this.gameMessageOverlay.play("noDuplicatesSkillName");
+          break;
       }
     }
   }

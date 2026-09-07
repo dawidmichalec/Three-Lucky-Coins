@@ -33,6 +33,8 @@ export class DealerFightManager {
   private previousBet: number | null = null;
   private previousCombination: string | null = null;
 
+  private previousKirkCombination: string | null = null;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -70,6 +72,8 @@ export class DealerFightManager {
     this.previousBet = null;
     this.previousCombination = null;
 
+    this.previousKirkCombination = null;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -104,6 +108,32 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordCombinationForNoDuplicates(
+    combination: readonly string[],
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasNoDuplicates = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.NO_DUPLICATES,
+    );
+
+    if (!hasNoDuplicates) {
+      return false;
+    }
+
+    const combinationKey =
+      combination.join("-");
+
+    const repeated =
+      this.previousKirkCombination === combinationKey;
+
+    this.previousKirkCombination =
+      combinationKey;
+
+    return repeated;
   }
 
   recordCombinationForNoRepeats(

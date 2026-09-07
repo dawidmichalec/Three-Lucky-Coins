@@ -19,7 +19,9 @@ export enum DealerSkillId {
 
   BET_VARIETY = "bet_variety",
 
-  NO_REPEATS = "no_repeats"
+  NO_REPEATS = "no_repeats",
+
+  NO_DUPLICATES = "no_duplicates"
 
   // Kolejne skille w przyszłości...
 }

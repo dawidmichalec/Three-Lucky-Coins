@@ -45,6 +45,8 @@ export default {
   sarahPerfumeDescription: "A light, elegant fragrance that lingers just long enough to be remembered.",
   mikeGummyBears: "Mike's Gummy Bears",
   mikeGummyBearsDescription: "He always keeps a pack behind the table. Just don't ask him to share.",
+  kirkWristwatch: "Kirk's Wristwatch",
+  kirkWristwatchDescription: "Always five minutes fast. Kirk prefers waiting for others to being late himself.",
 
   // PLAYER STATS LABELS
 
@@ -203,6 +205,10 @@ export default {
     "Mike is an easygoing guy who doesn't ask much from the players at his table.\n\nJust keep the game interesting. He has a good eye for patterns and an even better memory for the ones he's already seen.\n\nRepetition tends to get on his nerves.",
   mikeSaying: 
     "I've seen that one already.",
+  kirkSaying:
+    "House rules.",
+  kirkDescription:
+    "Kirk is charming, quick-witted, and almost impossible to catch in a bad mood.\n\nEven when a player makes a mistake, that friendly smile rarely leaves his face.\n\nOf course, that doesn't mean he won't make them pay for it.",
 
   // SKILLS
 
@@ -241,6 +247,10 @@ export default {
 
   noRepeatsSkillName: "No Repeats",
   noRepeatsSkillDescription: "If you use the same combination in a row the streak multiplier goes to the basic value.",
+
+  noDuplicatesSkillName: "No Duplicates",
+  noDuplicatesSkillDescription: "Using the same combination twice in a row cancels the bet. The stake is still deducted.",
+
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

@@ -552,6 +552,58 @@ export class GameScene extends BaseScene {
       return;
     }
 
+    const noDuplicatesTriggered =
+      this.dealerFightManager
+        .recordCombinationForNoDuplicates(
+          selected,
+        );
+
+    if (noDuplicatesTriggered) {
+      this.lockControls();
+
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.NO_DUPLICATES,
+      ]);
+
+      this.player.balance -= betCost;
+
+      this.view.gameUI.updateBalance(
+        this.player.balance,
+      );
+
+      this.controller.adjustBetToBalance(
+        (bet) => this.isBetAffordable(bet),
+      );
+
+      if (!this.canPlay()) {
+        const minAvailableBet =
+          this.controller.getMinAvailableBet();
+
+        if (minAvailableBet !== null) {
+          await this.perkGameplayController
+            .tryRecoverFromInsufficientBalance(
+              minAvailableBet,
+            );
+        }
+
+        this.controller.adjustBetToBalance(
+          (bet) => this.isBetAffordable(bet),
+        );
+      }
+
+      if (!this.canPlay()) {
+        this.roundState = "result";
+
+        this.triggerGameOver();
+
+        return;
+      }
+
+      this.unlockControls();
+
+      return;
+    }
+
     this.roundState = "spinning";
 
     this.lockControls();
