@@ -39,6 +39,8 @@ export class DealerFightManager {
   private fightGoldenCoins = 0;
   private fightTargetGoldenCoins = 0;
 
+  private forcedDealer?: DealerData;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -50,9 +52,13 @@ export class DealerFightManager {
   }
 
   getCurrentDealer(): DealerData {
-    return this.dealerOrder[this.currentDealerIndex];
+    return (
+      this.forcedDealer ??
+      this.dealerOrder[
+        this.currentDealerIndex
+      ]
+    );
   }
-
   startFight(playerBalance: number): DealerFightState {
     const dealer = this.getCurrentDealer();
 
@@ -437,7 +443,15 @@ export class DealerFightManager {
     }
   }
 
+  forceCurrentDealer(
+    dealer: DealerData,
+  ): void {
+    this.forcedDealer = dealer;
+  }
+
   advanceToNextDealer(): DealerData | null {
+    this.forcedDealer = undefined;
+
     const nextIndex =
       this.currentDealerIndex + 1;
 

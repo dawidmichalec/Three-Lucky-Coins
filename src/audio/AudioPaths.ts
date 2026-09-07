@@ -27,4 +27,6 @@ export const AUDIO_PATHS = {
   [SoundId.COIN_THREE_CORRECT]: "/assets/main/sounds/coin_three_correct.wav",
 
   [SoundId.CARD_SWIPE]: "/assets/main/sounds/card_swipe.mp3",
+
+  [SoundId.CLOCK_TICKING_SOUND_EFFECT]: "/assets/main/sounds/clock_ticking_sound_effect.mp3"
 };

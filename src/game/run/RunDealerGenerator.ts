@@ -9,6 +9,7 @@ import {
 } from "../dealers/DealerRegistry";
 
 export class RunDealerGenerator {
+  
   static generateRun(): DealerData[] {
     return [
       ...this.generateJuniorStage(),

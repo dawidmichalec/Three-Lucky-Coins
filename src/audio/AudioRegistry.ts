@@ -29,4 +29,6 @@ export const AUDIO_REGISTRY = {
   [SoundId.COIN_THREE_CORRECT]: AudioCategory.SFX,
 
   [SoundId.CARD_SWIPE]: AudioCategory.SFX,
+
+  [SoundId.CLOCK_TICKING_SOUND_EFFECT]: AudioCategory.SFX
 };

@@ -26,4 +26,6 @@ export enum SoundId {
   COIN_THREE_CORRECT = "coin_three_correct",
 
   CARD_SWIPE = "card_swipe",
+
+  CLOCK_TICKING_SOUND_EFFECT = "clock_ticking_sound_effect"
 }

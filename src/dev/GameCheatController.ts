@@ -13,6 +13,8 @@ interface GameCheatControllerOptions {
   onGameOver: () => void;
 
   onNextDealer: () => void;
+
+  onDealer: (dealerId: string) => void;
 }
 
 export class GameCheatController {
@@ -70,6 +72,14 @@ export class GameCheatController {
     this.cheatManager.register(CheatCode.NEXT_DEALER, () => {
       this.options.onNextDealer();
     });
+
+    // SPECIFIC DEALER
+
+    this.cheatManager.registerDealerCheat(
+      (dealerId) => {
+        this.options.onDealer(dealerId);
+      },
+    );
 
     // ===================================================
     // CHEATS FOR PERKS

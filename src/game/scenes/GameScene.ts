@@ -43,6 +43,10 @@ import { DealerRole } from "../dealers/DealerRole";
 import { DealerSkillId } from "../dealers/DealerSkill";
 import { PerkEffectMessageType } from "../../ui/overlays/PerkEffectOverlay";
 import { BetRestrictionManager } from "../BetRestrictionManager";
+import { RoundTimerManager } from "../RoundTimerManager";
+import { getDealerById } from "../dealers/DealerRegistry";
+import { AudioManager } from "../../core/AudioManager";
+import { SoundId } from "../../audio/SoundId";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -79,6 +83,8 @@ export class GameScene extends BaseScene {
   private perkGameplayController: PerkGameplayController;
   private mandatoryGambleForMoreActive = false;
   private betRestrictionManager = new BetRestrictionManager();
+  private roundTimerManager = new RoundTimerManager();
+  private audioManager = AudioManager.getInstance();
   
 
   constructor(
@@ -237,6 +243,10 @@ export class GameScene extends BaseScene {
         onNextDealer: () => {
           void this.cheatNextDealer();
         },
+
+        onDealer: (dealerId) => {
+          void this.cheatDealer(dealerId);
+        },
       },
     );
 
@@ -262,6 +272,8 @@ export class GameScene extends BaseScene {
         this.startDealerFight();
 
         this.roundState = "ready";
+
+        this.startRoundTimerIfNeeded();
 
         this.isChangingDealer = false;
 
@@ -551,6 +563,9 @@ export class GameScene extends BaseScene {
     if (this.roundState !== "ready") {
       return;
     }
+
+    this.roundTimerManager.cancel();
+    this.view.gameUI.hideRoundTimer();
 
     const noDuplicatesTriggered =
       this.dealerFightManager
@@ -1151,6 +1166,8 @@ export class GameScene extends BaseScene {
 
     this.roundState = "ready";
 
+    this.startRoundTimerIfNeeded();
+
     this.unlockControls();
   }
 
@@ -1172,6 +1189,69 @@ export class GameScene extends BaseScene {
     );
 
     this.view.gameUI.updateWon(amount);
+  }
+
+  private startRoundTimerIfNeeded(): void {
+    const skill =
+      this.currentDealer.skills.find(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.TIME_IS_MONEY,
+      );
+
+    if (!skill?.timeLimit) {
+      this.roundTimerManager.cancel();
+
+      this.view.gameUI.hideRoundTimer();
+
+      this.audioManager.stop(
+        SoundId.CLOCK_TICKING_SOUND_EFFECT,
+      );
+
+      return;
+    }
+
+    this.view.gameUI.showRoundTimer();
+
+    this.audioManager.play(
+      SoundId.CLOCK_TICKING_SOUND_EFFECT,
+      {
+        loop: true,
+        volume: 0.7,
+      },
+    );
+
+    this.roundTimerManager.start(
+      skill.timeLimit,
+
+      (seconds) => {
+        this.view.gameUI.updateRoundTimer(
+          seconds,
+        );
+      },
+
+      async () => {
+        if (this.roundState !== "ready") {
+          return;
+        }
+
+        this.audioManager.stop(
+          SoundId.CLOCK_TICKING_SOUND_EFFECT,
+        );
+
+        this.lockControls();
+
+        await this.dealerSkillFeedbackHandler.handle([
+          DealerSkillId.TIME_IS_MONEY,
+        ]);
+
+        if (this.roundState !== "ready") {
+          return;
+        }
+
+        await this.startRound();
+      },
+    );
   }
 
   private generateResult(): CoinSide[] {
@@ -1282,6 +1362,50 @@ export class GameScene extends BaseScene {
     );
 
     await this.loadDealer(nextDealer);
+  }
+
+  private async cheatDealer(
+    dealerId: string,
+  ): Promise<void> {
+    if (
+      this.roundState !== "ready" ||
+      this.isChangingDealer
+    ) {
+      return;
+    }
+
+    const dealer =
+      getDealerById(dealerId);
+
+    if (!dealer) {
+      console.log(
+        "Unknown dealer:",
+        dealerId,
+      );
+
+      return;
+    }
+
+    this.roundTimerManager.cancel();
+    this.view.gameUI.hideRoundTimer();
+
+    this.audioManager.stop(
+      SoundId.CLOCK_TICKING_SOUND_EFFECT,
+    );
+
+    this.isChangingDealer = true;
+
+    this.lockControls();
+
+    this.dealerFightManager
+      .forceCurrentDealer(dealer);
+
+    console.log(
+      "CHEAT - DEALER:",
+      dealer.name,
+    );
+
+    await this.loadDealer(dealer);
   }
 
   // CLEANUP

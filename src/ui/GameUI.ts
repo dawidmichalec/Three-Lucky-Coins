@@ -231,9 +231,10 @@ export class GameUI extends Container {
       }
     });
 
-    this.timeLabel.position.set(126, 170);
+    this.timeLabel.position.set(169, 170);
 
     this.timeLabel.visible = false;
+    this.timeLabel.anchor.set(0.5, 0);
 
     // ADD
 
@@ -273,6 +274,21 @@ export class GameUI extends Container {
     this.clockIcon.visible = false;
 
     this.addChild(this.clockIcon);
+  }
+
+  showRoundTimer(): void {
+    this.clockIcon.visible = true;
+    this.timeLabel.visible = true;
+  }
+
+  hideRoundTimer(): void {
+    this.clockIcon.visible = false;
+    this.timeLabel.visible = false;
+  }
+
+  updateRoundTimer(seconds: number): void {
+    this.timeLabel.text =
+      seconds.toString();
   }
 
   async animatePenaltyIntoWon(

@@ -14,6 +14,7 @@ import { SARAH_DATA } from "./data/mid_dealers/Sarah";
 import { MIKE_DATA } from "./data/mid_dealers/Mike";
 import { KIRK_DATA } from "./data/mid_dealers/Kirk";
 import { TRISHA_DATA } from "./data/mid_dealers/Trisha";
+import { BLAKE_DATA } from "./data/mid_dealers/Blake";
 import { DealerGroup } from "./DealerGroup";
 import { DealerRole } from "./DealerRole";
 
@@ -33,7 +34,8 @@ export const DEALERS: readonly DealerData[] = [
   SARAH_DATA,
   MIKE_DATA,
   KIRK_DATA,
-  TRISHA_DATA
+  TRISHA_DATA,
+  BLAKE_DATA
 ];
 
 export {
@@ -51,7 +53,8 @@ export {
   SARAH_DATA,
   MIKE_DATA,
   KIRK_DATA,
-  TRISHA_DATA
+  TRISHA_DATA,
+  BLAKE_DATA
 };
 
 export function getDealersByGroup(group: DealerGroup): readonly DealerData[] {
@@ -74,6 +77,10 @@ export function getSupervisorByGroup(
   );
 }
 
-export function getDealerById(dealerId: string): DealerData | undefined {
-  return DEALERS.find((dealer) => dealer.id === dealerId);
+export function getDealerById(
+  id: string,
+): DealerData | undefined {
+  return DEALERS.find(
+    (dealer) => dealer.id === id,
+  );
 }

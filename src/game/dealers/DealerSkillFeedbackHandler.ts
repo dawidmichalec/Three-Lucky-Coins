@@ -46,6 +46,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.SMALL_HOUSE_CUT:
           await this.gameMessageOverlay.play("smallHouseCutSkillName");
           break;
+
+        case DealerSkillId.TIME_IS_MONEY:
+          await this.gameMessageOverlay.play("timeIsMoneySkillName");
+          break;
       }
     }
   }

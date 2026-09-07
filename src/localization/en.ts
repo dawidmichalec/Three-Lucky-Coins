@@ -49,6 +49,8 @@ export default {
   kirkWristwatchDescription: "Always five minutes fast. Kirk prefers waiting for others to being late himself.",
   trishaEarrings: "Trisha's Earrings",
   trishaEarringsDescription: "Big, bold, and impossible to ignore. Just the way Trisha likes it.",
+  blakeNotebook: "Blake's Notebook",
+  blakeNotebookDescription: "Every shift, every break, every detail. If it happened, Blake probably wrote it down.",
 
   // PLAYER STATS LABELS
 
@@ -215,7 +217,10 @@ export default {
   "The house always gets its cut.",
   trishaDescription:
     "Trisha didn't become a supervisor by being generous.\n\nShe knows exactly how long players will keep chasing their luck, and she's more than happy to let them try.\n\nJust remember: the longer you stay at her table, the more the house expects its share.",
-
+  blakeSaying:
+    "Right on schedule.",
+  blakeDescription:
+    "Blake likes everything exactly where it belongs.\n\nHis chips are perfectly stacked, his table is always spotless, and his schedule is followed to the second.\n\nSo when Blake gives you ten seconds to make a decision, don't expect an eleventh.",
 
   // SKILLS
 
@@ -260,6 +265,9 @@ export default {
 
   smallHouseCutSkillName: "Small House Cut",
   smallHouseCutSkillDescription: "On a loss, the house takes an additional 25% of your bet from your balance.",
+
+  timeIsMoneySkillName: "Time Is Money",
+  timeIsMoneySkillDescription: "You have exactly 10 seconds to place a bet.\n\nIf you don't manage to do it, the bet is placed automatically with the bet value and combination that are set at the moment.",
 
   // PERKS
 

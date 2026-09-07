@@ -23,7 +23,9 @@ export enum DealerSkillId {
 
   NO_DUPLICATES = "no_duplicates",
 
-  SMALL_HOUSE_CUT = "small_house_cut"
+  SMALL_HOUSE_CUT = "small_house_cut",
+
+  TIME_IS_MONEY = "time_is_money"
 
   // Kolejne skille w przyszłości...
 }
@@ -34,4 +36,5 @@ export interface DealerSkillData {
   description: TranslationKey;
   icon: string;
   triggerChance?: number;
+  timeLimit?: number;
 }
