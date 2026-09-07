@@ -42,6 +42,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.NO_DUPLICATES:
           await this.gameMessageOverlay.play("noDuplicatesSkillName");
           break;
+
+        case DealerSkillId.SMALL_HOUSE_CUT:
+          await this.gameMessageOverlay.play("smallHouseCutSkillName");
+          break;
       }
     }
   }

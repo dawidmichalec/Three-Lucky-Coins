@@ -47,6 +47,8 @@ export default {
   mikeGummyBearsDescription: "He always keeps a pack behind the table. Just don't ask him to share.",
   kirkWristwatch: "Kirk's Wristwatch",
   kirkWristwatchDescription: "Always five minutes fast. Kirk prefers waiting for others to being late himself.",
+  trishaEarrings: "Trisha's Earrings",
+  trishaEarringsDescription: "Big, bold, and impossible to ignore. Just the way Trisha likes it.",
 
   // PLAYER STATS LABELS
 
@@ -209,6 +211,11 @@ export default {
     "House rules.",
   kirkDescription:
     "Kirk is charming, quick-witted, and almost impossible to catch in a bad mood.\n\nEven when a player makes a mistake, that friendly smile rarely leaves his face.\n\nOf course, that doesn't mean he won't make them pay for it.",
+  trishaSaying:
+  "The house always gets its cut.",
+  trishaDescription:
+    "Trisha didn't become a supervisor by being generous.\n\nShe knows exactly how long players will keep chasing their luck, and she's more than happy to let them try.\n\nJust remember: the longer you stay at her table, the more the house expects its share.",
+
 
   // SKILLS
 
@@ -250,6 +257,9 @@ export default {
 
   noDuplicatesSkillName: "No Duplicates",
   noDuplicatesSkillDescription: "Using the same combination twice in a row cancels the bet. The stake is still deducted.",
+
+  smallHouseCutSkillName: "Small House Cut",
+  smallHouseCutSkillDescription: "On a loss, the house takes an additional 25% of your bet from your balance.",
 
   // PERKS
 

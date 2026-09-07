@@ -21,7 +21,9 @@ export enum DealerSkillId {
 
   NO_REPEATS = "no_repeats",
 
-  NO_DUPLICATES = "no_duplicates"
+  NO_DUPLICATES = "no_duplicates",
+
+  SMALL_HOUSE_CUT = "small_house_cut"
 
   // Kolejne skille w przyszłości...
 }

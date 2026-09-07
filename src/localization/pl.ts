@@ -46,6 +46,8 @@ export default {
   mikeGummyBearsDescription: "Zawsze trzyma paczkę za stołem. Tylko nie proś, żeby się podzielił.",
   kirkWristwatch: "Zegarek Kirka",
   kirkWristwatchDescription: "Zawsze pięć minut za szybko. Kirk woli czekać na innych, niż się spóźniać.",
+  trishaEarrings: "Kolczyki Trishy",
+  trishaEarringsDescription: "Duże, wyraziste i niemożliwe do przeoczenia. Dokładnie takie, jakie lubi Trisha.",
 
   // PLAYER STATS LABELS
 
@@ -205,6 +207,10 @@ export default {
     "Już to widziałem.",
   kirkSaying: "Takie są zasady.",
   kirkDescription: "Kirk jest czarujący, bystry i niemal nie sposób go złapać w złym humorze.\n\nNawet gdy gracz popełni błąd, jego przyjazny uśmiech rzadko schodzi z twarzy.\n\nOczywiście nie oznacza to, że nie każe im za to zapłacić.",
+  trishaSaying:
+    "Kasyno zawsze dostaje swoją działkę.",
+  trishaDescription:
+    "Trisha nie została nadzorcą dzięki swojej hojności.\n\nOna doskonale wie, jak długo gracze będą szukać szczęścia i z radością pozwala im spróbować.\n\nPamiętaj tylko: im dłużej zostaniesz przy jej stole, tym większej działki kasyno oczekuje.",
 
   // SKILL
 
@@ -252,6 +258,9 @@ export default {
 
   noDuplicatesSkillName: "Bez duplikatów",
   noDuplicatesSkillDescription: "Użycie tej samej kombinacji dwa razy z rzędu unieważnia zakład. Stawka jest nadal pobierana.",
+
+  smallHouseCutSkillName: "Mała kara",
+  smallHouseCutSkillDescription: "W przypadku przegranej kasyno pobiera z Twojego salda dodatkowe 25% zakładu.",
 
   // PERKS
 

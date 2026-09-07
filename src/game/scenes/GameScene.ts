@@ -668,6 +668,24 @@ export class GameScene extends BaseScene {
 
     await this.coinRow.spin(goldenResult, selected);
 
+    const goldenCoinsCollected =
+      goldenResult.filter(
+        (outcome) => outcome.isGolden,
+      ).length;
+
+    this.dealerFightManager.recordGoldenCoins(goldenCoinsCollected);
+
+    if (
+      goldenCoinsCollected > 0 &&
+      this.currentDealer.objectiveType ===
+      ObjectiveType.COLLECT_GOLDEN_COINS
+    ) {
+      this.view.gameUI.dealerCard.updateObjectiveProgress(
+        this.dealerFightManager.getFightGoldenCoins(),
+        this.dealerFightManager.getFightTargetGoldenCoins(),
+      );
+    }
+
     this.statsManager.recordCoinsTossed(resultSides.length);
 
     const goldenMultiplier =
@@ -853,6 +871,27 @@ export class GameScene extends BaseScene {
     if (outcome.wonAmount > 0) {
       this.commitPartialPayout(
         outcome.wonAmount,
+      );
+    }
+
+    const smallHouseCut =
+      this.dealerFightManager
+        .resolveSmallHouseCut(bet);
+
+    if (smallHouseCut > 0) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.SMALL_HOUSE_CUT,
+      ]);
+
+      this.player.balance -= smallHouseCut;
+
+      await this.view.gameUI.animatePenaltyIntoBalance(
+        smallHouseCut,
+        this.player.balance,
+      );
+
+      this.view.gameUI.updateBalance(
+        this.player.balance,
       );
     }
 

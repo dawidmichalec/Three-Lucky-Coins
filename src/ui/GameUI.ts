@@ -414,6 +414,120 @@ export class GameUI extends Container {
     });
   }
 
+  async animatePenaltyIntoBalance(
+    penaltyAmount: number,
+    finalBalance: number,
+  ): Promise<void> {
+    const penaltyText = new Text({
+      text: `-${penaltyAmount.toFixed(2)}`,
+
+      style: {
+        fontFamily: "Anek-Kannada Bold",
+        fontSize: 36,
+        fontWeight: "bold",
+        fill: 0xff3131,
+
+        dropShadow: {
+          alpha: 1,
+          blur: 12,
+          color: "#ff0000",
+          distance: 0,
+          angle: 0,
+        },
+      },
+    });
+
+    penaltyText.anchor.set(0.5);
+
+    penaltyText.position.set(
+      900,
+      850,
+    );
+
+    penaltyText.alpha = 0;
+    penaltyText.scale.set(0.8);
+
+    this.addChild(penaltyText);
+
+    await this.animateBonusAppear(
+      penaltyText,
+    );
+
+    await this.animatePenaltyFlyToBalance(
+      penaltyText,
+    );
+
+    penaltyText.destroy();
+
+    this.balanceValue.text =
+      finalBalance.toFixed(2);
+
+    await this.animateBalancePulse();
+  }
+
+  private animatePenaltyFlyToBalance(
+    penaltyText: Text,
+  ): Promise<void> {
+    const startX = penaltyText.x;
+    const startY = penaltyText.y;
+
+    const targetX =
+      this.balanceValue.x +
+      this.balanceValue.width / 2;
+
+    const targetY =
+      this.balanceValue.y +
+      this.balanceValue.height / 2;
+
+    return this.animate(
+      500,
+
+      (progress) => {
+        const eased =
+          progress * progress;
+
+        penaltyText.x =
+          startX +
+          (targetX - startX) * eased;
+
+        penaltyText.y =
+          startY +
+          (targetY - startY) * eased;
+
+        if (progress > 0.7) {
+          penaltyText.alpha =
+            1 -
+            (progress - 0.7) / 0.3;
+        }
+
+        const scale =
+          1 - progress * 0.25;
+
+        penaltyText.scale.set(scale);
+      },
+    );
+  }
+
+  private animateBalancePulse(): Promise<void> {
+    return this.animate(
+      220,
+
+      (progress) => {
+        const punch =
+          Math.sin(progress * Math.PI);
+
+        const scale =
+          1 + punch * 0.14;
+
+        this.balanceValue.scale.set(
+          scale,
+        );
+      },
+    ).then(() => {
+      this.balanceValue.scale.set(1);
+    });
+  }
+
   private animate(
     duration: number,
     update: (progress: number) => void,

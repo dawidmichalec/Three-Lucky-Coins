@@ -7,6 +7,7 @@ export interface DealerFightState {
   targetWins?: number;
   targetMultiplier?: number;
   targetGambleForMoreWins?: number;
+  targetGoldenCoins?: number;
 }
 
 export class DealerFightManager {
@@ -34,6 +35,9 @@ export class DealerFightManager {
   private previousCombination: string | null = null;
 
   private previousKirkCombination: string | null = null;
+
+  private fightGoldenCoins = 0;
+  private fightTargetGoldenCoins = 0;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -74,6 +78,9 @@ export class DealerFightManager {
 
     this.previousKirkCombination = null;
 
+    this.fightGoldenCoins = 0;
+    this.fightTargetGoldenCoins = 0;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -103,11 +110,51 @@ export class DealerFightManager {
 
         return {};
 
+      case ObjectiveType.COLLECT_GOLDEN_COINS:
+        this.fightTargetGoldenCoins =
+          dealer.objectiveValue;
+
+        return {
+          targetGoldenCoins:
+            this.fightTargetGoldenCoins,
+        };
+
       default:
         throw new Error(
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  resolveSmallHouseCut(
+    bet: number,
+  ): number {
+    const dealer = this.getCurrentDealer();
+
+    const hasSmallHouseCut = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.SMALL_HOUSE_CUT,
+    );
+
+    if (!hasSmallHouseCut) {
+      return 0;
+    }
+
+    return bet * 0.25;
+  }
+
+  recordGoldenCoins(amount: number): void {
+    const dealer = this.getCurrentDealer();
+
+    if (
+      dealer.objectiveType !==
+      ObjectiveType.COLLECT_GOLDEN_COINS
+    ) {
+      return;
+    }
+
+    this.fightGoldenCoins += amount;
   }
 
   recordCombinationForNoDuplicates(
@@ -374,6 +421,12 @@ export class DealerFightManager {
           dealer.objectiveValue
         );
 
+      case ObjectiveType.COLLECT_GOLDEN_COINS:
+        return (
+          this.fightGoldenCoins >=
+          dealer.objectiveValue
+        );
+
       default:
         console.warn(
           "Unsupported objective type:",
@@ -419,5 +472,13 @@ export class DealerFightManager {
 
   getFightTargetGambleForMoreWins(): number {
     return this.fightTargetGambleForMoreWins;
+  }
+
+  getFightGoldenCoins(): number {
+    return this.fightGoldenCoins;
+  }
+
+  getFightTargetGoldenCoins(): number {
+    return this.fightTargetGoldenCoins;
   }
 }

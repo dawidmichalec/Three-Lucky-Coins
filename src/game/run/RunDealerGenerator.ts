@@ -41,10 +41,27 @@ export class RunDealerGenerator {
         DealerGroup.MID,
       );
 
-    return this.pickRandomDealers(
-      regularDealers,
-      2,
-    );
+    const randomDealers =
+      this.pickRandomDealers(
+        regularDealers,
+        2,
+      );
+
+    const supervisor =
+      getSupervisorByGroup(
+        DealerGroup.MID,
+      );
+
+    if (!supervisor) {
+      throw new Error(
+        "Mid Supervisor not found.",
+      );
+    }
+
+    return [
+      ...randomDealers,
+      supervisor,
+    ];
   }
 
   private static pickRandomDealer(dealers: readonly DealerData[]): DealerData {
