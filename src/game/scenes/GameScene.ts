@@ -828,11 +828,38 @@ export class GameScene extends BaseScene {
         return;
       }
 
-      this.streakMultiplierManager.applyResolution(streakResolution);
+      const previousMultiplier =
+        this.streakMultiplierManager.getValue();
+
+      this.streakMultiplierManager.applyResolution(
+        streakResolution,
+      );
+
+      const currentMultiplier =
+        this.streakMultiplierManager.getValue();
 
       this.view.gameUI.updateMultiplier(
-        this.streakMultiplierManager.getValue(),
+        currentMultiplier,
       );
+
+      const milestoneBonusTriggered =
+        this.roundOutcomeHandler.recordMultiplierMilestone(
+          previousMultiplier,
+          currentMultiplier,
+          this.currentDealer,
+        );
+
+      if (milestoneBonusTriggered) {
+        await this.dealerSkillFeedbackHandler.handle([
+          DealerSkillId.MILESTONE_BONUS,
+        ]);
+
+        await this.view.perkEffectMessageOverlay.play(
+          "winningsIncreasedBy",
+          "+20%",
+          PerkEffectMessageType.POSITIVE,
+        );
+      }
 
       const mandatoryTipTriggered =
         this.dealerFightManager.recordMandatoryTipWin();
@@ -979,13 +1006,38 @@ export class GameScene extends BaseScene {
     await this.perkGameplayController.handleWinCommitted();
 
     if (this.pendingStreakResolution) {
+      const previousMultiplier =
+        this.streakMultiplierManager.getValue();
+
       this.streakMultiplierManager.applyResolution(
         this.pendingStreakResolution,
       );
 
+      const currentMultiplier =
+        this.streakMultiplierManager.getValue();
+
       this.view.gameUI.updateMultiplier(
-        this.streakMultiplierManager.getValue(),
+        currentMultiplier,
       );
+
+      const milestoneBonusTriggered =
+        this.roundOutcomeHandler.recordMultiplierMilestone(
+          previousMultiplier,
+          currentMultiplier,
+          this.currentDealer,
+        );
+
+      if (milestoneBonusTriggered) {
+        await this.dealerSkillFeedbackHandler.handle([
+          DealerSkillId.MILESTONE_BONUS,
+        ]);
+
+        await this.view.perkEffectMessageOverlay.play(
+          "winningsIncreasedBy",
+          "+20%",
+          PerkEffectMessageType.POSITIVE,
+        );
+      }
     }
 
     this.runStatsRecorder.finishRound({

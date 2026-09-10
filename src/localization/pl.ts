@@ -52,6 +52,8 @@ export default {
   blakeNotebookDescription: "Każda zmiana, każda przerwa, każdy szczegół. Jeśli coś się wydarzyło, Blake prawdopodobnie to zapisał.",
   derekDeckOfCards: "Talia kart Dereka",
   derekDeckOfCardsDescription: "Nie ma w niej dwóch kart z tej samej talii. Derek nie wyobrażał sobie, by mogło być inaczej.",
+  cindyKeychain: "Szczęśliwy breloczek Cindy",
+  cindyKeychainDescription: "Cindy nosi to przy sobie od lat. To, czy faktycznie przynosi szczęście, nie jest tak naprawdę istotne.",
 
   // PLAYER STATS LABELS
 
@@ -217,6 +219,9 @@ export default {
   blakeDescription: "Blake lubi, kiedy wszystko jest dokładnie na swoim miejscu.\n\nJego żetony są idealnie poukładane, stół zawsze nieskazitelny, a harmonogram przestrzegany co do sekundy.\n\nWięc kiedy Blake daje ci dziesięć sekund na decyzję, nie licz na jedenastą.",
   derekSaying: "Pokaż mi coś nowego",
   derekDescription: "Derek widział już wszystkie sztampowe zagrywki i – szczerze mówiąc – jest nimi znudzony.\n\nCeni graczy, którzy lubią wprowadzać urozmaicenia i próbować czegoś nowego.\n\nZadbaj o interesującą grę, a Derek może sprawić, że naprawdę ci się to opłaci.",
+  cindySaying: "Liczy się każdy krok.",
+  cindyDescription: "Cindy uważa, że ​​każdy postęp zasługuje na odrobinę uznania.\n\nDostrzega drobne zwycięstwa, które większość ludzi pomija, i nigdy nie przepuszcza okazji, by je docenić.\n\nRób swoje i idź naprzód – Cindy zadba o to, by się to opłaciło.",
+  
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -272,6 +277,10 @@ export default {
 
   varietyPaysSkillName: "Różnorodność popłaca",
   varietyPaysSkillDescription: "Wygrana z wykorzystaniem pary stawki i kombinacji, z którymi wcześniej nie wygrałeś, zwiększa wygraną o 20%.",
+  
+  milestoneBonusSkillName: "Bonus za poziom",
+  milestoneBonusSkillDescription: "Za każdym razem, gdy osiągniesz nowy próg mnożnika, Twoja kolejna wygrana będzie o 20% wyższa.",
+  
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

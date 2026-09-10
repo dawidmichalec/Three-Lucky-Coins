@@ -53,6 +53,8 @@ export default {
   blakeNotebookDescription: "Every shift, every break, every detail. If it happened, Blake probably wrote it down.",
   derekDeckOfCards: "Derek's Deck of Cards",
   derekDeckOfCardsDescription: "No two cards came from the same deck. Derek wouldn't have it any other way.",
+  cindyKeychain: "Cindy's Lucky Keychain",
+  cindyKeychainDescription: "Cindy has carried it for years. Whether it actually brings good luck isn't really the point.",
 
   // PLAYER STATS LABELS
 
@@ -227,7 +229,12 @@ export default {
     "Show me something new.",
   derekDescription: 
     "Derek has seen every safe bet in the book, and frankly, he's bored of them.\n\nHe has a soft spot for players willing to mix things up and try something new.\n\nKeep him entertained, and Derek might make it worth your while.",
-  // SKILLS
+  cindySaying: 
+    "Every step counts.",
+  cindyDescription: 
+    "Cindy believes every bit of progress deserves a little recognition.\n\nShe keeps an eye on the small victories most people overlook and never misses a chance to reward them.\n\nKeep moving forward, and Cindy will make sure it pays off.",
+  
+    // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
 
@@ -277,6 +284,8 @@ export default {
   varietyPaysSkillName: "Variety Pays",
   varietyPaysSkillDescription: "Winning with a bet and combination pair you haven't won with before increases the winnings by 20%.",
   
+  milestoneBonusSkillName: "Milestone Bonus",
+  milestoneBonusSkillDescription: "Every time you reach a new multiplier milestone, your next winning pays 20% more.",
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

@@ -27,7 +27,9 @@ export enum DealerSkillId {
 
   TIME_IS_MONEY = "time_is_money",
 
-  VARIETY_PAYS = "variety_pays"
+  VARIETY_PAYS = "variety_pays",
+
+  MILESTONE_BONUS = "milestone_bonus"
 
   // Kolejne skille w przyszłości...
 }

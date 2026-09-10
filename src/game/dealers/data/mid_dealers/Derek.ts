@@ -20,8 +20,8 @@ export const DEREK_DATA: DealerData = {
 
   signatureToken:
     "/assets/main/icons/signature_token_icons/mid_dealers/derek/derek_signature_token_icon.png",
-  signatureTokenName: "derekMixedDeck",
-  signatureTokenDescription: "derekMixedDeckDescription",
+  signatureTokenName: "derekDeckOfCards",
+  signatureTokenDescription: "derekDeckOfCardsDescription",
 
   group: DealerGroup.MID,
   role: DealerRole.REGULAR,
@@ -30,7 +30,7 @@ export const DEREK_DATA: DealerData = {
 
   objectiveType: ObjectiveType.INCREASE_BALANCE,
 
-  objectiveValue: 850,
+  objectiveValue: 1000,
 
   goldenCoinSettings: {
     baseChance: 0.0075,

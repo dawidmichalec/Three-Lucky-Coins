@@ -30,6 +30,7 @@ interface WinModifierResult {
 export class RoundOutcomeHandler {
   private audioManager = AudioManager.getInstance();
   private varietyPaysWinningPairs = new Set<string>();
+  private milestoneBonusPending = false;
 
   apply(data: RoundOutcomeData): RoundOutcomeResult {
     if (!data.win) {
@@ -132,6 +133,22 @@ export class RoundOutcomeHandler {
       }
     }
 
+    const milestoneBonusSkill = dealer.skills.find(
+      (skill) =>
+        skill.id === DealerSkillId.MILESTONE_BONUS,
+    );
+
+    if (
+      milestoneBonusSkill &&
+      this.milestoneBonusPending
+    ) {
+      finalWinAmount = roundMoney(
+        finalWinAmount * 1.2,
+      );
+
+      this.milestoneBonusPending = false;
+    }
+
     return {
       winAmount: finalWinAmount,
       triggeredSkills,
@@ -203,5 +220,38 @@ export class RoundOutcomeHandler {
 
   resetDealerState(): void {
     this.varietyPaysWinningPairs.clear();
+    this.milestoneBonusPending = false;
+  }
+
+  recordMultiplierMilestone(
+    previousMultiplier: number,
+    currentMultiplier: number,
+    dealer: DealerData,
+  ): boolean {
+    const hasMilestoneBonus = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.MILESTONE_BONUS,
+    );
+
+    if (!hasMilestoneBonus) {
+      return false;
+    }
+
+    const previousMilestone =
+      Math.floor(previousMultiplier);
+
+    const currentMilestone =
+      Math.floor(currentMultiplier);
+
+    if (
+      currentMilestone >= 2 &&
+      currentMilestone > previousMilestone
+    ) {
+      this.milestoneBonusPending = true;
+
+      return true;
+    }
+
+    return false;
   }
 }

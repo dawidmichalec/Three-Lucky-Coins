@@ -54,6 +54,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.VARIETY_PAYS:
           await this.gameMessageOverlay.play("varietyPaysSkillName");
           break;
+
+        case DealerSkillId.MILESTONE_BONUS:
+          await this.gameMessageOverlay.play("milestoneBonusSkillName");
+          break;
       }
     }
   }
