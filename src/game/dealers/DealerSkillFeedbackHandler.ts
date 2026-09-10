@@ -58,6 +58,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.MILESTONE_BONUS:
           await this.gameMessageOverlay.play("milestoneBonusSkillName");
           break;
+
+        case DealerSkillId.BETTER_PAY_FOR_NOT_THE_SAME:
+          await this.gameMessageOverlay.play("betterPayForNotTheSameSkillName");
+          break;
       }
     }
   }

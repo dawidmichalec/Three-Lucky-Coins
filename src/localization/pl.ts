@@ -54,6 +54,8 @@ export default {
   derekDeckOfCardsDescription: "Nie ma w niej dwóch kart z tej samej talii. Derek nie wyobrażał sobie, by mogło być inaczej.",
   cindyKeychain: "Szczęśliwy breloczek Cindy",
   cindyKeychainDescription: "Cindy nosi to przy sobie od lat. To, czy faktycznie przynosi szczęście, nie jest tak naprawdę istotne.",
+  andyCoffeeMug: "Kubek Andy'ego",
+  andyCoffeeMugDescription: "Wyszczerbiony, wyblakły i starszy od niektórych dealerów. Andy upiera się, że kawa po prostu lepiej z niego smakuje.",
 
   // PLAYER STATS LABELS
 
@@ -221,7 +223,8 @@ export default {
   derekDescription: "Derek widział już wszystkie sztampowe zagrywki i – szczerze mówiąc – jest nimi znudzony.\n\nCeni graczy, którzy lubią wprowadzać urozmaicenia i próbować czegoś nowego.\n\nZadbaj o interesującą grę, a Derek może sprawić, że naprawdę ci się to opłaci.",
   cindySaying: "Liczy się każdy krok.",
   cindyDescription: "Cindy uważa, że ​​każdy postęp zasługuje na odrobinę uznania.\n\nDostrzega drobne zwycięstwa, które większość ludzi pomija, i nigdy nie przepuszcza okazji, by je docenić.\n\nRób swoje i idź naprzód – Cindy zadba o to, by się to opłaciło.",
-  
+  andySaying: "Niech będzie ciekawie.",
+  andyDescription: "Andy uważa, że dobra gra nigdy nie powinna być nudna.\n\nLubi graczy, którzy nie stoją w miejscu i nie boją się zmieniać swojej strategii z rundy na rundę.\n\nNie pozwól mu się nudzić, a chętnie dorzuci ci coś ekstra.",  
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -281,6 +284,8 @@ export default {
   milestoneBonusSkillName: "Bonus za poziom",
   milestoneBonusSkillDescription: "Za każdym razem, gdy osiągniesz nowy próg mnożnika, Twoja kolejna wygrana będzie o 20% wyższa.",
   
+  betterPayForNotTheSameSkillName: "Zmiana popłaca",
+  betterPayForNotTheSameSkillDescription: "Używanie innej kombinacji w każdej rundzie zwiększa wygrane o 5%.",
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

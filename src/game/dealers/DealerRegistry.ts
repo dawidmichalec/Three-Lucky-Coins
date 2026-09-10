@@ -17,6 +17,7 @@ import { TRISHA_DATA } from "./data/mid_dealers/Trisha";
 import { BLAKE_DATA } from "./data/mid_dealers/Blake";
 import { DEREK_DATA } from "./data/mid_dealers/Derek";
 import { CINDY_DATA } from "./data/mid_dealers/Cindy";
+import { ANDY_DATA } from "./data/junior_dealers/Andy";
 import { DealerGroup } from "./DealerGroup";
 import { DealerRole } from "./DealerRole";
 
@@ -25,7 +26,8 @@ export const DEALERS: readonly DealerData[] = [
   BEN_DATA,
   ZACK_DATA,
   BECKY_DATA,
-  JOHNNY_DATA, 
+  JOHNNY_DATA,
+  ANDY_DATA, 
   MELANIE_DATA,
   HILLARY_DATA,
   TIMOTHY_DATA,
@@ -47,6 +49,7 @@ export {
   ZACK_DATA,
   BECKY_DATA,
   JOHNNY_DATA,
+  ANDY_DATA,
   MELANIE_DATA,
   HILLARY_DATA,
   TIMOTHY_DATA,

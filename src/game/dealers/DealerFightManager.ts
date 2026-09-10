@@ -41,6 +41,8 @@ export class DealerFightManager {
 
   private forcedDealer?: DealerData;
 
+  private previousAndyCombination: string | null = null;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -88,6 +90,8 @@ export class DealerFightManager {
     this.fightGoldenCoins = 0;
     this.fightTargetGoldenCoins = 0;
 
+    this.previousAndyCombination = null;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -131,6 +135,32 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordCombinationForBetterPay(
+    combination: readonly string[],
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasBetterPay = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.BETTER_PAY_FOR_NOT_THE_SAME,
+    );
+
+    if (!hasBetterPay) {
+      return false;
+    }
+
+    const combinationKey = combination.join("-");
+
+    const changedCombination =
+      this.previousAndyCombination !== null &&
+      this.previousAndyCombination !== combinationKey;
+
+    this.previousAndyCombination = combinationKey;
+
+    return changedCombination;
   }
 
   resolveSmallHouseCut(

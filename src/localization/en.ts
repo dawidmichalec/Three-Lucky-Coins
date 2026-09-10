@@ -55,6 +55,8 @@ export default {
   derekDeckOfCardsDescription: "No two cards came from the same deck. Derek wouldn't have it any other way.",
   cindyKeychain: "Cindy's Lucky Keychain",
   cindyKeychainDescription: "Cindy has carried it for years. Whether it actually brings good luck isn't really the point.",
+  andyCoffeeMug: "Andy's Coffee Mug",
+  andyCoffeeMugDescription: "Chipped, faded, and older than some of the dealers. Andy insists the coffee just tastes better in it.",
 
   // PLAYER STATS LABELS
 
@@ -233,7 +235,11 @@ export default {
     "Every step counts.",
   cindyDescription: 
     "Cindy believes every bit of progress deserves a little recognition.\n\nShe keeps an eye on the small victories most people overlook and never misses a chance to reward them.\n\nKeep moving forward, and Cindy will make sure it pays off.",
-  
+  andySaying: 
+    "Keep it interesting.",
+  andyDescription:
+    "Andy believes a good game should never get boring.\n\nHe likes players who keep things moving and aren't afraid to switch things up from round to round.\n\nKeep him entertained, and he'll happily throw a little extra your way.",
+
     // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
@@ -286,6 +292,9 @@ export default {
   
   milestoneBonusSkillName: "Milestone Bonus",
   milestoneBonusSkillDescription: "Every time you reach a new multiplier milestone, your next winning pays 20% more.",
+
+  betterPayForNotTheSameSkillName: "Better Pay For Not The Same",
+  betterPayForNotTheSameSkillDescription: "Using a different combination every round increases winnings by 5%.",
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

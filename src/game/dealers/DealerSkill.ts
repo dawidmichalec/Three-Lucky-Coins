@@ -29,7 +29,9 @@ export enum DealerSkillId {
 
   VARIETY_PAYS = "variety_pays",
 
-  MILESTONE_BONUS = "milestone_bonus"
+  MILESTONE_BONUS = "milestone_bonus",
+
+  BETTER_PAY_FOR_NOT_THE_SAME = "better_pay_for_not_the_same"
 
   // Kolejne skille w przyszłości...
 }

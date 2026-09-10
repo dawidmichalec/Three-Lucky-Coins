@@ -625,6 +625,8 @@ export class GameScene extends BaseScene {
 
     this.lockControls();
 
+    const betterPayTriggered = this.dealerFightManager.recordCombinationForBetterPay(selected);
+
     this.betRestrictionManager.recordBetUsed(bet);
 
     const betVarietyTriggered =
@@ -738,6 +740,7 @@ export class GameScene extends BaseScene {
       selectedBet: bet,
       combination: selected,
       currentDealer: this.currentDealer,
+      betterPayTriggered,
     });
 
     await this.dealerSkillFeedbackHandler.handle(outcome.triggeredSkills);
