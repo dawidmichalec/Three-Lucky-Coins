@@ -449,6 +449,8 @@ export class GameScene extends BaseScene {
 
   private async loadDealer(dealer: DealerData): Promise<void> {
 
+    this.roundOutcomeHandler.resetDealerState();
+
     this.betRestrictionManager.setDealer(dealer);
 
     this.dealerCollectionManager.discoverDealer(dealer.id);
@@ -733,6 +735,8 @@ export class GameScene extends BaseScene {
       winAmount,
       correctGuesses,
       bet: payoutBet,
+      selectedBet: bet,
+      combination: selected,
       currentDealer: this.currentDealer,
     });
 

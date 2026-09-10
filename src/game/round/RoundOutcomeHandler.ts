@@ -10,6 +10,8 @@ export interface RoundOutcomeData {
   winAmount?: number;
   correctGuesses: number;
   bet: number;
+  selectedBet: number;
+  combination: readonly string[];
   currentDealer: DealerData;
 }
 
@@ -27,6 +29,7 @@ interface WinModifierResult {
 
 export class RoundOutcomeHandler {
   private audioManager = AudioManager.getInstance();
+  private varietyPaysWinningPairs = new Set<string>();
 
   apply(data: RoundOutcomeData): RoundOutcomeResult {
     if (!data.win) {
@@ -58,6 +61,8 @@ export class RoundOutcomeHandler {
 
     const winModifierResult = this.applyWinModifiers(
       data.winAmount,
+      data.selectedBet,
+      data.combination,
       data.currentDealer,
     );
 
@@ -76,6 +81,8 @@ export class RoundOutcomeHandler {
 
   private applyWinModifiers(
     winAmount: number,
+    bet: number,
+    combination: readonly string[],
     dealer: DealerData,
   ): WinModifierResult {
     const triggeredSkills: DealerSkillId[] = [];
@@ -83,16 +90,45 @@ export class RoundOutcomeHandler {
     let finalWinAmount = winAmount;
 
     const doublePayoutSkill = dealer.skills.find(
-      (skill) => skill.id === DealerSkillId.OOPS_I_PAID_YOU_TWICE,
+      (skill) =>
+        skill.id ===
+        DealerSkillId.OOPS_I_PAID_YOU_TWICE,
     );
 
     if (doublePayoutSkill) {
-      const triggerChance = doublePayoutSkill.triggerChance ?? 0;
+      const triggerChance =
+        doublePayoutSkill.triggerChance ?? 0;
 
       if (Math.random() < triggerChance) {
-        finalWinAmount = roundMoney(finalWinAmount * 2);
+        finalWinAmount = roundMoney(
+          finalWinAmount * 2,
+        );
 
-        triggeredSkills.push(DealerSkillId.OOPS_I_PAID_YOU_TWICE);
+        triggeredSkills.push(
+          DealerSkillId.OOPS_I_PAID_YOU_TWICE,
+        );
+      }
+    }
+
+    const varietyPaysSkill = dealer.skills.find(
+      (skill) =>
+        skill.id === DealerSkillId.VARIETY_PAYS,
+    );
+
+    if (varietyPaysSkill) {
+      const pairKey =
+        `${bet}:${combination.join("-")}`;
+
+      if (!this.varietyPaysWinningPairs.has(pairKey)) {
+        this.varietyPaysWinningPairs.add(pairKey);
+
+        finalWinAmount = roundMoney(
+          finalWinAmount * 1.2,
+        );
+
+        triggeredSkills.push(
+          DealerSkillId.VARIETY_PAYS,
+        );
       }
     }
 
@@ -163,5 +199,9 @@ export class RoundOutcomeHandler {
     }
 
     return 1;
+  }
+
+  resetDealerState(): void {
+    this.varietyPaysWinningPairs.clear();
   }
 }

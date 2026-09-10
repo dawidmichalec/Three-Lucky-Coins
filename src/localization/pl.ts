@@ -50,6 +50,8 @@ export default {
   trishaEarringsDescription: "Duże, wyraziste i niemożliwe do przeoczenia. Dokładnie takie, jakie lubi Trisha.",
   blakeNotebook: "Notatnik Blake'a",
   blakeNotebookDescription: "Każda zmiana, każda przerwa, każdy szczegół. Jeśli coś się wydarzyło, Blake prawdopodobnie to zapisał.",
+  derekDeckOfCards: "Talia kart Dereka",
+  derekDeckOfCardsDescription: "Nie ma w niej dwóch kart z tej samej talii. Derek nie wyobrażał sobie, by mogło być inaczej.",
 
   // PLAYER STATS LABELS
 
@@ -209,15 +211,12 @@ export default {
     "Już to widziałem.",
   kirkSaying: "Takie są zasady.",
   kirkDescription: "Kirk jest czarujący, bystry i niemal nie sposób go złapać w złym humorze.\n\nNawet gdy gracz popełni błąd, jego przyjazny uśmiech rzadko schodzi z twarzy.\n\nOczywiście nie oznacza to, że nie każe im za to zapłacić.",
-  trishaSaying:
-    "Kasyno zawsze dostaje swoją działkę.",
-  trishaDescription:
-    "Trisha nie została nadzorcą dzięki swojej hojności.\n\nOna doskonale wie, jak długo gracze będą szukać szczęścia i z radością pozwala im spróbować.\n\nPamiętaj tylko: im dłużej zostaniesz przy jej stole, tym większej działki kasyno oczekuje.",
-  blakeSaying: 
-    "Zgodnie z planem.",
-  blakeDescription:
-    "Blake lubi, kiedy wszystko jest dokładnie na swoim miejscu.\n\nJego żetony są idealnie poukładane, stół zawsze nieskazitelny, a harmonogram przestrzegany co do sekundy.\n\nWięc kiedy Blake daje ci dziesięć sekund na decyzję, nie licz na jedenastą.",
-
+  trishaSaying: "Kasyno zawsze dostaje swoją działkę.",
+  trishaDescription: "Trisha nie została nadzorcą dzięki swojej hojności.\n\nOna doskonale wie, jak długo gracze będą szukać szczęścia i z radością pozwala im spróbować.\n\nPamiętaj tylko: im dłużej zostaniesz przy jej stole, tym większej działki kasyno oczekuje.",
+  blakeSaying: "Zgodnie z planem.",
+  blakeDescription: "Blake lubi, kiedy wszystko jest dokładnie na swoim miejscu.\n\nJego żetony są idealnie poukładane, stół zawsze nieskazitelny, a harmonogram przestrzegany co do sekundy.\n\nWięc kiedy Blake daje ci dziesięć sekund na decyzję, nie licz na jedenastą.",
+  derekSaying: "Pokaż mi coś nowego",
+  derekDescription: "Derek widział już wszystkie sztampowe zagrywki i – szczerze mówiąc – jest nimi znudzony.\n\nCeni graczy, którzy lubią wprowadzać urozmaicenia i próbować czegoś nowego.\n\nZadbaj o interesującą grę, a Derek może sprawić, że naprawdę ci się to opłaci.",
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -271,6 +270,8 @@ export default {
   timeIsMoneySkillName: "Czas to pieniądz",
   timeIsMoneySkillDescription: "Masz dokładnie 10 sekund, aby postawić zakład.\n\nJeśli nie uda Ci się tego zrobić, zakład zostanie postawiony automatycznie ze stawką i kombinacją, które są ustawione w danym momencie.",
 
+  varietyPaysSkillName: "Różnorodność popłaca",
+  varietyPaysSkillDescription: "Wygrana z wykorzystaniem pary stawki i kombinacji, z którymi wcześniej nie wygrałeś, zwiększa wygraną o 20%.",
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

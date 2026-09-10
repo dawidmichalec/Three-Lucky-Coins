@@ -50,6 +50,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.TIME_IS_MONEY:
           await this.gameMessageOverlay.play("timeIsMoneySkillName");
           break;
+
+        case DealerSkillId.VARIETY_PAYS:
+          await this.gameMessageOverlay.play("varietyPaysSkillName");
+          break;
       }
     }
   }

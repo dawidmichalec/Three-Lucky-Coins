@@ -25,7 +25,9 @@ export enum DealerSkillId {
 
   SMALL_HOUSE_CUT = "small_house_cut",
 
-  TIME_IS_MONEY = "time_is_money"
+  TIME_IS_MONEY = "time_is_money",
+
+  VARIETY_PAYS = "variety_pays"
 
   // Kolejne skille w przyszłości...
 }

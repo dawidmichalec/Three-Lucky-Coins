@@ -59,6 +59,7 @@ export class DealerFightManager {
       ]
     );
   }
+
   startFight(playerBalance: number): DealerFightState {
     const dealer = this.getCurrentDealer();
 

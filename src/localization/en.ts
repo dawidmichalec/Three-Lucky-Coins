@@ -51,6 +51,8 @@ export default {
   trishaEarringsDescription: "Big, bold, and impossible to ignore. Just the way Trisha likes it.",
   blakeNotebook: "Blake's Notebook",
   blakeNotebookDescription: "Every shift, every break, every detail. If it happened, Blake probably wrote it down.",
+  derekDeckOfCards: "Derek's Deck of Cards",
+  derekDeckOfCardsDescription: "No two cards came from the same deck. Derek wouldn't have it any other way.",
 
   // PLAYER STATS LABELS
 
@@ -221,7 +223,10 @@ export default {
     "Right on schedule.",
   blakeDescription:
     "Blake likes everything exactly where it belongs.\n\nHis chips are perfectly stacked, his table is always spotless, and his schedule is followed to the second.\n\nSo when Blake gives you ten seconds to make a decision, don't expect an eleventh.",
-
+  derekSaying: 
+    "Show me something new.",
+  derekDescription: 
+    "Derek has seen every safe bet in the book, and frankly, he's bored of them.\n\nHe has a soft spot for players willing to mix things up and try something new.\n\nKeep him entertained, and Derek might make it worth your while.",
   // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
@@ -269,6 +274,9 @@ export default {
   timeIsMoneySkillName: "Time Is Money",
   timeIsMoneySkillDescription: "You have exactly 10 seconds to place a bet.\n\nIf you don't manage to do it, the bet is placed automatically with the bet value and combination that are set at the moment.",
 
+  varietyPaysSkillName: "Variety Pays",
+  varietyPaysSkillDescription: "Winning with a bet and combination pair you haven't won with before increases the winnings by 20%.",
+  
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
