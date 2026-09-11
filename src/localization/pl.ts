@@ -56,9 +56,12 @@ export default {
   cindyKeychainDescription: "Cindy nosi to przy sobie od lat. To, czy faktycznie przynosi szczęście, nie jest tak naprawdę istotne.",
   andyCoffeeMug: "Kubek Andy'ego",
   andyCoffeeMugDescription: "Wyszczerbiony, wyblakły i starszy od niektórych dealerów. Andy upiera się, że kawa po prostu lepiej z niego smakuje.",
-  tracySaying: "Przewidywalność daleko cię nie zaprowadzi.",
-  tracyDescription: "Tracy uważa, że ​​dobry gracz nigdy nie powinien stać się przewidywalny.\n\nStale zmieniaj swoje zakłady, a być może zyskasz jej szacunek.",
-
+  tracyNoseRing: "Kolczyk Tracy",
+  tracyNoseRingDescription: "Mały, srebrny i bez dwóch zdań w jej stylu. Tracy twierdzi, że bezpieczna gra nigdy nie była dla niej.",
+  steveHairComb: "Grzebień Steve'a",
+  steveHairCombDescription: "Elegancki kieszonkowy grzebień, który Steve zawsze ma pod ręką. Niektórym rzeczom warto poświęcić trochę więcej czasu.",
+  garyCigarCutter: "Gilotynka do cygar Gary'ego",
+  garyCigarCutterDescription: "Ciężka, mosiężna gilotynka do cygar, którą Gary nosi przy sobie od lat. Kiedy Gary zabiera się do cięcia, nie uznaje półśrodków.",
 
   // PLAYER STATS LABELS
 
@@ -182,6 +185,10 @@ export default {
   melanieDescription:
     "Melanie jest młodszą kierowniczką.\n\nPracuje w kasynie, ale nie lubi tego.",
   melanieSaying: "To koniec Twojego szczęścia",
+  tracySaying: "Przewidywalność daleko cię nie zaprowadzi.",
+  tracyDescription: "Tracy uważa, że ​​dobry gracz nigdy nie powinien stać się przewidywalny.\n\nStale zmieniaj swoje zakłady, a być może zyskasz jej szacunek.",
+  andySaying: "Niech będzie ciekawie.",
+  andyDescription: "Andy uważa, że dobra gra nigdy nie powinna być nudna.\n\nLubi graczy, którzy nie stoją w miejscu i nie boją się zmieniać swojej strategii z rundy na rundę.\n\nNie pozwól mu się nudzić, a chętnie dorzuci ci coś ekstra.",  
 
   // MID DEALERS
 
@@ -226,10 +233,13 @@ export default {
   derekDescription: "Derek widział już wszystkie sztampowe zagrywki i – szczerze mówiąc – jest nimi znudzony.\n\nCeni graczy, którzy lubią wprowadzać urozmaicenia i próbować czegoś nowego.\n\nZadbaj o interesującą grę, a Derek może sprawić, że naprawdę ci się to opłaci.",
   cindySaying: "Liczy się każdy krok.",
   cindyDescription: "Cindy uważa, że ​​każdy postęp zasługuje na odrobinę uznania.\n\nDostrzega drobne zwycięstwa, które większość ludzi pomija, i nigdy nie przepuszcza okazji, by je docenić.\n\nRób swoje i idź naprzód – Cindy zadba o to, by się to opłaciło.",
-  andySaying: "Niech będzie ciekawie.",
-  andyDescription: "Andy uważa, że dobra gra nigdy nie powinna być nudna.\n\nLubi graczy, którzy nie stoją w miejscu i nie boją się zmieniać swojej strategii z rundy na rundę.\n\nNie pozwól mu się nudzić, a chętnie dorzuci ci coś ekstra.",  
-  tracyNoseRing: "Kolczyk Tracy",
-  tracyNoseRingDescription: "Mały, srebrny i bez dwóch zdań w jej stylu. Tracy twierdzi, że bezpieczna gra nigdy nie była dla niej.",
+  
+  // SENIOR DEALERS
+  
+  steveSaying: "Czas ucieka. Więc grasz czy nie?",
+  steveDescription:"Steve pracuje przy stole wystarczająco długo, by wiedzieć, że wahanie rzadko popłaca.\n\nLubi graczy, którzy ufają swojemu instynktowi, podejmują decyzje i dbają o płynną grę.",
+  garySaying: "Nie martw się. Dobrze się tym zajmę.",
+  garyDescription: "Gary przez lata dbał o to, by kasyno zawsze otrzymywał swoją należną część. \n\nOn nazywa to biznesem. Gracze zazwyczaj określają to inaczej.",
   
   // SKILL
 
@@ -295,7 +305,13 @@ export default {
 
   switchItUpSkillName: "Czas na zmianę",
   switchItUpSkillDescription: "Używanie różnych stawek w każdej rundzie zwiększa wygrane o 5%.",
+
+  timeIsMoneyPlusSkillName: "Czas to pieniądz+",
+  timeIsMoneyPlusSkillDescription: "Masz dokładnie 7 sekund, aby postawić zakład.\n\nJeśli nie uda Ci się tego zrobić, zakład zostanie postawiony automatycznie ze stawką i kombinacją, które są ustawione w danym momencie.",
   
+  houseCutSkillName: "Kara",
+  houseCutSkillDescription: "W przypadku przegranej kasyno pobiera z Twojego salda dodatkowe 50% zakładu.",
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

@@ -159,3 +159,19 @@ export const CINDY_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.15, 0.17, 0.19, 0.25, 0.3, 0.7, 0.75, 0.81, 0.83, 0.85],
 };
+
+// STEVE
+
+export const STEVE_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.2, 0.25, 0.3, 0.35, 0.4, 0.6, 0.65, 0.7, 0.75, 0.8],
+};
+
+// GARY
+
+export const GARY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.12, 0.18, 0.23, 0.27, 0.3, 0.33, 0.35, 0.65, 0.67, 0.7, 0.73, 0.77, 0.82, 0.88],
+};

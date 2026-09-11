@@ -102,14 +102,6 @@ export class TossButton extends Container {
         this.startAnimation();
 
         this.emit("toss");
-
-        this.audioManager.play(
-          SoundId.TOSS_BUTTON_CLICKED,
-          {
-            loop: false,
-            volume: 0.5,
-          },
-        );
       },
     );
 
@@ -134,6 +126,14 @@ export class TossButton extends Container {
     if (this.isAnimating) {
       return;
     }
+
+    this.audioManager.play(
+          SoundId.TOSS_BUTTON_CLICKED,
+          {
+            loop: false,
+            volume: 0.5,
+          },
+        );
 
     this.isAnimating = true;
 

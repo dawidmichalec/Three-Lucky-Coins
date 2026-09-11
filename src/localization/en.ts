@@ -59,6 +59,10 @@ export default {
   andyCoffeeMugDescription: "Chipped, faded, and older than some of the dealers. Andy insists the coffee just tastes better in it.",
   tracyNoseRing: "Tracy's Nose Ring",
   tracyNoseRingDescription: "Small, silver, and unmistakably hers. Tracy says playing it safe was never really her thing.",
+  steveHairComb: "Steve's Hair Comb",
+  steveHairCombDescription: "A sleek pocket comb Steve always keeps within reach. Some things are worth taking your time with.",
+  garyCigarCutter: "Gary's Cigar Cutter",
+  garyCigarCutterDescription: "A heavy brass cigar cutter Gary has carried for years. When Gary takes a cut, he doesn't believe in half measures.",
 
   // PLAYER STATS LABELS
 
@@ -246,7 +250,16 @@ export default {
   tracyDescription: 
     "Tracy believes a good player should never become predictable.\n\nKeep switching up your bets, and you might just earn her respect.",
 
-    // SKILLS
+  //SENIOR DEALERS
+
+  steveSaying:
+    "The clock's ticking. So are you playing or not?",
+  steveDescription:
+    "Steve has been dealing long enough to know that hesitation rarely pays off.\n\nHe likes players who trust their instincts, make a decision, and keep the table moving.",
+  garySaying: "Don't worry. I'll take good care of it.",
+  garyDescription: "Gary has spent years making sure the house always gets its fair share.\n\nHe calls it business. Players tend to call it something else.",
+  
+  // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
 
@@ -305,6 +318,11 @@ export default {
   switchItUpSkillName: "Switch It Up",
   switchItUpSkillDescription: "Using different bets every round increases winnings by 5%.",
 
+  timeIsMoneyPlusSkillName: "Time Is Money+",
+  timeIsMoneyPlusSkillDescription: "You have exactly 7 seconds to place a bet.\n\nIf you don't manage to do it, the bet is placed automatically with the bet value and combination that are set at the moment.",
+
+  houseCutSkillName: "House Cut",
+  houseCutSkillDescription: "On a loss, the house takes an additional 50% of your bet from your balance.",
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

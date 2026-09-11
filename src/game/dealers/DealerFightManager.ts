@@ -190,22 +190,35 @@ export class DealerFightManager {
     return changedCombination;
   }
 
-  resolveSmallHouseCut(
+  resolveHouseCut(
     bet: number,
-  ): number {
+  ): {
+    amount: number;
+    skillId?: DealerSkillId;
+  } {
     const dealer = this.getCurrentDealer();
 
-    const hasSmallHouseCut = dealer.skills.some(
+    const skill = dealer.skills.find(
       (skill) =>
-        skill.id ===
-        DealerSkillId.SMALL_HOUSE_CUT,
+        skill.id === DealerSkillId.SMALL_HOUSE_CUT ||
+        skill.id === DealerSkillId.HOUSE_CUT,
     );
 
-    if (!hasSmallHouseCut) {
-      return 0;
+    if (!skill) {
+      return {
+        amount: 0,
+      };
     }
 
-    return bet * 0.25;
+    const cutPercentage =
+      skill.id === DealerSkillId.HOUSE_CUT
+        ? 0.5
+        : 0.25;
+
+    return {
+      amount: bet * cutPercentage,
+      skillId: skill.id,
+    };
   }
 
   recordGoldenCoins(amount: number): void {

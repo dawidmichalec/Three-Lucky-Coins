@@ -14,6 +14,7 @@ export class RunDealerGenerator {
     return [
       ...this.generateJuniorStage(),
       ...this.generateMidStage(),
+      ...this.generateSeniorStage(),
     ];
   }
 
@@ -98,5 +99,17 @@ export class RunDealerGenerator {
     }
 
     return selected;
+  }
+
+  private static generateSeniorStage(): DealerData[] {
+    const regularDealers =
+      getRegularDealersByGroup(
+        DealerGroup.SENIOR,
+      );
+
+    return this.pickRandomDealers(
+      regularDealers,
+      2,
+    );
   }
 }

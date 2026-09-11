@@ -33,7 +33,11 @@ export enum DealerSkillId {
 
   BETTER_PAY_FOR_NOT_THE_SAME = "better_pay_for_not_the_same",
 
-  SWITCH_IT_UP = "switch_it_up"
+  SWITCH_IT_UP = "switch_it_up",
+
+  TIME_IS_MONEY_PLUS = "time_is_money_plus",
+
+  HOUSE_CUT = "house_cut"
 
   // Kolejne skille w przyszłości...
 }

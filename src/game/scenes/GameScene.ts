@@ -566,8 +566,7 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.roundTimerManager.cancel();
-    this.view.gameUI.hideRoundTimer();
+    this.stopRoundTimer();
 
     const noDuplicatesTriggered =
       this.dealerFightManager
@@ -926,19 +925,21 @@ export class GameScene extends BaseScene {
       );
     }
 
-    const smallHouseCut =
-      this.dealerFightManager
-        .resolveSmallHouseCut(bet);
+    const houseCut =
+    this.dealerFightManager.resolveHouseCut(bet);
 
-    if (smallHouseCut > 0) {
+    if (
+      houseCut.amount > 0 &&
+      houseCut.skillId
+    ) {
       await this.dealerSkillFeedbackHandler.handle([
-        DealerSkillId.SMALL_HOUSE_CUT,
+        houseCut.skillId,
       ]);
 
-      this.player.balance -= smallHouseCut;
+      this.player.balance -= houseCut.amount;
 
       await this.view.gameUI.animatePenaltyIntoBalance(
-        smallHouseCut,
+        houseCut.amount,
         this.player.balance,
       );
 
@@ -1257,19 +1258,13 @@ export class GameScene extends BaseScene {
     const skill =
       this.currentDealer.skills.find(
         (skill) =>
-          skill.id ===
-          DealerSkillId.TIME_IS_MONEY,
+          skill.id === DealerSkillId.TIME_IS_MONEY ||
+          skill.id === DealerSkillId.TIME_IS_MONEY_PLUS,
       );
+
+    this.stopRoundTimer();
 
     if (!skill?.timeLimit) {
-      this.roundTimerManager.cancel();
-
-      this.view.gameUI.hideRoundTimer();
-
-      this.audioManager.stop(
-        SoundId.CLOCK_TICKING_SOUND_EFFECT,
-      );
-
       return;
     }
 
@@ -1297,14 +1292,12 @@ export class GameScene extends BaseScene {
           return;
         }
 
-        this.audioManager.stop(
-          SoundId.CLOCK_TICKING_SOUND_EFFECT,
-        );
+        this.stopRoundTimer();
 
         this.lockControls();
 
         await this.dealerSkillFeedbackHandler.handle([
-          DealerSkillId.TIME_IS_MONEY,
+          skill.id,
         ]);
 
         if (this.roundState !== "ready") {
@@ -1313,6 +1306,16 @@ export class GameScene extends BaseScene {
 
         await this.startRound();
       },
+    );
+  }
+
+  private stopRoundTimer(): void {
+    this.roundTimerManager.cancel();
+
+    this.view.gameUI.hideRoundTimer();
+
+    this.audioManager.stop(
+      SoundId.CLOCK_TICKING_SOUND_EFFECT,
     );
   }
 
@@ -1448,8 +1451,7 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.roundTimerManager.cancel();
-    this.view.gameUI.hideRoundTimer();
+    this.stopRoundTimer();
 
     this.audioManager.stop(
       SoundId.CLOCK_TICKING_SOUND_EFFECT,
@@ -1473,6 +1475,9 @@ export class GameScene extends BaseScene {
   // CLEANUP
 
   cleanup() {
+
+    this.stopRoundTimer();
+
     this.app.ticker.remove(this.updateTicker);
 
     this.dealerPresentationController.destroy();

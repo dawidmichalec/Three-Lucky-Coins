@@ -66,6 +66,14 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.SWITCH_IT_UP:
           await this.gameMessageOverlay.play("switchItUpSkillName");
           break;
+
+        case DealerSkillId.TIME_IS_MONEY_PLUS:
+          await this.gameMessageOverlay.play("timeIsMoneyPlusSkillName");
+          break;
+
+        case DealerSkillId.HOUSE_CUT:
+          await this.gameMessageOverlay.play("houseCutSkillName");
+          break;
       }
     }
   }
