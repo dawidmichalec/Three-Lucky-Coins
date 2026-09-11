@@ -627,6 +627,8 @@ export class GameScene extends BaseScene {
 
     const betterPayTriggered = this.dealerFightManager.recordCombinationForBetterPay(selected);
 
+    const switchItUpTriggered = this.dealerFightManager.recordBetForSwitchItUp(bet);
+
     this.betRestrictionManager.recordBetUsed(bet);
 
     const betVarietyTriggered =
@@ -741,6 +743,7 @@ export class GameScene extends BaseScene {
       combination: selected,
       currentDealer: this.currentDealer,
       betterPayTriggered,
+      switchItUpTriggered,
     });
 
     await this.dealerSkillFeedbackHandler.handle(outcome.triggeredSkills);

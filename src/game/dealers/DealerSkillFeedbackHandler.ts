@@ -62,6 +62,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.BETTER_PAY_FOR_NOT_THE_SAME:
           await this.gameMessageOverlay.play("betterPayForNotTheSameSkillName");
           break;
+
+        case DealerSkillId.SWITCH_IT_UP:
+          await this.gameMessageOverlay.play("switchItUpSkillName");
+          break;
       }
     }
   }

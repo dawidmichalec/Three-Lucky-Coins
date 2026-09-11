@@ -57,6 +57,8 @@ export default {
   cindyKeychainDescription: "Cindy has carried it for years. Whether it actually brings good luck isn't really the point.",
   andyCoffeeMug: "Andy's Coffee Mug",
   andyCoffeeMugDescription: "Chipped, faded, and older than some of the dealers. Andy insists the coffee just tastes better in it.",
+  tracyNoseRing: "Tracy's Nose Ring",
+  tracyNoseRingDescription: "Small, silver, and unmistakably hers. Tracy says playing it safe was never really her thing.",
 
   // PLAYER STATS LABELS
 
@@ -239,6 +241,10 @@ export default {
     "Keep it interesting.",
   andyDescription:
     "Andy believes a good game should never get boring.\n\nHe likes players who keep things moving and aren't afraid to switch things up from round to round.\n\nKeep him entertained, and he'll happily throw a little extra your way.",
+  tracySaying:
+    "Predictable won't get you far.",
+  tracyDescription: 
+    "Tracy believes a good player should never become predictable.\n\nKeep switching up your bets, and you might just earn her respect.",
 
     // SKILLS
 
@@ -295,6 +301,10 @@ export default {
 
   betterPayForNotTheSameSkillName: "Better Pay For Not The Same",
   betterPayForNotTheSameSkillDescription: "Using a different combination every round increases winnings by 5%.",
+
+  switchItUpSkillName: "Switch It Up",
+  switchItUpSkillDescription: "Using different bets every round increases winnings by 5%.",
+
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

@@ -40,6 +40,14 @@ export const ANDY_PROFILE: DealerOddsProfile = {
   headsProbabilities: [0.15, 0.18, 0.2, 0.23, 0.25, 0.75, 0.77, 0.8, 0.82, 0.85],
 };
 
+// TRACY
+
+export const TRACY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.15, 0.16, 0.22, 0.26, 0.28, 0.72, 0.74, 0.78, 0.84, 0.85],
+};
+
 // MELANIE
 
 export const MELANIE_PROFILE: DealerOddsProfile = {

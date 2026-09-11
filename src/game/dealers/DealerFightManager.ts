@@ -43,6 +43,8 @@ export class DealerFightManager {
 
   private previousAndyCombination: string | null = null;
 
+  private previousTracyBet: number | null = null;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -92,6 +94,8 @@ export class DealerFightManager {
 
     this.previousAndyCombination = null;
 
+    this.previousTracyBet = null;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -135,6 +139,29 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordBetForSwitchItUp(
+    bet: number,
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasSwitchItUp = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.SWITCH_IT_UP,
+    );
+
+    if (!hasSwitchItUp) {
+      return false;
+    }
+
+    const changedBet =
+      this.previousTracyBet !== null &&
+      this.previousTracyBet !== bet;
+
+    this.previousTracyBet = bet;
+
+    return changedBet;
   }
 
   recordCombinationForBetterPay(

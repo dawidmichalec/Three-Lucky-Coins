@@ -14,6 +14,7 @@ export interface RoundOutcomeData {
   combination: readonly string[];
   currentDealer: DealerData;
   betterPayTriggered: boolean;
+  switchItUpTriggered: boolean;
 }
 
 export interface RoundOutcomeResult {
@@ -66,6 +67,7 @@ export class RoundOutcomeHandler {
       data.selectedBet,
       data.combination,
       data.betterPayTriggered,
+      data.switchItUpTriggered,
       data.currentDealer,
     );
 
@@ -87,6 +89,7 @@ export class RoundOutcomeHandler {
     bet: number,
     combination: readonly string[],
     betterPayTriggered: boolean,
+    switchItUpTriggered: boolean,
     dealer: DealerData,
   ): WinModifierResult {
     const triggeredSkills: DealerSkillId[] = [];
@@ -168,6 +171,24 @@ export class RoundOutcomeHandler {
 
       triggeredSkills.push(
         DealerSkillId.BETTER_PAY_FOR_NOT_THE_SAME,
+      );
+    }
+
+    const switchItUpSkill = dealer.skills.find(
+      (skill) =>
+        skill.id === DealerSkillId.SWITCH_IT_UP,
+    );
+
+    if (
+      switchItUpSkill &&
+      switchItUpTriggered
+    ) {
+      finalWinAmount = roundMoney(
+        finalWinAmount * 1.05,
+      );
+
+      triggeredSkills.push(
+        DealerSkillId.SWITCH_IT_UP,
       );
     }
 

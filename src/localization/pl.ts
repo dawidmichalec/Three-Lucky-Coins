@@ -56,6 +56,9 @@ export default {
   cindyKeychainDescription: "Cindy nosi to przy sobie od lat. To, czy faktycznie przynosi szczęście, nie jest tak naprawdę istotne.",
   andyCoffeeMug: "Kubek Andy'ego",
   andyCoffeeMugDescription: "Wyszczerbiony, wyblakły i starszy od niektórych dealerów. Andy upiera się, że kawa po prostu lepiej z niego smakuje.",
+  tracySaying: "Przewidywalność daleko cię nie zaprowadzi.",
+  tracyDescription: "Tracy uważa, że ​​dobry gracz nigdy nie powinien stać się przewidywalny.\n\nStale zmieniaj swoje zakłady, a być może zyskasz jej szacunek.",
+
 
   // PLAYER STATS LABELS
 
@@ -225,6 +228,9 @@ export default {
   cindyDescription: "Cindy uważa, że ​​każdy postęp zasługuje na odrobinę uznania.\n\nDostrzega drobne zwycięstwa, które większość ludzi pomija, i nigdy nie przepuszcza okazji, by je docenić.\n\nRób swoje i idź naprzód – Cindy zadba o to, by się to opłaciło.",
   andySaying: "Niech będzie ciekawie.",
   andyDescription: "Andy uważa, że dobra gra nigdy nie powinna być nudna.\n\nLubi graczy, którzy nie stoją w miejscu i nie boją się zmieniać swojej strategii z rundy na rundę.\n\nNie pozwól mu się nudzić, a chętnie dorzuci ci coś ekstra.",  
+  tracyNoseRing: "Kolczyk Tracy",
+  tracyNoseRingDescription: "Mały, srebrny i bez dwóch zdań w jej stylu. Tracy twierdzi, że bezpieczna gra nigdy nie była dla niej.",
+  
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -286,6 +292,10 @@ export default {
   
   betterPayForNotTheSameSkillName: "Zmiana popłaca",
   betterPayForNotTheSameSkillDescription: "Używanie innej kombinacji w każdej rundzie zwiększa wygrane o 5%.",
+
+  switchItUpSkillName: "Czas na zmianę",
+  switchItUpSkillDescription: "Używanie różnych stawek w każdej rundzie zwiększa wygrane o 5%.",
+  
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",
