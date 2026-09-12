@@ -748,7 +748,19 @@ export class GameScene extends BaseScene {
       switchItUpTriggered,
     });
 
-    await this.dealerSkillFeedbackHandler.handle(outcome.triggeredSkills);
+    const payoutBonusSkills = [
+      DealerSkillId.OOPS_I_PAID_YOU_TWICE,
+      DealerSkillId.BETTER_PAY_FOR_NOT_THE_SAME,
+      DealerSkillId.SWITCH_IT_UP,
+    ];
+
+    const immediateSkills =
+      outcome.triggeredSkills.filter(
+        (skillId) =>
+          !payoutBonusSkills.includes(skillId),
+      );
+
+    await this.dealerSkillFeedbackHandler.handle(immediateSkills);
 
     const streakResolution = outcome.streakResolution;
 
@@ -767,6 +779,27 @@ export class GameScene extends BaseScene {
 
     if (win && winAmount !== undefined) {
       const resolvedWinAmount = outcome.wonAmount;
+
+      const payoutBonusSkill =
+        outcome.triggeredSkills.find(
+          (skillId) =>
+            payoutBonusSkills.includes(skillId),
+        );
+
+      if (payoutBonusSkill) {
+        await this.dealerSkillFeedbackHandler.handle([
+          payoutBonusSkill,
+        ]);
+
+        const bonusAmount =
+          resolvedWinAmount - winAmount;
+
+        await this.roundPayoutPresentationController
+          .presentBonus(
+            bonusAmount,
+            resolvedWinAmount,
+          );
+      }
 
       const payoutResult =
         this.roundPayoutResolver.resolve({

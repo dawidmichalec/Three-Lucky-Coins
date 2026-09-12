@@ -1,11 +1,9 @@
 import { GameUI } from "../GameUI";
 import { PerkEffectMessageOverlay, PerkEffectMessageType } from "../overlays/PerkEffectOverlay";
-import {
-  CoinSenseResult,
-  GamblerResult,
-  LuckyHandResult,
-  RiskTakerResult,
-} from "../../game/perks/PerkEffectApplier";
+import type { CoinSenseResult } from "../../game/perks/effects/CoinSenseEffect";
+import type { RiskTakerResult } from "../../game/perks/effects/RiskTakerEffect";
+import type { GamblerResult } from "../../game/perks/effects/GamblerEffect";
+import type { LuckyHandResult } from "../../game/perks/effects/LuckyHandEffect";
 import { roundMoney } from "../../game/util/MoneyUtils";
 
 export class RoundPayoutPresentationController {
@@ -87,5 +85,38 @@ export class RoundPayoutPresentationController {
         luckyHandResult.finalWinAmount,
       );
     }
+  }
+
+  async presentBonus(
+    bonusAmount: number,
+    finalAmount: number,
+  ): Promise<void> {
+    if (bonusAmount <= 0) {
+      return;
+    }
+
+    const baseAmount =
+      roundMoney(finalAmount - bonusAmount);
+
+    this.gameUI.updateWon(baseAmount);
+
+    await this.gameUI.animateBonusIntoWon(
+      bonusAmount,
+      finalAmount,
+    );
+  }
+
+  async presentDealerBonus(
+    bonusAmount: number,
+    finalAmount: number,
+  ): Promise<void> {
+    if (bonusAmount <= 0) {
+      return;
+    }
+
+    await this.gameUI.animateBonusIntoWon(
+      bonusAmount,
+      finalAmount,
+    );
   }
 }
