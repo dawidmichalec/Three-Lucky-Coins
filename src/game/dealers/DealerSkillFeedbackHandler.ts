@@ -82,6 +82,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.PATTERN_BREAKER:
           await this.gameMessageOverlay.play("patternBreakerSkillName");
           break;
+
+        case DealerSkillId.DEJA_VU:
+          await this.gameMessageOverlay.play("dejaVuSkillName");
+          break;
       }
     }
   }

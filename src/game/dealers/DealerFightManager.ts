@@ -51,6 +51,9 @@ export class DealerFightManager {
   private previousJessicaBet: number | null = null;
   private jessicaRepeatedBetCount = 0;
 
+  private previousTedCombination: string | null = null;
+  private tedRepeatedCombinationCount = 0;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -108,6 +111,9 @@ export class DealerFightManager {
     this.previousJessicaBet = null; 
     this.jessicaRepeatedBetCount = 0;
 
+    this.previousTedCombination = null;
+    this.tedRepeatedCombinationCount = 0;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -151,6 +157,40 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordCombinationForDejaVu(
+    combination: readonly string[],
+  ): number {
+    const dealer = this.getCurrentDealer();
+
+    const hasDejaVu =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.DEJA_VU,
+      );
+
+    if (!hasDejaVu) {
+      return 0;
+    }
+
+    const combinationKey =
+      combination.join("-");
+
+    if (
+      this.previousTedCombination ===
+      combinationKey
+    ) {
+      this.tedRepeatedCombinationCount++;
+    } else {
+      this.tedRepeatedCombinationCount = 1;
+    }
+
+    this.previousTedCombination =
+      combinationKey;
+
+    return this.tedRepeatedCombinationCount;
   }
 
   recordBetForPatternBreaker(

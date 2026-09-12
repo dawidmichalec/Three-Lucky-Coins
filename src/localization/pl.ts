@@ -66,7 +66,8 @@ export default {
   charlieFidgetRingDescription: "Wytarty srebrny pierścień, którym Charlie bez przerwy obraca na palcu. Siedzenie bezczynnie nigdy nie było w jego stylu.",
   jessicaRubiksCube: "Kostka Rubika Jessiki",
   jessicaRubiksCubeDescription: "Wysłużona kostka, którą Jessica potrafi ułożyć niemal bez zastanowienia. Twierdzi, że schematy łatwo przełamać, gdy nauczysz się je dostrzegać.",
-
+  tedCigaretteCase:"Papierośnica Teda",
+  tedCigaretteCaseDescription: "Porysowana srebrna papierośnica, którą Ted nosi ze sobą od lat. Nie pamięta już, ile paczek papierosów przez nią przeszło, ale niektórych nawyków trudniej się pozbyć niż innych.",
 
   // PLAYER STATS LABELS
 
@@ -249,7 +250,9 @@ export default {
   charlieDescription: "Charlie szybko się nudzi, gdy gracze wpadają w rutynę.\n\nStale zmieniaj swoje podejście, inaczej sprawi, że za przewidywalność przyjdzie ci słono zapłacić.",
   jessicaSaying: "Raz to wybór. Dwa razy to już schemat.",
   jessicaDescription: "Jessica ma dobre oko do graczy, którzy zbyt łatwo przyzwyczajają się do swoich nawyków.\n\nPowtarzaj się zbyt często, a zadba o to, żeby każdy znajomy wybór stawał się coraz mniej opłacalny.",
-  
+  tedSaying: "Ciągle ta sama historia, co?",
+  tedDescription: "Ted spędził za stołem wystarczająco dużo czasu, żeby od razu rozpoznać znajome zagranie.\n\nPowtarzaj tę samą kombinację, a zadba o to, żeby za każdym razem opłacała się trochę mniej.",
+
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -327,6 +330,9 @@ export default {
   patternBreakerSkillName: "Przełamywanie schematów",
   patternBreakerSkillDescription: "Powtarzanie tej samej stawki zmniejsza wygraną: o 20% przy dwóch razach z rzędu, 30% przy trzech, 40% przy czterech i 50% przy pięciu lub więcej.",
   
+  dejaVuSkillName: "Déjà Vu",
+  dejaVuSkillDescription: "Powtarzanie tej samej kombinacji zmniejsza wygraną: o 20% przy dwóch razach z rzędu, 30% przy trzech, 40% przy czterech i 50% przy pięciu lub więcej.",
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

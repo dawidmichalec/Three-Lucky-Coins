@@ -184,10 +184,18 @@ export const CHARLIE_PROFILE: DealerOddsProfile = {
   headsProbabilities: [0.16, 0.19, 0.21, 0.26, 0.34, 0.66, 0.74, 0.79, 0.81, 0.84],
 };
 
-// Jessica
+// JESSICA
 
 export const JESSICA_PROFILE: DealerOddsProfile = {
   visibility: OddsVisibility.EXACT,
 
   headsProbabilities: [0.18, 0.2, 0.22, 0.28, 0.3, 0.33, 0.67, 0.7, 0.72, 0.78, 0.8, 0.82],
+};
+
+// TED
+
+export const TED_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.19, 0.2, 0.22, 0.27, 0.32, 0.33, 0.67, 0.68, 0.73, 0.78, 0.8, 0.81],
 };

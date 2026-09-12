@@ -67,6 +67,8 @@ export default {
   charlieFidgetRingDescription: "A worn silver ring Charlie constantly spins around his finger. Staying still was never really his thing.",
   jessicaRubiksCube: "Jessica's Rubik's Cube",
   jessicaRubiksCubeDescription: "A well-worn puzzle Jessica can solve without much thought. She says patterns are easy to break once you learn how to see them.",
+  tedCigaretteCase: "Ted's Cigarette Case",
+  tedCigaretteCaseDescription: "A scratched silver cigarette case Ted has carried for years. He's forgotten how many packs have passed through it, but some habits are harder to break than others.",
 
   // PLAYER STATS LABELS
 
@@ -266,6 +268,8 @@ export default {
   charlieDescription: "Charlie gets bored quickly when players fall into a routine.\n\nKeep changing your approach, or he'll make sure predictability comes at a price.",
   jessicaSaying: "Once is a choice. Twice is a pattern.",
   jessicaDescription: "Jessica has a sharp eye for players who settle into comfortable habits.\n\nRepeat yourself too often, and she'll make sure every familiar choice becomes a little less rewarding.",
+  tedSaying: "Same old story, huh?",
+  tedDescription: "Ted has spent enough time behind the table to recognize a familiar play when he sees one.\n\nKeep repeating the same combination, and he'll make sure it pays a little less every time.",
 
   // SKILLS
 
@@ -337,6 +341,9 @@ export default {
   
   patternBreakerSkillName: "Pattern Breaker",
   patternBreakerSkillDescription: "Repeated bets reduce your winnings: 20% for two in a row, 30% for three, 40% for four, and 50% for five or more.",
+
+  dejaVuSkillName: "Déjà Vu",
+  dejaVuSkillDescription: "Repeated combinations reduce your winnings: 20% for two in a row, 30% for three, 40% for four, and 50% for five or more.",
 
   // PERKS
 
