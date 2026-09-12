@@ -85,6 +85,7 @@ export class GameScene extends BaseScene {
   private betRestrictionManager = new BetRestrictionManager();
   private roundTimerManager = new RoundTimerManager();
   private audioManager = AudioManager.getInstance();
+  private pendingHabitBreakerTriggered = false;
   
 
   constructor(
@@ -624,6 +625,8 @@ export class GameScene extends BaseScene {
 
     this.lockControls();
 
+    const habitBreakerTriggered = this.dealerFightManager.recordSetupForHabitBreaker(bet,selected,);
+
     const betterPayTriggered = this.dealerFightManager.recordCombinationForBetterPay(selected);
 
     const switchItUpTriggered = this.dealerFightManager.recordBetForSwitchItUp(bet);
@@ -813,8 +816,9 @@ export class GameScene extends BaseScene {
         this.gambleForMoreManager.shouldTrigger();
 
       if (gambleTriggered) {
-        this.pendingStreakResolution =
-          outcome.streakResolution;
+        this.pendingStreakResolution = outcome.streakResolution;
+
+        this.pendingHabitBreakerTriggered = habitBreakerTriggered;
 
         if (mandatoryGambleForMoreTriggered) {
           this.dealerFightManager.consumeMandatoryGambleForMore();
@@ -892,15 +896,21 @@ export class GameScene extends BaseScene {
         );
       }
 
+      const habitBreakerWinAmount =
+        await this.applyHabitBreaker(
+          finalRoundWinAmount,
+          habitBreakerTriggered,
+        );
+
       this.runStatsRecorder.finishRound({
         win: true,
 
-        winAmount: finalRoundWinAmount,
+        winAmount: habitBreakerWinAmount,
 
         streakMultiplier: this.streakMultiplierManager.getValue(),
       });
 
-      this.commitWin(finalRoundWinAmount);
+      this.commitWin(habitBreakerWinAmount);
 
       await this.perkGameplayController.handleWinCommitted();
 
@@ -1006,9 +1016,13 @@ export class GameScene extends BaseScene {
       );
     }
 
-    this.commitWin(
-      finalRoundWinAmount,
-    );
+    const habitBreakerWinAmount =
+      await this.applyHabitBreaker(
+        finalRoundWinAmount,
+        this.pendingHabitBreakerTriggered,
+      );
+
+    this.commitWin(habitBreakerWinAmount);
 
     await this.perkGameplayController.handleWinCommitted();
 
@@ -1049,11 +1063,12 @@ export class GameScene extends BaseScene {
 
     this.runStatsRecorder.finishRound({
       win: true,
-      winAmount: finalRoundWinAmount,
+      winAmount: habitBreakerWinAmount,
       streakMultiplier:
         this.streakMultiplierManager.getValue(),
     });
 
+    this.pendingHabitBreakerTriggered = false;
     this.pendingStreakResolution = undefined;
 
     await this.finishRound(true);
@@ -1117,6 +1132,8 @@ export class GameScene extends BaseScene {
     this.view.gambleForMoreOverlay.hide();
 
     this.pendingStreakResolution = undefined;
+
+    this.pendingHabitBreakerTriggered = false;
 
     await this.finishRound(false);
   }
@@ -1252,6 +1269,29 @@ export class GameScene extends BaseScene {
     );
 
     this.view.gameUI.updateWon(amount);
+  }
+
+  private async applyHabitBreaker(
+    winAmount: number,
+    triggered: boolean,
+  ): Promise<number> {
+    if (!triggered) {
+      return winAmount;
+    }
+
+    const finalWinAmount =
+      winAmount * 0.5;
+
+    await this.dealerSkillFeedbackHandler.handle([
+      DealerSkillId.HABIT_BREAKER,
+    ]);
+
+    await this.view.gameUI.animatePenaltyIntoWon(
+      winAmount - finalWinAmount,
+      finalWinAmount,
+    );
+
+    return finalWinAmount;
   }
 
   private startRoundTimerIfNeeded(): void {

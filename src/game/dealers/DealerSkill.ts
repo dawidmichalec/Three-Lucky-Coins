@@ -37,7 +37,9 @@ export enum DealerSkillId {
 
   TIME_IS_MONEY_PLUS = "time_is_money_plus",
 
-  HOUSE_CUT = "house_cut"
+  HOUSE_CUT = "house_cut",
+
+  HABIT_BREAKER = "habit_breaker"
 
   // Kolejne skille w przyszłości...
 }

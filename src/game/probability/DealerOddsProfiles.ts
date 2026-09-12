@@ -175,3 +175,11 @@ export const GARY_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.12, 0.18, 0.23, 0.27, 0.3, 0.33, 0.35, 0.65, 0.67, 0.7, 0.73, 0.77, 0.82, 0.88],
 };
+
+// CHARLIE
+
+export const CHARLIE_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.16, 0.19, 0.21, 0.26, 0.34, 0.66, 0.74, 0.79, 0.81, 0.84],
+};

@@ -62,6 +62,8 @@ export default {
   steveHairCombDescription: "Elegancki kieszonkowy grzebień, który Steve zawsze ma pod ręką. Niektórym rzeczom warto poświęcić trochę więcej czasu.",
   garyCigarCutter: "Gilotynka do cygar Gary'ego",
   garyCigarCutterDescription: "Ciężka, mosiężna gilotynka do cygar, którą Gary nosi przy sobie od lat. Kiedy Gary zabiera się do cięcia, nie uznaje półśrodków.",
+  charlieFidgetRing: "Obrotowy pierścień Charliego",
+  charlieFidgetRingDescription: "Wytarty srebrny pierścień, którym Charlie bez przerwy obraca na palcu. Siedzenie bezczynnie nigdy nie było w jego stylu.",
 
   // PLAYER STATS LABELS
 
@@ -240,7 +242,9 @@ export default {
   steveDescription:"Steve pracuje przy stole wystarczająco długo, by wiedzieć, że wahanie rzadko popłaca.\n\nLubi graczy, którzy ufają swojemu instynktowi, podejmują decyzje i dbają o płynną grę.",
   garySaying: "Nie martw się. Dobrze się tym zajmę.",
   garyDescription: "Gary przez lata dbał o to, by kasyno zawsze otrzymywał swoją należną część. \n\nOn nazywa to biznesem. Gracze zazwyczaj określają to inaczej.",
-  
+  charlieSaying: "Ten sam ruch dwa razy? Ułatwiasz mi robotę.",
+  charlieDescription: "Charlie szybko się nudzi, gdy gracze wpadają w rutynę.\n\nStale zmieniaj swoje podejście, inaczej sprawi, że za przewidywalność przyjdzie ci słono zapłacić.",
+
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -311,6 +315,9 @@ export default {
   
   houseCutSkillName: "Kara",
   houseCutSkillDescription: "W przypadku przegranej kasyno pobiera z Twojego salda dodatkowe 50% zakładu.",
+
+  habitBreakerSkillName: "Łamacz nawyków",
+  habitBreakerSkillDescription: "Powtórzenie tego samego zakładu i kombinacji co w poprzedniej rundzie zmniejsza Twoją kolejną wygraną o 50%.",
 
   // PERKS
 

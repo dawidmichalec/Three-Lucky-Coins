@@ -74,6 +74,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.HOUSE_CUT:
           await this.gameMessageOverlay.play("houseCutSkillName");
           break;
+
+         case DealerSkillId.HABIT_BREAKER:
+          await this.gameMessageOverlay.play("habitBreakerSkillName");
+          break;
       }
     }
   }

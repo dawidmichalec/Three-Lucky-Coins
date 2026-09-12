@@ -63,6 +63,9 @@ export default {
   steveHairCombDescription: "A sleek pocket comb Steve always keeps within reach. Some things are worth taking your time with.",
   garyCigarCutter: "Gary's Cigar Cutter",
   garyCigarCutterDescription: "A heavy brass cigar cutter Gary has carried for years. When Gary takes a cut, he doesn't believe in half measures.",
+  charlieFidgetRing: "Charlie's Fidget Ring",
+  charlieFidgetRingDescription: "A worn silver ring Charlie constantly spins around his finger. Staying still was never really his thing.",
+
 
   // PLAYER STATS LABELS
 
@@ -258,7 +261,9 @@ export default {
     "Steve has been dealing long enough to know that hesitation rarely pays off.\n\nHe likes players who trust their instincts, make a decision, and keep the table moving.",
   garySaying: "Don't worry. I'll take good care of it.",
   garyDescription: "Gary has spent years making sure the house always gets its fair share.\n\nHe calls it business. Players tend to call it something else.",
-  
+  charlieSaying: "Same move twice? You're making this too easy.",
+  charlieDescription: "Charlie gets bored quickly when players fall into a routine.\n\nKeep changing your approach, or he'll make sure predictability comes at a price.",
+
   // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
@@ -323,6 +328,10 @@ export default {
 
   houseCutSkillName: "House Cut",
   houseCutSkillDescription: "On a loss, the house takes an additional 50% of your bet from your balance.",
+
+  habitBreakerSkillName: "Habit Breaker",
+  habitBreakerSkillDescription: "Repeating the same bet and combination as in the previous round reduces your next winnings by 50%.",
+  
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
