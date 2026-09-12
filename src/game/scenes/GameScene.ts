@@ -631,6 +631,8 @@ export class GameScene extends BaseScene {
 
     const switchItUpTriggered = this.dealerFightManager.recordBetForSwitchItUp(bet);
 
+    const patternBreakerBetCount = this.dealerFightManager.recordBetForPatternBreaker(bet);
+
     this.betRestrictionManager.recordBetUsed(bet);
 
     const betVarietyTriggered =
@@ -746,6 +748,7 @@ export class GameScene extends BaseScene {
       currentDealer: this.currentDealer,
       betterPayTriggered,
       switchItUpTriggered,
+      patternBreakerBetCount,
     });
 
     const payoutBonusSkills = [
@@ -754,10 +757,15 @@ export class GameScene extends BaseScene {
       DealerSkillId.SWITCH_IT_UP,
     ];
 
+    const payoutPresentationSkills = [
+      ...payoutBonusSkills,
+      DealerSkillId.PATTERN_BREAKER,
+    ];
+
     const immediateSkills =
       outcome.triggeredSkills.filter(
         (skillId) =>
-          !payoutBonusSkills.includes(skillId),
+          !payoutPresentationSkills.includes(skillId),
       );
 
     await this.dealerSkillFeedbackHandler.handle(immediateSkills);
@@ -780,6 +788,23 @@ export class GameScene extends BaseScene {
     if (win && winAmount !== undefined) {
       const resolvedWinAmount = outcome.wonAmount;
 
+      const patternBreakerTriggered =
+        outcome.triggeredSkills.includes(
+          DealerSkillId.PATTERN_BREAKER,
+        );
+
+      if (patternBreakerTriggered) {
+        await this.dealerSkillFeedbackHandler.handle([
+          DealerSkillId.PATTERN_BREAKER,
+        ]);
+
+        await this.roundPayoutPresentationController
+          .presentPenalty(
+            winAmount - resolvedWinAmount,
+            resolvedWinAmount,
+          );
+      }
+      
       const payoutBonusSkill =
         outcome.triggeredSkills.find(
           (skillId) =>

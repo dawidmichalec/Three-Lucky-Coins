@@ -48,6 +48,9 @@ export class DealerFightManager {
   private previousCharlieBet: number | null = null;
   private previousCharlieCombination: string | null = null;
 
+  private previousJessicaBet: number | null = null;
+  private jessicaRepeatedBetCount = 0;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -102,6 +105,9 @@ export class DealerFightManager {
     this.previousCharlieBet = null;
     this.previousCharlieCombination = null;
 
+    this.previousJessicaBet = null; 
+    this.jessicaRepeatedBetCount = 0;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -145,6 +151,33 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordBetForPatternBreaker(
+    bet: number,
+  ): number {
+    const dealer = this.getCurrentDealer();
+
+    const hasPatternBreaker =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.PATTERN_BREAKER,
+      );
+
+    if (!hasPatternBreaker) {
+      return 0;
+    }
+
+    if (this.previousJessicaBet === bet) {
+      this.jessicaRepeatedBetCount++;
+    } else {
+      this.jessicaRepeatedBetCount = 1;
+    }
+
+    this.previousJessicaBet = bet;
+
+    return this.jessicaRepeatedBetCount;
   }
 
   recordSetupForHabitBreaker(

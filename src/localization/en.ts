@@ -65,7 +65,8 @@ export default {
   garyCigarCutterDescription: "A heavy brass cigar cutter Gary has carried for years. When Gary takes a cut, he doesn't believe in half measures.",
   charlieFidgetRing: "Charlie's Fidget Ring",
   charlieFidgetRingDescription: "A worn silver ring Charlie constantly spins around his finger. Staying still was never really his thing.",
-
+  jessicaRubiksCube: "Jessica's Rubik's Cube",
+  jessicaRubiksCubeDescription: "A well-worn puzzle Jessica can solve without much thought. She says patterns are easy to break once you learn how to see them.",
 
   // PLAYER STATS LABELS
 
@@ -263,6 +264,8 @@ export default {
   garyDescription: "Gary has spent years making sure the house always gets its fair share.\n\nHe calls it business. Players tend to call it something else.",
   charlieSaying: "Same move twice? You're making this too easy.",
   charlieDescription: "Charlie gets bored quickly when players fall into a routine.\n\nKeep changing your approach, or he'll make sure predictability comes at a price.",
+  jessicaSaying: "Once is a choice. Twice is a pattern.",
+  jessicaDescription: "Jessica has a sharp eye for players who settle into comfortable habits.\n\nRepeat yourself too often, and she'll make sure every familiar choice becomes a little less rewarding.",
 
   // SKILLS
 
@@ -332,6 +335,9 @@ export default {
   habitBreakerSkillName: "Habit Breaker",
   habitBreakerSkillDescription: "Repeating the same bet and combination as in the previous round reduces your next winnings by 50%.",
   
+  patternBreakerSkillName: "Pattern Breaker",
+  patternBreakerSkillDescription: "Repeated bets reduce your winnings: 20% for two in a row, 30% for three, 40% for four, and 50% for five or more.",
+
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

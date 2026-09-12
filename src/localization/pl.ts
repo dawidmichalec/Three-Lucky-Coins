@@ -64,6 +64,9 @@ export default {
   garyCigarCutterDescription: "Ciężka, mosiężna gilotynka do cygar, którą Gary nosi przy sobie od lat. Kiedy Gary zabiera się do cięcia, nie uznaje półśrodków.",
   charlieFidgetRing: "Obrotowy pierścień Charliego",
   charlieFidgetRingDescription: "Wytarty srebrny pierścień, którym Charlie bez przerwy obraca na palcu. Siedzenie bezczynnie nigdy nie było w jego stylu.",
+  jessicaRubiksCube: "Kostka Rubika Jessiki",
+  jessicaRubiksCubeDescription: "Wysłużona kostka, którą Jessica potrafi ułożyć niemal bez zastanowienia. Twierdzi, że schematy łatwo przełamać, gdy nauczysz się je dostrzegać.",
+
 
   // PLAYER STATS LABELS
 
@@ -244,7 +247,9 @@ export default {
   garyDescription: "Gary przez lata dbał o to, by kasyno zawsze otrzymywał swoją należną część. \n\nOn nazywa to biznesem. Gracze zazwyczaj określają to inaczej.",
   charlieSaying: "Ten sam ruch dwa razy? Ułatwiasz mi robotę.",
   charlieDescription: "Charlie szybko się nudzi, gdy gracze wpadają w rutynę.\n\nStale zmieniaj swoje podejście, inaczej sprawi, że za przewidywalność przyjdzie ci słono zapłacić.",
-
+  jessicaSaying: "Raz to wybór. Dwa razy to już schemat.",
+  jessicaDescription: "Jessica ma dobre oko do graczy, którzy zbyt łatwo przyzwyczajają się do swoich nawyków.\n\nPowtarzaj się zbyt często, a zadba o to, żeby każdy znajomy wybór stawał się coraz mniej opłacalny.",
+  
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -319,6 +324,9 @@ export default {
   habitBreakerSkillName: "Łamacz nawyków",
   habitBreakerSkillDescription: "Powtórzenie tego samego zakładu i kombinacji co w poprzedniej rundzie zmniejsza Twoją kolejną wygraną o 50%.",
 
+  patternBreakerSkillName: "Przełamywanie schematów",
+  patternBreakerSkillDescription: "Powtarzanie tej samej stawki zmniejsza wygraną: o 20% przy dwóch razach z rzędu, 30% przy trzech, 40% przy czterech i 50% przy pięciu lub więcej.",
+  
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

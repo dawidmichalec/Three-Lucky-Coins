@@ -15,6 +15,7 @@ export interface RoundOutcomeData {
   currentDealer: DealerData;
   betterPayTriggered: boolean;
   switchItUpTriggered: boolean;
+  patternBreakerBetCount: number;
 }
 
 export interface RoundOutcomeResult {
@@ -68,6 +69,7 @@ export class RoundOutcomeHandler {
       data.combination,
       data.betterPayTriggered,
       data.switchItUpTriggered,
+      data.patternBreakerBetCount,
       data.currentDealer,
     );
 
@@ -90,6 +92,7 @@ export class RoundOutcomeHandler {
     combination: readonly string[],
     betterPayTriggered: boolean,
     switchItUpTriggered: boolean,
+    patternBreakerBetCount: number,
     dealer: DealerData,
   ): WinModifierResult {
     const triggeredSkills: DealerSkillId[] = [];
@@ -189,6 +192,38 @@ export class RoundOutcomeHandler {
 
       triggeredSkills.push(
         DealerSkillId.SWITCH_IT_UP,
+      );
+    }
+
+    const patternBreakerSkill =
+      dealer.skills.find(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.PATTERN_BREAKER,
+      );
+
+    if (
+      patternBreakerSkill &&
+      patternBreakerBetCount >= 2
+    ) {
+      let reduction = 0;
+
+      if (patternBreakerBetCount >= 5) {
+        reduction = 0.5;
+      } else if (patternBreakerBetCount === 4) {
+        reduction = 0.4;
+      } else if (patternBreakerBetCount === 3) {
+        reduction = 0.3;
+      } else {
+        reduction = 0.2;
+      }
+
+      finalWinAmount = roundMoney(
+        finalWinAmount * (1 - reduction),
+      );
+
+      triggeredSkills.push(
+        DealerSkillId.PATTERN_BREAKER,
       );
     }
 

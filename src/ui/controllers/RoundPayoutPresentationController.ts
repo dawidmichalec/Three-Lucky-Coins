@@ -119,4 +119,23 @@ export class RoundPayoutPresentationController {
       finalAmount,
     );
   }
+
+  async presentPenalty(
+    penaltyAmount: number,
+    finalAmount: number,
+  ): Promise<void> {
+    if (penaltyAmount <= 0) {
+      return;
+    }
+
+    const baseAmount =
+      roundMoney(finalAmount + penaltyAmount);
+
+    this.gameUI.updateWon(baseAmount);
+
+    await this.gameUI.animatePenaltyIntoWon(
+      penaltyAmount,
+      finalAmount,
+    );
+  }
 }

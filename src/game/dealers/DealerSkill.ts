@@ -39,7 +39,9 @@ export enum DealerSkillId {
 
   HOUSE_CUT = "house_cut",
 
-  HABIT_BREAKER = "habit_breaker"
+  HABIT_BREAKER = "habit_breaker",
+
+  PATTERN_BREAKER = "pattern_breaker"
 
   // Kolejne skille w przyszłości...
 }
