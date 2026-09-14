@@ -130,6 +130,7 @@ export default {
   start: "START",
   headsSelector: "Orzeł",
   tailsSelector: "Reszka",
+  decayIn: "ROZPAD\nZA:",
 
   // GAMBLE FOR MORE
 

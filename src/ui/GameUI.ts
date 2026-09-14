@@ -36,6 +36,9 @@ export class GameUI extends Container {
   public clockIcon!: Sprite;
   public timeLabel!: Text;
 
+  public decayLabel!: LocalizedText;
+  public decayValue!: Text;
+
   constructor(private currentDealer: DealerData) {
     super();
 
@@ -231,10 +234,39 @@ export class GameUI extends Container {
       }
     });
 
-    this.timeLabel.position.set(169, 170);
+    this.timeLabel.position.set(130, 170);
 
     this.timeLabel.visible = false;
     this.timeLabel.anchor.set(0.5, 0);
+
+    // DECAY LABEL
+
+    this.decayLabel = new LocalizedText(
+      "decayIn",
+      {
+        font: "Open Sans",
+        fontSize: 44,
+        fontWeight: "bold",
+        fill: 0xff3131,
+        align: "center"
+      }
+    );
+
+    this.decayLabel.position.set(62.4, 345.6);
+
+    this.decayValue = new Text({
+      text: "10",
+      style: {
+        font: "Open Sans",
+        fontSize: 72,
+        fontWeight: "bold",
+        fill: 0xff3131,
+      }
+    });
+
+    this.decayValue.position.set(130, 457.6);
+    this.decayValue.anchor.set(0.5, 0);
+
 
     // ADD
 
@@ -250,7 +282,9 @@ export class GameUI extends Container {
       this.dealerSkillsPanel,
       this.perkContainer,
       this.freeBetLabel,
-      this.timeLabel
+      this.timeLabel,
+      this.decayLabel,
+      this.decayValue
     );
   }
 
@@ -269,7 +303,7 @@ export class GameUI extends Container {
 
     this.clockIcon.width = 85;
     this.clockIcon.height = 85;
-    this.clockIcon.position.set(126.5, 70);
+    this.clockIcon.position.set(90.5, 70);
 
     this.clockIcon.visible = false;
 
@@ -289,6 +323,16 @@ export class GameUI extends Container {
   updateRoundTimer(seconds: number): void {
     this.timeLabel.text =
       seconds.toString();
+  }
+
+  showDecayTimer(): void {
+    this.decayLabel.visible = true;
+    this.decayValue.visible = true;
+  }
+
+  hideDecayTimer(): void {
+    this.decayLabel.visible = false;
+    this.decayValue.visible = false;
   }
 
   async animatePenaltyIntoWon(

@@ -133,6 +133,7 @@ export default {
   start: "START",
   headsSelector: "Heads",
   tailsSelector: "Tails",
+  decayIn: "DECAY\nIN:",
 
   // GAMBLE FOR MORE
 
