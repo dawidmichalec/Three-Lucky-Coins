@@ -86,6 +86,7 @@ export class GameScene extends BaseScene {
   private roundTimerManager = new RoundTimerManager();
   private audioManager = AudioManager.getInstance();
   private pendingHabitBreakerTriggered = false;
+  private delayedDecayRoundStartMultiplier?: number;
   
 
   constructor(
@@ -345,6 +346,8 @@ export class GameScene extends BaseScene {
       this.currentDealer,
       fight.targetBalance,
     );
+
+    this.startDelayedDecayIfNeeded();
   }
 
   private isCurrentDealerDefeated(): boolean {
@@ -453,6 +456,8 @@ export class GameScene extends BaseScene {
     this.roundOutcomeHandler.resetDealerState();
 
     this.betRestrictionManager.setDealer(dealer);
+
+    this.view.gameUI.hideDecayTimer();
 
     this.dealerCollectionManager.discoverDealer(dealer.id);
 
@@ -625,6 +630,17 @@ export class GameScene extends BaseScene {
 
     this.lockControls();
 
+    if (
+      this.dealerFightManager
+        .isDelayedDecayActive()
+    ) {
+      this.delayedDecayRoundStartMultiplier =
+        this.streakMultiplierManager.getValue();
+    } else {
+      this.delayedDecayRoundStartMultiplier =
+        undefined;
+    }
+
     const habitBreakerTriggered = this.dealerFightManager.recordSetupForHabitBreaker(bet,selected,);
 
     const betterPayTriggered = this.dealerFightManager.recordCombinationForBetterPay(selected);
@@ -735,6 +751,16 @@ export class GameScene extends BaseScene {
     const perkRoundResult = this.perkGameplayController.recordRoundResult(win);
 
     const winAmount = resolution.winAmount;
+
+    if (win && winAmount !== undefined && winAmount < 0) {
+      await this.handleNegativePayoutWin(
+        winAmount,
+        selected,
+        bet,
+      );
+
+      return;
+    }
 
     const correctGuesses = selected.filter(
       (side, index) => side === resultSides[index],
@@ -909,7 +935,7 @@ export class GameScene extends BaseScene {
       const previousMultiplier =
         this.streakMultiplierManager.getValue();
 
-      this.streakMultiplierManager.applyResolution(
+      this.applyStreakResolution(
         streakResolution,
       );
 
@@ -994,7 +1020,7 @@ export class GameScene extends BaseScene {
 
     const finalStreakResolution = await this.perkGameplayController.handleLoss(streakResolution);
 
-    this.streakMultiplierManager.applyResolution(finalStreakResolution);
+    this.applyStreakResolution(finalStreakResolution);
 
     this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
 
@@ -1099,7 +1125,7 @@ export class GameScene extends BaseScene {
       const previousMultiplier =
         this.streakMultiplierManager.getValue();
 
-      this.streakMultiplierManager.applyResolution(
+      this.applyStreakResolution(
         this.pendingStreakResolution,
       );
 
@@ -1213,7 +1239,7 @@ export class GameScene extends BaseScene {
 
     const finalStreakResolution = await this.perkGameplayController.handleLoss({action: StreakAction.RESET,});
 
-    this.streakMultiplierManager.applyResolution(finalStreakResolution,);
+    this.applyStreakResolution(finalStreakResolution,);
 
     this.view.gameUI.updateWon(0);
 
@@ -1259,6 +1285,8 @@ export class GameScene extends BaseScene {
 
       return;
     }
+
+    this.applyDelayedDecay();
 
     this.controller.adjustBetToRestrictions();
 
@@ -1418,6 +1446,80 @@ export class GameScene extends BaseScene {
     );
   }
 
+  private applyStreakResolution(
+    resolution: StreakResolution,
+  ): void {
+    if (
+      this.dealerFightManager
+        .isDelayedDecayActive()
+    ) {
+      return;
+    }
+
+    this.streakMultiplierManager
+      .applyResolution(resolution);
+  }
+
+  private applyDelayedDecay(): void {
+    const result =
+      this.dealerFightManager
+        .recordDelayedDecayRound();
+
+    if (!result) {
+      return;
+    }
+
+    if (result.remainingRounds > 0) {
+      this.view.gameUI.updateDecayTimer(
+        result.remainingRounds,
+      );
+
+      return;
+    }
+
+    this.view.gameUI.hideDecayTimer();
+
+    if (!result.shouldDecay) {
+      return;
+    }
+
+    const roundStartMultiplier =
+      this.delayedDecayRoundStartMultiplier;
+
+    if (roundStartMultiplier === undefined) {
+      return;
+    }
+
+    this.streakMultiplierManager.setValue(
+      roundStartMultiplier - 1,
+    );
+
+    this.delayedDecayRoundStartMultiplier =
+      undefined;
+
+    this.view.gameUI.updateMultiplier(
+      this.streakMultiplierManager.getValue(),
+    );
+  }
+
+  private startDelayedDecayIfNeeded(): void {
+    const roundsRemaining =
+      this.dealerFightManager
+        .getDelayedDecayRoundsRemaining();
+
+    if (roundsRemaining === null) {
+      this.view.gameUI.hideDecayTimer();
+
+      return;
+    }
+
+    this.view.gameUI.updateDecayTimer(
+      roundsRemaining,
+    );
+
+    this.view.gameUI.showDecayTimer();
+  }
+
   private stopRoundTimer(): void {
     this.roundTimerManager.cancel();
 
@@ -1456,6 +1558,42 @@ export class GameScene extends BaseScene {
     this.view.controls.setDisabled(false);
     this.view.setDisabled(false);
     this.view.gameUI.setDisabled(false);
+  }
+
+  private async handleNegativePayoutWin(
+    winAmount: number,
+    selected: readonly CoinSide[],
+    bet: number,
+  ): Promise<void> {
+    const penaltyAmount =
+      Math.abs(winAmount);
+
+    this.runStatsRecorder.startRound({
+      selected,
+      bet,
+    });
+
+    this.player.balance += winAmount;
+
+    this.view.gameUI.updateWon(0);
+
+    await this.view.gameUI.animatePenaltyIntoBalance(
+      penaltyAmount,
+      this.player.balance,
+    );
+
+    this.view.gameUI.updateBalance(
+      this.player.balance,
+    );
+
+    this.runStatsRecorder.finishRound({
+      win: true,
+      winAmount,
+      streakMultiplier:
+        this.streakMultiplierManager.getValue(),
+    });
+
+    await this.finishRound(true);
   }
 
   // TICKER

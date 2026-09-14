@@ -43,7 +43,9 @@ export enum DealerSkillId {
 
   PATTERN_BREAKER = "pattern_breaker",
 
-  DEJA_VU = "deja_vu"
+  DEJA_VU = "deja_vu",
+
+  DELAYED_DECAY = "delayed_decay"
 
   // Kolejne skille w przyszłości...
 }

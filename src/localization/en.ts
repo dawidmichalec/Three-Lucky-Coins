@@ -69,6 +69,8 @@ export default {
   jessicaRubiksCubeDescription: "A well-worn puzzle Jessica can solve without much thought. She says patterns are easy to break once you learn how to see them.",
   tedCigaretteCase: "Ted's Cigarette Case",
   tedCigaretteCaseDescription: "A scratched silver cigarette case Ted has carried for years. He's forgotten how many packs have passed through it, but some habits are harder to break than others.",
+  finnLighter: "Finn's Lighter",
+  finnLighterDescription: "A battered metal lighter Finn has carried for years. The flame never lasts long, but he always seems to know exactly when it's about to go out.",
 
   // PLAYER STATS LABELS
 
@@ -271,6 +273,8 @@ export default {
   jessicaDescription: "Jessica has a sharp eye for players who settle into comfortable habits.\n\nRepeat yourself too often, and she'll make sure every familiar choice becomes a little less rewarding.",
   tedSaying: "Same old story, huh?",
   tedDescription: "Ted has spent enough time behind the table to recognize a familiar play when he sees one.\n\nKeep repeating the same combination, and he'll make sure it pays a little less every time.",
+  finnSaying: "Enjoy it while it lasts.",
+  finnDescription: "Finn is in no hurry to take control of the table. He knows that sooner or later, the odds will start turning in his favor.\n\nMake the most of your early advantage, because Finn knows good things never last.",
 
   // SKILLS
 
@@ -345,6 +349,9 @@ export default {
 
   dejaVuSkillName: "Déjà Vu",
   dejaVuSkillDescription: "Repeated combinations reduce your winnings: 20% for two in a row, 30% for three, 40% for four, and 50% for five or more.",
+
+  delayedDecaySkillName: "Delayed Decay",
+  delayedDecaySkillDescription: "After 10 rounds, your multiplier decreases by 1 after every round, regardless of the outcome. It can fall below 0.",
 
   // PERKS
 

@@ -153,7 +153,7 @@ export class GameUI extends Container {
         fontSize: 100,
         fontWeight: "bold",
         fill: 0xffffff,
-        wordWrap: true,
+        wordWrap: false,
 
         dropShadow: {
           alpha: 1,
@@ -253,6 +253,7 @@ export class GameUI extends Container {
     );
 
     this.decayLabel.position.set(62.4, 345.6);
+    this.decayLabel.visible = false;
 
     this.decayValue = new Text({
       text: "10",
@@ -266,6 +267,7 @@ export class GameUI extends Container {
 
     this.decayValue.position.set(130, 457.6);
     this.decayValue.anchor.set(0.5, 0);
+    this.decayValue.visible = false;
 
 
     // ADD
@@ -323,6 +325,11 @@ export class GameUI extends Container {
   updateRoundTimer(seconds: number): void {
     this.timeLabel.text =
       seconds.toString();
+  }
+
+  updateDecayTimer(rounds: number): void {
+    this.decayValue.text =
+      rounds.toString();
   }
 
   showDecayTimer(): void {

@@ -199,3 +199,11 @@ export const TED_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.19, 0.2, 0.22, 0.27, 0.32, 0.33, 0.67, 0.68, 0.73, 0.78, 0.8, 0.81],
 };
+
+// FINN
+
+export const FINN_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.14, 0.18, 0.22, 0.26, 0.3, 0.34, 0.66, 0.7, 0.74, 0.78, 0.82, 0.86],
+};

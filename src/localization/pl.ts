@@ -68,6 +68,9 @@ export default {
   jessicaRubiksCubeDescription: "Wysłużona kostka, którą Jessica potrafi ułożyć niemal bez zastanowienia. Twierdzi, że schematy łatwo przełamać, gdy nauczysz się je dostrzegać.",
   tedCigaretteCase:"Papierośnica Teda",
   tedCigaretteCaseDescription: "Porysowana srebrna papierośnica, którą Ted nosi ze sobą od lat. Nie pamięta już, ile paczek papierosów przez nią przeszło, ale niektórych nawyków trudniej się pozbyć niż innych.",
+  finnLighter: "Zapalniczka Finna",
+  finnLighterDescription: "Poobijana metalowa zapalniczka, którą Finn nosi ze sobą od lat. Płomień nigdy nie trwa długo, ale Finn zawsze zdaje się wiedzieć, kiedy zaraz zgaśnie.",
+
 
   // PLAYER STATS LABELS
 
@@ -253,6 +256,8 @@ export default {
   jessicaDescription: "Jessica ma dobre oko do graczy, którzy zbyt łatwo przyzwyczajają się do swoich nawyków.\n\nPowtarzaj się zbyt często, a zadba o to, żeby każdy znajomy wybór stawał się coraz mniej opłacalny.",
   tedSaying: "Ciągle ta sama historia, co?",
   tedDescription: "Ted spędził za stołem wystarczająco dużo czasu, żeby od razu rozpoznać znajome zagranie.\n\nPowtarzaj tę samą kombinację, a zadba o to, żeby za każdym razem opłacała się trochę mniej.",
+  finnSaying: "Korzystaj, póki możesz.",
+  finnDescription: "Finn nie spieszy się z przejęciem kontroli nad stołem. Wie, że prędzej czy później sytuacja zacznie obracać się na jego korzyść.\n\nWykorzystaj swoją początkową przewagę, bo Finn dobrze wie, że nic, co dobre, nie trwa wiecznie.",
 
   // SKILL
 
@@ -333,6 +338,10 @@ export default {
   
   dejaVuSkillName: "Déjà Vu",
   dejaVuSkillDescription: "Powtarzanie tej samej kombinacji zmniejsza wygraną: o 20% przy dwóch razach z rzędu, 30% przy trzech, 40% przy czterech i 50% przy pięciu lub więcej.",
+
+  delayedDecaySkillName: "Odroczony rozpad",
+  delayedDecaySkillDescription: "Po 10 rundach twój mnożnik zmniejsza się o 1 po każdej rundzie, niezależnie od jej wyniku. Może spaść poniżej 0.",
+
 
   // PERKS
 

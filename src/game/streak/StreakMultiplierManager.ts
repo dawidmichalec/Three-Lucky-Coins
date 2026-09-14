@@ -65,6 +65,10 @@ export class StreakMultiplierManager {
     );
   }
 
+  decay(amount = 1): void {
+    this.currentValue -= amount;
+  }
+
   reset() {
     this.currentValue = this.baseValue;
   }

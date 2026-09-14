@@ -54,6 +54,9 @@ export class DealerFightManager {
   private previousTedCombination: string | null = null;
   private tedRepeatedCombinationCount = 0;
 
+  private delayedDecayRoundCounter = 0;
+  private static readonly DELAYED_DECAY_GRACE_ROUNDS = 10;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -114,6 +117,8 @@ export class DealerFightManager {
     this.previousTedCombination = null;
     this.tedRepeatedCombinationCount = 0;
 
+    this.delayedDecayRoundCounter = 0;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -157,6 +162,78 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  isDelayedDecayActive(): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasDelayedDecay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.DELAYED_DECAY,
+      );
+
+    if (!hasDelayedDecay) {
+      return false;
+    }
+
+    return (
+      this.delayedDecayRoundCounter >=
+      DealerFightManager.DELAYED_DECAY_GRACE_ROUNDS
+    );
+  }
+
+  getDelayedDecayRoundsRemaining(): number | null {
+    const dealer = this.getCurrentDealer();
+
+    const hasDelayedDecay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id === DealerSkillId.DELAYED_DECAY,
+      );
+
+    if (!hasDelayedDecay) {
+      return null;
+    }
+
+    return Math.max(
+      0,
+      DealerFightManager.DELAYED_DECAY_GRACE_ROUNDS -
+        this.delayedDecayRoundCounter,
+    );
+  }
+
+  recordDelayedDecayRound(): {
+    remainingRounds: number;
+    shouldDecay: boolean;
+  } | null {
+    const dealer = this.getCurrentDealer();
+
+    const hasDelayedDecay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id === DealerSkillId.DELAYED_DECAY,
+      );
+
+    if (!hasDelayedDecay) {
+      return null;
+    }
+
+    this.delayedDecayRoundCounter++;
+
+    const remainingRounds = Math.max(
+      0,
+      DealerFightManager.DELAYED_DECAY_GRACE_ROUNDS -
+        this.delayedDecayRoundCounter,
+    );
+
+    return {
+      remainingRounds,
+      shouldDecay:
+        this.delayedDecayRoundCounter >
+        DealerFightManager.DELAYED_DECAY_GRACE_ROUNDS,
+    };
   }
 
   recordCombinationForDejaVu(
