@@ -9,7 +9,7 @@ export const MELANIE_DATA: DealerData = {
 
   name: "Melanie",
 
-  title: "juniorSupervisor",
+  title: "juniorDealer",
 
   avatarNormal: "/assets/main/icons/casino_staff_icons/melanie_icon.png",
 
@@ -23,7 +23,7 @@ export const MELANIE_DATA: DealerData = {
   signatureTokenDescription: "melanieReadingGlassesDescription",
 
   group: DealerGroup.JUNIOR,
-  role: DealerRole.SUPERVISOR,
+  role: DealerRole.REGULAR,
 
   oddsProfile: MELANIE_PROFILE,
 

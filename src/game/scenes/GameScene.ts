@@ -86,7 +86,7 @@ export class GameScene extends BaseScene {
   private roundTimerManager = new RoundTimerManager();
   private audioManager = AudioManager.getInstance();
   private pendingHabitBreakerTriggered = false;
-  private delayedDecayRoundStartMultiplier?: number;
+  private decayRoundStartMultiplier?: number;
   
 
   constructor(
@@ -632,12 +632,12 @@ export class GameScene extends BaseScene {
 
     if (
       this.dealerFightManager
-        .isDelayedDecayActive()
+        .isMultiplierDecayActive()
     ) {
-      this.delayedDecayRoundStartMultiplier =
+      this.decayRoundStartMultiplier =
         this.streakMultiplierManager.getValue();
     } else {
-      this.delayedDecayRoundStartMultiplier =
+      this.decayRoundStartMultiplier =
         undefined;
     }
 
@@ -1274,6 +1274,18 @@ export class GameScene extends BaseScene {
       );
     }
 
+    if (this.currentDealer.objectiveType === ObjectiveType.SURVIVE_ROUNDS) {
+    this.dealerFightManager.recordSurvivedRound();
+
+    this.view.gameUI.dealerCard.updateObjectiveProgress(
+        this.dealerFightManager
+          .getFightRounds(),
+
+        this.dealerFightManager
+          .getFightTargetRounds(),
+      );
+  }
+
     const currentBetCost = this.perkEffectApplier.resolveBetCost(
       this.controller.getBet(),
     );
@@ -1286,7 +1298,7 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.applyDelayedDecay();
+    this.applyMultiplierDecay();
 
     this.controller.adjustBetToRestrictions();
 
@@ -1451,7 +1463,7 @@ export class GameScene extends BaseScene {
   ): void {
     if (
       this.dealerFightManager
-        .isDelayedDecayActive()
+        .isMultiplierDecayActive()
     ) {
       return;
     }
@@ -1460,7 +1472,36 @@ export class GameScene extends BaseScene {
       .applyResolution(resolution);
   }
 
-  private applyDelayedDecay(): void {
+  private applyMultiplierDecay(): void {
+    const hasImmediateDecay =
+      this.currentDealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MULTIPLIER_DECAY,
+      );
+
+    if (hasImmediateDecay) {
+      const roundStartMultiplier =
+        this.decayRoundStartMultiplier;
+
+      if (roundStartMultiplier === undefined) {
+        return;
+      }
+
+      this.streakMultiplierManager.setValue(
+        roundStartMultiplier - 1,
+      );
+
+      this.decayRoundStartMultiplier =
+        undefined;
+
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
+
+      return;
+    }
+
     const result =
       this.dealerFightManager
         .recordDelayedDecayRound();
@@ -1484,7 +1525,7 @@ export class GameScene extends BaseScene {
     }
 
     const roundStartMultiplier =
-      this.delayedDecayRoundStartMultiplier;
+      this.decayRoundStartMultiplier;
 
     if (roundStartMultiplier === undefined) {
       return;
@@ -1494,7 +1535,7 @@ export class GameScene extends BaseScene {
       roundStartMultiplier - 1,
     );
 
-    this.delayedDecayRoundStartMultiplier =
+    this.decayRoundStartMultiplier =
       undefined;
 
     this.view.gameUI.updateMultiplier(

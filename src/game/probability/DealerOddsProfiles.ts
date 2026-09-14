@@ -53,7 +53,15 @@ export const TRACY_PROFILE: DealerOddsProfile = {
 export const MELANIE_PROFILE: DealerOddsProfile = {
   visibility: OddsVisibility.EXACT,
 
-  headsProbabilities: [0.25, 0.3, 0.35, 0.65, 0.7, 0.75],
+  headsProbabilities: [0.15, 0.2, 0.25, 0.75, 0.8, 0.85],
+};
+
+// JACOB
+
+export const JACOB_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.2, 0.25, 0.3, 0.35, 0.65, 0.7, 0.75, 0.8],
 };
 
 // HILLARY

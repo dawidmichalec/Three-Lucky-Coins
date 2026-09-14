@@ -71,6 +71,8 @@ export default {
   tedCigaretteCaseDescription: "A scratched silver cigarette case Ted has carried for years. He's forgotten how many packs have passed through it, but some habits are harder to break than others.",
   finnLighter: "Finn's Lighter",
   finnLighterDescription: "A battered metal lighter Finn has carried for years. The flame never lasts long, but he always seems to know exactly when it's about to go out.",
+  jacobDogTag: "Jacob's Dog Tag",
+  jacobDogTagDescription: "An old, scratched dog tag Jacob keeps tucked beneath his shirt. He never says where it came from, and nobody at the casino has been brave enough to ask.",
 
   // PLAYER STATS LABELS
 
@@ -197,6 +199,8 @@ export default {
   johnnySaying:"Just go with the flow. Worked for me.",
   melanieDescription: "Melanie is a Junior Supervisor.\n\nShe works at a casino but doesn't like this. ",
   melanieSaying: "Your luck ends here",
+  jacobSaying: "Let's see how long you last.",
+  jacobDescription: "Jacob has watched plenty of confident players take a seat at his table. Most of them didn't stay confident for long.\n\nAgainst Jacob, winning isn't everything. Sometimes, lasting another round is enough.",
 
   // MID DEALERS
 
@@ -352,6 +356,9 @@ export default {
 
   delayedDecaySkillName: "Delayed Decay",
   delayedDecaySkillDescription: "After 10 rounds, your multiplier decreases by 1 after every round, regardless of the outcome. It can fall below 0.",
+
+  multiplierDecaySkillName: "Multiplier Decay",
+  multiplierDecaySkillDescription: "After every round multiplier decreases by 1 regardless of the round's outcome. It can fall below 0.",
 
   // PERKS
 

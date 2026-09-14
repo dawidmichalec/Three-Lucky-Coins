@@ -45,7 +45,9 @@ export enum DealerSkillId {
 
   DEJA_VU = "deja_vu",
 
-  DELAYED_DECAY = "delayed_decay"
+  DELAYED_DECAY = "delayed_decay",
+
+  MULTIPLIER_DECAY = "multiplier_decay"
 
   // Kolejne skille w przyszłości...
 }

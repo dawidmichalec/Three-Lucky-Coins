@@ -8,6 +8,7 @@ export interface DealerFightState {
   targetMultiplier?: number;
   targetGambleForMoreWins?: number;
   targetGoldenCoins?: number;
+  targetRounds?: number;
 }
 
 export class DealerFightManager {
@@ -56,6 +57,9 @@ export class DealerFightManager {
 
   private delayedDecayRoundCounter = 0;
   private static readonly DELAYED_DECAY_GRACE_ROUNDS = 10;
+
+  private fightRounds = 0;
+  private fightTargetRounds = 0;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -119,6 +123,9 @@ export class DealerFightManager {
 
     this.delayedDecayRoundCounter = 0;
 
+    this.fightRounds = 0;
+    this.fightTargetRounds = 0;
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -157,6 +164,15 @@ export class DealerFightManager {
             this.fightTargetGoldenCoins,
         };
 
+      case ObjectiveType.SURVIVE_ROUNDS:
+        this.fightTargetRounds =
+          dealer.objectiveValue;
+
+        return {
+          targetRounds:
+            this.fightTargetRounds,
+        };
+
       default:
         throw new Error(
           `Unsupported objective type: ${dealer.objectiveType}`,
@@ -164,8 +180,40 @@ export class DealerFightManager {
     }
   }
 
-  isDelayedDecayActive(): boolean {
+  recordSurvivedRound(): void {
     const dealer = this.getCurrentDealer();
+
+    if (
+      dealer.objectiveType !==
+      ObjectiveType.SURVIVE_ROUNDS
+    ) {
+      return;
+    }
+
+    this.fightRounds++;
+  }
+
+  getFightRounds(): number {
+    return this.fightRounds;
+  }
+
+  getFightTargetRounds(): number {
+    return this.fightTargetRounds;
+  }
+
+  isMultiplierDecayActive(): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasMultiplierDecay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MULTIPLIER_DECAY,
+      );
+
+    if (hasMultiplierDecay) {
+      return true;
+    }
 
     const hasDelayedDecay =
       dealer.skills.some(
@@ -180,7 +228,8 @@ export class DealerFightManager {
 
     return (
       this.delayedDecayRoundCounter >=
-      DealerFightManager.DELAYED_DECAY_GRACE_ROUNDS
+      DealerFightManager
+        .DELAYED_DECAY_GRACE_ROUNDS
     );
   }
 
@@ -688,6 +737,12 @@ export class DealerFightManager {
         return (
           this.fightGoldenCoins >=
           dealer.objectiveValue
+        );
+
+      case ObjectiveType.SURVIVE_ROUNDS:
+        return (
+          this.fightRounds >=
+          this.fightTargetRounds
         );
 
       default:

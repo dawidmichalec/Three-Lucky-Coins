@@ -70,6 +70,8 @@ export default {
   tedCigaretteCaseDescription: "Porysowana srebrna papierośnica, którą Ted nosi ze sobą od lat. Nie pamięta już, ile paczek papierosów przez nią przeszło, ale niektórych nawyków trudniej się pozbyć niż innych.",
   finnLighter: "Zapalniczka Finna",
   finnLighterDescription: "Poobijana metalowa zapalniczka, którą Finn nosi ze sobą od lat. Płomień nigdy nie trwa długo, ale Finn zawsze zdaje się wiedzieć, kiedy zaraz zgaśnie.",
+  jacobDogTag: "Nieśmiertelnik Jacoba",
+  jacobDogTagDescription: "Stary, porysowany nieśmiertelnik, który Jacob nosi pod koszulą. Nigdy nie mówi, skąd go ma, a nikt w kasynie nie miał odwagi zapytać.",
 
 
   // PLAYER STATS LABELS
@@ -199,7 +201,9 @@ export default {
   tracyDescription: "Tracy uważa, że ​​dobry gracz nigdy nie powinien stać się przewidywalny.\n\nStale zmieniaj swoje zakłady, a być może zyskasz jej szacunek.",
   andySaying: "Niech będzie ciekawie.",
   andyDescription: "Andy uważa, że dobra gra nigdy nie powinna być nudna.\n\nLubi graczy, którzy nie stoją w miejscu i nie boją się zmieniać swojej strategii z rundy na rundę.\n\nNie pozwól mu się nudzić, a chętnie dorzuci ci coś ekstra.",  
-
+  jacobSaying: "Zobaczymy, jak długo wytrzymasz.",
+  jacobDescription: "Jacob widział już wielu pewnych siebie graczy siadających przy jego stole. Większość z nich szybko traciła tę pewność.\n\nW starciu z Jacobem wygrywanie to nie wszystko. Czasem wystarczy przetrwać kolejną rundę.",
+  
   // MID DEALERS
 
   hillaryDescription:
@@ -342,7 +346,9 @@ export default {
   delayedDecaySkillName: "Odroczony rozpad",
   delayedDecaySkillDescription: "Po 10 rundach twój mnożnik zmniejsza się o 1 po każdej rundzie, niezależnie od jej wyniku. Może spaść poniżej 0.",
 
-
+  multiplierDecaySkillName: "Rozpad mnożnika",
+  multiplierDecaySkillDescription: "Po każdej rundzie twój mnożnik zmniejsza się o 1, niezależnie od jej wyniku. Może spaść poniżej 0.",
+  
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",
