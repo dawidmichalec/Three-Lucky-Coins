@@ -215,3 +215,19 @@ export const FINN_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.14, 0.18, 0.22, 0.26, 0.3, 0.34, 0.66, 0.7, 0.74, 0.78, 0.82, 0.86],
 };
+
+// PAULIE
+
+export const PAULIE_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.2, 0.23, 0.25, 0.28, 0.3, 0.35, 0.65, 0.67, 0.7, 0.72, 0.75, 0.8],
+};
+
+// FORCED RANDOM TOSS
+
+export const FORCED_RANDOM_TOSS_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.5],
+};

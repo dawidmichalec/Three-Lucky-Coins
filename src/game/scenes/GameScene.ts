@@ -47,6 +47,7 @@ import { RoundTimerManager } from "../RoundTimerManager";
 import { getDealerById } from "../dealers/DealerRegistry";
 import { AudioManager } from "../../core/AudioManager";
 import { SoundId } from "../../audio/SoundId";
+import { FORCED_RANDOM_TOSS_PROFILE } from "../probability/DealerOddsProfiles";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -324,9 +325,20 @@ export class GameScene extends BaseScene {
   }
 
   private prepareNextRound() {
-    const odds = this.oddsManager.rollOdds(this.currentDealer.oddsProfile);
+    const profile =
+      this.dealerFightManager
+        .shouldForceRandomToss()
+        ? FORCED_RANDOM_TOSS_PROFILE
+        : this.currentDealer.oddsProfile;
 
-    this.view.gameUI.updateProbability(odds);
+    const odds =
+      this.oddsManager.rollOdds(
+        profile,
+      );
+
+    this.view.gameUI.updateProbability(
+      odds,
+    );
   }
 
   private prepareNextRoundWithPerks(): void {
@@ -646,7 +658,7 @@ export class GameScene extends BaseScene {
     const betterPayTriggered = this.dealerFightManager.recordCombinationForBetterPay(selected);
 
     const switchItUpTriggered = this.dealerFightManager.recordBetForSwitchItUp(bet);
-
+ 
     const patternBreakerBetCount = this.dealerFightManager.recordBetForPatternBreaker(bet);
 
     const dejaVuCombinationCount = this.dealerFightManager.recordCombinationForDejaVu(selected);
@@ -1274,17 +1286,21 @@ export class GameScene extends BaseScene {
       );
     }
 
-    if (this.currentDealer.objectiveType === ObjectiveType.SURVIVE_ROUNDS) {
-    this.dealerFightManager.recordSurvivedRound();
+    this.dealerFightManager.recordCompletedRound();
 
-    this.view.gameUI.dealerCard.updateObjectiveProgress(
-        this.dealerFightManager
-          .getFightRounds(),
+    if (
+      this.currentDealer.objectiveType ===
+      ObjectiveType.SURVIVE_ROUNDS
+    ) {
+      this.view.gameUI.dealerCard
+        .updateObjectiveProgress(
+          this.dealerFightManager
+            .getFightRounds(),
 
-        this.dealerFightManager
-          .getFightTargetRounds(),
-      );
-  }
+          this.dealerFightManager
+            .getFightTargetRounds(),
+        );
+    }
 
     const currentBetCost = this.perkEffectApplier.resolveBetCost(
       this.controller.getBet(),

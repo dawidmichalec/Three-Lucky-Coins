@@ -180,16 +180,27 @@ export class DealerFightManager {
     }
   }
 
-  recordSurvivedRound(): void {
+  shouldForceRandomToss(): boolean {
     const dealer = this.getCurrentDealer();
 
-    if (
-      dealer.objectiveType !==
-      ObjectiveType.SURVIVE_ROUNDS
-    ) {
-      return;
+    const hasForcedRandomToss =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.FORCED_RANDOM_TOSS,
+      );
+
+    if (!hasForcedRandomToss) {
+      return false;
     }
 
+    const nextRound =
+      this.fightRounds + 1;
+
+    return nextRound % 3 === 0;
+  }
+
+  recordCompletedRound(): void {
     this.fightRounds++;
   }
 

@@ -47,7 +47,9 @@ export enum DealerSkillId {
 
   DELAYED_DECAY = "delayed_decay",
 
-  MULTIPLIER_DECAY = "multiplier_decay"
+  MULTIPLIER_DECAY = "multiplier_decay",
+
+  FORCED_RANDOM_TOSS = "forced_random_toss"
 
   // Kolejne skille w przyszłości...
 }

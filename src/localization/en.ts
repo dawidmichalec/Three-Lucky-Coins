@@ -73,6 +73,9 @@ export default {
   finnLighterDescription: "A battered metal lighter Finn has carried for years. The flame never lasts long, but he always seems to know exactly when it's about to go out.",
   jacobDogTag: "Jacob's Dog Tag",
   jacobDogTagDescription: "An old, scratched dog tag Jacob keeps tucked beneath his shirt. He never says where it came from, and nobody at the casino has been brave enough to ask.",
+  paulieVintageDice: "Paulie's Vintage Dice",
+  paulieVintageDiceDescription: "Old dice. Old rules.",
+
 
   // PLAYER STATS LABELS
 
@@ -280,6 +283,9 @@ export default {
   finnSaying: "Enjoy it while it lasts.",
   finnDescription: "Finn is in no hurry to take control of the table. He knows that sooner or later, the odds will start turning in his favor.\n\nMake the most of your early advantage, because Finn knows good things never last.",
 
+  paulieSaying: "Let’s do it the old way!",
+  paulieDescription: "Paulie is an old timer. He follows the rule that if we gamble… we gamble! Not guess…",
+
   // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
@@ -359,6 +365,9 @@ export default {
 
   multiplierDecaySkillName: "Multiplier Decay",
   multiplierDecaySkillDescription: "After every round multiplier decreases by 1 regardless of the round's outcome. It can fall below 0.",
+
+  forcedRandomTossSkillName: "Forced random toss",
+  forcedRandomTossSkillDescription: "Every three rounds a toss is random (all coins have 50% chance).",
 
   // PERKS
 

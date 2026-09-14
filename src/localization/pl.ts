@@ -72,7 +72,8 @@ export default {
   finnLighterDescription: "Poobijana metalowa zapalniczka, którą Finn nosi ze sobą od lat. Płomień nigdy nie trwa długo, ale Finn zawsze zdaje się wiedzieć, kiedy zaraz zgaśnie.",
   jacobDogTag: "Nieśmiertelnik Jacoba",
   jacobDogTagDescription: "Stary, porysowany nieśmiertelnik, który Jacob nosi pod koszulą. Nigdy nie mówi, skąd go ma, a nikt w kasynie nie miał odwagi zapytać.",
-
+  paulieVintageDice: "Kości do gry Paulie'go",
+  paulieVintageDiceDescription: "Stare kości. Stare zasady.",
 
   // PLAYER STATS LABELS
 
@@ -262,6 +263,8 @@ export default {
   tedDescription: "Ted spędził za stołem wystarczająco dużo czasu, żeby od razu rozpoznać znajome zagranie.\n\nPowtarzaj tę samą kombinację, a zadba o to, żeby za każdym razem opłacała się trochę mniej.",
   finnSaying: "Korzystaj, póki możesz.",
   finnDescription: "Finn nie spieszy się z przejęciem kontroli nad stołem. Wie, że prędzej czy później sytuacja zacznie obracać się na jego korzyść.\n\nWykorzystaj swoją początkową przewagę, bo Finn dobrze wie, że nic, co dobre, nie trwa wiecznie.",
+  paulieSaying: "Zróbmy to w stary stylu!",
+  paulieDescription: "Paulie to stary wyjadacz. Wyznaje zasadę, że jeśli już uprawiamy hazard… to uprawiamy hazard! A nie zgadujemy…",
 
   // SKILL
 
@@ -348,6 +351,9 @@ export default {
 
   multiplierDecaySkillName: "Rozpad mnożnika",
   multiplierDecaySkillDescription: "Po każdej rundzie twój mnożnik zmniejsza się o 1, niezależnie od jej wyniku. Może spaść poniżej 0.",
+  
+  forcedRandomTossSkillName: "Losowy rzut",
+  forcedRandomTossSkillDescription: "Co trzy rundy rzut jest losowy (szanse wszystkich monet wynoszą 50%).",
   
   // PERKS
 
