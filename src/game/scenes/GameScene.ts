@@ -579,13 +579,26 @@ export class GameScene extends BaseScene {
 
   private async startRound() {
     const bet = this.controller.getBet();
+
+    const availableBets =
+      this.controller
+        .getAvailableBets()
+        .filter(
+          (candidate) =>
+            this.isBetAffordable(candidate),
+        );
+
+    const betManipulation = this.dealerFightManager.resolveBetValueManipulation(bet, availableBets,);
+
+    const effectiveBet = betManipulation.bet;
+
     const selected = this.controller.getCurrentCombo();
 
     const highestAffordableBet = this.controller.getHighestAffordableBet(
       this.player.balance,
     );
 
-    const betResult = this.roundBetResolver.resolve({bet,});
+    const betResult = this.roundBetResolver.resolve({bet: effectiveBet,});
 
     const {
       betCost,
@@ -661,6 +674,25 @@ export class GameScene extends BaseScene {
     this.roundState = "spinning";
 
     this.lockControls();
+
+    if (betManipulation.manipulated) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.BET_VALUE_MANIPULATION,
+      ]);
+
+      await this.view.perkEffectMessageOverlay.play(
+        "betValueChangedTo",
+        effectiveBet.toFixed(2),
+        PerkEffectMessageType.NEGATIVE,
+      );
+
+      console.log(
+        "PETER BET MANIPULATION:",
+        bet,
+        "->",
+        effectiveBet,
+      );
+    }
 
     if (
       this.dealerFightManager

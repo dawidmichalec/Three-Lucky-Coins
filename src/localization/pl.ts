@@ -78,6 +78,8 @@ export default {
   jackCufflinkDescription: "Jedna z dwóch starych, pasujących do siebie spinek. Druga należy do Josha. Żaden z nich nie pamięta, który wybierał pierwszy.",
   joshCufflink: "Spinka Josha",
   joshCufflinkDescription: "Jedna z dwóch starych, pasujących do siebie spinek. Druga należy do Jacka. Josh upiera się, że jego jest oryginalna.",
+  peterWhiskeyBottle: "Butelka whiskey Petera",
+  peterWhiskeyBottleDescription: "W połowie pełna. W połowie pusta. Petera przestało to obchodzić lata temu.",
 
   // PLAYER STATS LABELS
 
@@ -143,6 +145,7 @@ export default {
   decayIn: "ROZPAD\nZA:",
   combinationWontScore: "BRAK WYGRANEJ",
   combinationBlocked: "KOMBINACJA ZABLOKOWANA",
+  betValueChangedTo: "STAWKA ZMIENIONA NA",
 
   // GAMBLE FOR MORE
 
@@ -275,6 +278,8 @@ export default {
   jackDescription: "Nie, z twoim wzrokiem wszystko w porządku. Nie widzisz podwójnie. Jack jest bratem Josha.\n\nMogą wyglądać niemal identycznie, ale przy stole łatwo ich odróżnić. Jack nigdy nie przepadał za orłami.",
   joshSaying: "Reszka? Twój pogrzeb.",
   joshDescription: "Nie, z twoim wzrokiem wszystko w porządku. Nie widzisz podwójnie. Josh jest bratem Jacka.\n\nOd lat są ze sobą myleni, ale przy stole ich upodobania nie mogłyby być bardziej odmienne. Jeśli Jack nie znosi orłów, Josh ma szczególną awersję do reszek.",
+  peterSaying: "Co? Postawiłeś więcej? Nie! Niemożliwe!",
+  peterDescription: "Peter lubi sobie wypić. Niestety, nie zostawia tego nawyku w domu. \n\nKierownictwo nauczyło się przymykać na to oko. Peter przynosi zbyt duże zyski, a do tego – jakimś cudem – nawet po kilku głębszych wciąż wywiązuje się ze swoich zadań. \n\nJednak im dłużej siedzisz przy jego stoliku, tym bardziej nieprzewidywalne rzeczy się dzieją.",
 
   // SKILL
 
@@ -370,7 +375,10 @@ export default {
   
   tailsCurseSkillName: "Klątwa reszki",
   tailsCurseSkillDescription: "Kombinacje zawierające co najmniej dwie reszki nie przynoszą żadnej wygranej.",
-  
+
+  betValueManipulationSkillName: "Manipulacja stawką",
+  betValueManipulationSkillDescription: "Peter może zmienić wysokość twojego zakładu. Im dłużej trwa walka, tym bardziej nieprzewidywalne stają się jego zmiany.",
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

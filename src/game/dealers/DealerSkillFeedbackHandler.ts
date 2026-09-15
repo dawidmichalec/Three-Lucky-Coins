@@ -94,6 +94,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.TAILS_CURSE:
           await this.gameMessageOverlay.play("tailsCurseSkillName");
           break;
+
+        case DealerSkillId.BET_VALUE_MANIPULATION:
+          await this.gameMessageOverlay.play("betValueManipulationSkillName");
+          break;
       }
     }
   }

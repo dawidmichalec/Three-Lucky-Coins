@@ -180,6 +180,104 @@ export class DealerFightManager {
     }
   }
 
+  resolveBetValueManipulation(
+    selectedBet: number,
+    availableBets: readonly number[],
+  ): {
+    bet: number;
+    manipulated: boolean;
+  } {
+    const dealer = this.getCurrentDealer();
+
+    const hasSkill = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.BET_VALUE_MANIPULATION,
+    );
+
+    if (!hasSkill) {
+      return {
+        bet: selectedBet,
+        manipulated: false,
+      };
+    }
+
+    const completedRounds = this.fightRounds;
+
+    let triggerChance: number;
+    let maxLevelShift: number;
+
+    if (completedRounds < 5) {
+      triggerChance = 0.2;
+      maxLevelShift = 1;
+    } else if (completedRounds < 10) {
+      triggerChance = 0.35;
+      maxLevelShift = 2;
+    } else if (completedRounds < 15) {
+      triggerChance = 0.5;
+      maxLevelShift = 3;
+    } else if (completedRounds < 20) {
+      triggerChance = 0.65;
+      maxLevelShift = 4;
+    } else {
+      triggerChance = 0.8;
+      maxLevelShift = availableBets.length;
+    }
+
+    if (Math.random() >= triggerChance) {
+      return {
+        bet: selectedBet,
+        manipulated: false,
+      };
+    }
+
+    const selectedIndex =
+      availableBets.indexOf(selectedBet);
+
+    if (selectedIndex === -1) {
+      return {
+        bet: selectedBet,
+        manipulated: false,
+      };
+    }
+
+    const minIndex = Math.max(
+      0,
+      selectedIndex - maxLevelShift,
+    );
+
+    const maxIndex = Math.min(
+      availableBets.length - 1,
+      selectedIndex + maxLevelShift,
+    );
+
+    const candidates = availableBets.filter(
+      (candidate, index) =>
+        index >= minIndex &&
+        index <= maxIndex &&
+        candidate !== selectedBet,
+    );
+
+    if (candidates.length === 0) {
+      return {
+        bet: selectedBet,
+        manipulated: false,
+      };
+    }
+
+    const manipulatedBet =
+      candidates[
+        Math.floor(
+          Math.random() * candidates.length,
+        )
+      ];
+
+    return {
+      bet: manipulatedBet,
+      manipulated: true,
+    };
+  }
+
   isCombinationCursed(
     combination: readonly string[],
   ): boolean {

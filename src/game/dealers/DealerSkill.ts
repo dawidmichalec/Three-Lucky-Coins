@@ -53,7 +53,9 @@ export enum DealerSkillId {
 
   HEADS_CURSE = "heads_curse",
 
-  TAILS_CURSE = "tails_curse"
+  TAILS_CURSE = "tails_curse",
+
+  BET_VALUE_MANIPULATION = "bet_value_manipulation"
 
   // Kolejne skille w przyszłości...
 }

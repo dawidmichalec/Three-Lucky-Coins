@@ -29,6 +29,7 @@ import { JACOB_DATA } from "./data/junior_dealers/Jacob";
 import { PAULIE_DATA } from "./data/senior_dealers/Paulie";
 import { JACK_DATA } from "./data/senior_dealers/Jack";
 import { JOSH_DATA } from "./data/senior_dealers/Josh";
+import { PETER_DATA } from "./data/senior_dealers/Peter";
 import { DealerGroup } from "./DealerGroup";
 import { DealerRole } from "./DealerRole";
 
@@ -63,7 +64,8 @@ export const DEALERS: readonly DealerData[] = [
   FINN_DATA,
   PAULIE_DATA,
   JACK_DATA,
-  JOSH_DATA
+  JOSH_DATA,
+  PETER_DATA
 ];
 
 export {
@@ -96,7 +98,8 @@ export {
   FINN_DATA,
   PAULIE_DATA,
   JACK_DATA,
-  JOSH_DATA
+  JOSH_DATA,
+  PETER_DATA
 };
 
 export function getDealersByGroup(group: DealerGroup): readonly DealerData[] {
