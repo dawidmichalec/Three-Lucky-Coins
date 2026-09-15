@@ -75,7 +75,10 @@ export default {
   jacobDogTagDescription: "An old, scratched dog tag Jacob keeps tucked beneath his shirt. He never says where it came from, and nobody at the casino has been brave enough to ask.",
   paulieVintageDice: "Paulie's Vintage Dice",
   paulieVintageDiceDescription: "Old dice. Old rules.",
-
+  jackCufflink: "Jack's Cufflink",
+  jackCufflinkDescription: "One half of an old matching pair. The other belongs to Josh. Neither of them remembers who got to choose first.",
+  joshCufflink: "Josh's Cufflink",
+  joshCufflinkDescription: "One half of an old matching pair. The other belongs to Jack. Josh insists his is the original.",
 
   // PLAYER STATS LABELS
 
@@ -141,6 +144,8 @@ export default {
   headsSelector: "Heads",
   tailsSelector: "Tails",
   decayIn: "DECAY\nIN:",
+  combinationWontScore: "COMBINATION WON'T SCORE",
+  combinationBlocked: "COMBINATION BLOCKED",
 
   // GAMBLE FOR MORE
 
@@ -282,9 +287,12 @@ export default {
   tedDescription: "Ted has spent enough time behind the table to recognize a familiar play when he sees one.\n\nKeep repeating the same combination, and he'll make sure it pays a little less every time.",
   finnSaying: "Enjoy it while it lasts.",
   finnDescription: "Finn is in no hurry to take control of the table. He knows that sooner or later, the odds will start turning in his favor.\n\nMake the most of your early advantage, because Finn knows good things never last.",
-
   paulieSaying: "Let’s do it the old way!",
   paulieDescription: "Paulie is an old timer. He follows the rule that if we gamble… we gamble! Not guess…",
+  jackSaying: "Heads? Bad choice.",
+  jackDescription: "No, your eyes are fine. You're not seeing double. Jack is Josh's brother.\n\nThe two may look almost identical, but there's one easy way to tell them apart at the table. Jack has never been much of a fan of heads.",
+  joshSaying: "Tails? Your funeral.",
+  joshDescription: "No, your eyes are fine. You're not seeing double. Josh is Jack's brother.\n\nThey've spent years being mistaken for each other, but their preferences at the table couldn't be more different. If Jack can't stand heads, Josh has a particular dislike for tails.",
 
   // SKILLS
 
@@ -368,6 +376,12 @@ export default {
 
   forcedRandomTossSkillName: "Forced random toss",
   forcedRandomTossSkillDescription: "Every three rounds a toss is random (all coins have 50% chance).",
+
+  headsCurseSkillName: "Heads Curse",
+  headsCurseSkillDescription: "Combinations containing two or more heads generate no winnings.",
+
+  tailsCurseSkillName: "Tails Curse",
+  tailsCurseSkillDescription: "Combinations containing two or more tails generate no winnings.",
 
   // PERKS
 

@@ -98,6 +98,47 @@ export class RoundOutcomeHandler {
     dejaVuCombinationCount: number,
     dealer: DealerData,
   ): WinModifierResult {
+
+    const headsCurseSkill = dealer.skills.find(
+      (skill) =>
+        skill.id === DealerSkillId.HEADS_CURSE,
+    );
+
+    if (headsCurseSkill) {
+      const headsCount = combination.filter(
+        (side) => side === "H",
+      ).length;
+
+      if (headsCount >= 2) {
+        return {
+          winAmount: 0,
+          triggeredSkills: [
+            DealerSkillId.HEADS_CURSE,
+          ],
+        };
+      }
+    }
+
+    const tailsCurseSkill = dealer.skills.find(
+      (skill) =>
+        skill.id === DealerSkillId.TAILS_CURSE,
+    );
+
+    if (tailsCurseSkill) {
+      const tailsCount = combination.filter(
+        (side) => side === "T",
+      ).length;
+
+      if (tailsCount >= 2) {
+        return {
+          winAmount: 0,
+          triggeredSkills: [
+            DealerSkillId.TAILS_CURSE,
+          ],
+        };
+      }
+    }
+
     const triggeredSkills: DealerSkillId[] = [];
 
     let finalWinAmount = winAmount;

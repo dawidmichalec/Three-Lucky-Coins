@@ -49,7 +49,11 @@ export enum DealerSkillId {
 
   MULTIPLIER_DECAY = "multiplier_decay",
 
-  FORCED_RANDOM_TOSS = "forced_random_toss"
+  FORCED_RANDOM_TOSS = "forced_random_toss",
+
+  HEADS_CURSE = "heads_curse",
+
+  TAILS_CURSE = "tails_curse"
 
   // Kolejne skille w przyszłości...
 }

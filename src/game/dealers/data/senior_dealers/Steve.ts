@@ -30,7 +30,7 @@ export const STEVE_DATA: DealerData = {
 
   objectiveType: ObjectiveType.INCREASE_BALANCE,
 
-  objectiveValue: 800,
+  objectiveValue: 1200,
 
   goldenCoinSettings: {
     baseChance: 0.0075,

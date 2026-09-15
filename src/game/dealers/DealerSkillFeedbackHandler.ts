@@ -86,6 +86,14 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.DEJA_VU:
           await this.gameMessageOverlay.play("dejaVuSkillName");
           break;
+
+        case DealerSkillId.HEADS_CURSE:
+          await this.gameMessageOverlay.play("headsCurseSkillName");
+          break;
+
+        case DealerSkillId.TAILS_CURSE:
+          await this.gameMessageOverlay.play("tailsCurseSkillName");
+          break;
       }
     }
   }

@@ -11,6 +11,7 @@ import { AudioManager } from "../core/AudioManager";
 import { SoundId } from "../audio/SoundId";
 import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkTooltip } from "./components/PerkTooltip";
+import { LayoutManager } from "../core/LayoutManager";
 
 export class GameUI extends Container {
   private balanceValue: Text;
@@ -38,6 +39,9 @@ export class GameUI extends Container {
 
   public decayLabel!: LocalizedText;
   public decayValue!: Text;
+
+  public combinationStatusLabel!: LocalizedText;
+  private layoutManager = LayoutManager.getInstance();
 
   constructor(private currentDealer: DealerData) {
     super();
@@ -234,7 +238,7 @@ export class GameUI extends Container {
       }
     });
 
-    this.timeLabel.position.set(130, 170);
+    this.timeLabel.position.set(132, 100);
 
     this.timeLabel.visible = false;
     this.timeLabel.anchor.set(0.5, 0);
@@ -269,6 +273,22 @@ export class GameUI extends Container {
     this.decayValue.anchor.set(0.5, 0);
     this.decayValue.visible = false;
 
+    // COMBINATION STATUS LABEL
+
+    this.combinationStatusLabel = new LocalizedText(
+      "combinationWontScore",
+      {
+        fontFamily: "EgyptianSlateBd",
+        fontSize: 44,
+        fontWeight: "bold",
+        fill: 0xff3131,
+        align: "center"
+      }
+    );
+
+    this.combinationStatusLabel.position.set(960, 228);
+    this.combinationStatusLabel.anchor.set(0.5, 0);
+    this.combinationStatusLabel.visible = false;
 
     // ADD
 
@@ -286,7 +306,8 @@ export class GameUI extends Container {
       this.freeBetLabel,
       this.timeLabel,
       this.decayLabel,
-      this.decayValue
+      this.decayValue,
+      this.combinationStatusLabel,
     );
   }
 
@@ -305,7 +326,7 @@ export class GameUI extends Container {
 
     this.clockIcon.width = 85;
     this.clockIcon.height = 85;
-    this.clockIcon.position.set(90.5, 70);
+    this.clockIcon.position.set(90.5, 0);
 
     this.clockIcon.visible = false;
 
@@ -340,6 +361,14 @@ export class GameUI extends Container {
   hideDecayTimer(): void {
     this.decayLabel.visible = false;
     this.decayValue.visible = false;
+  }
+
+  showCombinationStatusLabel(){
+    this.combinationStatusLabel.visible = true;
+  }
+
+  hideCombinationStatusLabel() {
+    this.combinationStatusLabel.visible = false;
   }
 
   async animatePenaltyIntoWon(
@@ -765,7 +794,7 @@ export class GameUI extends Container {
 
     this.dealerCard.position.set(
       289.3,
-      70,
+      0,
     );
 
     this.addChild(

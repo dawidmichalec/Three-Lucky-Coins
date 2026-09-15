@@ -180,6 +180,40 @@ export class DealerFightManager {
     }
   }
 
+  isCombinationCursed(
+    combination: readonly string[],
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasHeadsCurse = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.HEADS_CURSE,
+    );
+
+    if (hasHeadsCurse) {
+      const headsCount = combination.filter(
+        (side) => side === "H",
+      ).length;
+
+      return headsCount >= 2;
+    }
+
+    const hasTailsCurse = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.TAILS_CURSE,
+    );
+
+    if (hasTailsCurse) {
+      const tailsCount = combination.filter(
+        (side) => side === "T",
+      ).length;
+
+      return tailsCount >= 2;
+    }
+
+    return false;
+  }
+
   shouldForceRandomToss(): boolean {
     const dealer = this.getCurrentDealer();
 

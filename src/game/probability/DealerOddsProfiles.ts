@@ -231,3 +231,19 @@ export const FORCED_RANDOM_TOSS_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.5],
 };
+
+// JACK
+
+export const JACK_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.16, 0.2, 0.24, 0.28, 0.3, 0.7, 0.72, 0.76, 0.8, 0.84],
+};
+
+// JOSH
+
+export const JOSH_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.16, 0.2, 0.24, 0.28, 0.3, 0.7, 0.72, 0.76, 0.8, 0.84],
+};

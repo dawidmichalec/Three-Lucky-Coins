@@ -74,6 +74,10 @@ export default {
   jacobDogTagDescription: "Stary, porysowany nieśmiertelnik, który Jacob nosi pod koszulą. Nigdy nie mówi, skąd go ma, a nikt w kasynie nie miał odwagi zapytać.",
   paulieVintageDice: "Kości do gry Paulie'go",
   paulieVintageDiceDescription: "Stare kości. Stare zasady.",
+  jackCufflink: "Spinka Jacka",
+  jackCufflinkDescription: "Jedna z dwóch starych, pasujących do siebie spinek. Druga należy do Josha. Żaden z nich nie pamięta, który wybierał pierwszy.",
+  joshCufflink: "Spinka Josha",
+  joshCufflinkDescription: "Jedna z dwóch starych, pasujących do siebie spinek. Druga należy do Jacka. Josh upiera się, że jego jest oryginalna.",
 
   // PLAYER STATS LABELS
 
@@ -137,6 +141,8 @@ export default {
   headsSelector: "Orzeł",
   tailsSelector: "Reszka",
   decayIn: "ROZPAD\nZA:",
+  combinationWontScore: "BRAK WYGRANEJ",
+  combinationBlocked: "KOMBINACJA ZABLOKOWANA",
 
   // GAMBLE FOR MORE
 
@@ -265,6 +271,10 @@ export default {
   finnDescription: "Finn nie spieszy się z przejęciem kontroli nad stołem. Wie, że prędzej czy później sytuacja zacznie obracać się na jego korzyść.\n\nWykorzystaj swoją początkową przewagę, bo Finn dobrze wie, że nic, co dobre, nie trwa wiecznie.",
   paulieSaying: "Zróbmy to w stary stylu!",
   paulieDescription: "Paulie to stary wyjadacz. Wyznaje zasadę, że jeśli już uprawiamy hazard… to uprawiamy hazard! A nie zgadujemy…",
+  jackSaying: "Orzeł? Zły wybór.",
+  jackDescription: "Nie, z twoim wzrokiem wszystko w porządku. Nie widzisz podwójnie. Jack jest bratem Josha.\n\nMogą wyglądać niemal identycznie, ale przy stole łatwo ich odróżnić. Jack nigdy nie przepadał za orłami.",
+  joshSaying: "Reszka? Twój pogrzeb.",
+  joshDescription: "Nie, z twoim wzrokiem wszystko w porządku. Nie widzisz podwójnie. Josh jest bratem Jacka.\n\nOd lat są ze sobą myleni, ale przy stole ich upodobania nie mogłyby być bardziej odmienne. Jeśli Jack nie znosi orłów, Josh ma szczególną awersję do reszek.",
 
   // SKILL
 
@@ -354,6 +364,12 @@ export default {
   
   forcedRandomTossSkillName: "Losowy rzut",
   forcedRandomTossSkillDescription: "Co trzy rundy rzut jest losowy (szanse wszystkich monet wynoszą 50%).",
+  
+  headsCurseSkillName: "Klątwa orła",
+  headsCurseSkillDescription: "Kombinacje zawierające co najmniej dwa orły nie przynoszą żadnej wygranej.",
+  
+  tailsCurseSkillName: "Klątwa reszki",
+  tailsCurseSkillDescription: "Kombinacje zawierające co najmniej dwie reszki nie przynoszą żadnej wygranej.",
   
   // PERKS
 

@@ -146,6 +146,8 @@ export class GameScene extends BaseScene {
             index,
             side,
           );
+
+          this.updateCombinationStatus();
         },
 
         onToss: () => this.handleToss(),
@@ -360,6 +362,8 @@ export class GameScene extends BaseScene {
     );
 
     this.startDelayedDecayIfNeeded();
+
+    this.updateCombinationStatus();
   }
 
   private isCurrentDealerDefeated(): boolean {
@@ -552,6 +556,22 @@ export class GameScene extends BaseScene {
     this.coinRow.zIndex = 0;
 
     this.addChild(this.coinRow);
+  }
+
+  private updateCombinationStatus(): void {
+    const combination = this.controller.getCurrentCombo();
+
+    const cursed = this.dealerFightManager.isCombinationCursed(combination);
+
+    if (cursed) {
+      this.view.gameUI.combinationStatusLabel.setKey("combinationWontScore");
+
+      this.view.gameUI.showCombinationStatusLabel();
+
+      return;
+    }
+
+    this.view.gameUI.hideCombinationStatusLabel();
   }
 
 
