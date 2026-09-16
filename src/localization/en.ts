@@ -314,7 +314,24 @@ export default {
   ivySaying: "You will fall to my knees.",
   ivyDescription: "Ivy is bossy and dominating croupier. She decides which combinations players can use.\n\nHer gorgeous looks and bossy personality brought many players to their knees and… their wallets as well.",
 
-  // SKILLS
+  // MACHINE FLOOR
+
+  machineSaying: "01001000 01001001",
+  tlcmProtoSaying: "01010100 01101000 01100101 01111001 00100000 01101100 01100101 01100110 01110100 00100000 01101101 01100101 00100000 01101000 01100101 01110010 01100101 00101110",
+
+  tlcm1Description: "The first generation of Three Lucky Coins Machines. Reliable despite their age, these machines were built before Golden Coins were introduced and do not support them.",
+  tlcm2Description: "The second generation of Three Lucky Coins Machines. While more advanced than their predecessors, these machines were notorious for malfunctioning bet controls.",
+  tlcm3Description: "The third generation of Three Lucky Coins Machines. As with the second generation, these machines also suffered from poorly functioning bet controls, with bet locking being the most common issue.",
+  tlcm4Description: "The fourth generation of Three Lucky Coins Machines. A faulty bet deduction system sometimes causes these machines to charge players more than intended.",
+  tlcm5Description: "The fifth generation of Three Lucky Coins Machines. A relatively successful generation. Its only notable issue was a longer toss animation, as its creators had to comply with regulations at the time that required toss animations to last longer.",
+  tlcm6Description: "The sixth generation of Three Lucky Coins Machines. Production of this generation was cancelled due to its poorly designed probability display system. However, some of these machines are still operational in casinos.",
+  tlcm7Description: "The seventh generation of Three Lucky Coins Machines. Malfunctions of the combination selection system were the most common problem with these machines.",
+  tlcm8Description: "The eighth generation of Three Lucky Coins Machines. Its designers decided to expose the multiplier system, but it brought more harm than good. The multiplier module was the weakest and most poorly designed component of this generation.",
+  tlcm9Description: "The ninth generation of Three Lucky Coins Machines. Nicknamed \"money eaters\" by gamblers and casino owners, these machines were notorious for failures of their balance modules.",
+  tlcm10Description: "The tenth and newest generation of Three Lucky Coins Machines. Modern, reliable and fully compatible with all current casino systems.",
+  tlcmProtoDescription: "The prototype unit of the Three Lucky Coins Machine. It is rumoured to have included all the features that would later appear in production models, but due to the technological limitations of the time, most of them were prone to malfunction.",
+  
+// SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
 

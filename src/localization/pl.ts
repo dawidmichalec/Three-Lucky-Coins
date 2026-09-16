@@ -297,7 +297,23 @@ export default {
   ivySaying: "Padniesz przede mną na kolana.",
   ivyDescription: "Ivy to apodyktyczna i dominująca krupierka. To ona decyduje, których kombinacji gracze mogą użyć.\n\nJej zniewalająca uroda i władczy charakter rzucały wielu graczy na kolana... ich portfele też.",
 
+  // MACHINE FLOOR
 
+  machineSaying: "01001000 01001001",
+  tlcmProtoSaying: "01010100 01101000 01100101 01111001 00100000 01101100 01100101 01100110 01110100 00100000 01101101 01100101 00100000 01101000 01100101 01110010 01100101 00101110",
+
+  tlcm1Description: "Pierwsza generacja automatów Three Lucky Coins. Pomimo swojego wieku maszyny te są niezawodne. Powstały jeszcze przed wprowadzeniem Złotych Monet i nie obsługują ich.",
+  tlcm2Description: "Druga generacja automatów Three Lucky Coins. Choć bardziej zaawansowane od swoich poprzedników, maszyny te zasłynęły z awaryjnego systemu sterowania stawką.",
+  tlcm3Description: "Trzecia generacja automatów Three Lucky Coins. Podobnie jak druga generacja, maszyny te również miały problemy z systemem sterowania stawką, a jego blokowanie się było najczęstszą usterką.",
+  tlcm4Description: "Czwarta generacja automatów Three Lucky Coins. Wadliwy system pobierania stawki sprawia, że maszyny te czasami pobierają od graczy więcej, niż powinny.",
+  tlcm5Description: "Piąta generacja automatów Three Lucky Coins. Stosunkowo udana generacja. Jej jedynym istotnym problemem była dłuższa animacja rzutu, ponieważ twórcy musieli dostosować się do obowiązujących wówczas przepisów, które wymagały dłuższych animacji rzutu.",
+  tlcm6Description: "Szósta generacja automatów Three Lucky Coins. Produkcja tej generacji została wstrzymana z powodu źle zaprojektowanego systemu wyświetlania prawdopodobieństwa. Mimo to niektóre z tych maszyn wciąż działają w kasynach.",
+  tlcm7Description: "Siódma generacja automatów Three Lucky Coins. Najczęstszym problemem tych maszyn były usterki systemu wyboru kombinacji.",
+  tlcm8Description: "Ósma generacja automatów Three Lucky Coins. Jej projektanci zdecydowali się wyeksponować system mnożnika, jednak przyniosło to więcej szkody niż pożytku. Moduł mnożnika był najsłabszym i najgorzej zaprojektowanym elementem tej generacji.",
+  tlcm9Description: "Dziewiąta generacja automatów Three Lucky Coins. Nazywane przez graczy i właścicieli kasyn \"pożeraczami pieniędzy\", maszyny te zasłynęły z częstych awarii modułu salda.",
+  tlcm10Description: "Dziesiąta i najnowsza generacja automatów Three Lucky Coins. Nowoczesna, niezawodna i w pełni kompatybilna ze wszystkimi obecnymi systemami kasyna.",
+  tlcmProtoDescription: "Prototyp automatu Three Lucky Coins. Według plotek posiadał wszystkie funkcje, które później pojawiły się w modelach produkcyjnych, jednak ze względu na ograniczenia technologiczne tamtych czasów większość z nich była podatna na awarie.",
+  
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
