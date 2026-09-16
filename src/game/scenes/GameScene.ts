@@ -578,6 +578,11 @@ export class GameScene extends BaseScene {
   // START ROUND - FUNCTION RESPONSIBLE FOR THE GAME LOOP
 
   private async startRound() {
+
+    if (this.roundState !== "ready") {
+      return;
+    }
+
     const bet = this.controller.getBet();
 
     const availableBets =
@@ -610,10 +615,6 @@ export class GameScene extends BaseScene {
     if (this.player.balance < betCost) {
       this.popupManager.show("insufficientBalance");
 
-      return;
-    }
-
-    if (this.roundState !== "ready") {
       return;
     }
 
@@ -769,16 +770,41 @@ export class GameScene extends BaseScene {
 
     const baseResult = this.generateResult();
 
-    const goldenResult = this.goldenCoinManager.applyGoldenCoins(baseResult);
+    const goldenResult = this.goldenCoinManager.applyGoldenCoins(baseResult,);
 
-    const resultSides = goldenResult.map((outcome) => outcome.side);
+    await this.coinRow.spin(goldenResult,selected,);
 
-    await this.coinRow.spin(goldenResult, selected);
+    const additionalCoinTossTriggered = this.dealerFightManager.shouldTriggerAdditionalCoinToss();
 
-    const goldenCoinsCollected =
-      goldenResult.filter(
-        (outcome) => outcome.isGolden,
-      ).length;
+    if (
+      additionalCoinTossTriggered
+    ) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.ADDITIONAL_COIN_TOSS,
+      ]);
+
+      const coinIndex =
+        Math.floor(Math.random() * goldenResult.length);
+
+      const newSide =
+        Math.random() < 0.5
+          ? CoinSide.Heads
+          : CoinSide.Tails;
+
+      goldenResult[coinIndex] = {
+        ...goldenResult[coinIndex],
+        side: newSide,
+      };
+
+      await this.coinRow.spinSingleCoin(
+        coinIndex,
+        goldenResult[coinIndex],
+      );
+    }
+
+    const resultSides = goldenResult.map((outcome) => outcome.side,);
+
+    const goldenCoinsCollected = goldenResult.filter((outcome) => outcome.isGolden,).length;
 
     this.dealerFightManager.recordGoldenCoins(goldenCoinsCollected);
 
@@ -793,7 +819,7 @@ export class GameScene extends BaseScene {
       );
     }
 
-    this.statsManager.recordCoinsTossed(resultSides.length);
+    this.statsManager.recordCoinsTossed(resultSides.length +(additionalCoinTossTriggered ? 1 : 0));
 
     const goldenMultiplier =
       this.goldenCoinManager.getGoldenMultiplier(goldenResult);

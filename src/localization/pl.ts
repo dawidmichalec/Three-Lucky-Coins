@@ -80,6 +80,8 @@ export default {
   joshCufflinkDescription: "Jedna z dwóch starych, pasujących do siebie spinek. Druga należy do Jacka. Josh upiera się, że jego jest oryginalna.",
   peterWhiskeyBottle: "Butelka whiskey Petera",
   peterWhiskeyBottleDescription: "W połowie pełna. W połowie pusta. Petera przestało to obchodzić lata temu.",
+  martyOversizedBowTie: "Ogromna muszka Marty'ego",
+  martyOversizedBowTieDescription: "Im większa muszka, tym większe show.",
 
   // PLAYER STATS LABELS
 
@@ -280,6 +282,8 @@ export default {
   joshDescription: "Nie, z twoim wzrokiem wszystko w porządku. Nie widzisz podwójnie. Josh jest bratem Jacka.\n\nOd lat są ze sobą myleni, ale przy stole ich upodobania nie mogłyby być bardziej odmienne. Jeśli Jack nie znosi orłów, Josh ma szczególną awersję do reszek.",
   peterSaying: "Co? Postawiłeś więcej? Nie! Niemożliwe!",
   peterDescription: "Peter lubi sobie wypić. Niestety, nie zostawia tego nawyku w domu. \n\nKierownictwo nauczyło się przymykać na to oko. Peter przynosi zbyt duże zyski, a do tego – jakimś cudem – nawet po kilku głębszych wciąż wywiązuje się ze swoich zadań. \n\nJednak im dłużej siedzisz przy jego stoliku, tym bardziej nieprzewidywalne rzeczy się dzieją.",
+  martySaying: "Myślałeś, że to już koniec? Niezupełnie.",
+  martyDescription: "Marty lubi mieć ostatnie słowo. Przy jego stole dotyczy to również monet.\n\nKiedy wydaje się, że runda jest już rozstrzygnięta, Marty ma zwyczaj się wtrącać. W jego obecności pierwszy wynik nie zawsze jest tym ostatecznym.",
 
   // SKILL
 
@@ -378,6 +382,9 @@ export default {
 
   betValueManipulationSkillName: "Manipulacja stawką",
   betValueManipulationSkillDescription: "Peter może zmienić wysokość twojego zakładu. Im dłużej trwa walka, tym bardziej nieprzewidywalne stają się jego zmiany.",
+
+  additionalCoinTossSkillName: "Dodatkowy rzut monetą",
+  additionalCoinTossSkillDescription: "Marty rzuca losową monetą ponownie co trzy rundy.",
 
   // PERKS
 

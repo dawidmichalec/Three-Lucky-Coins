@@ -255,3 +255,11 @@ export const PETER_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.17, 0.21, 0.25, 0.29, 0.3, 0.32, 0.68, 0.7, 0.71, 0.75, 0.79, 0.83],
 };
+
+// MARTY
+
+export const MARTY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.13, 0.15, 0.19, 0.2, 0.25, 0.27, 0.73, 0.75, 0.8, 0.81, 0.85, 0.87],
+};

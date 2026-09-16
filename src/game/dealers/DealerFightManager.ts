@@ -180,6 +180,26 @@ export class DealerFightManager {
     }
   }
 
+  shouldTriggerAdditionalCoinToss(): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasAdditionalCoinToss =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.ADDITIONAL_COIN_TOSS,
+      );
+
+    if (!hasAdditionalCoinToss) {
+      return false;
+    }
+
+    const nextRound =
+      this.fightRounds + 1;
+
+    return nextRound % 3 === 0;
+  }
+
   resolveBetValueManipulation(
     selectedBet: number,
     availableBets: readonly number[],

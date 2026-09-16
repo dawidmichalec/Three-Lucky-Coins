@@ -26,6 +26,36 @@ export class CoinRow extends Container {
     }
   }
 
+  async spinSingleCoin(
+    index: number,
+    outcome: CoinOutcome,
+  ): Promise<void> {
+    const coin = this.coins[index];
+
+    coin.startSpin();
+
+    this.audioManager.play(SoundId.SPIN_START, {
+      volume: 0.5,
+    });
+
+    await this.delay(500);
+
+    this.audioManager.play(SoundId.COIN_LAND, {
+      volume: 0.7,
+    });
+
+    if (outcome.isGolden) {
+      await coin.revealGolden(
+        outcome.side,
+        1,
+      );
+    } else {
+      coin.reveal(outcome.side);
+    }
+
+    await this.delay(250);
+  }
+
   setResult(result: readonly CoinSide[]) {
     result.forEach((side, index) => {
       this.coins[index].setSide(side);

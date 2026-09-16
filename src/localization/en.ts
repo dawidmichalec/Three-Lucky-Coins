@@ -81,6 +81,8 @@ export default {
   joshCufflinkDescription: "One half of an old matching pair. The other belongs to Jack. Josh insists his is the original.",
   peterWhiskeyBottle: "Peter's Whiskey Bottle",
   peterWhiskeyBottleDescription: "Half full. Or half empty. Peter stopped caring years ago.",
+  martyOversizedBowTie: "Marty's Oversized Bow Tie",
+  martyOversizedBowTieDescription: "The bigger the bow tie, the bigger the show.",
 
   // PLAYER STATS LABELS
 
@@ -298,6 +300,8 @@ export default {
   joshDescription: "No, your eyes are fine. You're not seeing double. Josh is Jack's brother.\n\nThey've spent years being mistaken for each other, but their preferences at the table couldn't be more different. If Jack can't stand heads, Josh has a particular dislike for tails.",
   peterSaying: "What? You placed more? Nah! No way!",
   peterDescription: "Peter likes to drink. Unfortunately, he doesn't leave that habit at home.\n\nManagement has learned to look the other way. Peter brings in too much money, and somehow, even after a few drinks, he still gets the job done.\n\nThe longer you stay at his table, though, the less predictable things tend to become.",
+  martySaying: "Thought we were done? Not quite.",
+  martyDescription: "Marty likes to have the last word. At his table, that applies to the coins too.\n\nJust when a round seems settled, he has a habit of getting involved.With Marty around, the first result isn't always the final one.",
 
   // SKILLS
 
@@ -391,6 +395,8 @@ export default {
   betValueManipulationSkillName: "Bet Value Manipulation",
   betValueManipulationSkillDescription: "Peter may alter the value of your bet. The longer the fight lasts, the more unpredictable his changes become.",
 
+  additionalCoinTossSkillName: "Additional Coin Toss",
+  additionalCoinTossSkillDescription: "Marty tosses random coin additional time every three rounds.",
 
   // PERKS
 

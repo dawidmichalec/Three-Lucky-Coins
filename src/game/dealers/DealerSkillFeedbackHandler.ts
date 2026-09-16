@@ -98,6 +98,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.BET_VALUE_MANIPULATION:
           await this.gameMessageOverlay.play("betValueManipulationSkillName");
           break;
+
+        case DealerSkillId.ADDITIONAL_COIN_TOSS:
+          await this.gameMessageOverlay.play("additionalCoinTossSkillName");
+          break;
       }
     }
   }
