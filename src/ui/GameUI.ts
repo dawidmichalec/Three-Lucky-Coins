@@ -41,7 +41,9 @@ export class GameUI extends Container {
   public decayValue!: Text;
 
   public combinationStatusLabel!: LocalizedText;
-  private layoutManager = LayoutManager.getInstance();
+  public ivyRuleLabel!: LocalizedText;
+  public ivyRuleContent!: LocalizedText;
+
 
   constructor(private currentDealer: DealerData) {
     super();
@@ -290,6 +292,35 @@ export class GameUI extends Container {
     this.combinationStatusLabel.anchor.set(0.5, 0);
     this.combinationStatusLabel.visible = false;
 
+    // IVY RULE LABELS
+
+    this.ivyRuleLabel = new LocalizedText(
+      "ivyRule",
+      {
+        font: "Open Sans",
+        fontSize: 34,
+        fontWeight: "bold",
+        fill: 0xffd21f,
+      }
+    )
+    this.ivyRuleLabel.position.set(1680, 345.6);
+    this.ivyRuleLabel.visible = false;
+
+    this.ivyRuleContent = new LocalizedText(
+      "noAllSame",
+      {
+        font: "Open Sans",
+        fontSize: 30,
+        fontWeight: "bold",
+        fill: 0xffffff,
+        wordWrap: true,
+        wordWrapWidth: 280,
+      }
+    );
+    this.ivyRuleContent.position.set(1680, 395.6);
+    this.ivyRuleContent.visible = false;
+
+
     // ADD
 
     this.addChild(
@@ -308,6 +339,8 @@ export class GameUI extends Container {
       this.decayLabel,
       this.decayValue,
       this.combinationStatusLabel,
+      this.ivyRuleLabel,
+      this.ivyRuleContent
     );
   }
 
@@ -369,6 +402,16 @@ export class GameUI extends Container {
 
   hideCombinationStatusLabel() {
     this.combinationStatusLabel.visible = false;
+  }
+
+  showIvyRules() {
+    this.ivyRuleLabel.visible = true;
+    this.ivyRuleContent.visible = true;
+  }
+
+  hideIvyRules() {
+    this.ivyRuleLabel.visible = false;
+    this.ivyRuleContent.visible = false;
   }
 
   async animatePenaltyIntoWon(

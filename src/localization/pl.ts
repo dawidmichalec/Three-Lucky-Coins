@@ -84,6 +84,8 @@ export default {
   martyOversizedBowTieDescription: "Im większa muszka, tym większe show.",
   henryPocketWatch: "Zegarek kieszonkowy Henry'ego",
   henryPocketWatchDescription: "Stary mechaniczny zegarek kieszonkowy, który Henry sprawdza między rundami. Trochę się spieszy — dokładnie tak, jak Henry lubi.",
+  ivyHairpin: "Spinka Ivy",
+  ivyHairpinDescription: "Nawet jej włosy podlegają ścisłym regułom.",
 
   // PLAYER STATS LABELS
 
@@ -150,6 +152,10 @@ export default {
   combinationWontScore: "BRAK WYGRANEJ",
   combinationBlocked: "KOMBINACJA ZABLOKOWANA",
   betValueChangedTo: "STAWKA ZMIENIONA NA",
+  ivyRule: "ZASADA IVY",
+  noAllSame: "Bez trzech takich samych",
+  noHeadsMajority: "Bez przewagi orłów",
+  noTailsMajority: "Bez przewagi reszek",
 
   // GAMBLE FOR MORE
 
@@ -288,6 +294,9 @@ export default {
   martyDescription: "Marty lubi mieć ostatnie słowo. Przy jego stole dotyczy to również monet.\n\nKiedy wydaje się, że runda jest już rozstrzygnięta, Marty ma zwyczaj się wtrącać. W jego obecności pierwszy wynik nie zawsze jest tym ostatecznym.",
   henrySaying: "Tę już grałeś.",
   henryDescription: "Henry nie ma cierpliwości do graczy, którzy ciągle wracają do tych samych wyborów.\n\nGdy zagrasz kombinację przy jego stole, na jakiś czas wycofa ją z gry. Jeśli chcesz grać dalej, musisz być ciągle w ruchu.",
+  ivySaying: "Padniesz przede mną na kolana.",
+  ivyDescription: "Ivy to apodyktyczna i dominująca krupierka. To ona decyduje, których kombinacji gracze mogą użyć.\n\nJej zniewalająca uroda i władczy charakter rzucały wielu graczy na kolana... ich portfele też.",
+
 
   // SKILL
 
@@ -393,6 +402,8 @@ export default {
   keepItMovingSkillName: "Nie stój w miejscu",
   keepItMovingSkillDescription: "Po użyciu kombinacji staje się ona niedostępna przez następne 3 rundy.",
 
+  myWayOrTheHighwaySkillName: "Po mojemu albo wcale",
+  myWayOrTheHighwaySkillDescription: "Ivy decyduje, które kombinacje można, a których nie można wykorzystać w danej rundzie.",
 
   // PERKS
 

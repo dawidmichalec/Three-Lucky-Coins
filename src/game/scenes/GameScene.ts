@@ -363,6 +363,8 @@ export class GameScene extends BaseScene {
 
     this.startDelayedDecayIfNeeded();
 
+    this.updateIvyRule();
+
     this.updateCombinationStatus();
   }
 
@@ -475,6 +477,8 @@ export class GameScene extends BaseScene {
 
     this.view.gameUI.hideDecayTimer();
 
+    this.view.gameUI.hideIvyRules();
+
     this.dealerCollectionManager.discoverDealer(dealer.id);
 
     this.perkEffectApplier.resetFightEffects();
@@ -556,6 +560,24 @@ export class GameScene extends BaseScene {
     this.coinRow.zIndex = 0;
 
     this.addChild(this.coinRow);
+  }
+
+  private updateIvyRule(): void {
+    const rule =
+      this.dealerFightManager
+        .getIvyCombinationRule();
+
+    if (!rule) {
+      this.view.gameUI.hideIvyRules();
+
+      return;
+    }
+
+    this.view.gameUI.ivyRuleContent.setKey(
+      rule,
+    );
+
+    this.view.gameUI.showIvyRules();
   }
 
   private updateCombinationStatus(): void {
@@ -1390,6 +1412,8 @@ export class GameScene extends BaseScene {
     }
 
     this.dealerFightManager.recordCompletedRound();
+
+    this.updateIvyRule();
 
     if (
       this.currentDealer.objectiveType ===

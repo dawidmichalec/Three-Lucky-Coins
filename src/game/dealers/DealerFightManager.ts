@@ -1,6 +1,7 @@
 import { DealerData } from "./DealerData";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerSkillId } from "./DealerSkill";
+import { IvyCombinationRule } from "./rules/IvyCombinationRule";
 
 export interface DealerFightState {
   targetBalance?: number;
@@ -64,6 +65,10 @@ export class DealerFightManager {
   private henryBlockedCombinations = new Map<string, number>();
 
   private static readonly HENRY_COMBINATION_BLOCK_ROUNDS = 3;
+
+  private ivyCombinationRule?: IvyCombinationRule;
+
+  private static readonly IVY_RULE_DURATION_ROUNDS = 3;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -132,6 +137,19 @@ export class DealerFightManager {
 
     this.henryBlockedCombinations.clear();
 
+    this.ivyCombinationRule = undefined;
+
+    const hasMyWayOrTheHighway =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
+      );
+
+    if (hasMyWayOrTheHighway) {
+      this.rollIvyCombinationRule();
+    }
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -186,6 +204,34 @@ export class DealerFightManager {
     }
   }
 
+  getIvyCombinationRule():
+    IvyCombinationRule | undefined {
+    return this.ivyCombinationRule;
+  }
+
+  private rollIvyCombinationRule(): void {
+    const rules = Object.values(
+      IvyCombinationRule,
+    );
+
+    const availableRules =
+      this.ivyCombinationRule === undefined
+        ? rules
+        : rules.filter(
+            (rule) =>
+              rule !==
+              this.ivyCombinationRule,
+          );
+
+    this.ivyCombinationRule =
+      availableRules[
+        Math.floor(
+          Math.random() *
+            availableRules.length,
+        )
+      ];
+  }
+
   isCombinationBlocked(
     combination: readonly string[],
   ): boolean {
@@ -198,26 +244,67 @@ export class DealerFightManager {
           DealerSkillId.KEEP_IT_MOVING,
       );
 
-    if (!hasKeepItMoving) {
-      return false;
+    if (hasKeepItMoving) {
+      const combinationKey =
+        combination.join("-");
+
+      const blockedUntilRound =
+        this.henryBlockedCombinations.get(
+          combinationKey,
+        );
+
+      if (
+        blockedUntilRound !== undefined
+      ) {
+        const nextRound =
+          this.fightRounds + 1;
+
+        if (
+          nextRound <=
+          blockedUntilRound
+        ) {
+          return true;
+        }
+      }
     }
 
-    const combinationKey =
-      combination.join("-");
-
-    const blockedUntilRound =
-      this.henryBlockedCombinations.get(
-        combinationKey,
+    const hasMyWayOrTheHighway =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
       );
 
-    if (blockedUntilRound === undefined) {
-      return false;
+    if (
+      hasMyWayOrTheHighway &&
+      this.ivyCombinationRule
+    ) {
+      const headsCount =
+        combination.filter(
+          (side) => side === "H",
+        ).length;
+
+      const tailsCount =
+        combination.filter(
+          (side) => side === "T",
+        ).length;
+
+      switch (this.ivyCombinationRule) {
+        case IvyCombinationRule.NO_ALL_SAME:
+          return (
+            headsCount === 3 ||
+            tailsCount === 3
+          );
+
+        case IvyCombinationRule.NO_HEADS_MAJORITY:
+          return headsCount >= 2;
+
+        case IvyCombinationRule.NO_TAILS_MAJORITY:
+          return tailsCount >= 2;
+      }
     }
 
-    const nextRound =
-      this.fightRounds + 1;
-
-    return nextRound <= blockedUntilRound;
+    return false;
   }
 
   recordCombinationForKeepItMoving(
@@ -424,6 +511,26 @@ export class DealerFightManager {
 
   recordCompletedRound(): void {
     this.fightRounds++;
+
+    const dealer =
+      this.getCurrentDealer();
+
+    const hasMyWayOrTheHighway =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
+      );
+
+    if (
+      hasMyWayOrTheHighway &&
+      this.fightRounds %
+        DealerFightManager
+          .IVY_RULE_DURATION_ROUNDS ===
+        0
+    ) {
+      this.rollIvyCombinationRule();
+    }
   }
 
   getFightRounds(): number {

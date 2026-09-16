@@ -59,7 +59,9 @@ export enum DealerSkillId {
 
   ADDITIONAL_COIN_TOSS = "additional_coin_toss",
 
-  KEEP_IT_MOVING = "keep_it_moving"
+  KEEP_IT_MOVING = "keep_it_moving",
+
+  MY_WAY_OR_THE_HIGHWAY = "my_way_or_the_highway"
 
   // Kolejne skille w przyszłości...
 }

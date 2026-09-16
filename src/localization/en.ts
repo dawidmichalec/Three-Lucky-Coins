@@ -85,6 +85,8 @@ export default {
   martyOversizedBowTieDescription: "The bigger the bow tie, the bigger the show.",
   henryPocketWatch: "Henry's Pocket Watch",
   henryPocketWatchDescription: "An old mechanical pocket watch Henry checks between rounds. It runs a little fast, which is exactly how he likes it.",
+  ivyHairpin: "Ivy's Hairpin",
+  ivyHairpinDescription: "Even her hair follows strict rules.",
 
   // PLAYER STATS LABELS
 
@@ -153,6 +155,11 @@ export default {
   combinationWontScore: "COMBINATION WON'T SCORE",
   combinationBlocked: "COMBINATION BLOCKED",
   betValueChangedTo: "BET CHANGED TO",
+  ivyRule: "IVY'S RULE",
+  noAllSame: "No All Same",
+  noHeadsMajority: "No Heads Majority",
+  noTailsMajority: "No Tails Majority",
+
 
   // GAMBLE FOR MORE
 
@@ -280,10 +287,8 @@ export default {
 
   //SENIOR DEALERS
 
-  steveSaying:
-    "The clock's ticking. So are you playing or not?",
-  steveDescription:
-    "Steve has been dealing long enough to know that hesitation rarely pays off.\n\nHe likes players who trust their instincts, make a decision, and keep the table moving.",
+  steveSaying: "The clock's ticking. So are you playing or not?",
+  steveDescription: "Steve has been dealing long enough to know that hesitation rarely pays off.\n\nHe likes players who trust their instincts, make a decision, and keep the table moving.",
   garySaying: "Don't worry. I'll take good care of it.",
   garyDescription: "Gary has spent years making sure the house always gets its fair share.\n\nHe calls it business. Players tend to call it something else.",
   charlieSaying: "Same move twice? You're making this too easy.",
@@ -306,6 +311,8 @@ export default {
   martyDescription: "Marty likes to have the last word. At his table, that applies to the coins too.\n\nJust when a round seems settled, he has a habit of getting involved.With Marty around, the first result isn't always the final one.",
   henrySaying: "You've played that one already.",
   henryDescription: "Henry has little patience for players who keep falling back on the same choices.\n\nOnce you've played a combination at his table, he'll take it out of rotation for a while. If you want to keep playing, you'll have to keep moving.",
+  ivySaying: "You will fall to my knees.",
+  ivyDescription: "Ivy is bossy and dominating croupier. She decides which combinations players can use.\n\nHer gorgeous looks and bossy personality brought many players to their knees and… their wallets as well.",
 
   // SKILLS
 
@@ -404,6 +411,9 @@ export default {
 
   keepItMovingSkillName: "Keep It Moving",
   keepItMovingSkillDescription: "After using a combination, it becomes unavailable for the next 3 rounds.",
+
+  myWayOrTheHighwaySkillName: "My Way Or The Highway",
+  myWayOrTheHighwaySkillDescription: "Ivy decides which combinations can and can't be used in the round.",
 
   // PERKS
 

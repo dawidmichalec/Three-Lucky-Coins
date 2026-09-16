@@ -271,3 +271,11 @@ export const HENRY_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.14, 0.15, 0.18, 0.22, 0.25, 0.27, 0.73, 0.75, 0.78, 0.82, 0.85, 0.86],
 };
+
+// IVY
+
+export const IVY_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.16, 0.19, 0.22, 0.25, 0.28, 0.31, 0.34, 0.37, 0.63, 0.66, 0.69, 0.72, 0.75, 0.78, 0.81, 0.84],
+};

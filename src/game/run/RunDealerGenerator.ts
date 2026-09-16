@@ -107,9 +107,26 @@ export class RunDealerGenerator {
         DealerGroup.SENIOR,
       );
 
-    return this.pickRandomDealers(
-      regularDealers,
-      2,
-    );
+    const randomDealers =
+      this.pickRandomDealers(
+        regularDealers,
+        2,
+      );
+
+    const supervisor =
+      getSupervisorByGroup(
+        DealerGroup.SENIOR,
+      );
+
+    if (!supervisor) {
+      throw new Error(
+        "Senior Supervisor not found.",
+      );
+    }
+
+    return [
+      ...randomDealers,
+      supervisor,
+    ];
   }
 }
