@@ -61,6 +61,10 @@ export class DealerFightManager {
   private fightRounds = 0;
   private fightTargetRounds = 0;
 
+  private henryBlockedCombinations = new Map<string, number>();
+
+  private static readonly HENRY_COMBINATION_BLOCK_ROUNDS = 3;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -126,6 +130,8 @@ export class DealerFightManager {
     this.fightRounds = 0;
     this.fightTargetRounds = 0;
 
+    this.henryBlockedCombinations.clear();
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -178,6 +184,70 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  isCombinationBlocked(
+    combination: readonly string[],
+  ): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasKeepItMoving =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.KEEP_IT_MOVING,
+      );
+
+    if (!hasKeepItMoving) {
+      return false;
+    }
+
+    const combinationKey =
+      combination.join("-");
+
+    const blockedUntilRound =
+      this.henryBlockedCombinations.get(
+        combinationKey,
+      );
+
+    if (blockedUntilRound === undefined) {
+      return false;
+    }
+
+    const nextRound =
+      this.fightRounds + 1;
+
+    return nextRound <= blockedUntilRound;
+  }
+
+  recordCombinationForKeepItMoving(
+    combination: readonly string[],
+  ): void {
+    const dealer = this.getCurrentDealer();
+
+    const hasKeepItMoving =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.KEEP_IT_MOVING,
+      );
+
+    if (!hasKeepItMoving) {
+      return;
+    }
+
+    const combinationKey =
+      combination.join("-");
+
+    const currentRound =
+      this.fightRounds + 1;
+
+    this.henryBlockedCombinations.set(
+      combinationKey,
+      currentRound +
+        DealerFightManager
+          .HENRY_COMBINATION_BLOCK_ROUNDS,
+    );
   }
 
   shouldTriggerAdditionalCoinToss(): boolean {

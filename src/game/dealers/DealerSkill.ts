@@ -57,7 +57,9 @@ export enum DealerSkillId {
 
   BET_VALUE_MANIPULATION = "bet_value_manipulation",
 
-  ADDITIONAL_COIN_TOSS = "additional_coin_toss"
+  ADDITIONAL_COIN_TOSS = "additional_coin_toss",
+
+  KEEP_IT_MOVING = "keep_it_moving"
 
   // Kolejne skille w przyszłości...
 }

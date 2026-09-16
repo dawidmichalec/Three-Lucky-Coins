@@ -83,6 +83,8 @@ export default {
   peterWhiskeyBottleDescription: "Half full. Or half empty. Peter stopped caring years ago.",
   martyOversizedBowTie: "Marty's Oversized Bow Tie",
   martyOversizedBowTieDescription: "The bigger the bow tie, the bigger the show.",
+  henryPocketWatch: "Henry's Pocket Watch",
+  henryPocketWatchDescription: "An old mechanical pocket watch Henry checks between rounds. It runs a little fast, which is exactly how he likes it.",
 
   // PLAYER STATS LABELS
 
@@ -302,6 +304,8 @@ export default {
   peterDescription: "Peter likes to drink. Unfortunately, he doesn't leave that habit at home.\n\nManagement has learned to look the other way. Peter brings in too much money, and somehow, even after a few drinks, he still gets the job done.\n\nThe longer you stay at his table, though, the less predictable things tend to become.",
   martySaying: "Thought we were done? Not quite.",
   martyDescription: "Marty likes to have the last word. At his table, that applies to the coins too.\n\nJust when a round seems settled, he has a habit of getting involved.With Marty around, the first result isn't always the final one.",
+  henrySaying: "You've played that one already.",
+  henryDescription: "Henry has little patience for players who keep falling back on the same choices.\n\nOnce you've played a combination at his table, he'll take it out of rotation for a while. If you want to keep playing, you'll have to keep moving.",
 
   // SKILLS
 
@@ -397,6 +401,9 @@ export default {
 
   additionalCoinTossSkillName: "Additional Coin Toss",
   additionalCoinTossSkillDescription: "Marty tosses random coin additional time every three rounds.",
+
+  keepItMovingSkillName: "Keep It Moving",
+  keepItMovingSkillDescription: "After using a combination, it becomes unavailable for the next 3 rounds.",
 
   // PERKS
 

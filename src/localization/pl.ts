@@ -82,6 +82,8 @@ export default {
   peterWhiskeyBottleDescription: "W połowie pełna. W połowie pusta. Petera przestało to obchodzić lata temu.",
   martyOversizedBowTie: "Ogromna muszka Marty'ego",
   martyOversizedBowTieDescription: "Im większa muszka, tym większe show.",
+  henryPocketWatch: "Zegarek kieszonkowy Henry'ego",
+  henryPocketWatchDescription: "Stary mechaniczny zegarek kieszonkowy, który Henry sprawdza między rundami. Trochę się spieszy — dokładnie tak, jak Henry lubi.",
 
   // PLAYER STATS LABELS
 
@@ -284,6 +286,8 @@ export default {
   peterDescription: "Peter lubi sobie wypić. Niestety, nie zostawia tego nawyku w domu. \n\nKierownictwo nauczyło się przymykać na to oko. Peter przynosi zbyt duże zyski, a do tego – jakimś cudem – nawet po kilku głębszych wciąż wywiązuje się ze swoich zadań. \n\nJednak im dłużej siedzisz przy jego stoliku, tym bardziej nieprzewidywalne rzeczy się dzieją.",
   martySaying: "Myślałeś, że to już koniec? Niezupełnie.",
   martyDescription: "Marty lubi mieć ostatnie słowo. Przy jego stole dotyczy to również monet.\n\nKiedy wydaje się, że runda jest już rozstrzygnięta, Marty ma zwyczaj się wtrącać. W jego obecności pierwszy wynik nie zawsze jest tym ostatecznym.",
+  henrySaying: "Tę już grałeś.",
+  henryDescription: "Henry nie ma cierpliwości do graczy, którzy ciągle wracają do tych samych wyborów.\n\nGdy zagrasz kombinację przy jego stole, na jakiś czas wycofa ją z gry. Jeśli chcesz grać dalej, musisz być ciągle w ruchu.",
 
   // SKILL
 
@@ -385,6 +389,10 @@ export default {
 
   additionalCoinTossSkillName: "Dodatkowy rzut monetą",
   additionalCoinTossSkillDescription: "Marty rzuca losową monetą ponownie co trzy rundy.",
+
+  keepItMovingSkillName: "Nie stój w miejscu",
+  keepItMovingSkillDescription: "Po użyciu kombinacji staje się ona niedostępna przez następne 3 rundy.",
+
 
   // PERKS
 

@@ -561,17 +561,34 @@ export class GameScene extends BaseScene {
   private updateCombinationStatus(): void {
     const combination = this.controller.getCurrentCombo();
 
-    const cursed = this.dealerFightManager.isCombinationCursed(combination);
+    const blocked =
+      this.dealerFightManager.isCombinationBlocked(combination,);
 
-    if (cursed) {
-      this.view.gameUI.combinationStatusLabel.setKey("combinationWontScore");
+    if (blocked) {
+      this.view.gameUI.combinationStatusLabel.setKey("combinationBlocked");
 
       this.view.gameUI.showCombinationStatusLabel();
+
+      this.view.controls.setTossDisabled(true);
+
+      return;
+    }
+
+    const cursed = this.dealerFightManager.isCombinationCursed(combination,);
+
+    if (cursed) {
+      this.view.gameUI.combinationStatusLabel.setKey("combinationWontScore",);
+
+      this.view.gameUI.showCombinationStatusLabel();
+
+      this.view.controls.setTossDisabled(false);
 
       return;
     }
 
     this.view.gameUI.hideCombinationStatusLabel();
+
+    this.view.controls.setTossDisabled(false);
   }
 
 
@@ -598,6 +615,12 @@ export class GameScene extends BaseScene {
     const effectiveBet = betManipulation.bet;
 
     const selected = this.controller.getCurrentCombo();
+
+    if (
+      this.dealerFightManager.isCombinationBlocked(selected)
+    ) {
+      return;
+    }
 
     const highestAffordableBet = this.controller.getHighestAffordableBet(
       this.player.balance,
@@ -709,6 +732,8 @@ export class GameScene extends BaseScene {
     const habitBreakerTriggered = this.dealerFightManager.recordSetupForHabitBreaker(bet,selected,);
 
     const betterPayTriggered = this.dealerFightManager.recordCombinationForBetterPay(selected);
+
+    this.dealerFightManager.recordCombinationForKeepItMoving(selected,);
 
     const switchItUpTriggered = this.dealerFightManager.recordBetForSwitchItUp(bet);
  
@@ -1693,6 +1718,7 @@ export class GameScene extends BaseScene {
     this.view.controls.setDisabled(false);
     this.view.setDisabled(false);
     this.view.gameUI.setDisabled(false);
+    this.updateCombinationStatus();
   }
 
   private async handleNegativePayoutWin(
