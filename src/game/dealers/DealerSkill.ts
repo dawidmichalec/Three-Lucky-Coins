@@ -65,7 +65,9 @@ export enum DealerSkillId {
 
   GOLDEN_COINS_NOT_SUPPORTED = "golden_coins_not_supported",
 
-  BALANCE_MODULE_MALFUNCTION = "balance_module_malfunction"
+  BALANCE_MODULE_MALFUNCTION = "balance_module_malfunction",
+
+  PROLONGED_TOSS_ANIMATION = "prolonged_toss_animation"
 
   // Kolejne skille w przyszłości...
 }

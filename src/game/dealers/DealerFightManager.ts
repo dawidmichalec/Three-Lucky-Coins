@@ -204,6 +204,21 @@ export class DealerFightManager {
     }
   }
 
+  getAdditionalTossAnimationDelay(): number {
+    const dealer = this.getCurrentDealer();
+
+    const hasProlongedTossAnimation =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.PROLONGED_TOSS_ANIMATION,
+      );
+
+    return hasProlongedTossAnimation
+      ? 2000
+      : 0;
+  }
+
   getIvyCombinationRule():
     IvyCombinationRule | undefined {
     return this.ivyCombinationRule;

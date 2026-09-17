@@ -77,6 +77,7 @@ export class CoinRow extends Container {
   async spin(
     result: readonly CoinOutcome[],
     selectedCombination: readonly CoinSide[],
+    additionalDelay = 0,
   ) {
     this.coins.forEach((coin) => coin.startSpin());
 
@@ -87,11 +88,20 @@ export class CoinRow extends Container {
     const middleStartPromise = this.startMiddleLoop();
 
     try {
-      await this.revealResult(result, selectedCombination);
+      if (additionalDelay > 0) {
+        await this.delay(additionalDelay);
+      }
+
+      await this.revealResult(
+        result,
+        selectedCombination,
+      );
     } finally {
       await middleStartPromise;
 
-      this.audioManager.stop(SoundId.SPIN_MIDDLE);
+      this.audioManager.stop(
+        SoundId.SPIN_MIDDLE,
+      );
     }
   }
 

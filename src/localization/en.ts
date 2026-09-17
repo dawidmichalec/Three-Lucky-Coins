@@ -93,6 +93,8 @@ export default {
   tlcm1ControlBoardDescription: "TLCM-1 Control Board.",
   tlcm9BalanceModule: "Balance Module",
   tlcm9BalanceModuleDescription: "TLCM-9 Balance Module",
+  tlcm5TossMotor: "Toss Motor",
+  tlcm5TossMotorDescription: "TLCM-5 Toss Motor",
 
   // PLAYER STATS LABELS
 
@@ -445,6 +447,9 @@ export default {
 
   balanceModuleMalfunctionSkillName: "Balance Module Malfunction",
   balanceModuleMalfunctionSkillDescription: "On a loss, an additional 75% of your bet is deducted from your balance.",
+
+  prolongedTossAnimationSkillName: "Prolonged Toss Animation",
+  prolongedTossAnimationSkillDescription: "The spin animation is 2 seconds longer.",
 
   // PERKS
 

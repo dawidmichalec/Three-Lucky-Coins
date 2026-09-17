@@ -819,7 +819,9 @@ export class GameScene extends BaseScene {
 
     const goldenResult = this.goldenCoinManager.applyGoldenCoins(baseResult,);
 
-    await this.coinRow.spin(goldenResult,selected,);
+    const additionalTossDelay = this.dealerFightManager.getAdditionalTossAnimationDelay();
+
+    await this.coinRow.spin(goldenResult,selected, additionalTossDelay,);
 
     const additionalCoinTossTriggered = this.dealerFightManager.shouldTriggerAdditionalCoinToss();
 

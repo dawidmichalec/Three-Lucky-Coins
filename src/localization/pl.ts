@@ -92,6 +92,8 @@ export default {
   tlcm1ControlBoardDescription: "Panel sterowania TLCM-1.",
   tlcm9BalanceModule: "Moduł salda",
   tlcm9BalanceModuleDescription: "Moduł salda TLCM-9",
+  tlcm5TossMotor: "Silnik rzutu",
+  tlcm5TossMotorDescription: "Silnik rzutu TLCM-5",
 
 
   // PLAYER STATS LABELS
@@ -435,6 +437,10 @@ export default {
 
   balanceModuleMalfunctionSkillName: "Awaria modułu salda",
   balanceModuleMalfunctionSkillDescription: "W przypadku przegranej z Twojego salda potrącane jest dodatkowe 75% stawki.",
+
+  prolongedTossAnimationSkillName: "Dłuższa animacja rzutu",
+  prolongedTossAnimationSkillDescription: "Animacja rzutu jest dwie sekundy dłuższa.",
+  
 
   // PERKS
 
