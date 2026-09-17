@@ -356,6 +356,10 @@ export class GameScene extends BaseScene {
   private startDealerFight() {
     const fight = this.dealerFightManager.startFight(this.player.balance);
 
+    this.betRestrictionManager.applyBetSlotMalfunction();
+
+    this.controller.adjustBetToRestrictions();
+
     this.view.gameUI.updateDealerObjective(
       this.currentDealer,
       fight.targetBalance,
@@ -1446,6 +1450,8 @@ export class GameScene extends BaseScene {
     }
 
     this.applyMultiplierDecay();
+
+    this.betRestrictionManager.applyBetSlotMalfunction();
 
     this.controller.adjustBetToRestrictions();
 

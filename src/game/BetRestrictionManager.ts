@@ -6,6 +6,7 @@ export class BetRestrictionManager {
   private blockedBets = new Set<number>();
   private currentDealer: DealerData | null = null;
   private fixedBet: number | null = null;
+  private lastBetSlotMalfunctionBet: number | null = null;
 
   setDealer(
     dealer: DealerData,
@@ -17,6 +18,34 @@ export class BetRestrictionManager {
     if (this.hasSkill(DealerSkillId.FIXED_BET_LOCK)) {
       this.applyFixedBetLock(playerBalance);
     }
+  }
+
+  applyBetSlotMalfunction(): void {
+    if (
+      !this.hasSkill(
+        DealerSkillId.BET_SLOT_MALFUNCTION,
+      )
+    ) {
+      return;
+    }
+
+    this.blockedBets.clear();
+
+    const candidates = BET_LEVELS.filter(
+      (bet) =>
+        bet !== this.lastBetSlotMalfunctionBet,
+    );
+
+    const blockedBet =
+      candidates[
+        Math.floor(
+          Math.random() * candidates.length,
+        )
+      ];
+
+    this.blockBet(blockedBet);
+
+    this.lastBetSlotMalfunctionBet = blockedBet;
   }
 
   private applyFixedBetLock(
@@ -81,6 +110,7 @@ export class BetRestrictionManager {
   reset(): void {
     this.blockedBets.clear();
     this.fixedBet = null;
+    this.lastBetSlotMalfunctionBet = null;
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {

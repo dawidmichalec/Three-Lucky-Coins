@@ -69,7 +69,9 @@ export enum DealerSkillId {
 
   PROLONGED_TOSS_ANIMATION = "prolonged_toss_animation",
 
-  FIXED_BET_LOCK = "fixed_bet_lock"
+  FIXED_BET_LOCK = "fixed_bet_lock",
+
+  BET_SLOT_MALFUNCTION = "bet_slot_malfunction"
 
   // Kolejne skille w przyszłości...
 }
