@@ -358,6 +358,8 @@ export class GameScene extends BaseScene {
 
     this.betRestrictionManager.applyBetSlotMalfunction();
 
+    this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
+
     this.controller.adjustBetToRestrictions();
 
     this.view.gameUI.updateDealerObjective(
@@ -1452,6 +1454,8 @@ export class GameScene extends BaseScene {
     this.applyMultiplierDecay();
 
     this.betRestrictionManager.applyBetSlotMalfunction();
+
+    this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
 
     this.controller.adjustBetToRestrictions();
 
