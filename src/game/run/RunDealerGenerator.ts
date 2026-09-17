@@ -15,6 +15,7 @@ export class RunDealerGenerator {
       ...this.generateJuniorStage(),
       ...this.generateMidStage(),
       ...this.generateSeniorStage(),
+      ...this.generateMachineFloorStage(),
     ];
   }
 
@@ -128,5 +129,17 @@ export class RunDealerGenerator {
       ...randomDealers,
       supervisor,
     ];
+  }
+
+  private static generateMachineFloorStage(): DealerData[] {
+    const regularMachines =
+      getRegularDealersByGroup(
+        DealerGroup.MACHINE_FLOOR,
+      );
+
+    return this.pickRandomDealers(
+      regularMachines,
+      1,
+    );
   }
 }

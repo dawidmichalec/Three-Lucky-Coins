@@ -87,6 +87,8 @@ export default {
   henryPocketWatchDescription: "An old mechanical pocket watch Henry checks between rounds. It runs a little fast, which is exactly how he likes it.",
   ivyHairpin: "Ivy's Hairpin",
   ivyHairpinDescription: "Even her hair follows strict rules.",
+  certifiedTlcmChip: "Certified TLCM Chip",
+  certifiedTlcmChipDescription: "A mark of excellence awarded to TLCM machines that meet the highest standards of quality and reliability.",
 
   // PLAYER STATS LABELS
 
@@ -187,6 +189,8 @@ export default {
   midDealer: "Mid Dealer",
   midSupervisor: "Mid Supervisor",
   seniorDealer: "Senior Dealer",
+  machine: "Machine",
+  prototype: "Prototype",
   manager: "Manager",
   vicePresident: "Vice President",
   owner: "Owner",

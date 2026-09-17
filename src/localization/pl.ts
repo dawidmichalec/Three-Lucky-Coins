@@ -86,6 +86,8 @@ export default {
   henryPocketWatchDescription: "Stary mechaniczny zegarek kieszonkowy, który Henry sprawdza między rundami. Trochę się spieszy — dokładnie tak, jak Henry lubi.",
   ivyHairpin: "Spinka Ivy",
   ivyHairpinDescription: "Nawet jej włosy podlegają ścisłym regułom.",
+  certifiedTlcmChip: "Znak jakości TLCM",
+  certifiedTlcmChipDescription: "Symbol doskonałości przyznawany automatom TLCM, które spełniają najwyższe standardy jakości i niezawodności.",
 
   // PLAYER STATS LABELS
 
@@ -182,6 +184,8 @@ export default {
   midDealer: "Krupier",
   midSupervisor: "Kierownik",
   seniorDealer: "Starszy Krupier",
+  machine: "Automat",
+  prototype: "Prototyp",
   manager: "Manager",
   vicePresident: "Wiceprezes",
   owner: "Właściciel",
