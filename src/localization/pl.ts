@@ -90,6 +90,8 @@ export default {
   certifiedTlcmChipDescription: "Symbol doskonałości przyznawany automatom TLCM, które spełniają najwyższe standardy jakości i niezawodności.",
   tlcm1ControlBoard: "Panel sterowania",
   tlcm1ControlBoardDescription: "Panel sterowania TLCM-1.",
+  tlcm9BalanceModule: "Moduł salda",
+  tlcm9BalanceModuleDescription: "Moduł salda TLCM-9",
 
 
   // PLAYER STATS LABELS
@@ -430,6 +432,9 @@ export default {
 
   goldenCoinsNotSupportedSkillName: "Brak wsparcia dla złotych monet",
   goldenCoinsNotSupportedSkillDescription: "Złote monety są wyłączone.",
+
+  balanceModuleMalfunctionSkillName: "Awaria modułu salda",
+  balanceModuleMalfunctionSkillDescription: "W przypadku przegranej z Twojego salda potrącane jest dodatkowe 75% stawki.",
 
   // PERKS
 

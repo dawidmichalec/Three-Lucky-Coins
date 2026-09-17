@@ -776,7 +776,8 @@ export class DealerFightManager {
     const skill = dealer.skills.find(
       (skill) =>
         skill.id === DealerSkillId.SMALL_HOUSE_CUT ||
-        skill.id === DealerSkillId.HOUSE_CUT,
+        skill.id === DealerSkillId.HOUSE_CUT ||
+        skill.id === DealerSkillId.BALANCE_MODULE_MALFUNCTION,
     );
 
     if (!skill) {
@@ -785,10 +786,24 @@ export class DealerFightManager {
       };
     }
 
-    const cutPercentage =
-      skill.id === DealerSkillId.HOUSE_CUT
-        ? 0.5
-        : 0.25;
+    let cutPercentage: number;
+
+    switch (skill.id) {
+      case DealerSkillId.SMALL_HOUSE_CUT:
+        cutPercentage = 0.25;
+        break;
+
+      case DealerSkillId.HOUSE_CUT:
+        cutPercentage = 0.5;
+        break;
+
+      case DealerSkillId.BALANCE_MODULE_MALFUNCTION:
+        cutPercentage = 0.75;
+        break;
+
+      default:
+        cutPercentage = 0;
+    }
 
     return {
       amount: bet * cutPercentage,

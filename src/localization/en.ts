@@ -91,6 +91,8 @@ export default {
   certifiedTlcmChipDescription: "A mark of excellence awarded to TLCM machines that meet the highest standards of quality and reliability.",
   tlcm1ControlBoard: "Control Board",
   tlcm1ControlBoardDescription: "TLCM-1 Control Board.",
+  tlcm9BalanceModule: "Balance Module",
+  tlcm9BalanceModuleDescription: "TLCM-9 Balance Module",
 
   // PLAYER STATS LABELS
 
@@ -440,6 +442,9 @@ export default {
 
   goldenCoinsNotSupportedSkillName: "Golden Coins Not Supported",
   goldenCoinsNotSupportedSkillDescription: "Golden Coins are disabled.",
+
+  balanceModuleMalfunctionSkillName: "Balance Module Malfunction",
+  balanceModuleMalfunctionSkillDescription: "On a loss, an additional 75% of your bet is deducted from your balance.",
 
   // PERKS
 

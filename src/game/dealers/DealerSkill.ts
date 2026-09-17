@@ -63,7 +63,9 @@ export enum DealerSkillId {
 
   MY_WAY_OR_THE_HIGHWAY = "my_way_or_the_highway",
 
-  GOLDEN_COINS_NOT_SUPPORTED = "golden_coins_not_supported"
+  GOLDEN_COINS_NOT_SUPPORTED = "golden_coins_not_supported",
+
+  BALANCE_MODULE_MALFUNCTION = "balance_module_malfunction"
 
   // Kolejne skille w przyszłości...
 }

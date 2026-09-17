@@ -102,6 +102,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.ADDITIONAL_COIN_TOSS:
           await this.gameMessageOverlay.play("additionalCoinTossSkillName");
           break;
+
+        case DealerSkillId.BALANCE_MODULE_MALFUNCTION:
+          await this.gameMessageOverlay.play("balanceModuleMalfunctionSkillName");
+          break;
       }
     }
   }
