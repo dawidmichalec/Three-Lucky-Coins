@@ -139,7 +139,7 @@ export class RunDealerGenerator {
 
     return this.pickRandomDealers(
       regularMachines,
-      1,
+      2,
     );
   }
 }

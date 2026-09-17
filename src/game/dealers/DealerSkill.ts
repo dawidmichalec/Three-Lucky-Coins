@@ -61,7 +61,9 @@ export enum DealerSkillId {
 
   KEEP_IT_MOVING = "keep_it_moving",
 
-  MY_WAY_OR_THE_HIGHWAY = "my_way_or_the_highway"
+  MY_WAY_OR_THE_HIGHWAY = "my_way_or_the_highway",
+
+  GOLDEN_COINS_NOT_SUPPORTED = "golden_coins_not_supported"
 
   // Kolejne skille w przyszłości...
 }

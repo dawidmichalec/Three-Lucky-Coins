@@ -18,7 +18,7 @@ export const TLCM10_DATA: DealerData = {
   avatarLocked: "/assets/main/icons/casino_staff_icons/locked_dealer_icon.png",
 
   signatureToken:
-    "/assets/main/icons/signature_token_icons/junior_dealers/tlcm-10/tlcm-10_signature_token_icon.png",
+    "/assets/main/icons/signature_token_icons/machine_floor/tlcm-10/tlcm-10_signature_token_icon.png",
   signatureTokenName: "certifiedTlcmChip",
   signatureTokenDescription: "certifiedTlcmChipDescription",
 

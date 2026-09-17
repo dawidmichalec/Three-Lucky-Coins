@@ -88,6 +88,9 @@ export default {
   ivyHairpinDescription: "Nawet jej włosy podlegają ścisłym regułom.",
   certifiedTlcmChip: "Znak jakości TLCM",
   certifiedTlcmChipDescription: "Symbol doskonałości przyznawany automatom TLCM, które spełniają najwyższe standardy jakości i niezawodności.",
+  tlcm1ControlBoard: "Panel sterowania",
+  tlcm1ControlBoardDescription: "Panel sterowania TLCM-1.",
+
 
   // PLAYER STATS LABELS
 
@@ -424,6 +427,9 @@ export default {
 
   myWayOrTheHighwaySkillName: "Po mojemu albo wcale",
   myWayOrTheHighwaySkillDescription: "Ivy decyduje, które kombinacje można, a których nie można wykorzystać w danej rundzie.",
+
+  goldenCoinsNotSupportedSkillName: "Brak wsparcia dla złotych monet",
+  goldenCoinsNotSupportedSkillDescription: "Złote monety są wyłączone.",
 
   // PERKS
 

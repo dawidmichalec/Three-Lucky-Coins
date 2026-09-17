@@ -89,6 +89,8 @@ export default {
   ivyHairpinDescription: "Even her hair follows strict rules.",
   certifiedTlcmChip: "Certified TLCM Chip",
   certifiedTlcmChipDescription: "A mark of excellence awarded to TLCM machines that meet the highest standards of quality and reliability.",
+  tlcm1ControlBoard: "Control Board",
+  tlcm1ControlBoardDescription: "TLCM-1 Control Board.",
 
   // PLAYER STATS LABELS
 
@@ -435,6 +437,9 @@ export default {
 
   myWayOrTheHighwaySkillName: "My Way Or The Highway",
   myWayOrTheHighwaySkillDescription: "Ivy decides which combinations can and can't be used in the round.",
+
+  goldenCoinsNotSupportedSkillName: "Golden Coins Not Supported",
+  goldenCoinsNotSupportedSkillDescription: "Golden Coins are disabled.",
 
   // PERKS
 
