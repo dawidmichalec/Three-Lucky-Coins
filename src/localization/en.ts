@@ -95,6 +95,8 @@ export default {
   tlcm9BalanceModuleDescription: "TLCM-9 Balance Module",
   tlcm5TossMotor: "Toss Motor",
   tlcm5TossMotorDescription: "TLCM-5 Toss Motor",
+  tlcm3BetMemoryModule: "Bet Memory Module",
+  tlcm3BetMemoryModuleDescription: "TLCM-3 Bet Memory Module",
 
   // PLAYER STATS LABELS
 
@@ -450,6 +452,18 @@ export default {
 
   prolongedTossAnimationSkillName: "Prolonged Toss Animation",
   prolongedTossAnimationSkillDescription: "The spin animation is 2 seconds longer.",
+  
+  fixedBetLockSkill: "Fixed Bet Lock",
+  fixedBetLockSkillDescription: "Locks the player to a randomly selected bet value for the entire fight.",
+
+  betSlotMalfunctionSkillName: "Bet Slot Malfunction",
+  betSlotMalfunctionSkillDescription: "Disables a different random bet value every round.",
+
+  dynamicBetLockSkillName: "Dynamic Bet Lock",
+  dynamicBetLockSkillDescription: "Forces the player to use a different randomly selected bet value every round.",
+
+  betDepletionSkillName: "Bet Depletion",
+  betDepletionSkillDescription: "Every round, the player must use a different bet value. Used bet values remain unavailable until all other bet values have been used.",
 
   // PERKS
 

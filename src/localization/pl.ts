@@ -94,6 +94,8 @@ export default {
   tlcm9BalanceModuleDescription: "Moduł salda TLCM-9",
   tlcm5TossMotor: "Silnik rzutu",
   tlcm5TossMotorDescription: "Silnik rzutu TLCM-5",
+  tlcm3BetMemoryModule: "Moduł pamięci stawki",
+  tlcm3BetMemoryModuleDescription: "Moduł pamięci stawki TLCM-3",
 
 
   // PLAYER STATS LABELS
@@ -440,6 +442,19 @@ export default {
 
   prolongedTossAnimationSkillName: "Dłuższa animacja rzutu",
   prolongedTossAnimationSkillDescription: "Animacja rzutu jest dwie sekundy dłuższa.",
+
+  fixedBetLockSkill: "Stała blokada stawki",
+  fixedBetLockSkillDescription: "Blokuje gracza na losowo wybranej wartości stawki przez całą walkę.",
+
+  betSlotMalfunctionSkillName: "Awaria wyboru stawki",
+  betSlotMalfunctionSkillDescription: "W każdej rundzie blokuje inną losową wartość stawki.",
+
+  dynamicBetLockSkillName: "Dynamiczna blokada stawki",
+  dynamicBetLockSkillDescription: "W każdej rundzie zmusza gracza do użycia innej losowo wybranej wartości stawki.",
+
+  betDepletionSkillName: "Wyczerpywanie stawek",
+  betDepletionSkillDescription: "W każdej rundzie gracz musi użyć innej wartości stawki. Wykorzystane wartości pozostają niedostępne, dopóki wszystkie pozostałe wartości nie zostaną użyte.",
+
   
 
   // PERKS
