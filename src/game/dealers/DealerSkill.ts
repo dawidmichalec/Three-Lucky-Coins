@@ -67,7 +67,9 @@ export enum DealerSkillId {
 
   BALANCE_MODULE_MALFUNCTION = "balance_module_malfunction",
 
-  PROLONGED_TOSS_ANIMATION = "prolonged_toss_animation"
+  PROLONGED_TOSS_ANIMATION = "prolonged_toss_animation",
+
+  FIXED_BET_LOCK = "fixed_bet_lock"
 
   // Kolejne skille w przyszłości...
 }

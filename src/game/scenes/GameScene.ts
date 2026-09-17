@@ -473,7 +473,9 @@ export class GameScene extends BaseScene {
 
     this.roundOutcomeHandler.resetDealerState();
 
-    this.betRestrictionManager.setDealer(dealer);
+    this.betRestrictionManager.setDealer(dealer, this.player.balance);
+
+    this.controller.adjustBetToRestrictions();
 
     this.view.gameUI.hideDecayTimer();
 

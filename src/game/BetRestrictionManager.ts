@@ -5,10 +5,47 @@ import { DealerSkillId } from "./dealers/DealerSkill";
 export class BetRestrictionManager {
   private blockedBets = new Set<number>();
   private currentDealer: DealerData | null = null;
+  private fixedBet: number | null = null;
 
-  setDealer(dealer: DealerData): void {
+  setDealer(
+    dealer: DealerData,
+    playerBalance: number,
+  ): void {
     this.currentDealer = dealer;
     this.reset();
+
+    if (this.hasSkill(DealerSkillId.FIXED_BET_LOCK)) {
+      this.applyFixedBetLock(playerBalance);
+    }
+  }
+
+  private applyFixedBetLock(
+    playerBalance: number,
+  ): void {
+    const affordableBets = BET_LEVELS.filter(
+      (bet) => bet <= playerBalance,
+    );
+
+    if (affordableBets.length === 0) {
+      return;
+    }
+
+    this.fixedBet =
+      affordableBets[
+        Math.floor(
+          Math.random() * affordableBets.length,
+        )
+      ];
+
+    BET_LEVELS.forEach((bet) => {
+      if (bet !== this.fixedBet) {
+        this.blockBet(bet);
+      }
+    });
+  }
+
+  getFixedBet(): number | null {
+    return this.fixedBet;
   }
 
   blockBet(bet: number): void {
@@ -43,6 +80,7 @@ export class BetRestrictionManager {
 
   reset(): void {
     this.blockedBets.clear();
+    this.fixedBet = null;
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {

@@ -34,6 +34,7 @@ import { MARTY_DATA } from "./data/senior_dealers/Marty";
 import { HENRY_DATA } from "./data/senior_dealers/Henry";
 import { IVY_DATA } from "./data/senior_dealers/Ivy";
 import { TLCM1_DATA } from "./data/machine_floor/TLCM1";
+import { TLCM3_1_DATA } from "./data/machine_floor/TLCM3_1";
 import { TLCM3_4_DATA } from "./data/machine_floor/TLCM3_4";
 import { TLCM5_DATA } from "./data/machine_floor/TLCM5";
 import { TLCM9_DATA } from "./data/machine_floor/TLCM9";
@@ -78,6 +79,7 @@ export const DEALERS: readonly DealerData[] = [
   HENRY_DATA,
   IVY_DATA,
   TLCM1_DATA,
+  TLCM3_1_DATA,
   TLCM3_4_DATA,
   TLCM5_DATA,
   TLCM9_DATA,
@@ -120,6 +122,7 @@ export {
   HENRY_DATA,
   IVY_DATA,
   TLCM1_DATA,
+  TLCM3_1_DATA,
   TLCM3_4_DATA,
   TLCM5_DATA,
   TLCM9_DATA,
