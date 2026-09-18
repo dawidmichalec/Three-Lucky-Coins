@@ -73,7 +73,9 @@ export enum DealerSkillId {
 
   BET_SLOT_MALFUNCTION = "bet_slot_malfunction",
 
-  DYNAMIC_BET_LOCK = "dynamic_bet_lock"
+  DYNAMIC_BET_LOCK = "dynamic_bet_lock",
+
+  REVERSED_BET_CHOICE = "reversed_bet_choice"
 
   // Kolejne skille w przyszłości...
 }

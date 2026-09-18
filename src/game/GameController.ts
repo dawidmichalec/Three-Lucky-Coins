@@ -22,6 +22,7 @@ export class GameController {
   private betIndex = 3;
   private currentCombination: CoinCombination =
     COMBINATION_CONFIGS[CombinationId.HHH].sides;
+  private reversedBetChoice = false;
 
   constructor(
     private config: ControllerConfig,
@@ -113,6 +114,17 @@ export class GameController {
     }
 
     return BET_LEVELS[nextIndex];
+  }
+
+  getPreviousBet(): number | null {
+    const previousIndex =
+      this.findPreviousAvailableBetIndex();
+
+    if (previousIndex === null) {
+      return null;
+    }
+
+    return BET_LEVELS[previousIndex];
   }
 
   getMinBet(): number {
@@ -233,5 +245,15 @@ export class GameController {
 
   getAvailableBets(): number[] {
     return this.betRestrictionManager.getAvailableBets();
+  }
+
+  setReversedBetChoice(
+    reversed: boolean,
+  ): void {
+    this.reversedBetChoice = reversed;
+  }
+
+  isBetChoiceReversed(): boolean {
+    return this.reversedBetChoice;
   }
 }

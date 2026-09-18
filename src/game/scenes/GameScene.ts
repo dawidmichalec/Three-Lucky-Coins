@@ -481,6 +481,8 @@ export class GameScene extends BaseScene {
 
     this.betRestrictionManager.setDealer(dealer, this.player.balance);
 
+    this.controller.setReversedBetChoice(dealer.skills.some((skill) => skill.id === DealerSkillId.REVERSED_BET_CHOICE,),);
+
     this.controller.adjustBetToRestrictions();
 
     this.view.gameUI.hideDecayTimer();
@@ -531,20 +533,47 @@ export class GameScene extends BaseScene {
   }
 
   private handleBetDown() {
+
+    if (
+      this.controller.isBetChoiceReversed()
+    ) {
+      this.tryIncreaseBet();
+
+      return;
+    }
+
     this.controller.decreaseBet();
   }
 
   private handleBetUp() {
-    const nextBet = this.controller.getNextBet();
+    if (
+      this.controller.isBetChoiceReversed()
+    ) {
+      this.controller.decreaseBet();
+
+      return;
+    }
+
+    this.tryIncreaseBet();
+  }
+
+  private tryIncreaseBet(): void {
+    const nextBet =
+      this.controller.getNextBet();
 
     if (nextBet === null) {
       return;
     }
 
-    const nextBetCost = this.perkEffectApplier.resolveBetCost(nextBet);
+    const nextBetCost =
+      this.perkEffectApplier.resolveBetCost(
+        nextBet,
+      );
 
     if (nextBetCost > this.player.balance) {
-      this.popupManager.show("insufficientBalance");
+      this.popupManager.show(
+        "insufficientBalance",
+      );
 
       return;
     }

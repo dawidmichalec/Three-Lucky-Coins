@@ -96,6 +96,9 @@ export default {
   tlcm5TossMotorDescription: "Silnik rzutu TLCM-5",
   tlcm3BetMemoryModule: "Moduł pamięci stawki",
   tlcm3BetMemoryModuleDescription: "Moduł pamięci stawki TLCM-3",
+  tlcm2BetControlModule: "Moduł kontroli stawki",
+  tlcm2BetControlModuleDescription: "Moduł kontroli stawki TLCM-2",
+
 
 
   // PLAYER STATS LABELS
@@ -455,7 +458,14 @@ export default {
   betDepletionSkillName: "Wyczerpywanie stawek",
   betDepletionSkillDescription: "W każdej rundzie gracz musi użyć innej wartości stawki. Wykorzystane wartości pozostają niedostępne, dopóki wszystkie pozostałe wartości nie zostaną użyte.",
 
-  
+  reversedBetChoiceSkillName: "Odwrócone sterowanie stawką",
+  reversedBetChoiceSkillDescription: "Odwraca działanie przycisków zmiany stawki.",
+
+  betIncreaseLockSkillName: "Blokada zwiększania stawki",
+  betIncreaseLockSkillDescription: "Co kilka rund uniemożliwia graczowi zwiększanie stawki.",
+
+  betDecreaseLockSkillName: "Blokada zmniejszania stawki",
+  betDecreaseLockSkillDescription: "Co kilka rund uniemożliwia graczowi zmniejszanie stawki.",  
 
   // PERKS
 

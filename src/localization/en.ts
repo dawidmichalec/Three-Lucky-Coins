@@ -97,6 +97,8 @@ export default {
   tlcm5TossMotorDescription: "TLCM-5 Toss Motor",
   tlcm3BetMemoryModule: "Bet Memory Module",
   tlcm3BetMemoryModuleDescription: "TLCM-3 Bet Memory Module",
+  tlcm2BetControlModule: "Bet Control Module",
+  tlcm2BetControlModuleDescription: "TLCM-2 Bet Control Module",
 
   // PLAYER STATS LABELS
 
@@ -464,6 +466,16 @@ export default {
 
   betDepletionSkillName: "Bet Depletion",
   betDepletionSkillDescription: "Every round, the player must use a different bet value. Used bet values remain unavailable until all other bet values have been used.",
+
+  reversedBetChoiceSkillName: "Reversed Bet Choice",
+  reversedBetChoiceSkillDescription: "Reverses the functions of the bet buttons.",
+
+  betIncreaseLockSkillName: "Bet Increase Lock",
+  betIncreaseLockSkillDescription: "Prevents the player from increasing the bet every few rounds.",
+
+  betDecreaseLockSkillName: "Bet Decrease Lock",
+  betDecreaseLockSkillDescription: "Prevents the player from decreasing the bet every few rounds.",
+
 
   // PERKS
 
