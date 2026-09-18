@@ -10,6 +10,8 @@ export class BetRestrictionManager {
   private lastDynamicBetLock: number | null = null;
   private betIncreaseLocked = false;
   private betIncreaseLockRoundsRemaining = 0;
+  private betDecreaseLocked = false;
+  private betDecreaseLockRoundsRemaining = 0;
 
   setDealer(
     dealer: DealerData,
@@ -29,6 +31,58 @@ export class BetRestrictionManager {
     ) {
       this.startBetIncreaseNormalPhase();
     }
+
+    if (
+      this.hasSkill(
+        DealerSkillId.BET_DECREASE_LOCK,
+      )
+    ) {
+      this.startBetDecreaseNormalPhase();
+    }
+  }
+
+  private startBetDecreaseNormalPhase(): void {
+    this.betDecreaseLocked = false;
+
+    this.betDecreaseLockRoundsRemaining =
+      this.rollBetControlPhaseDuration();
+  }
+
+  private startBetDecreaseLockPhase(): void {
+    this.betDecreaseLocked = true;
+
+    this.betDecreaseLockRoundsRemaining =
+      this.rollBetControlPhaseDuration();
+  }
+
+  advanceBetDecreaseLock(): void {
+    if (
+      !this.hasSkill(
+        DealerSkillId.BET_DECREASE_LOCK,
+      )
+    ) {
+      return;
+    }
+
+    this.betDecreaseLockRoundsRemaining--;
+
+    if (
+      this.betDecreaseLockRoundsRemaining > 0
+    ) {
+      return;
+    }
+
+    if (this.betDecreaseLocked) {
+      this.startBetDecreaseNormalPhase();
+
+      return;
+    }
+
+    this.startBetDecreaseLockPhase();
+  }
+
+  isBetDecreaseLocked(): boolean {
+    return this.betDecreaseLocked;
   }
 
   private startBetIncreaseNormalPhase(): void {
@@ -219,6 +273,8 @@ export class BetRestrictionManager {
     this.lastDynamicBetLock = null;
     this.betIncreaseLocked = false;
     this.betIncreaseLockRoundsRemaining = 0;
+    this.betDecreaseLocked = false;
+    this.betDecreaseLockRoundsRemaining = 0;
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {

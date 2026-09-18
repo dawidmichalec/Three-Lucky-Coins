@@ -535,7 +535,6 @@ export class GameScene extends BaseScene {
   }
 
   private handleBetDown() {
-
     if (
       this.controller.isBetChoiceReversed()
     ) {
@@ -544,14 +543,14 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.controller.decreaseBet();
+    this.tryDecreaseBet();
   }
 
   private handleBetUp() {
     if (
       this.controller.isBetChoiceReversed()
     ) {
-      this.controller.decreaseBet();
+      this.tryDecreaseBet();
 
       return;
     }
@@ -587,6 +586,17 @@ export class GameScene extends BaseScene {
     }
 
     this.controller.increaseBet();
+  }
+
+  private tryDecreaseBet(): void {
+    if (
+      this.betRestrictionManager
+        .isBetDecreaseLocked()
+    ) {
+      return;
+    }
+
+    this.controller.decreaseBet();
   }
 
   private handleToss() {
@@ -1492,6 +1502,8 @@ export class GameScene extends BaseScene {
 
     this.betRestrictionManager.advanceBetIncreaseLock();
 
+    this.betRestrictionManager.advanceBetDecreaseLock();
+
     this.betRestrictionManager.applyBetSlotMalfunction();
 
     this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
@@ -1841,6 +1853,11 @@ export class GameScene extends BaseScene {
     this.view.controls.setBetUpDisabled(
       this.betRestrictionManager
         .isBetIncreaseLocked(),
+    );
+
+    this.view.controls.setBetDownDisabled(
+      this.betRestrictionManager
+        .isBetDecreaseLocked(),
     );
   }
 

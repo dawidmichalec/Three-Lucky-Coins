@@ -36,6 +36,7 @@ import { IVY_DATA } from "./data/senior_dealers/Ivy";
 import { TLCM1_DATA } from "./data/machine_floor/TLCM1";
 import { TLCM2_1_DATA } from "./data/machine_floor/TLCM2_1";
 import { TLCM2_2_DATA } from "./data/machine_floor/TCLM2_2";
+import { TLCM2_3_DATA } from "./data/machine_floor/TLCM2_3";
 import { TLCM3_1_DATA } from "./data/machine_floor/TLCM3_1";
 import { TLCM3_2_DATA } from "./data/machine_floor/TLCM3_2";
 import { TLCM3_3_DATA } from "./data/machine_floor/TLCM3_3";
@@ -86,6 +87,7 @@ export const DEALERS: readonly DealerData[] = [
   TLCM3_1_DATA,
   TLCM2_1_DATA,
   TLCM2_2_DATA,
+  TLCM2_3_DATA,
   TLCM3_2_DATA,
   TLCM3_3_DATA,
   TLCM3_4_DATA,
@@ -132,6 +134,7 @@ export {
   TLCM1_DATA,
   TLCM2_1_DATA,
   TLCM2_2_DATA,
+  TLCM2_3_DATA,
   TLCM3_1_DATA,
   TLCM3_2_DATA,
   TLCM3_3_DATA,

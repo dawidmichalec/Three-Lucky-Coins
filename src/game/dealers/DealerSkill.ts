@@ -77,7 +77,9 @@ export enum DealerSkillId {
 
   REVERSED_BET_CHOICE = "reversed_bet_choice",
 
-  BET_INCREASE_LOCK = "bet_increase_lock"
+  BET_INCREASE_LOCK = "bet_increase_lock",
+
+  BET_DECREASE_LOCK = "bet_decrease_lock"
 
   // Kolejne skille w przyszłości...
 }
