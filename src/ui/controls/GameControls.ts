@@ -108,6 +108,18 @@ export class GameControls extends Container {
     this.tossButton.setDisabled(value);
   }
 
+  setBetDownDisabled(
+    value: boolean,
+  ): void {
+    this.betDown.setDisabled(value);
+  }
+
+  setBetUpDisabled(
+    value: boolean,
+  ): void {
+    this.betUp.setDisabled(value);
+  }
+
   setDisabled(value: boolean) {
     this.betDown.setDisabled(value);
     this.betUp.setDisabled(value);

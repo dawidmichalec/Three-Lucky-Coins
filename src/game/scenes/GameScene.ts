@@ -362,6 +362,8 @@ export class GameScene extends BaseScene {
 
     this.controller.adjustBetToRestrictions();
 
+    this.updateBetControlRestrictions();
+
     this.view.gameUI.updateDealerObjective(
       this.currentDealer,
       fight.targetBalance,
@@ -558,8 +560,14 @@ export class GameScene extends BaseScene {
   }
 
   private tryIncreaseBet(): void {
-    const nextBet =
-      this.controller.getNextBet();
+    
+    if (
+      this.betRestrictionManager.isBetIncreaseLocked()
+    ) {
+      return;
+    }
+
+    const nextBet = this.controller.getNextBet();
 
     if (nextBet === null) {
       return;
@@ -1482,11 +1490,15 @@ export class GameScene extends BaseScene {
 
     this.applyMultiplierDecay();
 
+    this.betRestrictionManager.advanceBetIncreaseLock();
+
     this.betRestrictionManager.applyBetSlotMalfunction();
 
     this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
 
     this.controller.adjustBetToRestrictions();
+
+    this.updateBetControlRestrictions();
 
     if (currentBetCost > this.player.balance) {
       this.controller.adjustBetToBalance(
@@ -1785,6 +1797,7 @@ export class GameScene extends BaseScene {
     this.view.controls.setDisabled(false);
     this.view.setDisabled(false);
     this.view.gameUI.setDisabled(false);
+    this.updateBetControlRestrictions();
     this.updateCombinationStatus();
   }
 
@@ -1822,6 +1835,13 @@ export class GameScene extends BaseScene {
     });
 
     await this.finishRound(true);
+  }
+
+  private updateBetControlRestrictions(): void {
+    this.view.controls.setBetUpDisabled(
+      this.betRestrictionManager
+        .isBetIncreaseLocked(),
+    );
   }
 
   // TICKER

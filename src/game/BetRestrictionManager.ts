@@ -8,6 +8,8 @@ export class BetRestrictionManager {
   private fixedBet: number | null = null;
   private lastBetSlotMalfunctionBet: number | null = null;
   private lastDynamicBetLock: number | null = null;
+  private betIncreaseLocked = false;
+  private betIncreaseLockRoundsRemaining = 0;
 
   setDealer(
     dealer: DealerData,
@@ -19,6 +21,60 @@ export class BetRestrictionManager {
     if (this.hasSkill(DealerSkillId.FIXED_BET_LOCK)) {
       this.applyFixedBetLock(playerBalance);
     }
+
+    if (
+      this.hasSkill(
+        DealerSkillId.BET_INCREASE_LOCK,
+      )
+    ) {
+      this.startBetIncreaseNormalPhase();
+    }
+  }
+
+  private startBetIncreaseNormalPhase(): void {
+    this.betIncreaseLocked = false;
+
+    this.betIncreaseLockRoundsRemaining = this.rollBetControlPhaseDuration();
+  }
+
+  private startBetIncreaseLockPhase(): void {
+    this.betIncreaseLocked = true;
+
+    this.betIncreaseLockRoundsRemaining = this.rollBetControlPhaseDuration();
+  }
+
+  advanceBetIncreaseLock(): void {
+    if (
+      !this.hasSkill(
+        DealerSkillId.BET_INCREASE_LOCK,
+      )
+    ) {
+      return;
+    }
+
+    this.betIncreaseLockRoundsRemaining--;
+
+    if (
+      this.betIncreaseLockRoundsRemaining > 0
+    ) {
+      return;
+    }
+
+    if (this.betIncreaseLocked) {
+      this.startBetIncreaseNormalPhase();
+
+      return;
+    }
+
+    this.startBetIncreaseLockPhase();
+  }
+
+  private rollBetControlPhaseDuration(): number {
+    return Math.floor(Math.random() * 4) + 1;
+  }
+
+  isBetIncreaseLocked(): boolean {
+    return this.betIncreaseLocked;
   }
 
   applyDynamicBetLock(
@@ -161,6 +217,8 @@ export class BetRestrictionManager {
     this.fixedBet = null;
     this.lastBetSlotMalfunctionBet = null;
     this.lastDynamicBetLock = null;
+    this.betIncreaseLocked = false;
+    this.betIncreaseLockRoundsRemaining = 0;
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {
