@@ -70,6 +70,10 @@ export class DealerFightManager {
 
   private static readonly IVY_RULE_DURATION_ROUNDS = 3;
 
+  private betDeductionMalfunctionRoundsRemaining = 0;
+  private static readonly BET_DEDUCTION_MALFUNCTION_MIN_ROUNDS = 2;
+  private static readonly BET_DEDUCTION_MALFUNCTION_MAX_ROUNDS = 5;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -139,6 +143,8 @@ export class DealerFightManager {
 
     this.ivyCombinationRule = undefined;
 
+    this.betDeductionMalfunctionRoundsRemaining = 0;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -148,6 +154,19 @@ export class DealerFightManager {
 
     if (hasMyWayOrTheHighway) {
       this.rollIvyCombinationRule();
+    }
+
+    const hasBetDeductionMalfunction =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId
+            .BET_DEDUCTION_SYSTEM_MALFUNCTION,
+      );
+
+    if (hasBetDeductionMalfunction) {
+      this.betDeductionMalfunctionRoundsRemaining =
+        this.rollBetDeductionMalfunctionDelay();
     }
 
     switch (dealer.objectiveType) {
@@ -202,6 +221,50 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  shouldTriggerBetDeductionMalfunction(): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasSkill = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId
+          .BET_DEDUCTION_SYSTEM_MALFUNCTION,
+    );
+
+    if (!hasSkill) {
+      return false;
+    }
+
+    this.betDeductionMalfunctionRoundsRemaining--;
+
+    if (
+      this.betDeductionMalfunctionRoundsRemaining > 0
+    ) {
+      return false;
+    }
+
+    this.betDeductionMalfunctionRoundsRemaining =
+      this.rollBetDeductionMalfunctionDelay();
+
+    return true;
+  }
+
+  private rollBetDeductionMalfunctionDelay(): number {
+    const min =
+      DealerFightManager
+        .BET_DEDUCTION_MALFUNCTION_MIN_ROUNDS;
+
+    const max =
+      DealerFightManager
+        .BET_DEDUCTION_MALFUNCTION_MAX_ROUNDS;
+
+    return (
+      Math.floor(
+        Math.random() * (max - min + 1),
+      ) + min
+    );
   }
 
   getAdditionalTossAnimationDelay(): number {

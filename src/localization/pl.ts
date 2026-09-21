@@ -98,6 +98,8 @@ export default {
   tlcm3BetMemoryModuleDescription: "Moduł pamięci stawki TLCM-3",
   tlcm2BetControlModule: "Moduł kontroli stawki",
   tlcm2BetControlModuleDescription: "Moduł kontroli stawki TLCM-2",
+  tlcm4DeductionController: "Kontroler potrąceń",
+  tlcm4DeductionControllerDescription: "Kontroler potrąceń TLCM-4",
 
 
 
@@ -466,6 +468,9 @@ export default {
 
   betDecreaseLockSkillName: "Blokada zmniejszania stawki",
   betDecreaseLockSkillDescription: "Co kilka rund uniemożliwia graczowi zmniejszanie stawki.",  
+
+  betDeductionSystemMalfunctionSkillName: "Awaria systemu pobierania stawki",
+  betDeductionSystemMalfunctionSkillDescription: "Co kilka rund pobiera z salda dwukrotność postawionej stawki.",
 
   // PERKS
 

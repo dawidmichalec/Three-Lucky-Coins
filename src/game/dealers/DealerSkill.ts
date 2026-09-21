@@ -79,7 +79,9 @@ export enum DealerSkillId {
 
   BET_INCREASE_LOCK = "bet_increase_lock",
 
-  BET_DECREASE_LOCK = "bet_decrease_lock"
+  BET_DECREASE_LOCK = "bet_decrease_lock",
+
+  BET_DEDUCTION_SYSTEM_MALFUNCTION = "bet_deduction_system_malfunction"
 
   // Kolejne skille w przyszłości...
 }

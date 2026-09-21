@@ -106,6 +106,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.BALANCE_MODULE_MALFUNCTION:
           await this.gameMessageOverlay.play("balanceModuleMalfunctionSkillName");
           break;
+
+        case DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION:
+          await this.gameMessageOverlay.play("betDeductionSystemMalfunctionSkillName");
+          break;
       }
     }
   }

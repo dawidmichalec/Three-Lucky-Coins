@@ -712,7 +712,11 @@ export class GameScene extends BaseScene {
       coinSenseActive,
     } = betResult;
 
-    if (this.player.balance < betCost) {
+    const betDeductionMalfunctionTriggered = this.dealerFightManager.shouldTriggerBetDeductionMalfunction();
+
+    const finalBetCost = betDeductionMalfunctionTriggered ? betCost * 2 : betCost;
+
+    if (this.player.balance < finalBetCost) {
       this.popupManager.show("insufficientBalance");
 
       return;
@@ -733,7 +737,7 @@ export class GameScene extends BaseScene {
         DealerSkillId.NO_DUPLICATES,
       ]);
 
-      this.player.balance -= betCost;
+      this.player.balance -= finalBetCost;
 
       this.view.gameUI.updateBalance(
         this.player.balance,
@@ -860,7 +864,14 @@ export class GameScene extends BaseScene {
 
     await this.perkGameplayController.handleRoundStart(doubleDownActive,);
 
-    this.player.balance -= betCost;
+    if (betDeductionMalfunctionTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId
+          .BET_DEDUCTION_SYSTEM_MALFUNCTION,
+      ]);
+    }
+
+    this.player.balance -= finalBetCost;
 
     this.perkEffectApplier.recordBet();
 

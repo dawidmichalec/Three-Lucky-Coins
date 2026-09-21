@@ -99,6 +99,8 @@ export default {
   tlcm3BetMemoryModuleDescription: "TLCM-3 Bet Memory Module",
   tlcm2BetControlModule: "Bet Control Module",
   tlcm2BetControlModuleDescription: "TLCM-2 Bet Control Module",
+  tlcm4DeductionController: "Deduction Controller",
+  tlcm4DeductionControllerDescription: "TLCM-4 Deduction Controller",
 
   // PLAYER STATS LABELS
 
@@ -476,6 +478,8 @@ export default {
   betDecreaseLockSkillName: "Bet Decrease Lock",
   betDecreaseLockSkillDescription: "Prevents the player from decreasing the bet every few rounds.",
 
+  betDeductionSystemMalfunctionSkillName: "Bet Deduction System Malfunction",
+  betDeductionSystemMalfunctionSkillDescription: "Deducts twice the stake from the balance every few rounds.",
 
   // PERKS
 
