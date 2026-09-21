@@ -25,7 +25,7 @@ export class PerkTooltip extends Container {
         */
 
     const perkName = new LocalizedText(reward.perk.name, {
-      fontFamily: "JackCondensed",
+      font: "JackCondensed",
 
       fontWeight: "bold",
 

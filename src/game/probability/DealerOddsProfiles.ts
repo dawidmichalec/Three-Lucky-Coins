@@ -125,7 +125,7 @@ export const SARAH_PROFILE: DealerOddsProfile = {
 export const MIKE_PROFILE: DealerOddsProfile = {
   visibility: OddsVisibility.EXACT,
 
-  headsProbabilities: [0.15, 0.18, 0.2, 0.25, 0.27, 0.73, 0.75, 0.8, 0.82, 0.85],
+  headsProbabilities: [0.15, 0.18, 0.2, 0.25, 0.75, 0.8, 0.82, 0.85],
 };
 
 // KIRK

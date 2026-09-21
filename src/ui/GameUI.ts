@@ -303,7 +303,7 @@ export class GameUI extends Container {
         fill: 0xffd21f,
       }
     )
-    this.ivyRuleLabel.position.set(1680, 345.6);
+    this.ivyRuleLabel.position.set(1665, 345.6);
     this.ivyRuleLabel.visible = false;
 
     this.ivyRuleContent = new LocalizedText(
@@ -317,7 +317,7 @@ export class GameUI extends Container {
         wordWrapWidth: 280,
       }
     );
-    this.ivyRuleContent.position.set(1680, 395.6);
+    this.ivyRuleContent.position.set(1665, 395.6);
     this.ivyRuleContent.visible = false;
 
 

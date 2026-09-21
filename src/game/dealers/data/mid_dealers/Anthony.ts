@@ -30,7 +30,7 @@ export const ANTHONY_DATA: DealerData = {
 
   objectiveType: ObjectiveType.WIN_GAMBLE_FOR_MORE,
 
-  objectiveValue: 2,
+  objectiveValue: 10,
 
   goldenCoinSettings: {
     baseChance: 0.0075,

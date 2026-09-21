@@ -30,7 +30,7 @@ export const MIKE_DATA: DealerData = {
 
   objectiveType: ObjectiveType.REACH_MULTIPLIER,
 
-  objectiveValue: 11,
+  objectiveValue: 8,
 
   goldenCoinSettings: {
     baseChance: 0.0075,
