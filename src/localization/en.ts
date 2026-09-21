@@ -486,6 +486,9 @@ export default {
   multiplierSystemMalfunctionSkillName: "Multiplier System Malfunction",
   multiplierSystemMalfunctionSkillDescription: "Every few rounds, the multiplier resets to x1 value and remains locked there for several rounds, regardless of perks or round outcomes.",
 
+  hardMultiplierResetSkillName: "Hard Multiplier Reset",
+  hardMultiplierResetSkillDescription: "The first loss resets the multiplier to its base value. Each consecutive loss after that decreases it by 1. The multiplier can drop below 0.",
+
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",

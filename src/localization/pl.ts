@@ -477,6 +477,9 @@ export default {
   multiplierSystemMalfunctionSkillName: "Awaria systemu mnożnika",
   multiplierSystemMalfunctionSkillDescription: "Co kilka rund mnożnik wraca do x1 i pozostaje na niej zablokowany przez kilka rund, niezależnie od perków i wyników rund.",
 
+  hardMultiplierResetSkillName: "Twardy reset mnożnika",
+  hardMultiplierResetSkillDescription: "Pierwsza przegrana resetuje mnożnik do jego wartości bazowej. Każda kolejna przegrana z rzędu zmniejsza go o 1. Mnożnik może spaść poniżej 0.",
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

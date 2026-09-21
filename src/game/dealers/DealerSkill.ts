@@ -83,7 +83,9 @@ export enum DealerSkillId {
 
   BET_DEDUCTION_SYSTEM_MALFUNCTION = "bet_deduction_system_malfunction",
 
-  MULTIPLIER_SYSTEM_MALFUNCTION = "multiplier_system_malfunction"
+  MULTIPLIER_SYSTEM_MALFUNCTION = "multiplier_system_malfunction",
+
+  HARD_MULTIPLIER_RESET = "hard_multiplier_reset"
 
   // Kolejne skille w przyszłości...
 }

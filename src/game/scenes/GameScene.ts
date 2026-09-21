@@ -957,16 +957,6 @@ export class GameScene extends BaseScene {
 
     const winAmount = resolution.winAmount;
 
-    if (win && winAmount !== undefined && winAmount < 0) {
-      await this.handleNegativePayoutWin(
-        winAmount,
-        selected,
-        bet,
-      );
-
-      return;
-    }
-
     const correctGuesses = selected.filter(
       (side, index) => side === resultSides[index],
     ).length;
@@ -1021,6 +1011,16 @@ export class GameScene extends BaseScene {
       selected,
       bet,
     });
+
+    if (win && winAmount !== undefined && winAmount <= 0
+    ) {
+      await this.handleNegativePayoutWin(
+        winAmount,
+        streakResolution,
+      );
+
+      return;
+    }
 
     /*
             WIN
@@ -1140,6 +1140,8 @@ export class GameScene extends BaseScene {
       const previousMultiplier =
         this.streakMultiplierManager.getValue();
 
+      this.dealerFightManager.recordHardMultiplierResetWin();
+
       this.applyStreakResolution(
         streakResolution,
       );
@@ -1225,7 +1227,15 @@ export class GameScene extends BaseScene {
 
     const finalStreakResolution = await this.perkGameplayController.handleLoss(streakResolution);
 
-    this.applyStreakResolution(finalStreakResolution);
+    const hardMultiplierDecrease =this.dealerFightManager.recordHardMultiplierResetLoss();
+
+    if (hardMultiplierDecrease) {
+      this.streakMultiplierManager.decay(1);
+    } else {
+      this.applyStreakResolution(
+        finalStreakResolution,
+      );
+    }
 
     this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
 
@@ -1852,16 +1862,10 @@ export class GameScene extends BaseScene {
 
   private async handleNegativePayoutWin(
     winAmount: number,
-    selected: readonly CoinSide[],
-    bet: number,
+    streakResolution: StreakResolution,
   ): Promise<void> {
     const penaltyAmount =
       Math.abs(winAmount);
-
-    this.runStatsRecorder.startRound({
-      selected,
-      bet,
-    });
 
     this.player.balance += winAmount;
 
@@ -1874,6 +1878,17 @@ export class GameScene extends BaseScene {
 
     this.view.gameUI.updateBalance(
       this.player.balance,
+    );
+
+    this.dealerFightManager
+      .recordHardMultiplierResetWin();
+
+    this.applyStreakResolution(
+      streakResolution,
+    );
+
+    this.view.gameUI.updateMultiplier(
+      this.streakMultiplierManager.getValue(),
     );
 
     this.runStatsRecorder.finishRound({

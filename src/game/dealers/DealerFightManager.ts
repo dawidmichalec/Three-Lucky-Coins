@@ -84,6 +84,8 @@ export class DealerFightManager {
   private static readonly MULTIPLIER_SYSTEM_MALFUNCTION_MIN_DURATION = 2;
   private static readonly MULTIPLIER_SYSTEM_MALFUNCTION_MAX_DURATION = 4;
 
+  private hardMultiplierResetConsecutiveLosses = 0;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -158,6 +160,8 @@ export class DealerFightManager {
     this.multiplierSystemMalfunctionActive = false;
 
     this.multiplierSystemMalfunctionRoundsRemaining = 0;
+
+    this.hardMultiplierResetConsecutiveLosses = 0;
 
     const hasMyWayOrTheHighway =
       dealer.skills.some(
@@ -246,6 +250,42 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  recordHardMultiplierResetWin(): void {
+    const dealer = this.getCurrentDealer();
+
+    const hasSkill = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.HARD_MULTIPLIER_RESET,
+    );
+
+    if (!hasSkill) {
+      return;
+    }
+
+    this.hardMultiplierResetConsecutiveLosses = 0;
+  }
+
+  recordHardMultiplierResetLoss(): boolean {
+    const dealer = this.getCurrentDealer();
+
+    const hasSkill = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.HARD_MULTIPLIER_RESET,
+    );
+
+    if (!hasSkill) {
+      return false;
+    }
+
+    this.hardMultiplierResetConsecutiveLosses++;
+
+    return (
+      this.hardMultiplierResetConsecutiveLosses > 1
+    );
   }
 
   isMultiplierSystemMalfunctionActive(): boolean {

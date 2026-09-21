@@ -114,6 +114,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION:
           await this.gameMessageOverlay.play("multiplierSystemMalfunctionSkillName");
           break;
+
+        case DealerSkillId.HARD_MULTIPLIER_RESET:
+          await this.gameMessageOverlay.play("hardMultiplierResetSkillName");
+          break;
       }
     }
   }
