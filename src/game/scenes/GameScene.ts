@@ -1529,6 +1529,25 @@ export class GameScene extends BaseScene {
       );
     }
 
+    const multiplierSystemMalfunction =this.dealerFightManager.advanceMultiplierSystemMalfunction();
+
+    if (multiplierSystemMalfunction.justTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+      ]);
+
+      await this.view.playImpactShake();
+      await this.view.gameUI.playMultiplierMalfunction();
+    }
+
+    if (multiplierSystemMalfunction.active) {
+      this.streakMultiplierManager.knockOut();
+
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
+    }
+
     const multiplierKnockoutTriggered =
       this.dealerFightManager.rollMultiplierKnockout(
         this.streakMultiplierManager.getValue(),
@@ -1685,6 +1704,13 @@ export class GameScene extends BaseScene {
     if (
       this.dealerFightManager
         .isMultiplierDecayActive()
+    ) {
+      return;
+    }
+
+    if (
+      this.dealerFightManager
+        .isMultiplierSystemMalfunctionActive()
     ) {
       return;
     }

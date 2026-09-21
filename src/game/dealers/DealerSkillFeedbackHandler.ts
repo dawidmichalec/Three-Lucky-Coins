@@ -110,6 +110,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION:
           await this.gameMessageOverlay.play("betDeductionSystemMalfunctionSkillName");
           break;
+
+        case DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION:
+          await this.gameMessageOverlay.play("multiplierSystemMalfunctionSkillName");
+          break;
       }
     }
   }

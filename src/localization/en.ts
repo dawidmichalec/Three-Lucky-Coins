@@ -101,6 +101,8 @@ export default {
   tlcm2BetControlModuleDescription: "TLCM-2 Bet Control Module",
   tlcm4DeductionController: "Deduction Controller",
   tlcm4DeductionControllerDescription: "TLCM-4 Deduction Controller",
+  tlcm8MultiplierProcessor: "Multiplier Processor",
+  tlcm8MultiplierProcessorDescription: "TLCM-8 Multiplier Processor",
 
   // PLAYER STATS LABELS
 
@@ -480,6 +482,9 @@ export default {
 
   betDeductionSystemMalfunctionSkillName: "Bet Deduction System Malfunction",
   betDeductionSystemMalfunctionSkillDescription: "Deducts twice the stake from the balance every few rounds.",
+
+  multiplierSystemMalfunctionSkillName: "Multiplier System Malfunction",
+  multiplierSystemMalfunctionSkillDescription: "Every few rounds, the multiplier resets to x1 value and remains locked there for several rounds, regardless of perks or round outcomes.",
 
   // PERKS
 

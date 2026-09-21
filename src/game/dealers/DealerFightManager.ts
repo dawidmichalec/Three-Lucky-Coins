@@ -74,6 +74,16 @@ export class DealerFightManager {
   private static readonly BET_DEDUCTION_MALFUNCTION_MIN_ROUNDS = 2;
   private static readonly BET_DEDUCTION_MALFUNCTION_MAX_ROUNDS = 5;
 
+  private multiplierSystemMalfunctionActive = false;
+
+  private multiplierSystemMalfunctionRoundsRemaining = 0;
+
+  private static readonly MULTIPLIER_SYSTEM_MALFUNCTION_MIN_DELAY = 2;
+  private static readonly MULTIPLIER_SYSTEM_MALFUNCTION_MAX_DELAY = 5;
+
+  private static readonly MULTIPLIER_SYSTEM_MALFUNCTION_MIN_DURATION = 2;
+  private static readonly MULTIPLIER_SYSTEM_MALFUNCTION_MAX_DURATION = 4;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -145,6 +155,10 @@ export class DealerFightManager {
 
     this.betDeductionMalfunctionRoundsRemaining = 0;
 
+    this.multiplierSystemMalfunctionActive = false;
+
+    this.multiplierSystemMalfunctionRoundsRemaining = 0;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -167,6 +181,17 @@ export class DealerFightManager {
     if (hasBetDeductionMalfunction) {
       this.betDeductionMalfunctionRoundsRemaining =
         this.rollBetDeductionMalfunctionDelay();
+    }
+
+    const hasMultiplierSystemMalfunction =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+      );
+
+    if (hasMultiplierSystemMalfunction) {
+      this.startMultiplierSystemNormalPhase();
     }
 
     switch (dealer.objectiveType) {
@@ -221,6 +246,103 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  isMultiplierSystemMalfunctionActive(): boolean {
+    return this.multiplierSystemMalfunctionActive;
+  }
+
+  advanceMultiplierSystemMalfunction(): {
+    active: boolean;
+    justTriggered: boolean;
+  } {
+    const dealer = this.getCurrentDealer();
+
+    const hasSkill = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+    );
+
+    if (!hasSkill) {
+      return {
+        active: false,
+        justTriggered: false,
+      };
+    }
+
+    this.multiplierSystemMalfunctionRoundsRemaining--;
+
+    if (
+      this.multiplierSystemMalfunctionRoundsRemaining > 0
+    ) {
+      return {
+        active: this.multiplierSystemMalfunctionActive,
+        justTriggered: false,
+      };
+    }
+
+    if (this.multiplierSystemMalfunctionActive) {
+      this.startMultiplierSystemNormalPhase();
+
+      return {
+        active: false,
+        justTriggered: false,
+      };
+    }
+
+    this.startMultiplierSystemMalfunctionPhase();
+
+    return {
+      active: true,
+      justTriggered: true,
+    };
+  }
+
+  private startMultiplierSystemNormalPhase(): void {
+    this.multiplierSystemMalfunctionActive = false;
+
+    this.multiplierSystemMalfunctionRoundsRemaining =
+      this.rollMultiplierSystemMalfunctionDelay();
+  }
+
+  private startMultiplierSystemMalfunctionPhase(): void {
+    this.multiplierSystemMalfunctionActive = true;
+
+    this.multiplierSystemMalfunctionRoundsRemaining =
+      this.rollMultiplierSystemMalfunctionDuration();
+  }
+
+  private rollMultiplierSystemMalfunctionDelay(): number {
+    const min =
+      DealerFightManager
+        .MULTIPLIER_SYSTEM_MALFUNCTION_MIN_DELAY;
+
+    const max =
+      DealerFightManager
+        .MULTIPLIER_SYSTEM_MALFUNCTION_MAX_DELAY;
+
+    return (
+      Math.floor(
+        Math.random() * (max - min + 1),
+      ) + min
+    );
+  }
+
+  private rollMultiplierSystemMalfunctionDuration(): number {
+    const min =
+      DealerFightManager
+        .MULTIPLIER_SYSTEM_MALFUNCTION_MIN_DURATION;
+
+    const max =
+      DealerFightManager
+        .MULTIPLIER_SYSTEM_MALFUNCTION_MAX_DURATION;
+
+    return (
+      Math.floor(
+        Math.random() * (max - min + 1),
+      ) + min
+    );
   }
 
   shouldTriggerBetDeductionMalfunction(): boolean {

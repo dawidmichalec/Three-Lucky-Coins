@@ -100,6 +100,8 @@ export default {
   tlcm2BetControlModuleDescription: "Moduł kontroli stawki TLCM-2",
   tlcm4DeductionController: "Kontroler potrąceń",
   tlcm4DeductionControllerDescription: "Kontroler potrąceń TLCM-4",
+  tlcm8MultiplierProcessor: "Procesor mnożnika",
+  tlcm8MultiplierProcessorDescription: "Procesor mnożnika TLCM-8",
 
 
 
@@ -471,6 +473,9 @@ export default {
 
   betDeductionSystemMalfunctionSkillName: "Awaria systemu pobierania stawki",
   betDeductionSystemMalfunctionSkillDescription: "Co kilka rund pobiera z salda dwukrotność postawionej stawki.",
+
+  multiplierSystemMalfunctionSkillName: "Awaria systemu mnożnika",
+  multiplierSystemMalfunctionSkillDescription: "Co kilka rund mnożnik wraca do x1 i pozostaje na niej zablokowany przez kilka rund, niezależnie od perków i wyników rund.",
 
   // PERKS
 

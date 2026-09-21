@@ -1,4 +1,4 @@
-import { Container, Text, Sprite, Assets } from "pixi.js";
+import { Container, Text, Sprite, Assets, Graphics } from "pixi.js";
 import { LocalizedText } from "../localization/LocalizedText";
 import { ProbabilityDisplay } from "./components/ProbabilityDisplay";
 import { DealerCard } from "./components/dealerCard/DealerCard";
@@ -43,6 +43,8 @@ export class GameUI extends Container {
   public combinationStatusLabel!: LocalizedText;
   public ivyRuleLabel!: LocalizedText;
   public ivyRuleContent!: LocalizedText;
+
+  private multiplierMalfunctionAnimationId?: number;
 
 
   constructor(private currentDealer: DealerData) {
@@ -976,5 +978,260 @@ export class GameUI extends Container {
     };
 
     this.multiplierAnimationId = requestAnimationFrame(animate);
+  }
+
+  async playMultiplierMalfunction(): Promise<void> {
+    if (
+      this.multiplierMalfunctionAnimationId !== undefined
+    ) {
+      cancelAnimationFrame(
+        this.multiplierMalfunctionAnimationId,
+      );
+    }
+
+    if (
+      this.multiplierAnimationId !== undefined
+    ) {
+      cancelAnimationFrame(
+        this.multiplierAnimationId,
+      );
+
+      this.multiplierAnimationId = undefined;
+    }
+
+    this.playMultiplierSmoke();
+
+    const duration = 1400;
+
+    const startTime = performance.now();
+
+    return new Promise((resolve) => {
+      const animate = (currentTime: number) => {
+        const progress = Math.min(
+          1,
+          (currentTime - startTime) / duration,
+        );
+
+        /*
+          Migotanie jak zepsuta jarzeniówka.
+
+          Celowo nie jest regularne.
+        */
+
+        const flicker =
+          Math.sin(progress * Math.PI * 34) +
+          Math.sin(progress * Math.PI * 57);
+
+        if (flicker > 0.4) {
+          this.multiplierValue.alpha = 0.2;
+        } else if (flicker > -0.2) {
+          this.multiplierValue.alpha = 0.55;
+        } else {
+          this.multiplierValue.alpha = 1;
+        }
+
+        /*
+          Multiplier próbuje "ruszyć",
+          ale coś go blokuje.
+        */
+
+        const struggle =
+          Math.sin(progress * Math.PI * 10);
+
+        const scale =
+          1 +
+          Math.max(0, struggle) *
+            0.08 *
+            (1 - progress);
+
+        this.multiplierContainer.scale.set(scale);
+
+        /*
+          Lekko mechaniczny shake.
+        */
+
+        const shakeStrength =
+          (1 - progress) * 5;
+
+        const shakeX =
+          Math.sin(
+            progress * Math.PI * 42,
+          ) * shakeStrength;
+
+        const shakeY =
+          Math.cos(
+            progress * Math.PI * 31,
+          ) *
+          shakeStrength *
+          0.3;
+
+        this.multiplierValue.position.set(
+          shakeX,
+          shakeY,
+        );
+
+        /*
+          Glow też "traci zasilanie".
+        */
+
+        const glowAlpha =
+          0.35 +
+          Math.abs(flicker) * 0.4;
+
+        this.multiplierValue.style.dropShadow.alpha =
+          Math.min(1, glowAlpha);
+
+        if (progress < 1) {
+          this.multiplierMalfunctionAnimationId =
+            requestAnimationFrame(animate);
+
+          return;
+        }
+
+        this.multiplierValue.alpha = 1;
+
+        this.multiplierValue.position.set(0, 0);
+
+        this.multiplierContainer.scale.set(1);
+
+        this.multiplierValue.style.dropShadow.alpha = 1;
+
+        this.multiplierMalfunctionAnimationId =
+          undefined;
+
+        resolve();
+      };
+
+      this.multiplierMalfunctionAnimationId =
+        requestAnimationFrame(animate);
+    });
+  }
+
+  private createMultiplierSmokeParticle(): Graphics {
+    const smoke = new Graphics();
+
+    const radius =
+      24 + Math.random() * 16;
+
+    /*
+      Kilka nachodzących na siebie kółek,
+      żeby nie wyglądało to jak jedna kulka.
+    */
+
+    smoke.circle(0, 0, radius);
+
+    smoke.circle(
+      radius * 0.55,
+      -radius * 0.15,
+      radius * 0.7,
+    );
+
+    smoke.circle(
+      -radius * 0.5,
+      -radius * 0.1,
+      radius * 0.65,
+    );
+
+    smoke.fill({
+      color: 0xd0d0d0,
+      alpha: 0.65,
+    });
+
+    smoke.alpha = 0;
+
+    smoke.position.set(
+      this.multiplierValue.x +
+        this.multiplierValue.width * 0.5 +
+        (Math.random() - 0.5) * 70,
+      this.multiplierValue.y + 20,
+    );
+
+    return smoke;
+  }
+
+  private animateMultiplierSmokeParticle(
+    smoke: Graphics,
+  ): Promise<void> {
+    const duration =
+      700 + Math.random() * 350;
+
+    const startX = smoke.x;
+    const startY = smoke.y;
+
+    const driftX =
+      (Math.random() - 0.5) * 45;
+
+    return this.animate(
+      duration,
+
+      (progress) => {
+        /*
+          Szybkie pojawienie,
+          potem stopniowe zanikanie.
+        */
+
+        if (progress < 0.2) {
+          smoke.alpha =
+            (progress / 0.2) * 0.25;
+        } else {
+          smoke.alpha =
+            (1 - progress) * 0.25;
+        }
+
+        /*
+          Dym idzie do góry
+          i trochę dryfuje na bok.
+        */
+
+        smoke.x =
+          startX +
+          driftX * progress;
+
+        smoke.y =
+          startY -
+          progress * 65;
+
+        /*
+          Chmurka rozszerza się
+          podczas unoszenia.
+        */
+
+        const scale =
+          0.7 + progress * 1.2;
+
+        smoke.scale.set(scale);
+      },
+    ).then(() => {
+      smoke.destroy();
+    });
+  }
+
+  private playMultiplierSmoke(): void {
+    const particleCount = 4;
+
+    for (
+      let i = 0;
+      i < particleCount;
+      i++
+    ) {
+      window.setTimeout(() => {
+        const smoke =
+          this.createMultiplierSmokeParticle();
+
+        const multiplierValueIndex =
+          this.multiplierContainer.getChildIndex(
+            this.multiplierValue,
+          );
+
+        this.multiplierContainer.addChildAt(
+          smoke,
+          multiplierValueIndex,
+        );
+
+        void this.animateMultiplierSmokeParticle(
+          smoke,
+        );
+      }, i * 110);
+    }
   }
 }
