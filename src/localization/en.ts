@@ -105,6 +105,8 @@ export default {
   tlcm8MultiplierProcessorDescription: "TLCM-8 Multiplier Processor",
   tlcm7CombinationSelector: "Combination Selector",
   tlcm7CombinationSelectorDescription: "TLCM-7 Combination Selector",
+  tlcm6ProbabilityDisplayModule: "Probability Display Module",
+  tlcm6ProbabilityDisplayModuleDescription: "TLCM-6 Probability Display Module",
 
   // PLAYER STATS LABELS
 
@@ -499,6 +501,12 @@ export default {
 
   combinationSelectorBlockSkillName: "Combination Selector Block",
   combinationSelectorBlockSkillDescription: "Blocks one random coin selectors every round.",
+
+  unstableProbabilityDisplaySkillName: "Unstable Probability Display",
+  unstableProbabilityDisplaySkillDescription: "Every few rounds, the probability of one coin switches between two different values.",
+
+  brokenProbabilityDisplaySkillName: "Broken Probability Display",
+  brokenProbabilityDisplaySkillDescription: "Displays the probability of one coin as \"ERROR\" every round.",
 
   // PERKS
 

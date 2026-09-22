@@ -119,48 +119,54 @@ export class ProbabilityDisplay extends Container {
 
   updateOdds(
     odds: OddsTable,
+    errorIndex?: 0 | 1 | 2,
   ): void {
     this.updateCoinDisplay(
       this.coinDisplays[0],
       odds.coin1,
+      errorIndex === 0,
     );
 
     this.updateCoinDisplay(
       this.coinDisplays[1],
       odds.coin2,
+      errorIndex === 1,
     );
 
     this.updateCoinDisplay(
       this.coinDisplays[2],
       odds.coin3,
+      errorIndex === 2,
     );
   }
 
   private updateCoinDisplay(
-    display:
-      CoinProbabilityDisplay,
-
-    odds:
-      CoinOdds,
+    display: CoinProbabilityDisplay,
+    odds: CoinOdds,
+    showError = false,
   ): void {
     const headsIsMoreLikely =
-      odds.heads >=
-      odds.tails;
+      odds.heads >= odds.tails;
 
     const translationKey:
       TranslationKey =
-      headsIsMoreLikely
-        ? "heads"
-        : "tails";
+        headsIsMoreLikely
+          ? "heads"
+          : "tails";
+
+    display.sideLabel.setKey(
+      translationKey,
+    );
+
+    if (showError) {
+      display.valueLabel.text = "ERROR";
+      return;
+    }
 
     const probability =
       headsIsMoreLikely
         ? odds.heads
         : odds.tails;
-
-    display.sideLabel.setKey(
-      translationKey,
-    );
 
     display.valueLabel.text =
       this.formatPercentage(

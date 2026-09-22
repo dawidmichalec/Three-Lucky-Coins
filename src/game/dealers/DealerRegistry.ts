@@ -43,6 +43,7 @@ import { TLCM3_3_DATA } from "./data/machine_floor/TLCM3_3";
 import { TLCM3_4_DATA } from "./data/machine_floor/TLCM3_4";
 import { TLCM4_DATA } from "./data/machine_floor/TLCM4";
 import { TLCM5_DATA } from "./data/machine_floor/TLCM5";
+import { TLCM6_2_DATA } from "./data/machine_floor/TLCM6_2";
 import { TLCM7_1_DATA } from "./data/machine_floor/TLCM7_1";
 import { TLCM7_2_DATA } from "./data/machine_floor/TLCM7_2";
 import { TLCM7_3_DATA } from "./data/machine_floor/TLCM7_3";
@@ -99,6 +100,7 @@ export const DEALERS: readonly DealerData[] = [
   TLCM3_4_DATA,
   TLCM4_DATA,
   TLCM5_DATA,
+  TLCM6_2_DATA,
   TLCM7_1_DATA,
   TLCM7_2_DATA,
   TLCM7_3_DATA,
@@ -153,6 +155,7 @@ export {
   TLCM3_4_DATA,
   TLCM4_DATA,
   TLCM5_DATA,
+  TLCM6_2_DATA,
   TLCM7_1_DATA,
   TLCM7_2_DATA,
   TLCM7_3_DATA,

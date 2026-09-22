@@ -333,14 +333,11 @@ export class GameScene extends BaseScene {
         ? FORCED_RANDOM_TOSS_PROFILE
         : this.currentDealer.oddsProfile;
 
-    const odds =
-      this.oddsManager.rollOdds(
-        profile,
-      );
+    const odds = this.oddsManager.rollOdds(profile,);
 
-    this.view.gameUI.updateProbability(
-      odds,
-    );
+    const brokenProbabilityDisplayIndex = this.dealerFightManager.getBrokenProbabilityDisplayIndex();
+
+    this.view.gameUI.updateProbability(odds,brokenProbabilityDisplayIndex,);
   }
 
   private prepareNextRoundWithPerks(): void {
@@ -355,6 +352,13 @@ export class GameScene extends BaseScene {
 
   private startDealerFight() {
     const fight = this.dealerFightManager.startFight(this.player.balance);
+
+    const odds = this.oddsManager.getOdds();
+
+    this.view.gameUI.updateProbability(
+      odds,
+      this.dealerFightManager.getBrokenProbabilityDisplayIndex(),
+    );
 
     const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
 

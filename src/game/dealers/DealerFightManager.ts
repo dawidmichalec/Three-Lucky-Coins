@@ -90,6 +90,7 @@ export class DealerFightManager {
   private randomBlockedCombination?: string;
 
   private blockedCombinationSelector?: 0 | 1 | 2;
+  private brokenProbabilityDisplayIndex?:0 | 1 | 2;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -174,6 +175,8 @@ export class DealerFightManager {
 
     this.blockedCombinationSelector = undefined;
 
+    this.brokenProbabilityDisplayIndex = undefined;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -242,6 +245,17 @@ export class DealerFightManager {
       this.rollBlockedCombinationSelector();
     }
 
+    const hasBrokenProbabilityDisplay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.BROKEN_PROBABILITY_DISPLAY,
+      );
+
+    if (hasBrokenProbabilityDisplay) {
+      this.rollBrokenProbabilityDisplay();
+    }
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -294,6 +308,38 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  getBrokenProbabilityDisplayIndex():
+    0 | 1 | 2 | undefined {
+    return this.brokenProbabilityDisplayIndex;
+  }
+
+  private rollBrokenProbabilityDisplay(): void {
+    const displays:
+      readonly (0 | 1 | 2)[] = [
+        0,
+        1,
+        2,
+      ];
+
+    const availableDisplays =
+      this.brokenProbabilityDisplayIndex ===
+      undefined
+        ? displays
+        : displays.filter(
+            (index) =>
+              index !==
+              this.brokenProbabilityDisplayIndex,
+          );
+
+    this.brokenProbabilityDisplayIndex =
+      availableDisplays[
+        Math.floor(
+          Math.random() *
+            availableDisplays.length,
+        )
+      ];
   }
 
   getBlockedCombinationSelector():
@@ -948,6 +994,17 @@ export class DealerFightManager {
 
     if (hasCombinationSelectorBlock) {
       this.rollBlockedCombinationSelector();
+    }
+
+    const hasBrokenProbabilityDisplay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.BROKEN_PROBABILITY_DISPLAY,
+      );
+
+    if (hasBrokenProbabilityDisplay) {
+      this.rollBrokenProbabilityDisplay();
     }
   }
 

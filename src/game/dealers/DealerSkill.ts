@@ -91,7 +91,9 @@ export enum DealerSkillId {
 
   RANDOM_COMBINATION_BLOCK = "random_combination_block",
 
-  COMBINATION_SELECTOR_BLOCK = "combination_selector_block"
+  COMBINATION_SELECTOR_BLOCK = "combination_selector_block",
+
+  BROKEN_PROBABILITY_DISPLAY = "broken_probability_display"
 
   // Kolejne skille w przyszłości...
 }

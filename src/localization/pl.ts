@@ -104,6 +104,8 @@ export default {
   tlcm8MultiplierProcessorDescription: "Procesor mnożnika TLCM-8",
   tlcm7CombinationSelector: "Selektor kombinacji",
   tlcm7CombinationSelectorDescription: "Selektor kombinacji TLCM-7",
+  tlcm6ProbabilityDisplayModule: "Wyświetlacz prawdopodobieństwa",
+  tlcm6ProbabilityDisplayModuleDescription: "Wyświetlacz prawdopodobieństwa TLCM-6",
 
 
 
@@ -490,6 +492,12 @@ export default {
 
   combinationSelectorBlockSkillName: "Blokada selektora kombinacji",
   combinationSelectorBlockSkillDescription: "Blokuje jeden losowy selektor monety w każdej rundzie.",
+
+  unstableProbabilityDisplaySkillName: "Niestabilny wyświetlacz prawdopodobieństwa",
+  unstableProbabilityDisplaySkillDescription: "Co kilka rund prawdopodobieństwo jednej monety przełącza się między dwiema różnymi wartościami.",
+
+  brokenProbabilityDisplaySkillName: "Uszkodzony wyświetlacz prawdopodobieństwa",
+  brokenProbabilityDisplaySkillDescription: "W każdej rundzie wyświetla prawdopodobieństwo jednej monety jako \"ERROR\".",
 
   // PERKS
 

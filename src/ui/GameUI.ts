@@ -923,8 +923,8 @@ export class GameUI extends Container {
     }
   }
 
-  updateProbability(odds: OddsTable) {
-    this.probabilityDisplay.updateOdds(odds);
+  updateProbability(odds: OddsTable, errorIndex?: 0 | 1 | 2,) {
+    this.probabilityDisplay.updateOdds(odds, errorIndex);
   }
 
   private animateMultiplierIncrease() {
