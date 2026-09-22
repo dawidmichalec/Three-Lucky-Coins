@@ -106,8 +106,14 @@ export default {
   tlcm7CombinationSelectorDescription: "Selektor kombinacji TLCM-7",
   tlcm6ProbabilityDisplayModule: "Wyświetlacz prawdopodobieństwa",
   tlcm6ProbabilityDisplayModuleDescription: "Wyświetlacz prawdopodobieństwa TLCM-6",
-
-
+  debraVolleyball: "Piłka do siatkówki",
+  debraVolleyballDescription: "Piłka Debry. Po pracy regularnie gra w lokalnej amatorskiej drużynie.",
+  colinHeadphones: "Słuchawki",
+  colinHeadphonesDescription: "Ulubione słuchawki Colina. Poza pracą rzadko gdziekolwiek rusza się bez nich.",
+  frankPokerChip: "Żeton pokerowy",
+  frankPokerChipDescription: "Wytarty żeton pokerowy z ulubionego kasyna Franka. Nie chce powiedzieć, ile pieniędzy tam przegrał.",
+  kevinMotorcycleHelmet: "Kask motocyklowy",
+  kevinMotorcycleHelmetDescription: "Kask motocyklowy Kevina. Jego motocykl jest jedną z niewielu rzeczy, na które wydaje więcej pieniędzy, niż prawdopodobnie powinien.",
 
   // PLAYER STATS LABELS
 
@@ -239,7 +245,7 @@ export default {
     "Johnny podjął tymczasową pracę w kasynie, żeby zarobić na obóz surfingowy.\n\nPo obozie zdał sobie sprawę, że tęskni za kasynem i wrócił.\n\nTo, co zaczęło się jako szybki sposób na zarobienie pieniędzy, niespodziewanie stało się karierą, którą lubi.",
   johnnySaying:"Po prostu daj się ponieść. U mnie się sprawdziło.",
   melanieDescription:
-    "Melanie jest młodszą kierowniczką.\n\nPracuje w kasynie, ale nie lubi tego.",
+    "Melanie niespecjalnie lubi pracę w kasynie, ale znalezienie zatrudnienia w jej wieku nie było łatwe.\n\nNa razie kasyno jest jedynym miejscem, które postanowiło dać jej szansę, więc po prostu zaciska zęby i wykonuje swoją pracę bez narzekania.",
   melanieSaying: "To koniec Twojego szczęścia",
   tracySaying: "Przewidywalność daleko cię nie zaprowadzi.",
   tracyDescription: "Tracy uważa, że ​​dobry gracz nigdy nie powinien stać się przewidywalny.\n\nStale zmieniaj swoje zakłady, a być może zyskasz jej szacunek.",
@@ -247,7 +253,15 @@ export default {
   andyDescription: "Andy uważa, że dobra gra nigdy nie powinna być nudna.\n\nLubi graczy, którzy nie stoją w miejscu i nie boją się zmieniać swojej strategii z rundy na rundę.\n\nNie pozwól mu się nudzić, a chętnie dorzuci ci coś ekstra.",  
   jacobSaying: "Zobaczymy, jak długo wytrzymasz.",
   jacobDescription: "Jacob widział już wielu pewnych siebie graczy siadających przy jego stole. Większość z nich szybko traciła tę pewność.\n\nW starciu z Jacobem wygrywanie to nie wszystko. Czasem wystarczy przetrwać kolejną rundę.",
-  
+  debraDescription: "Młoda krupierka, która ma opinię wyjątkowej szczęściary. Debra twierdzi, że nie wierzy w szczęście, choć Złote Monety podejrzanie często pojawiają się przy jej stole.",
+  debraSaying: "Szczęście to tylko wymówka, której ludzie używają, kiedy nie potrafią wyjaśnić, co się stało.",
+  colinDescription: "Pogodny młody krupier, który sprawia wrażenie, jakby naprawdę lubił siedzieć przy stole. Colin jest lubiany zarówno przez graczy, jak i pracowników kasyna, choć jego niekończący się optymizm potrafi czasem działać im na nerwy.",
+  colinSaying: "No weź, zawsze mogło być gorzej!",
+  frankDescription: "Doświadczony krupier, a po godzinach zapalony hazardzista. Frank uważa, że odejście od stołu podczas dobrej passy to jeden z najgorszych błędów, jakie może popełnić gracz.",
+  frankSaying: "Skoro wygrywasz, to po co przestawać?",
+  kevinDescription: "Ambitny młody krupier, który jest zdeterminowany, by piąć się po szczeblach kasynowej hierarchii. Kevin traktuje swoją pracę znacznie poważniej niż większość Młodszych Krupierów i rzadko przepuszcza okazję, żeby się wykazać.",
+  kevinSaying: "Każdy musi od czegoś zacząć.",
+
   // MID DEALERS
 
   hillaryDescription:

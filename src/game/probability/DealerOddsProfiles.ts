@@ -56,6 +56,38 @@ export const MELANIE_PROFILE: DealerOddsProfile = {
   headsProbabilities: [0.15, 0.2, 0.25, 0.75, 0.8, 0.85],
 };
 
+// DEBRA
+
+export const DEBRA_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.12, 0.15, 0.18, 0.2, 0.22, 0.78, 0.8, 0.82, 0.85, 0.88],
+};
+
+// COLIN
+
+export const COLIN_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.11, 0.14, 0.17, 0.2, 0.23, 0.77, 0.8, 0.83, 0.86, 0.89],
+};
+
+// FRANK
+
+export const FRANK_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.1, 0.15, 0.2, 0.25, 0.75, 0.8, 0.85, 0.9],
+};
+
+// KEVIN
+
+export const KEVIN_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.09, 0.12, 0.16, 0.2, 0.22, 0.78, 0.8, 0.84, 0.88, 0.91],
+};
+
 // JACOB
 
 export const JACOB_PROFILE: DealerOddsProfile = {

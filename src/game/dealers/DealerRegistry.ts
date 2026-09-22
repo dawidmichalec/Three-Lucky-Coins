@@ -52,6 +52,10 @@ import { TLCM8_1_DATA } from "./data/machine_floor/TLCM8_1";
 import { TLCM8_2_DATA } from "./data/machine_floor/TLCM8_2";
 import { TLCM9_DATA } from "./data/machine_floor/TLCM9";
 import { TLCM10_DATA } from "./data/machine_floor/TLCM10";
+import { DEBRA_DATA } from "./data/junior_dealers/Debra";
+import { COLIN_DATA } from "./data/junior_dealers/Colin";
+import { FRANK_DATA } from "./data/junior_dealers/Frank";
+import { KEVIN_DATA } from "./data/junior_dealers/Kevin";
 import { DealerGroup } from "./DealerGroup";
 import { DealerRole } from "./DealerRole";
 
@@ -64,6 +68,10 @@ export const DEALERS: readonly DealerData[] = [
   ANDY_DATA, 
   TRACY_DATA,
   MELANIE_DATA,
+  DEBRA_DATA,
+  COLIN_DATA,
+  FRANK_DATA,
+  KEVIN_DATA,
   JACOB_DATA,
   HILLARY_DATA,
   TIMOTHY_DATA,
@@ -120,6 +128,10 @@ export {
   ANDY_DATA,
   TRACY_DATA,
   MELANIE_DATA,
+  DEBRA_DATA,
+  COLIN_DATA,
+  FRANK_DATA,
+  KEVIN_DATA,
   JACOB_DATA,
   HILLARY_DATA,
   TIMOTHY_DATA,

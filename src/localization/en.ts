@@ -107,6 +107,14 @@ export default {
   tlcm7CombinationSelectorDescription: "TLCM-7 Combination Selector",
   tlcm6ProbabilityDisplayModule: "Probability Display Module",
   tlcm6ProbabilityDisplayModuleDescription: "TLCM-6 Probability Display Module",
+  debraSignatureTokenName: "Volleyball",
+  debraSignatureTokenDescription: "Debra's volleyball. She regularly plays with a local amateur team after work.",
+  colinSignatureTokenName: "Headphones",
+  colinSignatureTokenDescription: "Colin's favourite headphones. He rarely goes anywhere without them when he's off the clock.",
+  frankSignatureTokenName: "Poker Chip",
+  frankSignatureTokenDescription: "A worn poker chip from Frank's favourite casino. He refuses to say how much money he lost there.",
+  kevinSignatureTokenName: "Motorcycle Helmet",
+  kevinSignatureTokenDescription: "Kevin's motorcycle helmet. His motorcycle is one of the few things he spends more money on than he probably should.",
 
   // PLAYER STATS LABELS
 
@@ -241,10 +249,18 @@ export default {
   johnnyDescription: 
     "Johnny took a temporary casino job to fund a surfing camp.\n\nAfter the camp, he realized he missed the casino and came back.\n\nWhat started as a quick way to make money unexpectedly became a career he enjoys.",
   johnnySaying:"Just go with the flow. Worked for me.",
-  melanieDescription: "Melanie is a Junior Supervisor.\n\nShe works at a casino but doesn't like this. ",
+  melanieDescription: "Melanie works at a casino but doesn't like this. ",
   melanieSaying: "Your luck ends here",
   jacobSaying: "Let's see how long you last.",
   jacobDescription: "Jacob has watched plenty of confident players take a seat at his table. Most of them didn't stay confident for long.\n\nAgainst Jacob, winning isn't everything. Sometimes, lasting another round is enough.",
+  debraDescription: "A young dealer with a reputation for being unusually lucky. Debra claims she does not believe in luck, although Golden Coins seem to appear suspiciously often at her table.",
+  debraSaying: "Luck is just an excuse people use when they can't explain what happened.",
+  colinDescription: "A cheerful young dealer who seems genuinely happy to be at the table. Colin is popular among both players and casino staff, although his endless optimism can occasionally get on their nerves.",
+  colinSaying: "Come on, it could always be worse!",
+  frankDescription: "An experienced dealer and a dedicated gambler outside working hours. Frank believes that walking away from a good streak is one of the worst mistakes a gambler can make.",
+  frankSaying: "If you're winning, why stop?",
+  kevinDescription: "An ambitious young dealer determined to move up the casino hierarchy. Kevin takes his job far more seriously than most Junior Dealers and rarely misses an opportunity to prove himself.",
+  kevinSaying: "Everyone starts somewhere.",
 
   // MID DEALERS
 
