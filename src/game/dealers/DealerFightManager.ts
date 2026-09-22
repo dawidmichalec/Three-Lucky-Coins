@@ -89,6 +89,8 @@ export class DealerFightManager {
   private fixedCombinationLock?: string;
   private randomBlockedCombination?: string;
 
+  private blockedCombinationSelector?: 0 | 1 | 2;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -170,6 +172,8 @@ export class DealerFightManager {
 
     this.randomBlockedCombination = undefined;
 
+    this.blockedCombinationSelector = undefined;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -227,6 +231,17 @@ export class DealerFightManager {
       this.rollRandomBlockedCombination();
     }
 
+    const hasCombinationSelectorBlock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.COMBINATION_SELECTOR_BLOCK,
+      );
+
+    if (hasCombinationSelectorBlock) {
+      this.rollBlockedCombinationSelector();
+    }
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -279,6 +294,39 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  getBlockedCombinationSelector():
+    | 0
+    | 1
+    | 2
+    | undefined {
+    return this.blockedCombinationSelector;
+  }
+
+  private rollBlockedCombinationSelector(): void {
+    const selectors: readonly (0 | 1 | 2)[] = [
+      0,
+      1,
+      2,
+    ];
+
+    const availableSelectors =
+      this.blockedCombinationSelector === undefined
+        ? selectors
+        : selectors.filter(
+            (index) =>
+              index !==
+              this.blockedCombinationSelector,
+          );
+
+    this.blockedCombinationSelector =
+      availableSelectors[
+        Math.floor(
+          Math.random() *
+            availableSelectors.length,
+        )
+      ];
   }
 
   getFixedCombinationLock(): string[] | undefined {
@@ -889,6 +937,17 @@ export class DealerFightManager {
 
     if (hasRandomCombinationBlock) {
       this.rollRandomBlockedCombination();
+    }
+
+    const hasCombinationSelectorBlock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.COMBINATION_SELECTOR_BLOCK,
+      );
+
+    if (hasCombinationSelectorBlock) {
+      this.rollBlockedCombinationSelector();
     }
   }
 

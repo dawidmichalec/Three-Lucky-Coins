@@ -654,6 +654,17 @@ export class GameScene extends BaseScene {
     this.view.gameUI.showIvyRules();
   }
 
+  private updateCombinationSelectorBlock(): void {
+    const blockedIndex =
+      this.dealerFightManager
+        .getBlockedCombinationSelector();
+
+    this.view.controls
+      .setBlockedCombinationSelector(
+        blockedIndex,
+      );
+  }
+
   private updateCombinationStatus(): void {
     const combination = this.controller.getCurrentCombo();
 
@@ -1879,6 +1890,7 @@ export class GameScene extends BaseScene {
     this.view.gameUI.setDisabled(false);
     this.updateBetControlRestrictions();
     this.updateCombinationStatus();
+    this.updateCombinationSelectorBlock();
   }
 
   private async handleNegativePayoutWin(

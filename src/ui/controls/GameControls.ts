@@ -129,6 +129,14 @@ export class GameControls extends Container {
     this.tossButton.setDisabled(value);
   }
 
+  setBlockedCombinationSelector(
+    index: 0 | 1 | 2 | undefined,
+  ): void {
+    this.combinationSelector.setBlockedSelector(
+      index,
+    );
+  }
+
   startTossAnimation() {
     this.tossButton.startAnimation();
   }

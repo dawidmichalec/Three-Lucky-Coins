@@ -78,6 +78,18 @@ export class CombinationSelector extends Container {
     }
   }
 
+  setBlockedSelector(
+    blockedIndex: 0 | 1 | 2 | undefined,
+  ): void {
+    this.selectors.forEach(
+      (selector, index) => {
+        selector.setDisabled(
+          index === blockedIndex,
+        );
+      },
+    );
+  }
+
   setCombination(
     combination: CoinCombination,
   ): void {

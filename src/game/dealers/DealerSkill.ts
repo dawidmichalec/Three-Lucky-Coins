@@ -89,7 +89,9 @@ export enum DealerSkillId {
 
   FIXED_COMBINATION_LOCK = "fixed_combination_lock",
 
-  RANDOM_COMBINATION_BLOCK = "random_combination_block"
+  RANDOM_COMBINATION_BLOCK = "random_combination_block",
+
+  COMBINATION_SELECTOR_BLOCK = "combination_selector_block"
 
   // Kolejne skille w przyszłości...
 }
