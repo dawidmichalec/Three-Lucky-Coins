@@ -87,7 +87,9 @@ export enum DealerSkillId {
 
   HARD_MULTIPLIER_RESET = "hard_multiplier_reset",
 
-  FIXED_COMBINATION_LOCK = "fixed_combination_lock"
+  FIXED_COMBINATION_LOCK = "fixed_combination_lock",
+
+  RANDOM_COMBINATION_BLOCK = "random_combination_block"
 
   // Kolejne skille w przyszłości...
 }

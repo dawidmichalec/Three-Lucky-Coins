@@ -1512,6 +1512,8 @@ export class GameScene extends BaseScene {
 
     this.updateIvyRule();
 
+    this.updateCombinationStatus();
+
     if (
       this.currentDealer.objectiveType ===
       ObjectiveType.SURVIVE_ROUNDS

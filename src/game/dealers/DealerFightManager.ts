@@ -87,6 +87,7 @@ export class DealerFightManager {
   private hardMultiplierResetConsecutiveLosses = 0;
 
   private fixedCombinationLock?: string;
+  private randomBlockedCombination?: string;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -167,6 +168,8 @@ export class DealerFightManager {
 
     this.fixedCombinationLock = undefined;
 
+    this.randomBlockedCombination = undefined;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -211,6 +214,17 @@ export class DealerFightManager {
 
     if (hasFixedCombinationLock) {
       this.rollFixedCombinationLock();
+    }
+
+    const hasRandomCombinationBlock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.RANDOM_COMBINATION_BLOCK,
+      );
+
+    if (hasRandomCombinationBlock) {
+      this.rollRandomBlockedCombination();
     }
 
     switch (dealer.objectiveType) {
@@ -273,6 +287,27 @@ export class DealerFightManager {
     }
 
     return this.fixedCombinationLock.split("-");
+  }
+
+  private rollRandomBlockedCombination(): void {
+    const sides = ["H", "T"];
+
+    let combinationKey: string;
+
+    do {
+      const combination = [
+        sides[Math.floor(Math.random() * sides.length)],
+        sides[Math.floor(Math.random() * sides.length)],
+        sides[Math.floor(Math.random() * sides.length)],
+      ];
+
+      combinationKey = combination.join("-");
+    } while (
+      combinationKey ===
+      this.randomBlockedCombination
+    );
+
+    this.randomBlockedCombination =combinationKey;
   }
 
   private rollFixedCombinationLock(): void {
@@ -600,6 +635,23 @@ export class DealerFightManager {
       );
     }
 
+    const hasRandomCombinationBlock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.RANDOM_COMBINATION_BLOCK,
+      );
+
+    if (
+      hasRandomCombinationBlock &&
+      this.randomBlockedCombination
+    ) {
+      return (
+        combination.join("-") ===
+        this.randomBlockedCombination
+      );
+    }
+
     return false;
   }
 
@@ -826,6 +878,17 @@ export class DealerFightManager {
         0
     ) {
       this.rollIvyCombinationRule();
+    }
+
+    const hasRandomCombinationBlock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.RANDOM_COMBINATION_BLOCK,
+      );
+
+    if (hasRandomCombinationBlock) {
+      this.rollRandomBlockedCombination();
     }
   }
 
