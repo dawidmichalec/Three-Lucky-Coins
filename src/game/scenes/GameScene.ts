@@ -48,6 +48,7 @@ import { getDealerById } from "../dealers/DealerRegistry";
 import { AudioManager } from "../../core/AudioManager";
 import { SoundId } from "../../audio/SoundId";
 import { FORCED_RANDOM_TOSS_PROFILE } from "../probability/DealerOddsProfiles";
+import { CoinOdds, DealerOddsProfile, OddsTable } from "../probability/OddsTypes";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -88,6 +89,11 @@ export class GameScene extends BaseScene {
   private audioManager = AudioManager.getInstance();
   private pendingHabitBreakerTriggered = false;
   private decayRoundStartMultiplier?: number;
+  private unstableProbabilityIndex?:0 | 1 | 2;
+  private unstableProbabilityOdds?: [CoinOdds,CoinOdds,];
+  private unstableProbabilityState = 0;
+  private unstableProbabilityElapsed = 0;
+  private static readonly UNSTABLE_PROBABILITY_INTERVAL = 700;
   
 
   constructor(
@@ -320,6 +326,128 @@ export class GameScene extends BaseScene {
     this.lockControls();
   }
 
+  private getCoinOdds(
+    odds: OddsTable,
+    index: 0 | 1 | 2,
+  ): CoinOdds {
+    switch (index) {
+      case 0:
+        return odds.coin1;
+
+      case 1:
+        return odds.coin2;
+
+      case 2:
+        return odds.coin3;
+    }
+  }
+
+  private startUnstableProbabilityDisplay(
+    index: 0 | 1 | 2,
+    profile: DealerOddsProfile,
+    odds: OddsTable,
+  ): void {
+    const originalOdds =
+      this.getCoinOdds(
+        odds,
+        index,
+      );
+
+    const originalHeadsDominant =
+      originalOdds.heads >=
+      originalOdds.tails;
+
+    let alternativeOdds: CoinOdds;
+
+    do {
+      alternativeOdds =
+        this.oddsManager.generateCoinOdds(
+          profile,
+        );
+    } while (
+      (alternativeOdds.heads >=
+        alternativeOdds.tails) ===
+      originalHeadsDominant
+    );
+
+    this.unstableProbabilityIndex =
+      index;
+
+    this.unstableProbabilityOdds = [
+      originalOdds,
+      alternativeOdds,
+    ];
+
+    this.unstableProbabilityState = 0;
+
+    this.unstableProbabilityElapsed = 0;
+
+    this.oddsManager.setCoinOdds(
+      index,
+      originalOdds,
+    );
+
+    this.view.gameUI.updateProbability(
+      this.oddsManager.getOdds(),
+    );
+  }
+
+  private stopUnstableProbabilityDisplay(): void {
+    this.unstableProbabilityIndex =
+      undefined;
+
+    this.unstableProbabilityOdds =
+      undefined;
+
+    this.unstableProbabilityState = 0;
+
+    this.unstableProbabilityElapsed = 0;
+  }
+
+  private updateUnstableProbabilityDisplay(
+    deltaMS: number,
+  ): void {
+    if (
+      this.unstableProbabilityIndex ===
+        undefined ||
+      !this.unstableProbabilityOdds ||
+      this.roundState !== "ready"
+    ) {
+      return;
+    }
+
+    this.unstableProbabilityElapsed +=
+      deltaMS;
+
+    if (
+      this.unstableProbabilityElapsed <
+      GameScene.UNSTABLE_PROBABILITY_INTERVAL
+    ) {
+      return;
+    }
+
+    this.unstableProbabilityElapsed = 0;
+
+    this.unstableProbabilityState =
+      this.unstableProbabilityState === 0
+        ? 1
+        : 0;
+
+    const currentOdds =
+      this.unstableProbabilityOdds[
+        this.unstableProbabilityState
+      ];
+
+    this.oddsManager.setCoinOdds(
+      this.unstableProbabilityIndex,
+      currentOdds,
+    );
+
+    this.view.gameUI.updateProbability(
+      this.oddsManager.getOdds(),
+    );
+  }
+
   private applyDealerSettings(dealer: DealerData) {
     this.goldenCoinManager.configure(dealer.goldenCoinSettings);
 
@@ -333,11 +461,33 @@ export class GameScene extends BaseScene {
         ? FORCED_RANDOM_TOSS_PROFILE
         : this.currentDealer.oddsProfile;
 
-    const odds = this.oddsManager.rollOdds(profile,);
+    const odds =
+      this.oddsManager.rollOdds(profile);
 
-    const brokenProbabilityDisplayIndex = this.dealerFightManager.getBrokenProbabilityDisplayIndex();
+    const unstableIndex =
+      this.dealerFightManager
+        .prepareUnstableProbabilityDisplayRound();
 
-    this.view.gameUI.updateProbability(odds,brokenProbabilityDisplayIndex,);
+    this.stopUnstableProbabilityDisplay();
+
+    const brokenProbabilityDisplayIndex =
+      this.dealerFightManager
+        .getBrokenProbabilityDisplayIndex();
+
+    if (unstableIndex !== undefined) {
+      this.startUnstableProbabilityDisplay(
+        unstableIndex,
+        profile,
+        odds,
+      );
+
+      return;
+    }
+
+    this.view.gameUI.updateProbability(
+      odds,
+      brokenProbabilityDisplayIndex,
+    );
   }
 
   private prepareNextRoundWithPerks(): void {
@@ -1961,9 +2111,15 @@ export class GameScene extends BaseScene {
       if (this.coinRow) {
         this.coinRow.update(delta);
       }
+
+      this.updateUnstableProbabilityDisplay(
+        ticker.deltaMS,
+      );
     };
 
-    this.app.ticker.add(this.updateTicker);
+    this.app.ticker.add(
+      this.updateTicker,
+    );
   }
 
   // IS PLAYER ABLE TO PLAY?

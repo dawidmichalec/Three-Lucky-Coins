@@ -423,3 +423,11 @@ export const TLCM6_2_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.11, 0.13, 0.16, 0.18, 0.22, 0.25, 0.75, 0.78, 0.82, 0.84, 0.87, 0.89],
 };
+
+// TLCM-6_1
+
+export const TLCM6_1_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.11, 0.13, 0.15, 0.18, 0.21, 0.25, 0.75, 0.79, 0.82, 0.85, 0.87, 0.89],
+};

@@ -11,7 +11,7 @@ export class OddsGenerator {
     };
   }
 
-  private static generateCoinOdds(profile: DealerOddsProfile): CoinOdds {
+  static generateCoinOdds(profile: DealerOddsProfile): CoinOdds {
     const probabilities = profile.headsProbabilities;
 
     if (probabilities.length === 0) {

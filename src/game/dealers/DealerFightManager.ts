@@ -92,6 +92,13 @@ export class DealerFightManager {
   private blockedCombinationSelector?: 0 | 1 | 2;
   private brokenProbabilityDisplayIndex?:0 | 1 | 2;
 
+  private unstableProbabilityDisplayIndex?:0 | 1 | 2;
+
+  private unstableProbabilityDisplayRoundsRemaining = 0;
+
+  private static readonly UNSTABLE_PROBABILITY_DISPLAY_MIN_DELAY = 2;
+  private static readonly UNSTABLE_PROBABILITY_DISPLAY_MAX_DELAY = 5;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -177,6 +184,10 @@ export class DealerFightManager {
 
     this.brokenProbabilityDisplayIndex = undefined;
 
+    this.unstableProbabilityDisplayIndex = undefined;
+
+    this.unstableProbabilityDisplayRoundsRemaining = 0;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -256,6 +267,18 @@ export class DealerFightManager {
       this.rollBrokenProbabilityDisplay();
     }
 
+    const hasUnstableProbabilityDisplay =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY,
+      );
+
+    if (hasUnstableProbabilityDisplay) {
+      this.unstableProbabilityDisplayRoundsRemaining =
+        this.rollUnstableProbabilityDisplayDelay();
+    }
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         this.fightTargetBalance =
@@ -308,6 +331,63 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  prepareUnstableProbabilityDisplayRound():
+    0 | 1 | 2 | undefined {
+    const dealer = this.getCurrentDealer();
+
+    const hasSkill = dealer.skills.some(
+      (skill) =>
+        skill.id ===
+        DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY,
+    );
+
+    if (!hasSkill) {
+      this.unstableProbabilityDisplayIndex =
+        undefined;
+
+      return undefined;
+    }
+
+    this.unstableProbabilityDisplayRoundsRemaining--;
+
+    if (
+      this.unstableProbabilityDisplayRoundsRemaining >
+      0
+    ) {
+      this.unstableProbabilityDisplayIndex =
+        undefined;
+
+      return undefined;
+    }
+
+    this.unstableProbabilityDisplayIndex =
+      Math.floor(Math.random() * 3) as
+        | 0
+        | 1
+        | 2;
+
+    this.unstableProbabilityDisplayRoundsRemaining =
+      this.rollUnstableProbabilityDisplayDelay();
+
+    return this.unstableProbabilityDisplayIndex;
+  }
+
+  private rollUnstableProbabilityDisplayDelay(): number {
+    const min =
+      DealerFightManager
+        .UNSTABLE_PROBABILITY_DISPLAY_MIN_DELAY;
+
+    const max =
+      DealerFightManager
+        .UNSTABLE_PROBABILITY_DISPLAY_MAX_DELAY;
+
+    return (
+      Math.floor(
+        Math.random() * (max - min + 1),
+      ) + min
+    );
   }
 
   getBrokenProbabilityDisplayIndex():
