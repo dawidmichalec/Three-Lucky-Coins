@@ -103,6 +103,8 @@ export default {
   tlcm4DeductionControllerDescription: "TLCM-4 Deduction Controller",
   tlcm8MultiplierProcessor: "Multiplier Processor",
   tlcm8MultiplierProcessorDescription: "TLCM-8 Multiplier Processor",
+  tlcm7CombinationSelector: "Combination Selector",
+  tlcm7CombinationSelectorDescription: "TLCM-7 Combination Selector",
 
   // PLAYER STATS LABELS
 
@@ -488,6 +490,15 @@ export default {
 
   hardMultiplierResetSkillName: "Hard Multiplier Reset",
   hardMultiplierResetSkillDescription: "The first loss resets the multiplier to its base value. Each consecutive loss after that decreases it by 1. The multiplier can drop below 0.",
+
+  randomCombinationBlockSkillName: "Random Combination Block",
+  randomCombinationBlockSkillDescription: "Blocks random combination every round.",
+
+  fixedCombinationLockSkillName: "Fixed Combination Lock",
+  fixedCombinationLockSkillDescription: "Locks the player to one random combination for the entire fight.",
+
+  combinationSelectorBlockSkillName: "Combination Selector Block",
+  combinationSelectorBlockSkillDescription: "Blocks one random coin selectors every round.",
 
   // PERKS
 

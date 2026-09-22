@@ -102,6 +102,8 @@ export default {
   tlcm4DeductionControllerDescription: "Kontroler potrąceń TLCM-4",
   tlcm8MultiplierProcessor: "Procesor mnożnika",
   tlcm8MultiplierProcessorDescription: "Procesor mnożnika TLCM-8",
+  tlcm7CombinationSelector: "Selektor kombinacji",
+  tlcm7CombinationSelectorDescription: "Selektor kombinacji TLCM-7",
 
 
 
@@ -479,6 +481,15 @@ export default {
 
   hardMultiplierResetSkillName: "Twardy reset mnożnika",
   hardMultiplierResetSkillDescription: "Pierwsza przegrana resetuje mnożnik do jego wartości bazowej. Każda kolejna przegrana z rzędu zmniejsza go o 1. Mnożnik może spaść poniżej 0.",
+
+  randomCombinationBlockSkillName: "Losowa blokada kombinacji",
+  randomCombinationBlockSkillDescription: "Blokuje jedną losową kombinację w każdej rundzie.",
+
+  fixedCombinationLockSkillName: "Stała blokada kombinacji",
+  fixedCombinationLockSkillDescription: "Ogranicza gracza do jednej losowej kombinacji przez całą walkę.",
+
+  combinationSelectorBlockSkillName: "Blokada selektora kombinacji",
+  combinationSelectorBlockSkillDescription: "Blokuje jeden losowy selektor monety w każdej rundzie.",
 
   // PERKS
 

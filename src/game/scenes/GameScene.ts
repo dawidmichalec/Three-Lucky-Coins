@@ -356,6 +356,25 @@ export class GameScene extends BaseScene {
   private startDealerFight() {
     const fight = this.dealerFightManager.startFight(this.player.balance);
 
+    const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
+
+    if (fixedCombination) {
+      this.controller.setCombinationSide(
+        0,
+        fixedCombination[0] as CoinSide,
+      );
+
+      this.controller.setCombinationSide(
+        1,
+        fixedCombination[1] as CoinSide,
+      );
+
+      this.controller.setCombinationSide(
+        2,
+        fixedCombination[2] as CoinSide,
+      );
+    }
+
     this.betRestrictionManager.applyBetSlotMalfunction();
 
     this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);

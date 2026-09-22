@@ -86,6 +86,8 @@ export class DealerFightManager {
 
   private hardMultiplierResetConsecutiveLosses = 0;
 
+  private fixedCombinationLock?: string;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -163,6 +165,8 @@ export class DealerFightManager {
 
     this.hardMultiplierResetConsecutiveLosses = 0;
 
+    this.fixedCombinationLock = undefined;
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -196,6 +200,17 @@ export class DealerFightManager {
 
     if (hasMultiplierSystemMalfunction) {
       this.startMultiplierSystemNormalPhase();
+    }
+
+    const hasFixedCombinationLock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.FIXED_COMBINATION_LOCK,
+      );
+
+    if (hasFixedCombinationLock) {
+      this.rollFixedCombinationLock();
     }
 
     switch (dealer.objectiveType) {
@@ -250,6 +265,27 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  getFixedCombinationLock(): string[] | undefined {
+    if (!this.fixedCombinationLock) {
+      return undefined;
+    }
+
+    return this.fixedCombinationLock.split("-");
+  }
+
+  private rollFixedCombinationLock(): void {
+    const sides = ["H", "T"];
+
+    const combination = [
+      sides[Math.floor(Math.random() * sides.length)],
+      sides[Math.floor(Math.random() * sides.length)],
+      sides[Math.floor(Math.random() * sides.length)],
+    ];
+
+    this.fixedCombinationLock =
+      combination.join("-");
   }
 
   recordHardMultiplierResetWin(): void {
@@ -542,6 +578,26 @@ export class DealerFightManager {
         case IvyCombinationRule.NO_TAILS_MAJORITY:
           return tailsCount >= 2;
       }
+    }
+
+    const hasFixedCombinationLock =
+      dealer.skills.some(
+        (skill) =>
+          skill.id ===
+          DealerSkillId.FIXED_COMBINATION_LOCK,
+      );
+
+    if (
+      hasFixedCombinationLock &&
+      this.fixedCombinationLock
+    ) {
+      const combinationKey =
+        combination.join("-");
+
+      return (
+        combinationKey !==
+        this.fixedCombinationLock
+      );
     }
 
     return false;

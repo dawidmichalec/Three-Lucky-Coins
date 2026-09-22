@@ -85,7 +85,9 @@ export enum DealerSkillId {
 
   MULTIPLIER_SYSTEM_MALFUNCTION = "multiplier_system_malfunction",
 
-  HARD_MULTIPLIER_RESET = "hard_multiplier_reset"
+  HARD_MULTIPLIER_RESET = "hard_multiplier_reset",
+
+  FIXED_COMBINATION_LOCK = "fixed_combination_lock"
 
   // Kolejne skille w przyszłości...
 }
