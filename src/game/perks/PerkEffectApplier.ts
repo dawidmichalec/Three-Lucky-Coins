@@ -12,6 +12,7 @@ import { LuckyHandEffect, LuckyHandResult, } from "./effects/LuckyHandEffect";
 import { DoubleDownEffect } from "./effects/DoubleDownEffect";
 import { PiggyBankEffect, PiggyBankResult, } from "./effects/PiggyBankEffect";
 import { CasinoBonusEffect } from "./effects/CasinoBonusEffect";
+import { DecisivenessEffect } from "./effects/DecisivenessEffect";
 
 
 export class PerkEffectApplier {
@@ -23,6 +24,7 @@ export class PerkEffectApplier {
   private readonly doubleDownEffect: DoubleDownEffect;
   private readonly piggyBankEffect: PiggyBankEffect;
   private readonly casinoBonusEffect: CasinoBonusEffect;
+  private readonly decisivenessEffect: DecisivenessEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -59,6 +61,10 @@ export class PerkEffectApplier {
     );
 
     this.casinoBonusEffect = new CasinoBonusEffect(
+      this.runPerkManager,
+    );
+
+    this.decisivenessEffect = new DecisivenessEffect(
       this.runPerkManager,
     );
 
@@ -212,5 +218,9 @@ export class PerkEffectApplier {
       balance,
       minimumBet,
     );
+  }
+
+  preventsCombinationBlocking(): boolean {
+    return this.decisivenessEffect.preventsCombinationBlocking();
   }
 }

@@ -216,4 +216,27 @@ export class PerkGameplayController {
 
     this.gameUI.setFreeBetIndicator(isFree);
   }
+
+  isCombinationBlocked(
+    dealerBlocked: boolean,
+  ): boolean {
+    if (
+      this.perkEffectApplier
+        .preventsCombinationBlocking()
+    ) {
+      return false;
+    }
+
+    return dealerBlocked;
+  }
+
+  shouldApplyFixedCombinationLock(): boolean {
+    return !this.perkEffectApplier
+      .preventsCombinationBlocking();
+  }
+
+  shouldShowCombinationBlockingRule(): boolean {
+    return !this.perkEffectApplier
+      .preventsCombinationBlocking();
+  }
 }

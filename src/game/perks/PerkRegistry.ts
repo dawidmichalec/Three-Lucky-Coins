@@ -9,6 +9,7 @@ import { GAMBLER_DATA } from "./data/Gambler";
 import { INSURANCE_DATA } from "./data/Insurance";
 import { DOUBLE_DOWN_DATA } from "./data/DoubleDown";
 import { LUCKY_HAND_DATA } from "./data/LuckyHand";
+import { DECISIVENESS_DATA } from "./data/Decisiveness";
 
 export const PERKS: readonly PerkData[] = [
   MULTIPLIER_BOOSTER_DATA,
@@ -20,6 +21,7 @@ export const PERKS: readonly PerkData[] = [
   INSURANCE_DATA,
   DOUBLE_DOWN_DATA,
   LUCKY_HAND_DATA,
+  DECISIVENESS_DATA
 ];
 
 export function getPerkById(perkId: string): PerkData | undefined {

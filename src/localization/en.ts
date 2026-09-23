@@ -107,14 +107,14 @@ export default {
   tlcm7CombinationSelectorDescription: "TLCM-7 Combination Selector",
   tlcm6ProbabilityDisplayModule: "Probability Display Module",
   tlcm6ProbabilityDisplayModuleDescription: "TLCM-6 Probability Display Module",
-  debraSignatureTokenName: "Volleyball",
-  debraSignatureTokenDescription: "Debra's volleyball. She regularly plays with a local amateur team after work.",
-  colinSignatureTokenName: "Headphones",
-  colinSignatureTokenDescription: "Colin's favourite headphones. He rarely goes anywhere without them when he's off the clock.",
-  frankSignatureTokenName: "Poker Chip",
-  frankSignatureTokenDescription: "A worn poker chip from Frank's favourite casino. He refuses to say how much money he lost there.",
-  kevinSignatureTokenName: "Motorcycle Helmet",
-  kevinSignatureTokenDescription: "Kevin's motorcycle helmet. His motorcycle is one of the few things he spends more money on than he probably should.",
+  debraVolleyball: "Volleyball",
+  debraVolleyballDescription: "Debra's volleyball. She regularly plays with a local amateur team after work.",
+  colinHeadphones: "Headphones",
+  colinHeadphonesDescription: "Colin's favourite headphones. He rarely goes anywhere without them when he's off the clock.",
+  frankPokerChip: "Poker Chip",
+  frankPokerChipDescription: "A worn poker chip from Frank's favourite casino. He refuses to say how much money he lost there.",
+  kevinMotorcycleHelmet: "Motorcycle Helmet",
+  kevinMotorcycleHelmetDescription: "Kevin's motorcycle helmet. His motorcycle is one of the few things he spends more money on than he probably should.",
 
   // PLAYER STATS LABELS
 
@@ -249,7 +249,7 @@ export default {
   johnnyDescription: 
     "Johnny took a temporary casino job to fund a surfing camp.\n\nAfter the camp, he realized he missed the casino and came back.\n\nWhat started as a quick way to make money unexpectedly became a career he enjoys.",
   johnnySaying:"Just go with the flow. Worked for me.",
-  melanieDescription: "Melanie works at a casino but doesn't like this. ",
+  melanieDescription: "Melanie doesn't particularly like working at the casino, but finding a job at her age hasn't been easy.\n\nFor now, the casino is the only place that was willing to give her a chance, so she puts up with it and does her job without complaining. ",
   melanieSaying: "Your luck ends here",
   jacobSaying: "Let's see how long you last.",
   jacobDescription: "Jacob has watched plenty of confident players take a seat at his table. Most of them didn't stay confident for long.\n\nAgainst Jacob, winning isn't everything. Sometimes, lasting another round is enough.",
@@ -665,6 +665,11 @@ export default {
 
   luckyHandDescription: "Every fifth winning toss pays double.",
   payoutDoubled: "PAYOUT DOUBLED",
+
+  // DECISIVENESS
+
+  decisivenessName: "DECISIVENESS",
+  decisivenessDescription: "Ensures that no combination is blocked until the end of run.",
 
   // PERKS GAME UI
 

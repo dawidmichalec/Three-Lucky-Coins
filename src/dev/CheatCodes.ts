@@ -77,4 +77,8 @@ export enum CheatCode {
   // PIGGY BANK
 
   FORCE_PIGGY_BANK = "perk_piggy_bank",
+
+  // DECISIVENESS
+
+  FORCE_DECISIVENESS = "perk_decisiveness"
 }

@@ -655,6 +655,11 @@ export default {
   luckyHandDescription: "Co piąty zwycięski rzut podwaja wygraną.",
   payoutDoubled: "WYGRANA PODWOJONA",
 
+  // DECISIVENESS
+
+  decisivenessName: "ZDECYDOWANIE",
+  decisivenessDescription: "Zapewnia, że ​​żadna kombinacja nie zostanie zablokowana do końca podejścia.",
+
   // PERKS GAME UI
 
   perks: "Perki",

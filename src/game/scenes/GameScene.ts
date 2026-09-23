@@ -512,7 +512,11 @@ export class GameScene extends BaseScene {
 
     const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
 
-    if (fixedCombination) {
+    if (
+      fixedCombination &&
+      this.perkGameplayController
+        .shouldApplyFixedCombinationLock()
+    ) {
       this.controller.setCombinationSide(
         0,
         fixedCombination[0] as CoinSide,
@@ -528,7 +532,6 @@ export class GameScene extends BaseScene {
         fixedCombination[2] as CoinSide,
       );
     }
-
     this.betRestrictionManager.applyBetSlotMalfunction();
 
     this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
@@ -791,6 +794,15 @@ export class GameScene extends BaseScene {
   }
 
   private updateIvyRule(): void {
+    if (
+      !this.perkGameplayController
+        .shouldShowCombinationBlockingRule()
+    ) {
+      this.view.gameUI.hideIvyRules();
+
+      return;
+    }
+
     const rule =
       this.dealerFightManager
         .getIvyCombinationRule();
@@ -823,7 +835,11 @@ export class GameScene extends BaseScene {
     const combination = this.controller.getCurrentCombo();
 
     const blocked =
-      this.dealerFightManager.isCombinationBlocked(combination,);
+      this.perkGameplayController.isCombinationBlocked(
+        this.dealerFightManager.isCombinationBlocked(
+          combination,
+        ),
+      );
 
     if (blocked) {
       this.view.gameUI.combinationStatusLabel.setKey("combinationBlocked");
@@ -877,9 +893,14 @@ export class GameScene extends BaseScene {
 
     const selected = this.controller.getCurrentCombo();
 
-    if (
-      this.dealerFightManager.isCombinationBlocked(selected)
-    ) {
+    const combinationBlocked =
+      this.perkGameplayController.isCombinationBlocked(
+        this.dealerFightManager.isCombinationBlocked(
+          selected,
+        ),
+      );
+
+    if (combinationBlocked) {
       return;
     }
 
