@@ -80,5 +80,9 @@ export enum CheatCode {
 
   // DECISIVENESS
 
-  FORCE_DECISIVENESS = "perk_decisiveness"
+  FORCE_DECISIVENESS = "perk_decisiveness",
+
+  // SAFETY NET
+
+  FORCE_SAFETY_NET = "perk_safety_net"
 }

@@ -241,6 +241,12 @@ export class GameCheatController {
       this.forcePerkReward("decisiveness");
     });
 
+    // SAFETY NET
+
+    this.cheatManager.register(CheatCode.FORCE_SAFETY_NET, () => {
+      this.forcePerkReward("safety_net");
+    });
+
   }
 
   consumeForcedResult(): CoinSide[] | undefined {

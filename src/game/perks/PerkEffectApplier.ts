@@ -13,6 +13,7 @@ import { DoubleDownEffect } from "./effects/DoubleDownEffect";
 import { PiggyBankEffect, PiggyBankResult, } from "./effects/PiggyBankEffect";
 import { CasinoBonusEffect } from "./effects/CasinoBonusEffect";
 import { DecisivenessEffect } from "./effects/DecisivenessEffect";
+import { SafetyNetEffect } from "./effects/SafetyNetEffect";
 
 
 export class PerkEffectApplier {
@@ -25,6 +26,7 @@ export class PerkEffectApplier {
   private readonly piggyBankEffect: PiggyBankEffect;
   private readonly casinoBonusEffect: CasinoBonusEffect;
   private readonly decisivenessEffect: DecisivenessEffect;
+  private readonly safetyNetEffect: SafetyNetEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -65,6 +67,10 @@ export class PerkEffectApplier {
     );
 
     this.decisivenessEffect = new DecisivenessEffect(
+      this.runPerkManager,
+    );
+
+    this.safetyNetEffect = new SafetyNetEffect(
       this.runPerkManager,
     );
 
@@ -222,5 +228,37 @@ export class PerkEffectApplier {
 
   preventsCombinationBlocking(): boolean {
     return this.decisivenessEffect.preventsCombinationBlocking();
+  }
+
+  recordSafetyNetRoundResult(
+    win: boolean,
+  ): void {
+    this.safetyNetEffect.recordRoundResult(
+      win,
+    );
+  }
+
+  isSafetyNetReady(): boolean {
+    return this.safetyNetEffect.isReady();
+  }
+
+  consumeSafetyNet(): void {
+    this.safetyNetEffect.consume();
+  }
+
+  prepareSafetyNetResult(result: CoinSide[]): void {
+    this.safetyNetEffect.prepareResult(result);
+  }
+
+  consumePreparedSafetyNetResult(): CoinSide[] | undefined {
+    return this.safetyNetEffect.consumePreparedResult();
+  }
+
+  getPreparedSafetyNetResult(): CoinSide[] | undefined {
+    return this.safetyNetEffect.getPreparedResult();
+  }
+
+  resetSafetyNet(): void {
+    this.safetyNetEffect.reset();
   }
 }

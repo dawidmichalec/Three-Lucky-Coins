@@ -671,6 +671,11 @@ export default {
   decisivenessName: "DECISIVENESS",
   decisivenessDescription: "Ensures that no combination is blocked until the end of run.",
 
+  // SAFETY NET
+
+  safetyNetName: "SAFETY NET",
+  safetyNetDescription: "After three consecutive losses reveals the next combination.",
+
   // PERKS GAME UI
 
   perks: "Perks",

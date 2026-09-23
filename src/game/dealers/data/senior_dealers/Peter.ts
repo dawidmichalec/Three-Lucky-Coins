@@ -48,7 +48,7 @@ export const PETER_DATA: DealerData = {
       id: DealerSkillId.BET_VALUE_MANIPULATION,
       name: "betValueManipulationSkillName",
       description: "betValueManipulationSkillDescription",
-      icon: "/assets/main/icons/dealer_skill_icons/senior_dealers/paulie/forced_random_toss.png",
+      icon: "/assets/main/icons/dealer_skill_icons/senior_dealers/peter/bet_value_manipulation.png",
     },
   ],
 

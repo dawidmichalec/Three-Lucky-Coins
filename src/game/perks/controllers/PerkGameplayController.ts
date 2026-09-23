@@ -25,6 +25,22 @@ export class PerkGameplayController {
   ) {}
 
   prepareNextRound(): void {
+    const safetyNetResult = this.perkEffectApplier.getPreparedSafetyNetResult();
+
+    if (safetyNetResult) {
+      const revealedOdds: OddsTable = {
+        coin1: this.createRevealedCoinOdds(safetyNetResult[0]),
+        coin2: this.createRevealedCoinOdds(safetyNetResult[1]),
+        coin3: this.createRevealedCoinOdds(safetyNetResult[2]),
+      };
+
+      this.gameUI.updateProbability(revealedOdds);
+
+      console.log("SAFETY NET RESULT:", safetyNetResult.join("-"));
+
+      return;
+    }
+
     if (!this.perkEffectApplier.isCoinSenseAvailable()) {
       return;
     }
@@ -139,6 +155,11 @@ export class PerkGameplayController {
       this.doubleDownActivatedPending = true;
     }
 
+    this.perkEffectApplier
+      .recordSafetyNetRoundResult(
+        won,
+      );
+
     return {
       luckyHandTriggered,
     };
@@ -238,5 +259,40 @@ export class PerkGameplayController {
   shouldShowCombinationBlockingRule(): boolean {
     return !this.perkEffectApplier
       .preventsCombinationBlocking();
+  }
+
+  recordSafetyNetRoundResult(
+    win: boolean,
+  ): void {
+    this.perkEffectApplier
+      .recordSafetyNetRoundResult(
+        win,
+      );
+  }
+
+  isSafetyNetReady(): boolean {
+    return this.perkEffectApplier
+      .isSafetyNetReady();
+  }
+
+  consumeSafetyNet(): void {
+    this.perkEffectApplier
+      .consumeSafetyNet();
+  }
+
+  prepareSafetyNetResult(result: CoinSide[]): void {
+    this.perkEffectApplier.prepareSafetyNetResult(result);
+  }
+
+  consumePreparedSafetyNetResult(): CoinSide[] | undefined {
+    return this.perkEffectApplier.consumePreparedSafetyNetResult();
+  }
+
+  getPreparedSafetyNetResult(): CoinSide[] | undefined {
+    return this.perkEffectApplier.getPreparedSafetyNetResult();
+  }
+
+  resetSafetyNet(): void {
+    this.perkEffectApplier.resetSafetyNet();
   }
 }

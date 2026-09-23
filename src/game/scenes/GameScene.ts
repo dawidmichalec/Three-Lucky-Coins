@@ -461,20 +461,22 @@ export class GameScene extends BaseScene {
         ? FORCED_RANDOM_TOSS_PROFILE
         : this.currentDealer.oddsProfile;
 
-    const odds =
-      this.oddsManager.rollOdds(profile);
+    const odds = this.oddsManager.rollOdds(profile);
 
-    const unstableIndex =
-      this.dealerFightManager
-        .prepareUnstableProbabilityDisplayRound();
+    const safetyNetReady = this.perkGameplayController.isSafetyNetReady();
+
+    if (safetyNetReady) {
+      const safetyNetResult = this.oddsManager.rollResult();
+      this.perkGameplayController.prepareSafetyNetResult(safetyNetResult);
+    }
+
+    const unstableIndex = this.dealerFightManager.prepareUnstableProbabilityDisplayRound();
 
     this.stopUnstableProbabilityDisplay();
 
-    const brokenProbabilityDisplayIndex =
-      this.dealerFightManager
-        .getBrokenProbabilityDisplayIndex();
+    const brokenProbabilityDisplayIndex = this.dealerFightManager.getBrokenProbabilityDisplayIndex();
 
-    if (unstableIndex !== undefined) {
+    if (unstableIndex !== undefined && !safetyNetReady) {
       this.startUnstableProbabilityDisplay(
         unstableIndex,
         profile,
@@ -501,6 +503,8 @@ export class GameScene extends BaseScene {
   }
 
   private startDealerFight() {
+    this.perkGameplayController.resetSafetyNet();
+    
     const fight = this.dealerFightManager.startFight(this.player.balance);
 
     const odds = this.oddsManager.getOdds();
@@ -2043,8 +2047,13 @@ export class GameScene extends BaseScene {
         return forcedResult;
     }
 
-    const coinSenseResult =
-        this.perkEffectApplier.consumePreparedCoinSenseResult();
+    const safetyNetResult = this.perkGameplayController.consumePreparedSafetyNetResult();
+
+    if (safetyNetResult) {
+      return safetyNetResult;
+    }
+
+    const coinSenseResult = this.perkEffectApplier.consumePreparedCoinSenseResult();
 
     if (coinSenseResult) {
         return coinSenseResult;

@@ -660,6 +660,11 @@ export default {
   decisivenessName: "ZDECYDOWANIE",
   decisivenessDescription: "Zapewnia, że ​​żadna kombinacja nie zostanie zablokowana do końca podejścia.",
 
+  // SAFETY NET
+
+  safetyNetName: "MIĘKKIE LĄDOWANIE",
+  safetyNetDescription: "Po trzech przegranych zakładach z rzędu odsłania następną kombinację.",
+
   // PERKS GAME UI
 
   perks: "Perki",
