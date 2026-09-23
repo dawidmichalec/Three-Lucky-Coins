@@ -665,6 +665,16 @@ export default {
   safetyNetName: "MIĘKKIE LĄDOWANIE",
   safetyNetDescription: "Po trzech przegranych zakładach z rzędu odsłania następną kombinację.",
 
+  // UNDERDOG
+
+  underdogName: "UNDERDOG",
+
+  underdogDescriptionCommon: "Zwiększa wygrane o 5%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 15%, gdy spadnie poniżej 25%.",
+  underdogDescriptionUncommon: "Zwiększa wygrane o 7,5%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 17,5%, gdy spadnie poniżej 25%.",
+  underdogDescriptionRare: "Zwiększa wygrane o 10%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 20%, gdy spadnie poniżej 25%.",
+  underdogDescriptionEpic: "Zwiększa wygrane o 12,5%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 22,5%, gdy spadnie poniżej 25%.",
+  underdogDescriptionLegendary: "Zwiększa wygrane o 15%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 25%, gdy spadnie poniżej 25%.",
+  
   // PERKS GAME UI
 
   perks: "Perki",

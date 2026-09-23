@@ -295,4 +295,8 @@ export class PerkGameplayController {
   resetSafetyNet(): void {
     this.perkEffectApplier.resetSafetyNet();
   }
+
+  getUnderdogWinningsBonus(currentBalance: number, startingBalance: number): number {
+    return this.perkEffectApplier.getUnderdogWinningsBonus(currentBalance, startingBalance);
+  }
 }

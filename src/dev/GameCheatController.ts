@@ -247,6 +247,28 @@ export class GameCheatController {
       this.forcePerkReward("safety_net");
     });
 
+    // UNDERDOG
+
+    this.cheatManager.register(CheatCode.FORCE_UNDERDOG_COMMON, () => {
+      this.forcePerkReward("underdog", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_UNDERDOG_UNCOMMON, () => {
+      this.forcePerkReward("underdog", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_UNDERDOG_RARE, () => {
+      this.forcePerkReward("underdog", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_UNDERDOG_EPIC, () => {
+      this.forcePerkReward("underdog", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_UNDERDOG_LEGENDARY, () => {
+      this.forcePerkReward("underdog", PerkRarity.LEGENDARY);
+    });
+
   }
 
   consumeForcedResult(): CoinSide[] | undefined {

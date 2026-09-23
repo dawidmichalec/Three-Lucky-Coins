@@ -676,6 +676,16 @@ export default {
   safetyNetName: "SAFETY NET",
   safetyNetDescription: "After three consecutive losses reveals the next combination.",
 
+  // UNDERDOG
+
+  underdogName: "UNDERDOG",
+
+ underdogDescriptionCommon: "Increases winnings by 5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 15% when it falls below 25%.",
+  underdogDescriptionUncommon: "Increases winnings by 7.5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 17.5% when it falls below 25%.",
+  underdogDescriptionRare: "Increases winnings by 10% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 20% when it falls below 25%.",
+  underdogDescriptionEpic: "Increases winnings by 12.5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 22.5% when it falls below 25%.",
+  underdogDescriptionLegendary: "Increases winnings by 15% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 25% when it falls below 25%.",
+
   // PERKS GAME UI
 
   perks: "Perks",

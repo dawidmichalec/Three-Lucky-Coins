@@ -9,14 +9,12 @@ import { roundMoney } from "../util/MoneyUtils";
 export interface RoundPayoutInput {
 
     winAmount: number;
-
     bet: number;
-
     highestAffordableBet: number;
-
     coinSenseActive: boolean;
-
     luckyHandTriggered: boolean;
+    currentBalance: number;
+    fightStartingBalance: number;
 }
 
 
@@ -33,6 +31,8 @@ export interface RoundPayoutResult {
 
     luckyHandResult:
         LuckyHandResult;
+
+    underdogBonusAmount: number;
 
     finalWinAmount:
         number;
@@ -102,19 +102,27 @@ export class RoundPayoutResolver {
                     input.luckyHandTriggered
                 );
 
+        const underdogBonus = this.perkEffectApplier.getUnderdogWinningsBonus(
+            input.currentBalance,
+            input.fightStartingBalance,
+        );
+
+        const underdogBonusAmount = roundMoney(
+            luckyHandResult.finalWinAmount * underdogBonus
+        );
+
+        const finalWinAmount = roundMoney(
+            luckyHandResult.finalWinAmount + underdogBonusAmount
+        );
+
 
         return {
             coinSenseResult,
-
             riskTakerResult,
-
             gamblerResult,
-
             luckyHandResult,
-
-            finalWinAmount:
-                luckyHandResult
-                    .finalWinAmount
+            underdogBonusAmount,
+            finalWinAmount
         };
     }
 }

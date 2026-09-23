@@ -504,7 +504,7 @@ export class GameScene extends BaseScene {
 
   private startDealerFight() {
     this.perkGameplayController.resetSafetyNet();
-    
+
     const fight = this.dealerFightManager.startFight(this.player.balance);
 
     const odds = this.oddsManager.getOdds();
@@ -1285,6 +1285,8 @@ export class GameScene extends BaseScene {
           coinSenseActive,
           luckyHandTriggered:
             perkRoundResult.luckyHandTriggered,
+          currentBalance: this.player.balance,
+          fightStartingBalance: this.dealerFightManager.getFightStartingBalance(),
         });
 
       const {
@@ -1292,6 +1294,7 @@ export class GameScene extends BaseScene {
           riskTakerResult,
           gamblerResult,
           luckyHandResult,
+          underdogBonusAmount,
           finalWinAmount
       } = payoutResult;
 
@@ -1316,6 +1319,13 @@ export class GameScene extends BaseScene {
         gamblerResult,
         luckyHandResult,
       );
+
+      if (underdogBonusAmount > 0) {
+          await this.view.gameUI.animateBonusIntoWon(
+              underdogBonusAmount,
+              finalWinAmount,
+          );
+      }
 
       const mandatoryGambleForMoreTriggered =
         this.dealerFightManager.shouldTriggerMandatoryGambleForMore();

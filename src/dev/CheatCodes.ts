@@ -84,5 +84,13 @@ export enum CheatCode {
 
   // SAFETY NET
 
-  FORCE_SAFETY_NET = "perk_safety_net"
+  FORCE_SAFETY_NET = "perk_safety_net",
+
+  // UNDERDOG
+
+  FORCE_UNDERDOG_COMMON = "perk_underdog_common",
+  FORCE_UNDERDOG_UNCOMMON = "perk_underdog_uncommon",
+  FORCE_UNDERDOG_RARE = "perk_underdog_rare",
+  FORCE_UNDERDOG_EPIC = "perk_underdog_epic",
+  FORCE_UNDERDOG_LEGENDARY = "perk_underdog_legendary"
 }

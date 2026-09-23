@@ -14,6 +14,7 @@ import { PiggyBankEffect, PiggyBankResult, } from "./effects/PiggyBankEffect";
 import { CasinoBonusEffect } from "./effects/CasinoBonusEffect";
 import { DecisivenessEffect } from "./effects/DecisivenessEffect";
 import { SafetyNetEffect } from "./effects/SafetyNetEffect";
+import { UnderdogEffect } from "./effects/UnderdogEffect";
 
 
 export class PerkEffectApplier {
@@ -27,6 +28,7 @@ export class PerkEffectApplier {
   private readonly casinoBonusEffect: CasinoBonusEffect;
   private readonly decisivenessEffect: DecisivenessEffect;
   private readonly safetyNetEffect: SafetyNetEffect;
+  private readonly underdogEffect: UnderdogEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -73,6 +75,8 @@ export class PerkEffectApplier {
     this.safetyNetEffect = new SafetyNetEffect(
       this.runPerkManager,
     );
+
+    this.underdogEffect = new UnderdogEffect(this.runPerkManager);
 
   }
 
@@ -260,5 +264,9 @@ export class PerkEffectApplier {
 
   resetSafetyNet(): void {
     this.safetyNetEffect.reset();
+  }
+
+  getUnderdogWinningsBonus(currentBalance: number, startingBalance: number): number {
+    return this.underdogEffect.getWinningsBonus(currentBalance, startingBalance);
   }
 }
