@@ -2,6 +2,8 @@ import { DealerData } from "./DealerData";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
 import { DealerSkillId } from "./DealerSkill";
 import { IvyCombinationRule } from "./rules/IvyCombinationRule";
+import { CoinSide } from "../../ui/Coin";
+import { CoinCombination } from "../data/CoinCombinations";
 
 export interface DealerFightState {
   targetBalance?: number;
@@ -99,6 +101,29 @@ export class DealerFightManager {
   private static readonly UNSTABLE_PROBABILITY_DISPLAY_MIN_DELAY = 2;
   private static readonly UNSTABLE_PROBABILITY_DISPLAY_MAX_DELAY = 5;
 
+  private static readonly PROTO_PERMANENT_MALFUNCTIONS: readonly DealerSkillId[] = [
+    DealerSkillId.NO_SAME_BETS,
+    DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+    DealerSkillId.BALANCE_MODULE_MALFUNCTION,
+  ];
+
+  private static readonly PROTO_ACTIVE_MALFUNCTIONS: readonly DealerSkillId[] = [
+    DealerSkillId.BET_INCREASE_LOCK,
+    DealerSkillId.BET_DECREASE_LOCK,
+    DealerSkillId.BET_SLOT_MALFUNCTION,
+    DealerSkillId.DYNAMIC_BET_LOCK,
+    DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
+    DealerSkillId.PROLONGED_TOSS_ANIMATION,
+    DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY,
+    DealerSkillId.BROKEN_PROBABILITY_DISPLAY,
+    DealerSkillId.RANDOM_COMBINATION_BLOCK,
+    DealerSkillId.FIXED_COMBINATION_LOCK,
+    DealerSkillId.COMBINATION_SELECTOR_BLOCK,
+  ];
+
+  private protoPermanentMalfunction?: DealerSkillId;
+  private protoActiveMalfunction?: DealerSkillId;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -188,6 +213,13 @@ export class DealerFightManager {
 
     this.unstableProbabilityDisplayRoundsRemaining = 0;
 
+    this.protoPermanentMalfunction = undefined;
+    this.protoActiveMalfunction = undefined;
+
+    if (this.isProtoFight()) {
+      this.rollProtoPermanentMalfunction();
+    }
+
     const hasMyWayOrTheHighway =
       dealer.skills.some(
         (skill) =>
@@ -212,12 +244,9 @@ export class DealerFightManager {
         this.rollBetDeductionMalfunctionDelay();
     }
 
-    const hasMultiplierSystemMalfunction =
-      dealer.skills.some(
-        (skill) =>
-          skill.id ===
-          DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
-      );
+    const hasMultiplierSystemMalfunction = this.hasActiveSkill(
+      DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+    );
 
     if (hasMultiplierSystemMalfunction) {
       this.startMultiplierSystemNormalPhase();
@@ -331,6 +360,89 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  private isProtoFight(): boolean {
+    return this.getCurrentDealer().id === "tlcm-proto";
+  }
+
+  private rollProtoPermanentMalfunction(): void {
+    const pool = DealerFightManager.PROTO_PERMANENT_MALFUNCTIONS;
+
+    this.protoPermanentMalfunction = pool[Math.floor(Math.random() * pool.length)];
+
+    console.log("PROTO PERMANENT:", this.protoPermanentMalfunction);
+  }
+
+  private rollProtoActiveMalfunction(): void {
+    const availableMalfunctions = DealerFightManager.PROTO_ACTIVE_MALFUNCTIONS.filter(
+      (malfunction) => malfunction !== this.protoActiveMalfunction,
+    );
+
+    this.protoActiveMalfunction = availableMalfunctions[
+      Math.floor(Math.random() * availableMalfunctions.length)
+    ];
+
+    console.log("PROTO ACTIVE:", this.protoActiveMalfunction);
+  }
+
+  getProtoPermanentMalfunction(): DealerSkillId | undefined {
+    return this.protoPermanentMalfunction;
+  }
+
+  getProtoActiveMalfunction(): DealerSkillId | undefined {
+    return this.protoActiveMalfunction;
+  }
+
+  prepareProtoRound(): void {
+    if (!this.isProtoFight()) {
+      return;
+    }
+
+    this.rollProtoActiveMalfunction();
+
+    if (this.protoActiveMalfunction === DealerSkillId.BROKEN_PROBABILITY_DISPLAY) {
+      this.rollBrokenProbabilityDisplay();
+    } else {
+      this.brokenProbabilityDisplayIndex = undefined;
+    }
+
+    if (this.protoActiveMalfunction === DealerSkillId.RANDOM_COMBINATION_BLOCK) {
+      this.rollRandomBlockedCombination();
+    } else {
+      this.randomBlockedCombination = undefined;
+    }
+
+    if (this.protoActiveMalfunction === DealerSkillId.COMBINATION_SELECTOR_BLOCK) {
+      this.rollBlockedCombinationSelector();
+    } else {
+      this.blockedCombinationSelector = undefined;
+    }
+
+    if (this.protoActiveMalfunction === DealerSkillId.FIXED_COMBINATION_LOCK) {
+      this.rollFixedCombinationLock();
+    } else {
+      this.fixedCombinationLock = undefined;
+    }
+  }
+
+  hasActiveSkill(skillId: DealerSkillId): boolean {
+    const hasDealerSkill = this.getCurrentDealer().skills.some(
+      (skill) => skill.id === skillId,
+    );
+
+    if (hasDealerSkill) {
+      return true;
+    }
+
+    if (!this.isProtoFight()) {
+      return false;
+    }
+
+    return (
+      this.protoPermanentMalfunction === skillId ||
+      this.protoActiveMalfunction === skillId
+    );
   }
 
   prepareUnstableProbabilityDisplayRound():
@@ -455,12 +567,18 @@ export class DealerFightManager {
       ];
   }
 
-  getFixedCombinationLock(): string[] | undefined {
+  getFixedCombinationLock(): CoinCombination | undefined {
     if (!this.fixedCombinationLock) {
       return undefined;
     }
 
-    return this.fixedCombinationLock.split("-");
+    const [first, second, third] = this.fixedCombinationLock.split("-");
+
+    return [
+      first as CoinSide,
+      second as CoinSide,
+      third as CoinSide,
+    ];
   }
 
   private rollRandomBlockedCombination(): void {
@@ -541,12 +659,9 @@ export class DealerFightManager {
     active: boolean;
     justTriggered: boolean;
   } {
-    const dealer = this.getCurrentDealer();
 
-    const hasSkill = dealer.skills.some(
-      (skill) =>
-        skill.id ===
-        DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+    const hasSkill = this.hasActiveSkill(
+      DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
     );
 
     if (!hasSkill) {
@@ -589,6 +704,11 @@ export class DealerFightManager {
 
     this.multiplierSystemMalfunctionRoundsRemaining =
       this.rollMultiplierSystemMalfunctionDelay();
+
+    console.log(
+      "MULTIPLIER MALFUNCTION INITIALIZED:",
+      this.multiplierSystemMalfunctionRoundsRemaining,
+    );
   }
 
   private startMultiplierSystemMalfunctionPhase(): void {
@@ -631,13 +751,17 @@ export class DealerFightManager {
   }
 
   shouldTriggerBetDeductionMalfunction(): boolean {
+    if (
+      this.isProtoFight() &&
+      this.protoActiveMalfunction === DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION
+    ) {
+      return true;
+    }
+
     const dealer = this.getCurrentDealer();
 
     const hasSkill = dealer.skills.some(
-      (skill) =>
-        skill.id ===
-        DealerSkillId
-          .BET_DEDUCTION_SYSTEM_MALFUNCTION,
+      (skill) => skill.id === DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
     );
 
     if (!hasSkill) {
@@ -646,9 +770,7 @@ export class DealerFightManager {
 
     this.betDeductionMalfunctionRoundsRemaining--;
 
-    if (
-      this.betDeductionMalfunctionRoundsRemaining > 0
-    ) {
+    if (this.betDeductionMalfunctionRoundsRemaining > 0) {
       return false;
     }
 
@@ -675,18 +797,7 @@ export class DealerFightManager {
   }
 
   getAdditionalTossAnimationDelay(): number {
-    const dealer = this.getCurrentDealer();
-
-    const hasProlongedTossAnimation =
-      dealer.skills.some(
-        (skill) =>
-          skill.id ===
-          DealerSkillId.PROLONGED_TOSS_ANIMATION,
-      );
-
-    return hasProlongedTossAnimation
-      ? 2000
-      : 0;
+    return this.hasActiveSkill(DealerSkillId.PROLONGED_TOSS_ANIMATION) ? 2000 : 0;
   }
 
   getIvyCombinationRule():
@@ -789,12 +900,9 @@ export class DealerFightManager {
       }
     }
 
-    const hasFixedCombinationLock =
-      dealer.skills.some(
-        (skill) =>
-          skill.id ===
-          DealerSkillId.FIXED_COMBINATION_LOCK,
-      );
+    const hasFixedCombinationLock = this.hasActiveSkill(
+      DealerSkillId.FIXED_COMBINATION_LOCK,
+    );
 
     if (
       hasFixedCombinationLock &&
@@ -809,12 +917,9 @@ export class DealerFightManager {
       );
     }
 
-    const hasRandomCombinationBlock =
-      dealer.skills.some(
-        (skill) =>
-          skill.id ===
-          DealerSkillId.RANDOM_COMBINATION_BLOCK,
-      );
+    const hasRandomCombinationBlock = this.hasActiveSkill(
+      DealerSkillId.RANDOM_COMBINATION_BLOCK,
+    );
 
     if (
       hasRandomCombinationBlock &&
@@ -1326,13 +1431,19 @@ export class DealerFightManager {
     amount: number;
     skillId?: DealerSkillId;
   } {
+    if (this.hasActiveSkill(DealerSkillId.BALANCE_MODULE_MALFUNCTION)) {
+      return {
+        amount: bet * 0.75,
+        skillId: DealerSkillId.BALANCE_MODULE_MALFUNCTION,
+      };
+    }
+
     const dealer = this.getCurrentDealer();
 
     const skill = dealer.skills.find(
       (skill) =>
         skill.id === DealerSkillId.SMALL_HOUSE_CUT ||
-        skill.id === DealerSkillId.HOUSE_CUT ||
-        skill.id === DealerSkillId.BALANCE_MODULE_MALFUNCTION,
+        skill.id === DealerSkillId.HOUSE_CUT,
     );
 
     if (!skill) {
@@ -1350,10 +1461,6 @@ export class DealerFightManager {
 
       case DealerSkillId.HOUSE_CUT:
         cutPercentage = 0.5;
-        break;
-
-      case DealerSkillId.BALANCE_MODULE_MALFUNCTION:
-        cutPercentage = 0.75;
         break;
 
       default:

@@ -49,6 +49,7 @@ import { AudioManager } from "../../core/AudioManager";
 import { SoundId } from "../../audio/SoundId";
 import { FORCED_RANDOM_TOSS_PROFILE } from "../probability/DealerOddsProfiles";
 import { CoinOdds, DealerOddsProfile, OddsTable } from "../probability/OddsTypes";
+import { getMachineFloorSkill } from "../dealers/MachineFloorSkillRegistry";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -89,11 +90,15 @@ export class GameScene extends BaseScene {
   private audioManager = AudioManager.getInstance();
   private pendingHabitBreakerTriggered = false;
   private decayRoundStartMultiplier?: number;
-  private unstableProbabilityIndex?:0 | 1 | 2;
-  private unstableProbabilityOdds?: [CoinOdds,CoinOdds,];
-  private unstableProbabilityState = 0;
-  private unstableProbabilityElapsed = 0;
+  private unstableProbabilityEntries: {
+    index: 0 | 1 | 2;
+    odds: [CoinOdds, CoinOdds];
+    state: number;
+    elapsed: number;
+  }[] = [];
+
   private static readonly UNSTABLE_PROBABILITY_INTERVAL = 700;
+  private currentDealer: DealerData;
   
 
   constructor(
@@ -115,6 +120,8 @@ export class GameScene extends BaseScene {
     );
 
     this.dealerFightManager = new DealerFightManager(dealerOrder);
+
+    this.currentDealer = this.dealerFightManager.getCurrentDealer();
 
     this.applyDealerSettings(this.currentDealer);
 
@@ -343,109 +350,77 @@ export class GameScene extends BaseScene {
   }
 
   private startUnstableProbabilityDisplay(
-    index: 0 | 1 | 2,
+    indexes: readonly (0 | 1 | 2)[],
     profile: DealerOddsProfile,
     odds: OddsTable,
   ): void {
-    const originalOdds =
-      this.getCoinOdds(
-        odds,
-        index,
+    this.unstableProbabilityEntries = indexes.map((index) => {
+      const originalOdds = this.getCoinOdds(odds, index);
+      const originalHeadsDominant = originalOdds.heads >= originalOdds.tails;
+
+      let alternativeOdds: CoinOdds;
+
+      do {
+        alternativeOdds = this.oddsManager.generateCoinOdds(profile);
+      } while (
+        (alternativeOdds.heads >= alternativeOdds.tails) === originalHeadsDominant
       );
 
-    const originalHeadsDominant =
-      originalOdds.heads >=
-      originalOdds.tails;
+      this.oddsManager.setCoinOdds(index, originalOdds);
 
-    let alternativeOdds: CoinOdds;
+      return {
+        index,
+        odds: [originalOdds, alternativeOdds],
+        state: 0,
+        elapsed: Math.random() * GameScene.UNSTABLE_PROBABILITY_INTERVAL,
+      };
+    });
 
-    do {
-      alternativeOdds =
-        this.oddsManager.generateCoinOdds(
-          profile,
-        );
-    } while (
-      (alternativeOdds.heads >=
-        alternativeOdds.tails) ===
-      originalHeadsDominant
-    );
-
-    this.unstableProbabilityIndex =
-      index;
-
-    this.unstableProbabilityOdds = [
-      originalOdds,
-      alternativeOdds,
-    ];
-
-    this.unstableProbabilityState = 0;
-
-    this.unstableProbabilityElapsed = 0;
-
-    this.oddsManager.setCoinOdds(
-      index,
-      originalOdds,
-    );
-
-    this.view.gameUI.updateProbability(
-      this.oddsManager.getOdds(),
-    );
+    this.view.gameUI.updateProbability(this.oddsManager.getOdds());
   }
 
   private stopUnstableProbabilityDisplay(): void {
-    this.unstableProbabilityIndex =
-      undefined;
-
-    this.unstableProbabilityOdds =
-      undefined;
-
-    this.unstableProbabilityState = 0;
-
-    this.unstableProbabilityElapsed = 0;
+    this.unstableProbabilityEntries = [];
   }
 
-  private updateUnstableProbabilityDisplay(
-    deltaMS: number,
-  ): void {
-    if (
-      this.unstableProbabilityIndex ===
-        undefined ||
-      !this.unstableProbabilityOdds ||
-      this.roundState !== "ready"
-    ) {
+  private updateUnstableProbabilityDisplay(deltaMS: number): void {
+    if (this.unstableProbabilityEntries.length === 0 || this.roundState !== "ready") {
       return;
     }
 
-    this.unstableProbabilityElapsed +=
-      deltaMS;
+    let displayChanged = false;
 
-    if (
-      this.unstableProbabilityElapsed <
-      GameScene.UNSTABLE_PROBABILITY_INTERVAL
-    ) {
+    for (const entry of this.unstableProbabilityEntries) {
+      entry.elapsed += deltaMS;
+
+      if (entry.elapsed < GameScene.UNSTABLE_PROBABILITY_INTERVAL) {
+        continue;
+      }
+
+      entry.elapsed -= GameScene.UNSTABLE_PROBABILITY_INTERVAL;
+      entry.state = entry.state === 0 ? 1 : 0;
+
+      this.oddsManager.setCoinOdds(entry.index, entry.odds[entry.state]);
+      displayChanged = true;
+    }
+
+    if (displayChanged) {
+      this.view.gameUI.updateProbability(this.oddsManager.getOdds());
+    }
+  }
+
+  private async updateProtoSkills(): Promise<void> {
+    const permanentMalfunction = this.dealerFightManager.getProtoPermanentMalfunction();
+    const activeMalfunction = this.dealerFightManager.getProtoActiveMalfunction();
+
+    if (!permanentMalfunction || !activeMalfunction) {
       return;
     }
 
-    this.unstableProbabilityElapsed = 0;
-
-    this.unstableProbabilityState =
-      this.unstableProbabilityState === 0
-        ? 1
-        : 0;
-
-    const currentOdds =
-      this.unstableProbabilityOdds[
-        this.unstableProbabilityState
-      ];
-
-    this.oddsManager.setCoinOdds(
-      this.unstableProbabilityIndex,
-      currentOdds,
-    );
-
-    this.view.gameUI.updateProbability(
-      this.oddsManager.getOdds(),
-    );
+    await this.view.gameUI.dealerCard.updateSkills([
+      getMachineFloorSkill(permanentMalfunction),
+      getMachineFloorSkill(activeMalfunction),
+    ]);
   }
 
   private applyDealerSettings(dealer: DealerData) {
@@ -455,11 +430,9 @@ export class GameScene extends BaseScene {
   }
 
   private prepareNextRound() {
-    const profile =
-      this.dealerFightManager
-        .shouldForceRandomToss()
-        ? FORCED_RANDOM_TOSS_PROFILE
-        : this.currentDealer.oddsProfile;
+    const profile = this.dealerFightManager.shouldForceRandomToss()
+      ? FORCED_RANDOM_TOSS_PROFILE
+      : this.currentDealer.oddsProfile;
 
     const odds = this.oddsManager.rollOdds(profile);
 
@@ -474,15 +447,20 @@ export class GameScene extends BaseScene {
 
     this.stopUnstableProbabilityDisplay();
 
-    const brokenProbabilityDisplayIndex = this.dealerFightManager.getBrokenProbabilityDisplayIndex();
+    const brokenProbabilityDisplayIndex =
+      this.dealerFightManager.getBrokenProbabilityDisplayIndex();
+
+    const protoUnstable =
+      this.dealerFightManager.getProtoActiveMalfunction() ===
+      DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY;
+
+    if (protoUnstable && !safetyNetReady) {
+      this.startUnstableProbabilityDisplay([0, 1, 2], profile, odds);
+      return;
+    }
 
     if (unstableIndex !== undefined && !safetyNetReady) {
-      this.startUnstableProbabilityDisplay(
-        unstableIndex,
-        profile,
-        odds,
-      );
-
+      this.startUnstableProbabilityDisplay([unstableIndex], profile, odds);
       return;
     }
 
@@ -492,14 +470,44 @@ export class GameScene extends BaseScene {
     );
   }
 
-  private prepareNextRoundWithPerks(): void {
+  private async prepareNextRoundWithPerks(): Promise<void> {
+    this.dealerFightManager.prepareProtoRound();
+
+    const protoPermanentMalfunction =
+      this.dealerFightManager.getProtoPermanentMalfunction();
+
+    const protoActiveMalfunction =
+      this.dealerFightManager.getProtoActiveMalfunction();
+
+    this.betRestrictionManager.setRuntimeSkills(
+      [protoPermanentMalfunction, protoActiveMalfunction].filter(
+        (skill): skill is DealerSkillId => skill !== undefined,
+      ),
+    );
+
+    if (protoActiveMalfunction) {
+      await this.view.gameUI.dealerCard.replaceActiveSkill(
+        getMachineFloorSkill(protoActiveMalfunction),
+      );
+    }
+
+    if (protoActiveMalfunction === DealerSkillId.FIXED_COMBINATION_LOCK) {
+      const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
+
+      if (fixedCombination && this.perkGameplayController.shouldApplyFixedCombinationLock()) {
+        this.controller.setCombinationSide(0, fixedCombination[0] as CoinSide);
+        this.controller.setCombinationSide(1, fixedCombination[1] as CoinSide);
+        this.controller.setCombinationSide(2, fixedCombination[2] as CoinSide);
+
+        this.view.controls.setCombination(fixedCombination);
+      }
+    }
+
+    this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
+    this.betRestrictionManager.applyDynamicBetLock(this.player.balance);
+
     this.prepareNextRound();
-
     this.perkGameplayController.prepareNextRound();
-  }
-
-  private get currentDealer(): DealerData {
-    return this.dealerFightManager.getCurrentDealer();
   }
 
   private startDealerFight() {
@@ -507,38 +515,39 @@ export class GameScene extends BaseScene {
 
     const fight = this.dealerFightManager.startFight(this.player.balance);
 
-    const odds = this.oddsManager.getOdds();
+    this.dealerFightManager.prepareProtoRound();
 
-    this.view.gameUI.updateProbability(
-      odds,
-      this.dealerFightManager.getBrokenProbabilityDisplayIndex(),
+    const protoPermanentMalfunction = this.dealerFightManager.getProtoPermanentMalfunction();
+
+    const protoActiveMalfunction = this.dealerFightManager.getProtoActiveMalfunction();
+
+    this.betRestrictionManager.setRuntimeSkills(
+      [protoPermanentMalfunction, protoActiveMalfunction].filter(
+        (skill): skill is DealerSkillId => skill !== undefined,
+      ),
     );
+
+    if (protoPermanentMalfunction && protoActiveMalfunction) {
+      void this.updateProtoSkills();
+    }
+
+    this.prepareNextRound();
 
     const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
 
-    if (
-      fixedCombination &&
-      this.perkGameplayController
-        .shouldApplyFixedCombinationLock()
-    ) {
-      this.controller.setCombinationSide(
-        0,
-        fixedCombination[0] as CoinSide,
-      );
+    if (fixedCombination && this.perkGameplayController.shouldApplyFixedCombinationLock()) {
+      this.controller.setCombinationSide(0, fixedCombination[0] as CoinSide);
+      this.controller.setCombinationSide(1, fixedCombination[1] as CoinSide);
+      this.controller.setCombinationSide(2, fixedCombination[2] as CoinSide);
 
-      this.controller.setCombinationSide(
-        1,
-        fixedCombination[1] as CoinSide,
-      );
-
-      this.controller.setCombinationSide(
-        2,
-        fixedCombination[2] as CoinSide,
-      );
+      this.view.controls.setCombination(fixedCombination);
     }
-    this.betRestrictionManager.applyBetSlotMalfunction();
+    
+    this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
 
     this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
+
+    this.controller.adjustBetToBalance((bet) => this.isBetAffordable(bet),);
 
     this.controller.adjustBetToRestrictions();
 
@@ -659,6 +668,8 @@ export class GameScene extends BaseScene {
 
   private async loadDealer(dealer: DealerData): Promise<void> {
 
+    this.currentDealer = dealer;
+
     this.roundOutcomeHandler.resetDealerState();
 
     this.betRestrictionManager.setDealer(dealer, this.player.balance);
@@ -739,9 +750,9 @@ export class GameScene extends BaseScene {
   }
 
   private tryIncreaseBet(): void {
-    
     if (
-      this.betRestrictionManager.isBetIncreaseLocked()
+      this.betRestrictionManager.isBetIncreaseLocked() ||
+      this.betRestrictionManager.isDynamicBetLocked()
     ) {
       return;
     }
@@ -752,15 +763,17 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    const nextBetCost =
-      this.perkEffectApplier.resolveBetCost(
-        nextBet,
-      );
+    const nextBetCost = this.perkEffectApplier.resolveBetCost(nextBet);
 
     if (nextBetCost > this.player.balance) {
-      this.popupManager.show(
-        "insufficientBalance",
+      const hasHigherAffordableBet = this.controller.hasHigherAffordableBet(
+        this.player.balance,
+        (bet) => this.isBetAffordable(bet),
       );
+
+      if (!hasHigherAffordableBet) {
+        this.popupManager.show("insufficientBalance");
+      }
 
       return;
     }
@@ -770,8 +783,8 @@ export class GameScene extends BaseScene {
 
   private tryDecreaseBet(): void {
     if (
-      this.betRestrictionManager
-        .isBetDecreaseLocked()
+      this.betRestrictionManager.isBetDecreaseLocked() ||
+      this.betRestrictionManager.isDynamicBetLocked()
     ) {
       return;
     }
@@ -862,14 +875,14 @@ export class GameScene extends BaseScene {
 
       this.view.gameUI.showCombinationStatusLabel();
 
-      this.view.controls.setTossDisabled(false);
+      this.view.controls.setTossDisabled(this.roundState !== "ready");
 
       return;
     }
 
     this.view.gameUI.hideCombinationStatusLabel();
 
-    this.view.controls.setTossDisabled(false);
+    this.view.controls.setTossDisabled(this.roundState !== "ready");
   }
 
 
@@ -926,8 +939,19 @@ export class GameScene extends BaseScene {
     const finalBetCost = betDeductionMalfunctionTriggered ? betCost * 2 : betCost;
 
     if (this.player.balance < finalBetCost) {
-      this.popupManager.show("insufficientBalance");
+      if (betDeductionMalfunctionTriggered) {
+        this.roundState = "result";
+        this.lockControls();
 
+        await this.dealerSkillFeedbackHandler.handle([
+          DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
+        ]);
+
+        this.triggerGameOver();
+        return;
+      }
+
+      this.popupManager.show("insufficientBalance");
       return;
     }
 
@@ -1728,10 +1752,6 @@ export class GameScene extends BaseScene {
         );
     }
 
-    const currentBetCost = this.perkEffectApplier.resolveBetCost(
-      this.controller.getBet(),
-    );
-
     if (this.isCurrentDealerDefeated()) {
       this.roundState = "result";
 
@@ -1742,22 +1762,11 @@ export class GameScene extends BaseScene {
 
     this.applyMultiplierDecay();
 
-    this.betRestrictionManager.advanceBetIncreaseLock();
-
-    this.betRestrictionManager.advanceBetDecreaseLock();
-
-    this.betRestrictionManager.applyBetSlotMalfunction();
-
-    this.betRestrictionManager.applyDynamicBetLock(this.player.balance,);
-
-    this.controller.adjustBetToRestrictions();
-
-    this.updateBetControlRestrictions();
-
-    if (currentBetCost > this.player.balance) {
-      this.controller.adjustBetToBalance(
-        (bet) => this.isBetAffordable(bet),
-      );
+    if (this.currentDealer.id !== "tlcm-proto") {
+      this.betRestrictionManager.advanceBetIncreaseLock();
+      this.betRestrictionManager.advanceBetDecreaseLock();
+      this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
+      this.betRestrictionManager.applyDynamicBetLock(this.player.balance);
     }
 
     const multiplierSystemMalfunction =this.dealerFightManager.advanceMultiplierSystemMalfunction();
@@ -1798,15 +1807,36 @@ export class GameScene extends BaseScene {
       );
     }
 
+    await this.prepareNextRoundWithPerks();
+
+    this.controller.adjustBetToRestrictions();
+
+    this.controller.adjustBetToBalance(
+      (bet) => this.isBetAffordable(bet),
+    );
+
+    this.updateBetControlRestrictions();
+
+    if (this.betRestrictionManager.hasNoSameBets() && !this.canPlay()) {
+      this.betRestrictionManager.resetNoSameBetsCycle();
+
+      this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
+      this.betRestrictionManager.applyDynamicBetLock(this.player.balance);
+
+      this.controller.adjustBetToRestrictions();
+
+      this.controller.adjustBetToBalance(
+        (bet) => this.isBetAffordable(bet),
+      );
+    }
+
     if (!this.canPlay()) {
-      const minAvailableBet =
-        this.controller.getMinAvailableBet();
+      const minAvailableBet = this.controller.getMinAvailableBet();
 
       if (minAvailableBet !== null) {
-        await this.perkGameplayController
-          .tryRecoverFromInsufficientBalance(
-            minAvailableBet,
-          );
+        await this.perkGameplayController.tryRecoverFromInsufficientBalance(
+          minAvailableBet,
+        );
       }
 
       this.controller.adjustBetToBalance(
@@ -1821,8 +1851,6 @@ export class GameScene extends BaseScene {
 
       return;
     }
-
-    this.prepareNextRoundWithPerks();
 
     this.roundState = "ready";
 
@@ -2129,14 +2157,14 @@ export class GameScene extends BaseScene {
   }
 
   private updateBetControlRestrictions(): void {
+    const dynamicBetLocked = this.betRestrictionManager.isDynamicBetLocked();
+
     this.view.controls.setBetUpDisabled(
-      this.betRestrictionManager
-        .isBetIncreaseLocked(),
+      dynamicBetLocked || this.betRestrictionManager.isBetIncreaseLocked(),
     );
 
     this.view.controls.setBetDownDisabled(
-      this.betRestrictionManager
-        .isBetDecreaseLocked(),
+      dynamicBetLocked || this.betRestrictionManager.isBetDecreaseLocked(),
     );
   }
 

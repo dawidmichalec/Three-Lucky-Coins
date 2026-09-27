@@ -132,14 +132,22 @@ export class RunDealerGenerator {
   }
 
   private static generateMachineFloorStage(): DealerData[] {
-    const regularMachines =
-      getRegularDealersByGroup(
-        DealerGroup.MACHINE_FLOOR,
-      );
+    const regularMachines = getRegularDealersByGroup(DealerGroup.MACHINE_FLOOR);
 
-    return this.pickRandomDealers(
+    const randomMachines = this.pickRandomDealers(
       regularMachines,
       3,
     );
+
+    const supervisor = getSupervisorByGroup(DealerGroup.MACHINE_FLOOR);
+
+    if (!supervisor) {
+      throw new Error("Machine Floor Supervisor not found.");
+    }
+
+    return [
+      ...randomMachines,
+      supervisor,
+    ];
   }
 }

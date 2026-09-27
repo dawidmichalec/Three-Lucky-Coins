@@ -115,6 +115,8 @@ export default {
   frankPokerChipDescription: "A worn poker chip from Frank's favourite casino. He refuses to say how much money he lost there.",
   kevinMotorcycleHelmet: "Motorcycle Helmet",
   kevinMotorcycleHelmetDescription: "Kevin's motorcycle helmet. His motorcycle is one of the few things he spends more money on than he probably should.",
+  tlcmProtoPrototypeCore: "Prototype Core",
+  tlcmProtoPrototypeCoreDescription: "TLCM-PROTO Prototype Core",
 
   // PLAYER STATS LABELS
 
@@ -524,6 +526,9 @@ export default {
   brokenProbabilityDisplaySkillName: "Broken Probability Display",
   brokenProbabilityDisplaySkillDescription: "Displays the probability of one coin as \"ERROR\" every round.",
 
+  multipleMalfunctionsSkillName: "Multiple Malfunctions",
+  multipleMalfunctionsSkillDescription: "PROTO has one permanent malfunction for the entire fight and another malfunction that changes every round.",
+
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
@@ -680,7 +685,7 @@ export default {
 
   underdogName: "UNDERDOG",
 
- underdogDescriptionCommon: "Increases winnings by 5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 15% when it falls below 25%.",
+  underdogDescriptionCommon: "Increases winnings by 5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 15% when it falls below 25%.",
   underdogDescriptionUncommon: "Increases winnings by 7.5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 17.5% when it falls below 25%.",
   underdogDescriptionRare: "Increases winnings by 10% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 20% when it falls below 25%.",
   underdogDescriptionEpic: "Increases winnings by 12.5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 22.5% when it falls below 25%.",

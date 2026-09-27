@@ -95,7 +95,9 @@ export enum DealerSkillId {
 
   BROKEN_PROBABILITY_DISPLAY = "broken_probability_display",
 
-  UNSTABLE_PROBABILITY_DISPLAY = "unstable_probability_display"
+  UNSTABLE_PROBABILITY_DISPLAY = "unstable_probability_display",
+
+  MULTIPLE_MALFUNCTIONS = "multiple_malfunctions"
 
   // Kolejne skille w przyszłości...
 }
@@ -104,7 +106,7 @@ export interface DealerSkillData {
   id: DealerSkillId;
   name: TranslationKey;
   description: TranslationKey;
-  icon: string;
+  icon?: string;
   triggerChance?: number;
   timeLimit?: number;
 }

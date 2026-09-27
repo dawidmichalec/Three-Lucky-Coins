@@ -12,6 +12,9 @@ export class BetRestrictionManager {
   private betIncreaseLockRoundsRemaining = 0;
   private betDecreaseLocked = false;
   private betDecreaseLockRoundsRemaining = 0;
+  private runtimeSkills = new Set<DealerSkillId>();
+  private betSlotMalfunctionBlockedBet: number | null = null;
+  private dynamicBetLockBet: number | null = null;
 
   setDealer(
     dealer: DealerData,
@@ -53,6 +56,32 @@ export class BetRestrictionManager {
 
     this.betDecreaseLockRoundsRemaining =
       this.rollBetControlPhaseDuration();
+  }
+
+  setRuntimeSkills(skillIds: readonly DealerSkillId[]): void {
+    const hadRuntimeBetIncreaseLock = this.runtimeSkills.has(DealerSkillId.BET_INCREASE_LOCK);
+    const hadRuntimeBetDecreaseLock = this.runtimeSkills.has(DealerSkillId.BET_DECREASE_LOCK);
+
+    this.runtimeSkills = new Set(skillIds);
+
+    const hasRuntimeBetIncreaseLock = this.runtimeSkills.has(DealerSkillId.BET_INCREASE_LOCK);
+    const hasRuntimeBetDecreaseLock = this.runtimeSkills.has(DealerSkillId.BET_DECREASE_LOCK);
+
+    if (hasRuntimeBetIncreaseLock && !hadRuntimeBetIncreaseLock) {
+      this.betIncreaseLocked = true;
+      this.betIncreaseLockRoundsRemaining = 0;
+    } else if (!this.hasSkill(DealerSkillId.BET_INCREASE_LOCK)) {
+      this.betIncreaseLocked = false;
+      this.betIncreaseLockRoundsRemaining = 0;
+    }
+
+    if (hasRuntimeBetDecreaseLock && !hadRuntimeBetDecreaseLock) {
+      this.betDecreaseLocked = true;
+      this.betDecreaseLockRoundsRemaining = 0;
+    } else if (!this.hasSkill(DealerSkillId.BET_DECREASE_LOCK)) {
+      this.betDecreaseLocked = false;
+      this.betDecreaseLockRoundsRemaining = 0;
+    }
   }
 
   advanceBetDecreaseLock(): void {
@@ -131,79 +160,59 @@ export class BetRestrictionManager {
     return this.betIncreaseLocked;
   }
 
-  applyDynamicBetLock(
-    playerBalance: number,
-  ): void {
-    if (
-      !this.hasSkill(
-        DealerSkillId.DYNAMIC_BET_LOCK,
-      )
-    ) {
+  applyDynamicBetLock(playerBalance: number): void {
+    if (!this.hasSkill(DealerSkillId.DYNAMIC_BET_LOCK)) {
+      this.dynamicBetLockBet = null;
       return;
     }
 
-    this.blockedBets.clear();
-
     const affordableBets = BET_LEVELS.filter(
-      (bet) => bet <= playerBalance,
+      (bet) => bet <= playerBalance && !this.blockedBets.has(bet),
     );
 
     if (affordableBets.length === 0) {
+      this.dynamicBetLockBet = null;
       return;
     }
 
-    const candidates =
-      affordableBets.filter(
-        (bet) =>
-          bet !== this.lastDynamicBetLock,
-      );
+    const candidates = affordableBets.filter((bet) => bet !== this.lastDynamicBetLock);
 
-    const pool =
-      candidates.length > 0
-        ? candidates
-        : affordableBets;
+    const pool = candidates.length > 0 ? candidates : affordableBets;
 
-    const selectedBet =
-      pool[
-        Math.floor(
-          Math.random() * pool.length,
-        )
-      ];
+    const selectedBet = pool[Math.floor(Math.random() * pool.length)];
 
-    BET_LEVELS.forEach((bet) => {
-      if (bet !== selectedBet) {
-        this.blockBet(bet);
-      }
-    });
-
+    this.dynamicBetLockBet = selectedBet;
     this.lastDynamicBetLock = selectedBet;
   }
 
-  applyBetSlotMalfunction(): void {
-    if (
-      !this.hasSkill(
-        DealerSkillId.BET_SLOT_MALFUNCTION,
-      )
-    ) {
+  isDynamicBetLocked(): boolean {
+    return this.dynamicBetLockBet !== null;
+  }
+
+  applyBetSlotMalfunction(playerBalance: number): void {
+    if (!this.hasSkill(DealerSkillId.BET_SLOT_MALFUNCTION)) {
+      this.betSlotMalfunctionBlockedBet = null;
       return;
     }
 
-    this.blockedBets.clear();
-
-    const candidates = BET_LEVELS.filter(
-      (bet) =>
-        bet !== this.lastBetSlotMalfunctionBet,
+    const availableBets = BET_LEVELS.filter(
+      (bet) => bet <= playerBalance && !this.blockedBets.has(bet),
     );
 
-    const blockedBet =
-      candidates[
-        Math.floor(
-          Math.random() * candidates.length,
-        )
-      ];
+    const candidates = availableBets.filter(
+      (bet) => bet !== this.lastBetSlotMalfunctionBet,
+    );
 
-    this.blockBet(blockedBet);
+    const pool = candidates.length > 0 ? candidates : availableBets;
 
+    if (pool.length === 0) {
+      this.betSlotMalfunctionBlockedBet = null;
+      return;
+    }
+
+    const blockedBet = pool[Math.floor(Math.random() * pool.length)];
+
+    this.betSlotMalfunctionBlockedBet = blockedBet;
     this.lastBetSlotMalfunctionBet = blockedBet;
   }
 
@@ -245,7 +254,19 @@ export class BetRestrictionManager {
   }
 
   isBetAvailable(bet: number): boolean {
-    return !this.blockedBets.has(bet);
+    if (this.blockedBets.has(bet)) {
+      return false;
+    }
+
+    if (bet === this.betSlotMalfunctionBlockedBet) {
+      return false;
+    }
+
+    if (this.dynamicBetLockBet !== null && bet !== this.dynamicBetLockBet) {
+      return false;
+    }
+
+    return true;
   }
 
   getAvailableBets(): number[] {
@@ -262,8 +283,16 @@ export class BetRestrictionManager {
     this.blockBet(bet);
 
     if (this.blockedBets.size >= BET_LEVELS.length) {
-      this.reset();
+      this.blockedBets.clear();
     }
+  }
+
+  hasNoSameBets(): boolean {
+    return this.hasSkill(DealerSkillId.NO_SAME_BETS);
+  }
+
+  resetNoSameBetsCycle(): void {
+    this.blockedBets.clear();
   }
 
   reset(): void {
@@ -275,13 +304,16 @@ export class BetRestrictionManager {
     this.betIncreaseLockRoundsRemaining = 0;
     this.betDecreaseLocked = false;
     this.betDecreaseLockRoundsRemaining = 0;
+    this.betSlotMalfunctionBlockedBet = null;
+    this.dynamicBetLockBet = null;
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {
-    return (
+    const hasDealerSkill =
       this.currentDealer?.skills.some(
         (skill) => skill.id === skillId,
-      ) ?? false
-    );
+      ) ?? false;
+
+    return hasDealerSkill || this.runtimeSkills.has(skillId);
   }
 }

@@ -114,6 +114,8 @@ export default {
   frankPokerChipDescription: "Wytarty żeton pokerowy z ulubionego kasyna Franka. Nie chce powiedzieć, ile pieniędzy tam przegrał.",
   kevinMotorcycleHelmet: "Kask motocyklowy",
   kevinMotorcycleHelmetDescription: "Kask motocyklowy Kevina. Jego motocykl jest jedną z niewielu rzeczy, na które wydaje więcej pieniędzy, niż prawdopodobnie powinien.",
+  tlcmProtoPrototypeCore: "Rdzeń prototypu",
+  tlcmProtoPrototypeCoreDescription: "Rdzeń prototypu TLCM-PROTO",
 
   // PLAYER STATS LABELS
 
@@ -512,6 +514,9 @@ export default {
 
   brokenProbabilityDisplaySkillName: "Uszkodzony wyświetlacz prawdopodobieństwa",
   brokenProbabilityDisplaySkillDescription: "W każdej rundzie wyświetla prawdopodobieństwo jednej monety jako \"ERROR\".",
+
+  multipleMalfunctionsSkillName: "Liczne awarie",
+  multipleMalfunctionsSkillDescription: "PROTO ma jedną stałą awarię przez całą walkę oraz drugą, która zmienia się co rundę.",
 
   // PERKS
 

@@ -208,6 +208,10 @@ export class DealerCard extends Container {
     ]);
   }
 
+  async updateSkills(skills: DealerSkillData[]): Promise<void> {
+      await this.createSkillIcons(skills);
+  }
+
   private async createAvatar(): Promise<void> {
     const texture =
       await Assets.load(
@@ -228,59 +232,46 @@ export class DealerCard extends Container {
     this.addChild(this.avatar);
   }
 
-  private async createSkillIcons(): Promise<void> {
+  private async createSkillIcons(skills: DealerSkillData[] = this.dealer.skills): Promise<void> {
     this.skillIconsContainer
       .removeChildren();
 
-    if (
-      this.dealer.skills.length === 0
-    ) {
+    if (skills.length === 0) {
       await this.createNoSkillsIcon();
-
       return;
     }
 
+    const skillsWithIcons = skills.filter(
+      (skill): skill is DealerSkillData & { icon: string } => skill.icon !== undefined,
+    );
+
     await Promise.all(
-      this.dealer.skills.map(
-        async (skill, index) => {
-          const texture =
-            await Assets.load(
-              skill.icon,
+      skillsWithIcons.map(async (skill, index) => {
+        const texture = await Assets.load(skill.icon);
+
+        const icon = new Sprite(texture);
+
+        icon.width = 77;
+        icon.height = 77;
+
+        icon.position.set(index * 100, 0);
+
+        if (this.onSkillClick) {
+          icon.eventMode = "static";
+          icon.cursor = "pointer";
+
+          icon.on("pointertap", () => {
+            const globalPosition = icon.getGlobalPosition();
+
+            this.onSkillClick?.(
+              skill,
+              globalPosition,
             );
+          });
+        }
 
-          const icon =
-            new Sprite(texture);
-
-          icon.width = 77;
-          icon.height = 77;
-
-          icon.position.set(
-            index * 70,
-            0,
-          );
-
-          if (this.onSkillClick) {
-            icon.eventMode = "static";
-            icon.cursor = "pointer";
-
-            icon.on(
-              "pointertap",
-              () => {
-                const globalPosition =
-                  icon.getGlobalPosition();
-
-                this.onSkillClick?.(
-                  skill,
-                  globalPosition,
-                );
-              },
-            );
-          }
-
-          this.skillIconsContainer
-            .addChild(icon);
-        },
-      ),
+        this.skillIconsContainer.addChild(icon);
+      }),
     );
   }
 
@@ -426,5 +417,126 @@ export class DealerCard extends Container {
       value
         ? 0.8
         : 1;
+  }
+
+  async replaceActiveSkill(skill: DealerSkillData): Promise<void> {
+
+    console.log(
+      "BEFORE REPLACE:",
+      this.skillIconsContainer.children.map((child, index) => ({
+        index,
+        x: child.x,
+        destroyed: child.destroyed,
+      })),
+    );
+    const oldIcon = this.skillIconsContainer.children.find(
+      (child): child is Sprite => child instanceof Sprite && child.x === 100,
+    );
+
+    if (!oldIcon || !skill.icon) {
+      return;
+    }
+
+    await this.animateSkillOut(oldIcon);
+
+    this.skillIconsContainer.removeChild(oldIcon);
+    oldIcon.destroy();
+
+    const texture = await Assets.load(skill.icon);
+    const newIcon = new Sprite(texture);
+
+    newIcon.width = 77;
+    newIcon.height = 77;
+    newIcon.position.set(100, 0);
+
+    if (this.onSkillClick) {
+      newIcon.eventMode = "static";
+      newIcon.cursor = "pointer";
+
+      newIcon.on("pointertap", () => {
+        const globalPosition = newIcon.getGlobalPosition();
+
+        this.onSkillClick?.(skill, globalPosition);
+      });
+    }
+
+    this.skillIconsContainer.addChild(newIcon);
+
+    await this.animateSkillIn(newIcon);
+
+    console.log(
+      "AFTER REPLACE:",
+      this.skillIconsContainer.children.map((child, index) => ({
+        index,
+        x: child.x,
+        destroyed: child.destroyed,
+      })),
+    );
+  }
+
+  private animateSkillOut(icon: Sprite): Promise<void> {
+    const duration = 280;
+    const startTime = performance.now();
+    const startX = icon.x;
+
+    return new Promise((resolve) => {
+      const animate = (currentTime: number) => {
+        const progress = Math.min(1, (currentTime - startTime) / duration);
+        const eased = progress * progress;
+
+        icon.x = startX + eased * 45;
+        icon.alpha = 1 - progress;
+        icon.rotation = progress * 0.25;
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+          return;
+        }
+
+        resolve();
+      };
+
+      requestAnimationFrame(animate);
+    });
+  }
+
+  private animateSkillIn(icon: Sprite): Promise<void> {
+    const duration = 320;
+    const startTime = performance.now();
+    const targetX = 100;
+    const startX = targetX - 45;
+
+    icon.x = startX;
+    icon.alpha = 0;
+    icon.rotation = -0.25;
+    icon.scale.set(0.9);
+
+    return new Promise((resolve) => {
+      const animate = (currentTime: number) => {
+        const progress = Math.min(1, (currentTime - startTime) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        icon.x = startX + (targetX - startX) * eased;
+        icon.alpha = eased;
+        icon.rotation = -0.25 * (1 - eased);
+
+        const snap = Math.sin(progress * Math.PI) * 0.08;
+        icon.scale.set(0.9 + eased * 0.1 + snap);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+          return;
+        }
+
+        icon.position.set(targetX, 0);
+        icon.alpha = 1;
+        icon.rotation = 0;
+        icon.scale.set(1);
+
+        resolve();
+      };
+
+      requestAnimationFrame(animate);
+    });
   }
 }

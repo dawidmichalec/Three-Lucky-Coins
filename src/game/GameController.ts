@@ -256,4 +256,14 @@ export class GameController {
   isBetChoiceReversed(): boolean {
     return this.reversedBetChoice;
   }
+
+  hasHigherAffordableBet(balance: number, isAffordable: (bet: number) => boolean): boolean {
+    for (let index = this.betIndex + 1; index < BET_LEVELS.length; index++) {
+      if (isAffordable(BET_LEVELS[index])) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

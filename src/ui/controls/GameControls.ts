@@ -141,6 +141,10 @@ export class GameControls extends Container {
     this.tossButton.startAnimation();
   }
 
+  setCombination(combination: CoinCombination): void {
+    this.combinationSelector.setCombination(combination);
+  }
+
   update(delta: number) {
     if (this.tossButton) {
       this.tossButton.update(delta);
