@@ -1453,7 +1453,8 @@ export class DealerFightManager {
     const skill = dealer.skills.find(
       (skill) =>
         skill.id === DealerSkillId.SMALL_HOUSE_CUT ||
-        skill.id === DealerSkillId.HOUSE_CUT,
+        skill.id === DealerSkillId.HOUSE_CUT ||
+        skill.id === DealerSkillId.THE_HOUSE_ALWAYS_WINS,
     );
 
     if (!skill) {
@@ -1471,6 +1472,10 @@ export class DealerFightManager {
 
       case DealerSkillId.HOUSE_CUT:
         cutPercentage = 0.5;
+        break;
+      
+      case DealerSkillId.THE_HOUSE_ALWAYS_WINS:
+        cutPercentage = 1;
         break;
 
       default:

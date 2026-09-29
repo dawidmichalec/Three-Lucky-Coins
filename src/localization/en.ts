@@ -119,6 +119,8 @@ export default {
   tlcmProtoPrototypeCoreDescription: "TLCM-PROTO Prototype Core",
   jamesOldPhotograph: "James' Old Photograph",
   jamesOldPhotographDescription: "An old photograph James keeps in his office. No one knows what is the meaning of the building in it.",
+  danOldWallet: "Dan's Old Wallet",
+  danOldWalletDescription: "Dan's old wallet. He's as loyal to it as he is to the casino.",
 
 
   // PLAYER STATS LABELS
@@ -379,6 +381,8 @@ export default {
 
   jamesDescription: "James doesn't like wasting time.\n\nHe keeps things short, expects quick decisions, and rarely gives anyone a second chance.\n\nThe only thing he seems unusually sentimental about is an old photograph he keeps in his office.",
   jamesSaying: "We're gonna make it quick.",
+  danDescription: "Dan has been loyal to the casino for longer than most people can remember.\n\nHe doesn't question its rules, doesn't argue with the odds, and firmly believes that every chip eventually finds its way back to the house.",
+  danSaying: "The house always wins.",
 
 
 
@@ -542,6 +546,9 @@ export default {
 
   timeIsUpSkillName: "Time Is Up",
   timeIsUpSkillDescription: "You have exactly 5 seconds to place a bet.\n\nIf you don't manage to do it, the bet is placed automatically with the bet value and combination that are chosen at the moment.",
+
+  theHouseAlwaysWinsSkillName: "The House Always Wins",
+  theHouseAlwaysWinsSkillDescription: "On a loss, an additional 100% of your bet is deducted from your balance.",
 
 
   // PERKS

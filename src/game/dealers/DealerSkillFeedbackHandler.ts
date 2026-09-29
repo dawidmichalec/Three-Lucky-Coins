@@ -122,6 +122,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.TIME_IS_UP:
           await this.gameMessageOverlay.play("timeIsUpSkillName");
           break;
+
+        case DealerSkillId.THE_HOUSE_ALWAYS_WINS:
+          await this.gameMessageOverlay.play("theHouseAlwaysWinsSkillName");
+          break;
       }
     }
   }

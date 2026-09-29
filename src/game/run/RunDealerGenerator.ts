@@ -155,6 +155,6 @@ export class RunDealerGenerator {
   private static generateManagerStage(): DealerData[] {
     const managers = getRegularDealersByGroup(DealerGroup.MANAGER);
 
-    return this.pickRandomDealers(managers, 1);
+    return this.pickRandomDealers(managers, 2);
   }
 }

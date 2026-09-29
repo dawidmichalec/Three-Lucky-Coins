@@ -99,7 +99,9 @@ export enum DealerSkillId {
 
   MULTIPLE_MALFUNCTIONS = "multiple_malfunctions",
 
-  TIME_IS_UP = "time_is_up"
+  TIME_IS_UP = "time_is_up",
+
+  THE_HOUSE_ALWAYS_WINS = "the_house_always_wins",
 
   // Kolejne skille w przyszłości...
 }

@@ -118,6 +118,8 @@ export default {
   tlcmProtoPrototypeCoreDescription: "Rdzeń prototypu TLCM-PROTO",
   jamesOldPhotograph: "Stara fotografia Jamesa",
   jamesOldPhotographDescription: "Stara fotografia, którą James trzyma w swoim biurze. Nikt nie wie czym jest budynek, który na niej jest.",
+  danOldWallet: "Stary portfel Dana",
+  danOldWalletDescription: "Stary portfel Dana. Jest do niego przywiązany równie mocno, jak do kasyna.",
 
 
   // PLAYER STATS LABELS
@@ -362,6 +364,9 @@ export default {
 
   jamesDescription: "James nie lubi marnować czasu.\n\nZałatwia sprawy szybko, oczekuje błyskawicznych decyzji i rzadko daje komukolwiek drugą szansę.\n\nJedyną rzeczą, do której zdaje się mieć zaskakujący sentyment, jest stara fotografia, którą trzyma w swoim biurze.",
   jamesSaying: "Zrobimy to szybko.",
+  danDescription: "Dan jest lojalny wobec kasyna dłużej, niż większość ludzi jest w stanie pamiętać. Nie kwestionuje jego zasad, nie dyskutuje z prawdopodobieństwem i głęboko wierzy, że każdy żeton prędzej czy później wraca do kasyna.",
+  danSaying: "Kasyno zawsze wygrywa.",
+
 
   // SKILL
 
@@ -529,6 +534,10 @@ export default {
 
   timeIsUpSkillName: "Koniec czasu",
   timeIsUpSkillDescription: "Masz dokładnie 5 sekund, aby postawić zakład.\n\nJeśli nie uda Ci się tego zrobić, zakład zostanie postawiony automatycznie ze stawką i kombinacją, które są ustawione w danym momencie.",
+
+  theHouseAlwaysWinsSkillName: "Kasyno zawsze wygrywa",
+  theHouseAlwaysWinsSkillDescription: "W przypadku przegranej kasyno pobiera z Twojego salda dodatkowe 100% zakładu.",
+
 
   // PERKS
 
