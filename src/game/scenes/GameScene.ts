@@ -50,6 +50,7 @@ import { SoundId } from "../../audio/SoundId";
 import { FORCED_RANDOM_TOSS_PROFILE } from "../probability/DealerOddsProfiles";
 import { CoinOdds, DealerOddsProfile, OddsTable } from "../probability/OddsTypes";
 import { getMachineFloorSkill } from "../dealers/MachineFloorSkillRegistry";
+import { DealerGroup } from "../dealers/DealerGroup";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -589,9 +590,18 @@ export class GameScene extends BaseScene {
 
     await this.view.gameMessageOverlay.play("youWon");
 
-    if (defeatedDealer.role !== DealerRole.SUPERVISOR) {
-      await this.continueToNextDealer();
+    const nextDealer = this.dealerFightManager.getNextDealer();
 
+    const defeatedSupervisor = defeatedDealer.role === DealerRole.SUPERVISOR;
+
+    const defeatedSecondManager =
+      defeatedDealer.group === DealerGroup.MANAGER &&
+      (!nextDealer || nextDealer.group !== DealerGroup.MANAGER);
+
+    const shouldShowPerkReward = defeatedSupervisor || defeatedSecondManager;
+
+    if (!shouldShowPerkReward) {
+      await this.continueToNextDealer();
       return;
     }
 
@@ -1907,7 +1917,8 @@ export class GameScene extends BaseScene {
       this.currentDealer.skills.find(
         (skill) =>
           skill.id === DealerSkillId.TIME_IS_MONEY ||
-          skill.id === DealerSkillId.TIME_IS_MONEY_PLUS,
+          skill.id === DealerSkillId.TIME_IS_MONEY_PLUS ||
+          skill.id === DealerSkillId.TIME_IS_UP,
       );
 
     this.stopRoundTimer();

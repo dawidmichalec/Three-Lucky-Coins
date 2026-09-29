@@ -471,3 +471,11 @@ export const TLCMPROTO_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.8, 0.9],
 };
+
+// JAMES
+
+export const JAMES_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.12, 0.15, 0.18, 0.22, 0.25, 0.28, 0.31, 0.69, 0.72, 0.75, 0.78, 0.82, 0.85, 0.88],
+};

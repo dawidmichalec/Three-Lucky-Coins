@@ -57,6 +57,7 @@ import { DEBRA_DATA } from "./data/junior_dealers/Debra";
 import { COLIN_DATA } from "./data/junior_dealers/Colin";
 import { FRANK_DATA } from "./data/junior_dealers/Frank";
 import { KEVIN_DATA } from "./data/junior_dealers/Kevin";
+import { JAMES_DATA } from "./data/managers/James";
 import { DealerGroup } from "./DealerGroup";
 import { DealerRole } from "./DealerRole";
 
@@ -119,7 +120,8 @@ export const DEALERS: readonly DealerData[] = [
   TLCM8_2_DATA,
   TLCM9_DATA,
   TLCM10_DATA,
-  TLCMPROTO_DATA
+  TLCMPROTO_DATA,
+  JAMES_DATA
 ];
 
 export {
@@ -180,7 +182,8 @@ export {
   TLCM8_2_DATA,
   TLCM9_DATA,
   TLCM10_DATA,
-  TLCMPROTO_DATA
+  TLCMPROTO_DATA,
+  JAMES_DATA
 };
 
 export function getDealersByGroup(group: DealerGroup): readonly DealerData[] {

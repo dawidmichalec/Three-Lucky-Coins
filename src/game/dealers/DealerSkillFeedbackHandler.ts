@@ -118,6 +118,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.HARD_MULTIPLIER_RESET:
           await this.gameMessageOverlay.play("hardMultiplierResetSkillName");
           break;
+
+        case DealerSkillId.TIME_IS_UP:
+          await this.gameMessageOverlay.play("timeIsUpSkillName");
+          break;
       }
     }
   }

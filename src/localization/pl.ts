@@ -116,6 +116,9 @@ export default {
   kevinMotorcycleHelmetDescription: "Kask motocyklowy Kevina. Jego motocykl jest jedną z niewielu rzeczy, na które wydaje więcej pieniędzy, niż prawdopodobnie powinien.",
   tlcmProtoPrototypeCore: "Rdzeń prototypu",
   tlcmProtoPrototypeCoreDescription: "Rdzeń prototypu TLCM-PROTO",
+  jamesOldPhotograph: "Stara fotografia Jamesa",
+  jamesOldPhotographDescription: "Stara fotografia, którą James trzyma w swoim biurze. Nikt nie wie czym jest budynek, który na niej jest.",
+
 
   // PLAYER STATS LABELS
 
@@ -217,6 +220,7 @@ export default {
   manager: "Manager",
   vicePresident: "Wiceprezes",
   owner: "Właściciel",
+  owners: "Właściciele",
   casino: "Kasyno",
   skills: "Umiejętności",
   objective: "Cel",
@@ -354,6 +358,11 @@ export default {
   tlcm10Description: "Dziesiąta i najnowsza generacja automatów Three Lucky Coins. Nowoczesna, niezawodna i w pełni kompatybilna ze wszystkimi obecnymi systemami kasyna.",
   tlcmProtoDescription: "Prototyp automatu Three Lucky Coins. Według plotek posiadał wszystkie funkcje, które później pojawiły się w modelach produkcyjnych, jednak ze względu na ograniczenia technologiczne tamtych czasów większość z nich była podatna na awarie.",
   
+  // MANAGERS
+
+  jamesDescription: "James nie lubi marnować czasu.\n\nZałatwia sprawy szybko, oczekuje błyskawicznych decyzji i rzadko daje komukolwiek drugą szansę.\n\nJedyną rzeczą, do której zdaje się mieć zaskakujący sentyment, jest stara fotografia, którą trzyma w swoim biurze.",
+  jamesSaying: "Zrobimy to szybko.",
+
   // SKILL
 
   oopsIPaidYouTwiceSkillName: "Ups... Zapłaciłam Ci dwa razy",
@@ -517,6 +526,9 @@ export default {
 
   multipleMalfunctionsSkillName: "Liczne awarie",
   multipleMalfunctionsSkillDescription: "PROTO ma jedną stałą awarię przez całą walkę oraz drugą, która zmienia się co rundę.",
+
+  timeIsUpSkillName: "Koniec czasu",
+  timeIsUpSkillDescription: "Masz dokładnie 5 sekund, aby postawić zakład.\n\nJeśli nie uda Ci się tego zrobić, zakład zostanie postawiony automatycznie ze stawką i kombinacją, które są ustawione w danym momencie.",
 
   // PERKS
 

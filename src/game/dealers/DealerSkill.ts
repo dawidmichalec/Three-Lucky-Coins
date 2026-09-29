@@ -97,7 +97,9 @@ export enum DealerSkillId {
 
   UNSTABLE_PROBABILITY_DISPLAY = "unstable_probability_display",
 
-  MULTIPLE_MALFUNCTIONS = "multiple_malfunctions"
+  MULTIPLE_MALFUNCTIONS = "multiple_malfunctions",
+
+  TIME_IS_UP = "time_is_up"
 
   // Kolejne skille w przyszłości...
 }

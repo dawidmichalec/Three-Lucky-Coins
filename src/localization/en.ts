@@ -117,6 +117,9 @@ export default {
   kevinMotorcycleHelmetDescription: "Kevin's motorcycle helmet. His motorcycle is one of the few things he spends more money on than he probably should.",
   tlcmProtoPrototypeCore: "Prototype Core",
   tlcmProtoPrototypeCoreDescription: "TLCM-PROTO Prototype Core",
+  jamesOldPhotograph: "James' Old Photograph",
+  jamesOldPhotographDescription: "An old photograph James keeps in his office. No one knows what is the meaning of the building in it.",
+
 
   // PLAYER STATS LABELS
 
@@ -222,6 +225,7 @@ export default {
   manager: "Manager",
   vicePresident: "Vice President",
   owner: "Owner",
+  owners: "Owners",
   casino: "Casino",
   skills: "Skills",
   objective: "Objective",
@@ -371,6 +375,13 @@ export default {
   tlcm10Description: "The tenth and newest generation of Three Lucky Coins Machines. Modern, reliable and fully compatible with all current casino systems.",
   tlcmProtoDescription: "The prototype unit of the Three Lucky Coins Machine. It is rumoured to have included all the features that would later appear in production models, but due to the technological limitations of the time, most of them were prone to malfunction.",
   
+  // MANAGERS
+
+  jamesDescription: "James doesn't like wasting time.\n\nHe keeps things short, expects quick decisions, and rarely gives anyone a second chance.\n\nThe only thing he seems unusually sentimental about is an old photograph he keeps in his office.",
+  jamesSaying: "We're gonna make it quick.",
+
+
+
 // SKILLS
 
   oopsIPaidYouTwiceSkillName: "Oops... I Paid You Twice",
@@ -528,6 +539,10 @@ export default {
 
   multipleMalfunctionsSkillName: "Multiple Malfunctions",
   multipleMalfunctionsSkillDescription: "PROTO has one permanent malfunction for the entire fight and another malfunction that changes every round.",
+
+  timeIsUpSkillName: "Time Is Up",
+  timeIsUpSkillDescription: "You have exactly 5 seconds to place a bet.\n\nIf you don't manage to do it, the bet is placed automatically with the bet value and combination that are chosen at the moment.",
+
 
   // PERKS
 

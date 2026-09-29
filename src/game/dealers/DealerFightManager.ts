@@ -143,6 +143,16 @@ export class DealerFightManager {
     );
   }
 
+  getNextDealer(): DealerData | null {
+    const nextIndex = this.currentDealerIndex + 1;
+
+    if (nextIndex >= this.dealerOrder.length) {
+      return null;
+    }
+
+    return this.dealerOrder[nextIndex];
+  }
+
   startFight(playerBalance: number): DealerFightState {
     const dealer = this.getCurrentDealer();
 

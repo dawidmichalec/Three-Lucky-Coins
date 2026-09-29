@@ -16,6 +16,7 @@ export class RunDealerGenerator {
       ...this.generateMidStage(),
       ...this.generateSeniorStage(),
       ...this.generateMachineFloorStage(),
+      ...this.generateManagerStage(),
     ];
   }
 
@@ -149,5 +150,11 @@ export class RunDealerGenerator {
       ...randomMachines,
       supervisor,
     ];
+  }
+
+  private static generateManagerStage(): DealerData[] {
+    const managers = getRegularDealersByGroup(DealerGroup.MANAGER);
+
+    return this.pickRandomDealers(managers, 1);
   }
 }

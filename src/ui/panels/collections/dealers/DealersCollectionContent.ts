@@ -43,8 +43,23 @@ export class DealerCollectionContent extends Container {
     },
 
     {
-      group: DealerGroup.MANAGEMENT,
+      group: DealerGroup.MANAGER,
       title: "management",
+    },
+
+    {
+      group: DealerGroup.VICE_PRESIDENT,
+      title: "vicePresident",
+    },
+
+    {
+      group: DealerGroup.OWNER,
+      title: "owners",
+    },
+
+    {
+      group: DealerGroup.THE_HOUSE,
+      title: "casino",
     },
   ];
 
