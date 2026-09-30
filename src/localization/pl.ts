@@ -120,6 +120,8 @@ export default {
   jamesOldPhotographDescription: "Stara fotografia, którą James trzyma w swoim biurze. Nikt nie wie czym jest budynek, który na niej jest.",
   danOldWallet: "Stary portfel Dana",
   danOldWalletDescription: "Stary portfel Dana. Jest do niego przywiązany równie mocno, jak do kasyna.",
+  marcusAccountingJournal: "Książka rachunkowa Marcusa",
+  marcusAccountingJournalDescription: "Rachunek zawsze się zgadza... na korzyść kasyna.",
 
 
   // PLAYER STATS LABELS
@@ -366,6 +368,8 @@ export default {
   jamesSaying: "Zrobimy to szybko.",
   danDescription: "Dan jest lojalny wobec kasyna dłużej, niż większość ludzi jest w stanie pamiętać. Nie kwestionuje jego zasad, nie dyskutuje z prawdopodobieństwem i głęboko wierzy, że każdy żeton prędzej czy później wraca do kasyna.",
   danSaying: "Kasyno zawsze wygrywa.",
+  marcusDescription: "Marcus od lat dba o to, aby księgi kasyna były w idealnym porządku.\n\nSpokojny, skrupulatny i obsesyjnie przywiązany do liczb uważa, że każdy żeton musi zostać rozliczony.\n\nJakimś cudem jego obliczenia zawsze wychodzą na korzyść kasyna.",
+  marcusSaying: "Są dwie pewne rzeczy w życiu: śmierć i... podatki!",
 
 
   // SKILL
@@ -538,6 +542,8 @@ export default {
   theHouseAlwaysWinsSkillName: "Kasyno zawsze wygrywa",
   theHouseAlwaysWinsSkillDescription: "W przypadku przegranej kasyno pobiera z Twojego salda dodatkowe 100% zakładu.",
 
+  winningTaxSkillName: "Podatek od wygranej",
+  winningTaxSkillDescription: "Każda wygrana jest pomniejszana o 20%.",
 
   // PERKS
 

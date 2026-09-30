@@ -1227,6 +1227,7 @@ export class GameScene extends BaseScene {
     const payoutPenaltySkills = [
       DealerSkillId.PATTERN_BREAKER,
       DealerSkillId.DEJA_VU,
+      DealerSkillId.WINNING_TAX,
     ];
 
     const payoutPresentationSkills = [

@@ -126,6 +126,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.THE_HOUSE_ALWAYS_WINS:
           await this.gameMessageOverlay.play("theHouseAlwaysWinsSkillName");
           break;
+
+        case DealerSkillId.WINNING_TAX:
+          await this.gameMessageOverlay.play("winningTaxSkillName");
+          break;
       }
     }
   }

@@ -307,6 +307,16 @@ export class RoundOutcomeHandler {
       );
     }
 
+    const winningTaxSkill = dealer.skills.find(
+      (skill) => skill.id === DealerSkillId.WINNING_TAX,
+    );
+
+    if (winningTaxSkill) {
+      finalWinAmount = roundMoney(finalWinAmount * 0.8);
+
+      triggeredSkills.push(DealerSkillId.WINNING_TAX);
+    }
+
     return {
       winAmount: finalWinAmount,
       triggeredSkills,

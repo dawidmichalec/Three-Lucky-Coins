@@ -103,6 +103,8 @@ export enum DealerSkillId {
 
   THE_HOUSE_ALWAYS_WINS = "the_house_always_wins",
 
+  WINNING_TAX = "winning_tax"
+
   // Kolejne skille w przyszłości...
 }
 

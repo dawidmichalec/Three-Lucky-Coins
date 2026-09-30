@@ -121,6 +121,9 @@ export default {
   jamesOldPhotographDescription: "An old photograph James keeps in his office. No one knows what is the meaning of the building in it.",
   danOldWallet: "Dan's Old Wallet",
   danOldWalletDescription: "Dan's old wallet. He's as loyal to it as he is to the casino.",
+  marcusAccountingJournal: "Marcus's Accounting Journal",
+  marcusAccountingJournalDescription: "The numbers always add up... in the casino's favor.",
+
 
 
   // PLAYER STATS LABELS
@@ -383,6 +386,8 @@ export default {
   jamesSaying: "We're gonna make it quick.",
   danDescription: "Dan has been loyal to the casino for longer than most people can remember.\n\nHe doesn't question its rules, doesn't argue with the odds, and firmly believes that every chip eventually finds its way back to the house.",
   danSaying: "The house always wins.",
+  marcusDescription: "Marcus has spent years keeping the casino's books in perfect order.\n\nCalm, meticulous, and obsessed with numbers, he believes that every chip should be accounted for.\n\nSomehow, his calculations always seem to favor the casino.",
+  marcusSaying: "There are two certain things in life: death and... taxes!",
 
 
 
@@ -549,6 +554,9 @@ export default {
 
   theHouseAlwaysWinsSkillName: "The House Always Wins",
   theHouseAlwaysWinsSkillDescription: "On a loss, an additional 100% of your bet is deducted from your balance.",
+
+  winningTaxSkillName: "Winning Tax",
+  winningTaxSkillDescription: "Every win is decreased by 20%.",
 
 
   // PERKS
