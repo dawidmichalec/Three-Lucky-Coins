@@ -124,6 +124,11 @@ export class DealerFightManager {
   private protoPermanentMalfunction?: DealerSkillId;
   private protoActiveMalfunction?: DealerSkillId;
 
+  private casinoPolicyCombination?: string;
+  private casinoPolicyLockedUntilRound = 0;
+
+private static readonly CASINO_POLICY_LOCK_ROUNDS = 5;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -225,6 +230,9 @@ export class DealerFightManager {
 
     this.protoPermanentMalfunction = undefined;
     this.protoActiveMalfunction = undefined;
+
+    this.casinoPolicyCombination = undefined;
+    this.casinoPolicyLockedUntilRound = 0;
 
     if (this.isProtoFight()) {
       this.rollProtoPermanentMalfunction();
@@ -370,6 +378,37 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  isCasinoPolicyLockActive(): boolean {
+    if (!this.hasActiveSkill(DealerSkillId.CASINO_POLICY)) {
+      return false;
+    }
+
+    if (!this.casinoPolicyCombination) {
+      return false;
+    }
+
+    const nextRound = this.fightRounds + 1;
+
+    return nextRound <= this.casinoPolicyLockedUntilRound;
+  }
+
+  recordCasinoPolicyCombination(combination: readonly string[]): boolean {
+    if (!this.hasActiveSkill(DealerSkillId.CASINO_POLICY)) {
+      return false;
+    }
+
+    const nextRound = this.fightRounds + 1;
+
+    if (nextRound <= this.casinoPolicyLockedUntilRound) {
+      return false;
+    }
+
+    this.casinoPolicyCombination = combination.join("-");
+    this.casinoPolicyLockedUntilRound = nextRound + DealerFightManager.CASINO_POLICY_LOCK_ROUNDS;
+
+    return true;
   }
 
   private isProtoFight(): boolean {
@@ -907,6 +946,16 @@ export class DealerFightManager {
 
         case IvyCombinationRule.NO_TAILS_MAJORITY:
           return tailsCount >= 2;
+      }
+    }
+
+    const hasCasinoPolicy = this.hasActiveSkill(DealerSkillId.CASINO_POLICY);
+
+    if (hasCasinoPolicy && this.casinoPolicyCombination) {
+      const nextRound = this.fightRounds + 1;
+
+      if (nextRound <= this.casinoPolicyLockedUntilRound) {
+        return combination.join("-") !== this.casinoPolicyCombination;
       }
     }
 

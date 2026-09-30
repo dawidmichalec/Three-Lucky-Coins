@@ -103,7 +103,9 @@ export enum DealerSkillId {
 
   THE_HOUSE_ALWAYS_WINS = "the_house_always_wins",
 
-  WINNING_TAX = "winning_tax"
+  WINNING_TAX = "winning_tax",
+
+  CASINO_POLICY = "casino_policy"
 
   // Kolejne skille w przyszłości...
 }

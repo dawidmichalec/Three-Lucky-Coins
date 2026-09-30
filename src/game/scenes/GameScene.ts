@@ -563,6 +563,7 @@ export class GameScene extends BaseScene {
 
     this.updateIvyRule();
 
+    this.updateCombinationSelectorBlock();
     this.updateCombinationStatus();
   }
 
@@ -848,14 +849,22 @@ export class GameScene extends BaseScene {
   }
 
   private updateCombinationSelectorBlock(): void {
-    const blockedIndex =
-      this.dealerFightManager
-        .getBlockedCombinationSelector();
+    const casinoPolicyLocked = this.dealerFightManager.isCasinoPolicyLockActive();
 
-    this.view.controls
-      .setBlockedCombinationSelector(
-        blockedIndex,
-      );
+    const fixedCombinationLocked =
+      this.dealerFightManager.hasActiveSkill(DealerSkillId.FIXED_COMBINATION_LOCK) &&
+      this.perkGameplayController.shouldApplyFixedCombinationLock();
+
+    if (casinoPolicyLocked || fixedCombinationLocked) {
+      this.view.controls.setCombinationDisabled(true);
+      return;
+    }
+
+    this.view.controls.setCombinationDisabled(false);
+
+    const blockedIndex = this.dealerFightManager.getBlockedCombinationSelector();
+
+    this.view.controls.setBlockedCombinationSelector(blockedIndex);
   }
 
   private updateCombinationStatus(): void {
@@ -930,6 +939,8 @@ export class GameScene extends BaseScene {
     if (combinationBlocked) {
       return;
     }
+
+    this.dealerFightManager.recordCasinoPolicyCombination(selected);
 
     const highestAffordableBet = this.controller.getHighestAffordableBet(
       this.player.balance,
@@ -1747,6 +1758,7 @@ export class GameScene extends BaseScene {
 
     this.updateIvyRule();
 
+    this.updateCombinationSelectorBlock();
     this.updateCombinationStatus();
 
     if (

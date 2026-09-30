@@ -122,6 +122,9 @@ export default {
   danOldWalletDescription: "Stary portfel Dana. Jest do niego przywiązany równie mocno, jak do kasyna.",
   marcusAccountingJournal: "Książka rachunkowa Marcusa",
   marcusAccountingJournalDescription: "Rachunek zawsze się zgadza... na korzyść kasyna.",
+  graceTermsAndConditions: "Regulamin Grace",
+  graceTermsAndConditionsDescription: "Nikt go nie czyta... aż nie jest za późno.",
+
 
 
   // PLAYER STATS LABELS
@@ -370,6 +373,8 @@ export default {
   danSaying: "Kasyno zawsze wygrywa.",
   marcusDescription: "Marcus od lat dba o to, aby księgi kasyna były w idealnym porządku.\n\nSpokojny, skrupulatny i obsesyjnie przywiązany do liczb uważa, że każdy żeton musi zostać rozliczony.\n\nJakimś cudem jego obliczenia zawsze wychodzą na korzyść kasyna.",
   marcusSaying: "Są dwie pewne rzeczy w życiu: śmierć i... podatki!",
+  graceDescription: "Grace zna na pamięć każdą zasadę, regulamin i procedurę kasyna.\n\nSurowa, opanowana i bezwzględnie profesjonalna pilnuje, aby wszystko odbywało się dokładnie według przepisów.\n\nNa wszystko znajdzie się jakaś zasada... a Grace dopilnuje, żebyś jej przestrzegał.",
+  graceSaying: "Przestrzeganie przepisów jest kluczowe.",
 
 
   // SKILL
@@ -544,6 +549,10 @@ export default {
 
   winningTaxSkillName: "Podatek od wygranej",
   winningTaxSkillDescription: "Każda wygrana jest pomniejszana o 20%.",
+
+  casinoPolicySkillName: "Regulamin Kasyna",
+  casinoPolicySkillDescription: "Blokuje wybraną kombinację na 5 rund. Po odblokowaniu kolejna zagrana kombinacja zostaje ponownie zablokowana na 5 rund.",
+
 
   // PERKS
 

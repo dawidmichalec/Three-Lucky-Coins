@@ -123,6 +123,8 @@ export default {
   danOldWalletDescription: "Dan's old wallet. He's as loyal to it as he is to the casino.",
   marcusAccountingJournal: "Marcus's Accounting Journal",
   marcusAccountingJournalDescription: "The numbers always add up... in the casino's favor.",
+  graceTermsAndConditions: "Grace's Terms and Conditions",
+  graceTermsAndConditionsDescription: "Nobody reads them... until it's too late.",
 
 
 
@@ -388,6 +390,8 @@ export default {
   danSaying: "The house always wins.",
   marcusDescription: "Marcus has spent years keeping the casino's books in perfect order.\n\nCalm, meticulous, and obsessed with numbers, he believes that every chip should be accounted for.\n\nSomehow, his calculations always seem to favor the casino.",
   marcusSaying: "There are two certain things in life: death and... taxes!",
+  graceDescription: "Grace knows every casino rule, policy, and procedure by heart.\n\nStrict, composed, and relentlessly professional, she makes sure everything is done exactly by the book.\n\nThere is always a rule for everything... and Grace will make sure you follow it.",
+  graceSaying: "Compliance is vital.",
 
 
 
@@ -557,6 +561,9 @@ export default {
 
   winningTaxSkillName: "Winning Tax",
   winningTaxSkillDescription: "Every win is decreased by 20%.",
+
+  casinoPolicySkillName: "Casino Policy",
+  casinoPolicySkillDescription: "Locks your chosen combination for 5 rounds. Once unlocked, the next combination you play is locked again for 5 rounds.",
 
 
   // PERKS

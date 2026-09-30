@@ -493,5 +493,13 @@ export const DAN_PROFILE: DealerOddsProfile = {
 export const MARCUS_PROFILE: DealerOddsProfile = {
   visibility: OddsVisibility.EXACT,
 
-  headsProbabilities: [0.1, 0.15, 0.2, 0.25, 0.3, 0.7, 0.75, 0.8, 0.85, 0.90],
+  headsProbabilities: [0.1, 0.15, 0.2, 0.25, 0.3, 0.7, 0.75, 0.8, 0.85, 0.9],
+};
+
+// GRACE
+
+export const GRACE_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.7, 0.72, 0.74, 0.76, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9],
 };

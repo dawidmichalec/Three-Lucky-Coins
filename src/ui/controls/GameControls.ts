@@ -150,4 +150,8 @@ export class GameControls extends Container {
       this.tossButton.update(delta);
     }
   }
+
+  setCombinationDisabled(value: boolean): void {
+    this.combinationSelector.setDisabled(value);
+  }
 }
