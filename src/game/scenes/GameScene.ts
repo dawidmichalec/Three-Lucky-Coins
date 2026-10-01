@@ -554,6 +554,11 @@ export class GameScene extends BaseScene {
 
     this.updateBetControlRestrictions();
 
+    if (!this.canPlay()) {
+      void this.triggerGameOver();
+      return;
+    }
+
     this.view.gameUI.updateDealerObjective(
       this.currentDealer,
       fight.targetBalance,

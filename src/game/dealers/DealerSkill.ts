@@ -105,7 +105,9 @@ export enum DealerSkillId {
 
   WINNING_TAX = "winning_tax",
 
-  CASINO_POLICY = "casino_policy"
+  CASINO_POLICY = "casino_policy",
+
+  HIGH_STAKES = "high_stakes"
 
   // Kolejne skille w przyszłości...
 }

@@ -125,6 +125,9 @@ export default {
   marcusAccountingJournalDescription: "The numbers always add up... in the casino's favor.",
   graceTermsAndConditions: "Grace's Terms and Conditions",
   graceTermsAndConditionsDescription: "Nobody reads them... until it's too late.",
+  victorStackOfCasinoChips: "Stack of Casino Chips",
+  victorStackOfCasinoChipsDescription: "Now that's what Victor calls a proper bet.",
+
 
 
 
@@ -392,6 +395,8 @@ export default {
   marcusSaying: "There are two certain things in life: death and... taxes!",
   graceDescription: "Grace knows every casino rule, policy, and procedure by heart.\n\nStrict, composed, and relentlessly professional, she makes sure everything is done exactly by the book.\n\nThere is always a rule for everything... and Grace will make sure you follow it.",
   graceSaying: "Compliance is vital.",
+  victorDescription: "Victor has little patience for cautious players and small bets.\n\nFor him, gambling is at its best when there's something serious at stake.\n\nThe bigger the risk, the better the thrill.",
+  victorSaying: "C’mon, those are rookie numbers in this racket.",
 
 
 
@@ -564,6 +569,9 @@ export default {
 
   casinoPolicySkillName: "Casino Policy",
   casinoPolicySkillDescription: "Locks your chosen combination for 5 rounds. Once unlocked, the next combination you play is locked again for 5 rounds.",
+
+  highStakesSkillName: "High Stakes",
+  highStakesSkillDescription: "The minimum bet is 25.00.",
 
 
   // PERKS

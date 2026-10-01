@@ -15,6 +15,7 @@ export class BetRestrictionManager {
   private runtimeSkills = new Set<DealerSkillId>();
   private betSlotMalfunctionBlockedBet: number | null = null;
   private dynamicBetLockBet: number | null = null;
+  private static readonly HIGH_STAKES_MIN_BET = 25;
 
   setDealer(
     dealer: DealerData,
@@ -254,6 +255,13 @@ export class BetRestrictionManager {
   }
 
   isBetAvailable(bet: number): boolean {
+    if (
+      this.hasSkill(DealerSkillId.HIGH_STAKES) &&
+      bet < BetRestrictionManager.HIGH_STAKES_MIN_BET
+    ) {
+      return false;
+    }
+
     if (this.blockedBets.has(bet)) {
       return false;
     }
@@ -262,7 +270,10 @@ export class BetRestrictionManager {
       return false;
     }
 
-    if (this.dynamicBetLockBet !== null && bet !== this.dynamicBetLockBet) {
+    if (
+      this.dynamicBetLockBet !== null &&
+      bet !== this.dynamicBetLockBet
+    ) {
       return false;
     }
 

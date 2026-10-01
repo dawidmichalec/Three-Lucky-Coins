@@ -124,6 +124,9 @@ export default {
   marcusAccountingJournalDescription: "Rachunek zawsze się zgadza... na korzyść kasyna.",
   graceTermsAndConditions: "Regulamin Grace",
   graceTermsAndConditionsDescription: "Nikt go nie czyta... aż nie jest za późno.",
+  victorStackOfCasinoChips: "Stos żetonów",
+  victorStackOfCasinoChipsDescription: "To Victor nazywa porządnym zakładem.",
+
 
 
 
@@ -375,6 +378,8 @@ export default {
   marcusSaying: "Są dwie pewne rzeczy w życiu: śmierć i... podatki!",
   graceDescription: "Grace zna na pamięć każdą zasadę, regulamin i procedurę kasyna.\n\nSurowa, opanowana i bezwzględnie profesjonalna pilnuje, aby wszystko odbywało się dokładnie według przepisów.\n\nNa wszystko znajdzie się jakaś zasada... a Grace dopilnuje, żebyś jej przestrzegał.",
   graceSaying: "Przestrzeganie przepisów jest kluczowe.",
+  victorDescription: "Victor nie ma cierpliwości do ostrożnych graczy i niskich stawek.\n\nDla niego hazard zaczyna się dopiero wtedy, gdy naprawdę jest o co grać.\n\nIm większe ryzyko, tym większe emocje.",
+  victorSaying: "Daj spokój, to są śmieszne stawki.",
 
 
   // SKILL
@@ -552,6 +557,9 @@ export default {
 
   casinoPolicySkillName: "Regulamin Kasyna",
   casinoPolicySkillDescription: "Blokuje wybraną kombinację na 5 rund. Po odblokowaniu kolejna zagrana kombinacja zostaje ponownie zablokowana na 5 rund.",
+
+  highStakesSkillName: "Wysokie stawki",
+  highStakesSkillDescription: "Minimalna stawka wynosi 25.00.",
 
 
   // PERKS
