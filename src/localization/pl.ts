@@ -744,6 +744,16 @@ export default {
   hotStreakDescriptionEpic: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 20% do końca walki.",
   hotStreakDescriptionLegendary: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 25% do końca walki.",
 
+  // ON A ROLL
+
+  onARollName: "NA FALI",
+
+  onARollDescriptionCommon: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +2.5%\nx5 → +5%\nx7 → +7.5%\nx10 → +10%",
+  onARollDescriptionUncommon: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +5%\nx5 → +10%\nx7 → +15%\nx10 → +25%",
+  onARollDescriptionRare: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +7.5%\nx5 → +15%\nx7 → +22.5%\nx10 → +30%",
+  onARollDescriptionEpic: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
+  onARollDescriptionLegendary: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
+
 
   // PERKS GAME UI
 

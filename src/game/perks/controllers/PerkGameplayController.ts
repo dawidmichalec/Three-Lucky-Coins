@@ -303,13 +303,27 @@ export class PerkGameplayController {
   async handleMultiplierChanged(multiplier: number): Promise<void> {
     const hotStreakActivated = this.perkEffectApplier.tryActivateHotStreak(multiplier);
 
-    if (!hotStreakActivated) {
+    if (hotStreakActivated) {
+      await this.perkEffectMessageOverlay.play(
+        "hotStreakName",
+        "",
+        PerkEffectMessageType.POSITIVE,
+      );
+    }
+
+    const onARollActivation = this.perkEffectApplier.tryActivateOnARoll(multiplier);
+
+    if (!onARollActivation.triggered || !onARollActivation.milestone) {
       return;
     }
 
+    const increasePercentage = roundMoney(
+      onARollActivation.milestone.winningsBonus * 100,
+    );
+
     await this.perkEffectMessageOverlay.play(
-      "hotStreakName",
-      "",
+      "winningsIncreasedBy",
+      `+${increasePercentage}%`,
       PerkEffectMessageType.POSITIVE,
     );
   }

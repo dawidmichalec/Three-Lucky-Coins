@@ -5,6 +5,7 @@ import { GamblerResult } from "../perks/effects/GamblerEffect";
 import { LuckyHandResult } from "../perks/effects/LuckyHandEffect";
 import { roundMoney } from "../util/MoneyUtils";
 import { HotStreakResult } from "../perks/effects/HotStreakEffect";
+import { OnARollResult } from "../perks/effects/OnARollEffect";
 
 
 export interface RoundPayoutInput {
@@ -25,6 +26,7 @@ export interface RoundPayoutResult {
     gamblerResult: GamblerResult;
     luckyHandResult: LuckyHandResult;
     hotStreakResult: HotStreakResult;
+    onARollResult: OnARollResult;
     underdogBonusAmount: number;
     finalWinAmount: number;
 }
@@ -99,17 +101,23 @@ export class RoundPayoutResolver {
                     luckyHandResult.finalWinAmount
                 );
 
+        const onARollResult =
+            this.perkEffectApplier
+                .applyOnARoll(
+                    hotStreakResult.finalWinAmount
+                );
+
         const underdogBonus = this.perkEffectApplier.getUnderdogWinningsBonus(
             input.currentBalance,
             input.fightStartingBalance,
         );
 
         const underdogBonusAmount = roundMoney(
-            hotStreakResult.finalWinAmount * underdogBonus
+            onARollResult.finalWinAmount * underdogBonus
         );
 
         const finalWinAmount = roundMoney(
-            hotStreakResult.finalWinAmount + underdogBonusAmount
+            onARollResult.finalWinAmount + underdogBonusAmount
         );
 
         return {
@@ -118,6 +126,7 @@ export class RoundPayoutResolver {
             gamblerResult,
             luckyHandResult,
             hotStreakResult,
+            onARollResult,
             underdogBonusAmount,
             finalWinAmount
         };

@@ -16,6 +16,7 @@ import { DecisivenessEffect } from "./effects/DecisivenessEffect";
 import { SafetyNetEffect } from "./effects/SafetyNetEffect";
 import { UnderdogEffect } from "./effects/UnderdogEffect";
 import { HotStreakEffect, HotStreakResult } from "./effects/HotStreakEffect";
+import { OnARollActivationResult, OnARollEffect, OnARollResult } from "./effects/OnARollEffect";
 
 
 export class PerkEffectApplier {
@@ -31,6 +32,7 @@ export class PerkEffectApplier {
   private readonly safetyNetEffect: SafetyNetEffect;
   private readonly underdogEffect: UnderdogEffect;
   private readonly hotStreakEffect: HotStreakEffect;
+  private readonly onARollEffect: OnARollEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -82,6 +84,8 @@ export class PerkEffectApplier {
 
     this.hotStreakEffect = new HotStreakEffect(this.runPerkManager);
 
+    this.onARollEffect = new OnARollEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -111,6 +115,8 @@ export class PerkEffectApplier {
     this.coinSenseEffect.resetFight();
 
     this.hotStreakEffect.resetFight();
+
+    this.onARollEffect.resetFight();
   }
 
   private applyMultiplierBooster(reward: PerkReward): void {
@@ -282,5 +288,13 @@ export class PerkEffectApplier {
 
   applyHotStreak(winAmount: number): HotStreakResult {
     return this.hotStreakEffect.apply(winAmount);
+  }
+
+  tryActivateOnARoll(multiplier: number): OnARollActivationResult {
+    return this.onARollEffect.tryActivate(multiplier);
+  }
+
+  applyOnARoll(winAmount: number): OnARollResult {
+    return this.onARollEffect.apply(winAmount);
   }
 }

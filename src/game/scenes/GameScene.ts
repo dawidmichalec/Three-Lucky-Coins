@@ -1357,13 +1357,14 @@ export class GameScene extends BaseScene {
         });
 
       const {
-          coinSenseResult,
-          riskTakerResult,
-          gamblerResult,
-          luckyHandResult,
-          hotStreakResult,
-          underdogBonusAmount,
-          finalWinAmount
+        coinSenseResult,
+        riskTakerResult,
+        gamblerResult,
+        luckyHandResult,
+        hotStreakResult,
+        onARollResult,
+        underdogBonusAmount,
+        finalWinAmount
       } = payoutResult;
 
       console.log(
@@ -1393,6 +1394,13 @@ export class GameScene extends BaseScene {
               hotStreakResult.bonusAmount,
               hotStreakResult.finalWinAmount,
           );
+      }
+
+      if (onARollResult.bonusAmount > 0) {
+        await this.view.gameUI.animateBonusIntoWon(
+          onARollResult.bonusAmount,
+          onARollResult.finalWinAmount,
+        );
       }
 
       if (underdogBonusAmount > 0) {

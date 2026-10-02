@@ -100,5 +100,15 @@ export enum CheatCode {
   FORCE_HOT_STREAK_UNCOMMON = "perk_hot_streak_uncommon",
   FORCE_HOT_STREAK_RARE = "perk_hot_streak_rare",
   FORCE_HOT_STREAK_EPIC = "perk_hot_streak_epic",
-  FORCE_HOT_STREAK_LEGENDARY = "perk_hot_streak_legendary"
+  FORCE_HOT_STREAK_LEGENDARY = "perk_hot_streak_legendary",
+
+  // ON A ROLL
+
+  FORCE_ON_A_ROLL_COMMON = "perk_on_a_roll_common",
+  FORCE_ON_A_ROLL_UNCOMMON = "perk_on_a_roll_uncommon",
+  FORCE_ON_A_ROLL_RARE = "perk_on_a_roll_rare",
+  FORCE_ON_A_ROLL_EPIC = "perk_on_a_roll_epic",
+  FORCE_ON_A_ROLL_LEGENDARY = "perk_on_a_roll_legendary"
+
+
 }

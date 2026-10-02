@@ -757,6 +757,17 @@ export default {
   hotStreakDescriptionEpic: "Reach a x5 multiplier to increase winnings by 20% for the rest of the fight.",
   hotStreakDescriptionLegendary: "Reach a x5 multiplier to increase winnings by 25% for the rest of the fight.",
 
+  // ON A ROLL
+
+  onARollName: "ON A ROLL",
+
+  onARollDescriptionCommon: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +2.5%\nx5 → +5%\nx7 → +7.5%\nx10 → +10%",
+  onARollDescriptionUncommon: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +5%\nx5 → +10%\nx7 → +15%\nx10 → +25%",
+  onARollDescriptionRare: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +7.5%\nx5 → +15%\nx7 → +22.5%\nx10 → +30%",
+  onARollDescriptionEpic: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
+  onARollDescriptionLegendary: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
+
+
 
   // PERKS GAME UI
 
