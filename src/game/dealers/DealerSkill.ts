@@ -107,7 +107,9 @@ export enum DealerSkillId {
 
   CASINO_POLICY = "casino_policy",
 
-  HIGH_STAKES = "high_stakes"
+  HIGH_STAKES = "high_stakes",
+
+  SECURITY_CHECK = "security_check"
 
   // Kolejne skille w przyszłości...
 }

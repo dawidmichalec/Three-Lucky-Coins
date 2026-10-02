@@ -127,6 +127,9 @@ export default {
   graceTermsAndConditionsDescription: "Nobody reads them... until it's too late.",
   victorStackOfCasinoChips: "Stack of Casino Chips",
   victorStackOfCasinoChipsDescription: "Now that's what Victor calls a proper bet.",
+  lionelSecurityCard: "Security ID Card",
+  lionelSecurityCardDescription: "Nothing leaves the casino without Lionel's approval.",
+
 
 
 
@@ -202,6 +205,8 @@ export default {
   noAllSame: "No All Same",
   noHeadsMajority: "No Heads Majority",
   noTailsMajority: "No Tails Majority",
+  accepted: "ACCEPTED",
+  declined: "DECLINED",
 
 
   // GAMBLE FOR MORE
@@ -397,6 +402,8 @@ export default {
   graceSaying: "Compliance is vital.",
   victorDescription: "Victor has little patience for cautious players and small bets.\n\nFor him, gambling is at its best when there's something serious at stake.\n\nThe bigger the risk, the better the thrill.",
   victorSaying: "C’mon, those are rookie numbers in this racket.",
+  lionelDescription: "Lionel runs casino security with absolute authority.\n\nEvery win looks suspicious to him until proven otherwise.\n\nIf money is leaving the casino, he wants to know why.",
+  lionelSaying: "Don’t try to trick me with your cheap shots!",
 
 
 
@@ -572,6 +579,10 @@ export default {
 
   highStakesSkillName: "High Stakes",
   highStakesSkillDescription: "The minimum bet is 25.00.",
+
+  securityCheckSkillName: "Security Check",
+  securityCheckSkillDescription: "Every win is frozen for three rounds and may or may not be paid out.",
+
 
 
   // PERKS

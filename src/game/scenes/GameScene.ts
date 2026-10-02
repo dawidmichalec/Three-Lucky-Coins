@@ -51,6 +51,7 @@ import { FORCED_RANDOM_TOSS_PROFILE } from "../probability/DealerOddsProfiles";
 import { CoinOdds, DealerOddsProfile, OddsTable } from "../probability/OddsTypes";
 import { getMachineFloorSkill } from "../dealers/MachineFloorSkillRegistry";
 import { DealerGroup } from "../dealers/DealerGroup";
+import { SecurityCheckManager } from "../SecurityCheckManager";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -100,6 +101,7 @@ export class GameScene extends BaseScene {
 
   private static readonly UNSTABLE_PROBABILITY_INTERVAL = 700;
   private currentDealer: DealerData;
+  private securityCheckManager = new SecurityCheckManager();
   
 
   constructor(
@@ -687,6 +689,20 @@ export class GameScene extends BaseScene {
     this.currentDealer = dealer;
 
     this.roundOutcomeHandler.resetDealerState();
+
+    this.securityCheckManager.reset();
+
+    this.updateSecurityCheckUI();
+
+    const securityCheckActive = dealer.skills.some(
+      (skill) => skill.id === DealerSkillId.SECURITY_CHECK,
+    );
+
+    if (securityCheckActive) {
+      this.view.gameUI.showSecurityCheck();
+    } else {
+      this.view.gameUI.hideSecurityCheck();
+    }
 
     this.betRestrictionManager.setDealer(dealer, this.player.balance);
 
@@ -1482,9 +1498,7 @@ export class GameScene extends BaseScene {
         streakMultiplier: this.streakMultiplierManager.getValue(),
       });
 
-      this.commitWin(habitBreakerWinAmount);
-
-      await this.perkGameplayController.handleWinCommitted();
+      await this.commitOrFreezeWin(habitBreakerWinAmount,);
 
       await this.finishRound(true);
 
@@ -1547,6 +1561,91 @@ export class GameScene extends BaseScene {
     await this.finishRound(false);
   }
 
+  private updateSecurityCheckUI(): void {
+      this.view.gameUI.updateSecurityCheckWins(this.securityCheckManager.getFrozenWins(),);
+  }
+
+  private async commitOrFreezeWin(
+    winAmount: number,
+  ): Promise<void> {
+    const securityCheckActive =
+      this.currentDealer.skills.some(
+        (skill) =>
+          skill.id === DealerSkillId.SECURITY_CHECK,
+      );
+
+    if (securityCheckActive) {
+      this.securityCheckManager.freezeWin(
+          winAmount,
+      );
+
+      await this.view.gameUI.animateWinIntoSecurityCheck(winAmount,);
+
+
+      this.updateSecurityCheckUI();
+
+      return;
+    }
+
+    this.commitWin(winAmount);
+
+    await this.perkGameplayController
+      .handleWinCommitted();
+  }
+
+  private async advanceSecurityCheck(): Promise<void> {
+    const securityCheckSkill = this.currentDealer.skills.find(
+      (skill) => skill.id === DealerSkillId.SECURITY_CHECK,
+    );
+
+    if (!securityCheckSkill) {
+      return;
+    }
+
+    const acceptChance = securityCheckSkill.triggerChance ?? 0.7;
+
+    const resolutions = this.securityCheckManager.advanceRound(
+      acceptChance,
+    );
+
+    for (const resolution of resolutions) {
+      if (resolution.accepted) {
+        await this.view.perkEffectMessageOverlay.play(
+          "winLabel",
+          resolution.amount.toFixed(2),
+          PerkEffectMessageType.POSITIVE,
+          850,
+          "accepted",
+        );
+
+        await this.view.gameUI.animateSecurityCheckWinToBalance(
+          resolution.id,
+          resolution.amount,
+        );
+
+        this.commitWin(resolution.amount);
+      } else {
+        await this.view.perkEffectMessageOverlay.play(
+          "winLabel",
+          resolution.amount.toFixed(2),
+          PerkEffectMessageType.NEGATIVE,
+          850,
+          "declined",
+        );
+
+        await this.view.gameUI.animateSecurityCheckWinDeclined(
+          resolution.id,
+        );
+      }
+
+      await this.view.gameUI.removeSecurityCheckWinAndShift(
+        resolution.id,
+      );
+    }
+
+    this.updateSecurityCheckUI();
+  }
+
   private startGambleForMore(
     winAmount: number,
     bet: number,
@@ -1602,9 +1701,7 @@ export class GameScene extends BaseScene {
         this.pendingHabitBreakerTriggered,
       );
 
-    this.commitWin(habitBreakerWinAmount);
-
-    await this.perkGameplayController.handleWinCommitted();
+    await this.commitOrFreezeWin(habitBreakerWinAmount,);
 
     if (this.pendingStreakResolution) {
       const previousMultiplier =
@@ -1760,6 +1857,8 @@ export class GameScene extends BaseScene {
     }
 
     this.dealerFightManager.recordCompletedRound();
+
+    await this.advanceSecurityCheck();
 
     this.updateIvyRule();
 

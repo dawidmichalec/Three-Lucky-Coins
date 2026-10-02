@@ -20,6 +20,8 @@ export class PerkEffectMessageOverlay extends Container {
 
   private valueLabel: Text;
 
+  private suffixLabel: LocalizedText;
+
   private animationFrameId?: number;
 
   private isAnimating = false;
@@ -76,7 +78,18 @@ export class PerkEffectMessageOverlay extends Container {
       },
     });
 
-    this.messageContainer.addChild(this.messageLabel, this.valueLabel);
+    this.suffixLabel = new LocalizedText("accepted", {
+      fontFamily: "Anek-Kannada Bold",
+      fontSize: 64,
+      fontWeight: "bold",
+      fill: 0x39ff14,
+    });
+
+    this.messageContainer.addChild(
+      this.messageLabel,
+      this.valueLabel,
+      this.suffixLabel,
+    );
 
     this.addChild(this.background, this.messageContainer);
   }
@@ -86,6 +99,7 @@ export class PerkEffectMessageOverlay extends Container {
     value = "",
     type: PerkEffectMessageType = PerkEffectMessageType.POSITIVE,
     visibleDuration = 850,
+    suffix?: TranslationKey,
   ): Promise<void> {
     if (this.isAnimating) {
       return;
@@ -94,6 +108,13 @@ export class PerkEffectMessageOverlay extends Container {
     this.messageLabel.setKey(message);
 
     this.valueLabel.text = value;
+
+    if (suffix) {
+      this.suffixLabel.setKey(suffix);
+      this.suffixLabel.visible = true;
+    } else {
+      this.suffixLabel.visible = false;
+    }
 
     this.setMessageStyle(type);
 
@@ -125,19 +146,49 @@ export class PerkEffectMessageOverlay extends Container {
   private updateMessageLayout(): void {
     const spacing = 20;
 
+    const valueWidth =
+      this.valueLabel.text
+        ? spacing + this.valueLabel.width
+        : 0;
+
+    const suffixWidth =
+      this.suffixLabel.visible
+        ? spacing + this.suffixLabel.width
+        : 0;
+
     const totalWidth =
       this.messageLabel.width +
-      (this.valueLabel.text ? spacing + this.valueLabel.width : 0);
+      valueWidth +
+      suffixWidth;
+
+    let currentX = -totalWidth / 2;
 
     this.messageLabel.position.set(
-      -totalWidth / 2,
+      currentX,
       -this.messageLabel.height / 2,
     );
 
-    this.valueLabel.position.set(
-      this.messageLabel.x + this.messageLabel.width + spacing,
-      -this.valueLabel.height / 2,
-    );
+    currentX += this.messageLabel.width;
+
+    if (this.valueLabel.text) {
+      currentX += spacing;
+
+      this.valueLabel.position.set(
+        currentX,
+        -this.valueLabel.height / 2,
+      );
+
+      currentX += this.valueLabel.width;
+    }
+
+    if (this.suffixLabel.visible) {
+      currentX += spacing;
+
+      this.suffixLabel.position.set(
+        currentX,
+        -this.suffixLabel.height / 2,
+      );
+    }
   }
 
   private setMessageStyle(type: PerkEffectMessageType): void {
@@ -150,6 +201,8 @@ export class PerkEffectMessageOverlay extends Container {
     this.messageLabel.style.fill = fill;
 
     this.valueLabel.style.fill = fill;
+
+    this.suffixLabel.style.fill = fill;
 
     /*
             Pixi wymaga angle w TextDropShadow,
@@ -165,6 +218,14 @@ export class PerkEffectMessageOverlay extends Container {
     };
 
     this.valueLabel.style.dropShadow = {
+      alpha: 1,
+      blur: 18,
+      color: shadowColor,
+      distance: 0,
+      angle: 0,
+    };
+
+    this.suffixLabel.style.dropShadow = {
       alpha: 1,
       blur: 18,
       color: shadowColor,

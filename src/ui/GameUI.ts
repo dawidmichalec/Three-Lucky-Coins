@@ -12,6 +12,7 @@ import { SoundId } from "../audio/SoundId";
 import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkTooltip } from "./components/PerkTooltip";
 import { LayoutManager } from "../core/LayoutManager";
+import { SecurityCheckPanel } from "./panels/SecurityCheckPanel";
 
 export class GameUI extends Container {
   private balanceValue: Text;
@@ -45,6 +46,8 @@ export class GameUI extends Container {
   public ivyRuleContent!: LocalizedText;
 
   private multiplierMalfunctionAnimationId?: number;
+
+  public securityCheckPanel!: SecurityCheckPanel;
 
 
   constructor(private currentDealer: DealerData) {
@@ -322,6 +325,10 @@ export class GameUI extends Container {
     this.ivyRuleContent.position.set(1665, 395.6);
     this.ivyRuleContent.visible = false;
 
+    this.securityCheckPanel = new SecurityCheckPanel();
+    this.securityCheckPanel.position.set(125, 20);
+    this.securityCheckPanel.visible = false;
+
 
     // ADD
 
@@ -342,7 +349,8 @@ export class GameUI extends Container {
       this.decayValue,
       this.combinationStatusLabel,
       this.ivyRuleLabel,
-      this.ivyRuleContent
+      this.ivyRuleContent,
+      this.securityCheckPanel
     );
   }
 
@@ -366,6 +374,23 @@ export class GameUI extends Container {
     this.clockIcon.visible = false;
 
     this.addChild(this.clockIcon);
+  }
+
+  updateSecurityCheckWins(
+    wins: readonly {
+      id: number;
+      amount: number;
+    }[],
+  ): void {
+    this.securityCheckPanel.setWins(wins);
+  }
+
+  getSecurityCheckWinGlobalPosition(
+    id: number,
+  ): { x: number; y: number } | null {
+    return this.securityCheckPanel.getWinGlobalPosition(
+      id,
+    );
   }
 
   showRoundTimer(): void {
@@ -414,6 +439,14 @@ export class GameUI extends Container {
   hideIvyRules() {
     this.ivyRuleLabel.visible = false;
     this.ivyRuleContent.visible = false;
+  }
+
+  showSecurityCheck() {
+    this.securityCheckPanel.visible = true;
+  }
+
+  hideSecurityCheck() {
+    this.securityCheckPanel.visible = false;
   }
 
   async animatePenaltyIntoWon(
@@ -1233,5 +1266,245 @@ export class GameUI extends Container {
         );
       }, i * 110);
     }
+  }
+
+  async animateWinIntoSecurityCheck(
+    amount: number,
+  ): Promise<void> {
+    const flyingWin = new Text({
+      text: amount.toFixed(2),
+
+      style: {
+        font: "Open Sans",
+        fontSize: 32,
+        fontWeight: "bold",
+        fill: 0xffffff,
+
+        dropShadow: {
+          alpha: 1,
+          blur: 12,
+          color: "#ffde59",
+          distance: 0,
+        },
+      },
+    });
+
+    flyingWin.anchor.set(0.5);
+
+    /*
+      Startujemy dokładnie z WON.
+    */
+
+    const wonGlobalPosition =
+      this.wonAmount.toGlobal({
+        x: this.wonAmount.width / 2,
+        y: 0,
+      });
+
+    const startPosition =
+      this.toLocal(wonGlobalPosition);
+
+    flyingWin.position.copyFrom(
+      startPosition,
+    );
+
+    flyingWin.alpha = 1;
+
+    this.addChild(flyingWin);
+
+    /*
+      SECURITY CHECK jest dzieckiem GameUI,
+      ale target chcemy wyliczyć względem
+      faktycznej pozycji winsContainer.
+    */
+
+    const targetGlobalPosition =
+      this.securityCheckPanel.getNextWinGlobalPosition();
+
+    const targetPosition =
+      this.toLocal(targetGlobalPosition);
+
+    const startX = flyingWin.x;
+    const startY = flyingWin.y;
+
+    const targetX = targetPosition.x;
+    const targetY = targetPosition.y;
+
+    await this.animate(
+      650,
+
+      (progress) => {
+        const eased =
+          1 - Math.pow(1 - progress, 3);
+
+        flyingWin.x =
+          startX +
+          (targetX - startX) * eased;
+
+        flyingWin.y =
+          startY +
+          (targetY - startY) * eased;
+
+        /*
+          Lekko zmniejszamy tekst w locie,
+          bo docelowe wpisy SECURITY CHECK
+          są mniejsze od WON.
+        */
+
+        const scale =
+          1 - progress * 0.2;
+
+        flyingWin.scale.set(scale);
+
+        /*
+          Dopiero pod sam koniec zanika,
+          żeby właściwy wpis mógł go zastąpić.
+        */
+
+        if (progress > 0.85) {
+          flyingWin.alpha =
+            1 -
+            (progress - 0.85) / 0.15;
+        }
+      },
+    );
+
+    flyingWin.destroy();
+  }
+
+  async animateSecurityCheckWinToBalance(
+    id: number,
+    amount: number,
+  ): Promise<void> {
+    const winGlobalPosition =
+      this.getSecurityCheckWinGlobalPosition(id);
+
+    if (!winGlobalPosition) {
+      return;
+    }
+
+    const flyingWin = new Text({
+      text: amount.toFixed(2),
+
+      style: {
+        font: "Open Sans",
+        fontSize: 32,
+        fontWeight: "bold",
+        fill: 0xffffff,
+
+        dropShadow: {
+          alpha: 1,
+          blur: 12,
+          color: "#ffde59",
+          distance: 0,
+        },
+      },
+    });
+
+    flyingWin.anchor.set(0.5);
+
+    const startPosition =
+      this.toLocal(winGlobalPosition);
+
+    flyingWin.position.copyFrom(
+      startPosition,
+    );
+
+    /*
+      Cel = środek aktualnej wartości BALANCE.
+    */
+
+    const balanceGlobalPosition =
+      this.balanceValue.toGlobal({
+        x: this.balanceValue.width / 2,
+        y: 0,
+      });
+
+    const targetPosition =
+      this.toLocal(balanceGlobalPosition);
+
+    this.addChild(flyingWin);
+
+    const startX = flyingWin.x;
+    const startY = flyingWin.y;
+
+    const targetX = targetPosition.x;
+    const targetY = targetPosition.y;
+
+    await this.animate(
+      650,
+
+      (progress) => {
+        const eased =
+          1 - Math.pow(1 - progress, 3);
+
+        flyingWin.x =
+          startX +
+          (targetX - startX) * eased;
+
+        flyingWin.y =
+          startY +
+          (targetY - startY) * eased;
+
+        if (progress > 0.85) {
+          flyingWin.alpha =
+            1 -
+            (progress - 0.85) / 0.15;
+        }
+      },
+    );
+
+    flyingWin.destroy();
+  }
+
+  async animateSecurityCheckWinDeclined(id: number): Promise<void> {
+    const winText = this.securityCheckPanel.getWinText(id);
+
+    if (!winText) {
+      return;
+    }
+
+    const startScaleX = winText.scale.x;
+    const startScaleY = winText.scale.y;
+
+    await this.animate(450, (progress) => {
+      const shakeStrength = (1 - progress) * 8;
+
+      winText.x = Math.sin(progress * Math.PI * 12) * shakeStrength;
+      winText.alpha = 1 - progress;
+
+      const scale = 1 - progress * 0.2;
+      winText.scale.set(
+        startScaleX * scale,
+        startScaleY * scale,
+      );
+    });
+
+    winText.x = 0;
+    winText.alpha = 1;
+    winText.scale.set(startScaleX, startScaleY);
+  }
+
+  async removeSecurityCheckWinAndShift(id: number): Promise<void> {
+    const remainingWins =
+      this.securityCheckPanel.getRemainingWinTargets(id);
+
+    const animations = remainingWins.map(({ text, targetY }) => {
+      const startY = text.y;
+
+      if (startY === targetY) {
+        return Promise.resolve();
+      }
+
+      return this.animate(350, (progress) => {
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        text.y = startY + (targetY - startY) * eased;
+      });
+    });
+
+    this.securityCheckPanel.removeWin(id);
+
+    await Promise.all(animations);
   }
 }

@@ -126,6 +126,8 @@ export default {
   graceTermsAndConditionsDescription: "Nikt go nie czyta... aż nie jest za późno.",
   victorStackOfCasinoChips: "Stos żetonów",
   victorStackOfCasinoChipsDescription: "To Victor nazywa porządnym zakładem.",
+  lionelSecurityCard: "Karta ochrony Lionela",
+  lionelSecurityCardDescription: "Nic nie opuszcza kasyna bez zgody Lionela.",
 
 
 
@@ -199,6 +201,8 @@ export default {
   noAllSame: "Bez trzech takich samych",
   noHeadsMajority: "Bez przewagi orłów",
   noTailsMajority: "Bez przewagi reszek",
+  accepted: "ZAAKCEPTOWANA",
+  declined: "ODRZUCONA",
 
   // GAMBLE FOR MORE
 
@@ -380,6 +384,8 @@ export default {
   graceSaying: "Przestrzeganie przepisów jest kluczowe.",
   victorDescription: "Victor nie ma cierpliwości do ostrożnych graczy i niskich stawek.\n\nDla niego hazard zaczyna się dopiero wtedy, gdy naprawdę jest o co grać.\n\nIm większe ryzyko, tym większe emocje.",
   victorSaying: "Daj spokój, to są śmieszne stawki.",
+  lionelDescription: "Lionel zarządza ochroną kasyna z absolutną stanowczością.\n\nKażda wygrana jest dla niego podejrzana, dopóki nie udowodnisz, że jest inaczej.\n\nJeśli pieniądze mają opuścić kasyno, chce wiedzieć dlaczego.",
+  lionelSaying: "Nie próbuj mnie nabrać na swoje tanie sztuczki!",
 
 
   // SKILL
@@ -560,6 +566,10 @@ export default {
 
   highStakesSkillName: "Wysokie stawki",
   highStakesSkillDescription: "Minimalna stawka wynosi 25.00.",
+
+  securityCheckSkillName: "Kontrola bezpieczeństwa",
+  securityCheckSkillDescription: "Każda wygrana zostaje zamrożona na trzy rundy i może zostać wypłacona lub odrzucona.",
+
 
 
   // PERKS
