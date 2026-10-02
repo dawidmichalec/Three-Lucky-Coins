@@ -299,4 +299,18 @@ export class PerkGameplayController {
   getUnderdogWinningsBonus(currentBalance: number, startingBalance: number): number {
     return this.perkEffectApplier.getUnderdogWinningsBonus(currentBalance, startingBalance);
   }
+
+  async handleMultiplierChanged(multiplier: number): Promise<void> {
+    const hotStreakActivated = this.perkEffectApplier.tryActivateHotStreak(multiplier);
+
+    if (!hotStreakActivated) {
+      return;
+    }
+
+    await this.perkEffectMessageOverlay.play(
+      "hotStreakName",
+      "",
+      PerkEffectMessageType.POSITIVE,
+    );
+  }
 }

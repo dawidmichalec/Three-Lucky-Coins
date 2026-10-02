@@ -269,6 +269,28 @@ export class GameCheatController {
       this.forcePerkReward("underdog", PerkRarity.LEGENDARY);
     });
 
+    // HOT STREAK
+
+    this.cheatManager.register(CheatCode.FORCE_HOT_STREAK_COMMON, () => {
+      this.forcePerkReward("hot_streak", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_HOT_STREAK_UNCOMMON, () => {
+      this.forcePerkReward("hot_streak", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_HOT_STREAK_RARE, () => {
+      this.forcePerkReward("hot_streak", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_HOT_STREAK_EPIC, () => {
+      this.forcePerkReward("hot_streak", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_HOT_STREAK_LEGENDARY, () => {
+      this.forcePerkReward("hot_streak", PerkRarity.LEGENDARY);
+    });
+
   }
 
   consumeForcedResult(): CoinSide[] | undefined {

@@ -747,6 +747,17 @@ export default {
   underdogDescriptionEpic: "Increases winnings by 12.5% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 22.5% when it falls below 25%.",
   underdogDescriptionLegendary: "Increases winnings by 15% when your balance is between 25% and 50% of your balance at the start of the current fight, and by 25% when it falls below 25%.",
 
+  // HOT STREAK
+
+  hotStreakName: "HOT STREAK",
+
+  hotStreakDescriptionCommon: "Reach a x5 multiplier to increase winnings by 5% for the rest of the fight.",
+  hotStreakDescriptionUncommon: "Reach a x5 multiplier to increase winnings by 10% for the rest of the fight.",
+  hotStreakDescriptionRare: "Reach a x5 multiplier to increase winnings by 15% for the rest of the fight.",
+  hotStreakDescriptionEpic: "Reach a x5 multiplier to increase winnings by 20% for the rest of the fight.",
+  hotStreakDescriptionLegendary: "Reach a x5 multiplier to increase winnings by 25% for the rest of the fight.",
+
+
   // PERKS GAME UI
 
   perks: "Perks",

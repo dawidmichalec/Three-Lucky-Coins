@@ -1361,6 +1361,7 @@ export class GameScene extends BaseScene {
           riskTakerResult,
           gamblerResult,
           luckyHandResult,
+          hotStreakResult,
           underdogBonusAmount,
           finalWinAmount
       } = payoutResult;
@@ -1386,6 +1387,13 @@ export class GameScene extends BaseScene {
         gamblerResult,
         luckyHandResult,
       );
+
+      if (hotStreakResult.bonusAmount > 0) {
+          await this.view.gameUI.animateBonusIntoWon(
+              hotStreakResult.bonusAmount,
+              hotStreakResult.finalWinAmount,
+          );
+      }
 
       if (underdogBonusAmount > 0) {
           await this.view.gameUI.animateBonusIntoWon(
@@ -1438,6 +1446,8 @@ export class GameScene extends BaseScene {
       this.view.gameUI.updateMultiplier(
         currentMultiplier,
       );
+
+      await this.perkGameplayController.handleMultiplierChanged(currentMultiplier);
 
       const milestoneBonusTriggered =
         this.roundOutcomeHandler.recordMultiplierMilestone(
@@ -1717,6 +1727,8 @@ export class GameScene extends BaseScene {
       this.view.gameUI.updateMultiplier(
         currentMultiplier,
       );
+
+      await this.perkGameplayController.handleMultiplierChanged(currentMultiplier);
 
       const milestoneBonusTriggered =
         this.roundOutcomeHandler.recordMultiplierMilestone(

@@ -12,6 +12,7 @@ import { LUCKY_HAND_DATA } from "./data/LuckyHand";
 import { DECISIVENESS_DATA } from "./data/Decisiveness";
 import { SAFETY_NET_DATA } from "./data/SafetyNet";
 import { UNDERDOG_DATA } from "./data/Underdog";
+import { HOT_STREAK_DATA } from "./data/HotStreak";
 
 export const PERKS: readonly PerkData[] = [
   MULTIPLIER_BOOSTER_DATA,
@@ -25,7 +26,8 @@ export const PERKS: readonly PerkData[] = [
   LUCKY_HAND_DATA,
   DECISIVENESS_DATA,
   SAFETY_NET_DATA,
-  UNDERDOG_DATA
+  UNDERDOG_DATA,
+  HOT_STREAK_DATA
 ];
 
 export function getPerkById(perkId: string): PerkData | undefined {

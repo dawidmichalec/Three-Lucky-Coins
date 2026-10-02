@@ -92,5 +92,13 @@ export enum CheatCode {
   FORCE_UNDERDOG_UNCOMMON = "perk_underdog_uncommon",
   FORCE_UNDERDOG_RARE = "perk_underdog_rare",
   FORCE_UNDERDOG_EPIC = "perk_underdog_epic",
-  FORCE_UNDERDOG_LEGENDARY = "perk_underdog_legendary"
+  FORCE_UNDERDOG_LEGENDARY = "perk_underdog_legendary",
+
+  // HOT STREAK
+
+  FORCE_HOT_STREAK_COMMON = "perk_hot_streak_common",
+  FORCE_HOT_STREAK_UNCOMMON = "perk_hot_streak_uncommon",
+  FORCE_HOT_STREAK_RARE = "perk_hot_streak_rare",
+  FORCE_HOT_STREAK_EPIC = "perk_hot_streak_epic",
+  FORCE_HOT_STREAK_LEGENDARY = "perk_hot_streak_legendary"
 }

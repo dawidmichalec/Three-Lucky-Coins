@@ -15,6 +15,7 @@ import { CasinoBonusEffect } from "./effects/CasinoBonusEffect";
 import { DecisivenessEffect } from "./effects/DecisivenessEffect";
 import { SafetyNetEffect } from "./effects/SafetyNetEffect";
 import { UnderdogEffect } from "./effects/UnderdogEffect";
+import { HotStreakEffect, HotStreakResult } from "./effects/HotStreakEffect";
 
 
 export class PerkEffectApplier {
@@ -29,6 +30,7 @@ export class PerkEffectApplier {
   private readonly decisivenessEffect: DecisivenessEffect;
   private readonly safetyNetEffect: SafetyNetEffect;
   private readonly underdogEffect: UnderdogEffect;
+  private readonly hotStreakEffect: HotStreakEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -78,6 +80,8 @@ export class PerkEffectApplier {
 
     this.underdogEffect = new UnderdogEffect(this.runPerkManager);
 
+    this.hotStreakEffect = new HotStreakEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -105,6 +109,8 @@ export class PerkEffectApplier {
     this.casinoBonusEffect.resetFight();
 
     this.coinSenseEffect.resetFight();
+
+    this.hotStreakEffect.resetFight();
   }
 
   private applyMultiplierBooster(reward: PerkReward): void {
@@ -268,5 +274,13 @@ export class PerkEffectApplier {
 
   getUnderdogWinningsBonus(currentBalance: number, startingBalance: number): number {
     return this.underdogEffect.getWinningsBonus(currentBalance, startingBalance);
+  }
+
+  tryActivateHotStreak(multiplier: number): boolean {
+    return this.hotStreakEffect.tryActivate(multiplier);
+  }
+
+  applyHotStreak(winAmount: number): HotStreakResult {
+    return this.hotStreakEffect.apply(winAmount);
   }
 }

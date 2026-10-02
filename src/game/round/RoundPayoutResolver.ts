@@ -4,6 +4,7 @@ import { RiskTakerResult } from "../perks/effects/RiskTakerEffect";
 import { GamblerResult } from "../perks/effects/GamblerEffect";
 import { LuckyHandResult } from "../perks/effects/LuckyHandEffect";
 import { roundMoney } from "../util/MoneyUtils";
+import { HotStreakResult } from "../perks/effects/HotStreakEffect";
 
 
 export interface RoundPayoutInput {
@@ -19,23 +20,13 @@ export interface RoundPayoutInput {
 
 
 export interface RoundPayoutResult {
-
-    coinSenseResult:
-        CoinSenseResult;
-
-    riskTakerResult:
-        RiskTakerResult;
-
-    gamblerResult:
-        GamblerResult;
-
-    luckyHandResult:
-        LuckyHandResult;
-
+    coinSenseResult: CoinSenseResult;
+    riskTakerResult: RiskTakerResult;
+    gamblerResult: GamblerResult;
+    luckyHandResult: LuckyHandResult;
+    hotStreakResult: HotStreakResult;
     underdogBonusAmount: number;
-
-    finalWinAmount:
-        number;
+    finalWinAmount: number;
 }
 
 
@@ -102,25 +93,31 @@ export class RoundPayoutResolver {
                     input.luckyHandTriggered
                 );
 
+        const hotStreakResult =
+            this.perkEffectApplier
+                .applyHotStreak(
+                    luckyHandResult.finalWinAmount
+                );
+
         const underdogBonus = this.perkEffectApplier.getUnderdogWinningsBonus(
             input.currentBalance,
             input.fightStartingBalance,
         );
 
         const underdogBonusAmount = roundMoney(
-            luckyHandResult.finalWinAmount * underdogBonus
+            hotStreakResult.finalWinAmount * underdogBonus
         );
 
         const finalWinAmount = roundMoney(
-            luckyHandResult.finalWinAmount + underdogBonusAmount
+            hotStreakResult.finalWinAmount + underdogBonusAmount
         );
-
 
         return {
             coinSenseResult,
             riskTakerResult,
             gamblerResult,
             luckyHandResult,
+            hotStreakResult,
             underdogBonusAmount,
             finalWinAmount
         };

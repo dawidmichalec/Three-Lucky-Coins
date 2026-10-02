@@ -734,6 +734,17 @@ export default {
   underdogDescriptionEpic: "Zwiększa wygrane o 12,5%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 22,5%, gdy spadnie poniżej 25%.",
   underdogDescriptionLegendary: "Zwiększa wygrane o 15%, gdy Twoje saldo wynosi od 25% do 50% salda z początku aktualnej walki, oraz o 25%, gdy spadnie poniżej 25%.",
   
+  // HOT STREAK
+
+  hotStreakName: "GORĄCA PASSA",
+
+  hotStreakDescriptionCommon: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 5% do końca walki.",
+  hotStreakDescriptionUncommon: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 10% do końca walki.",
+  hotStreakDescriptionRare: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 15% do końca walki.",
+  hotStreakDescriptionEpic: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 20% do końca walki.",
+  hotStreakDescriptionLegendary: "Osiągnij mnożnik x5, aby zwiększyć wygrane o 25% do końca walki.",
+
+
   // PERKS GAME UI
 
   perks: "Perki",
