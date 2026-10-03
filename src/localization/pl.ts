@@ -754,6 +754,16 @@ export default {
   onARollDescriptionEpic: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
   onARollDescriptionLegendary: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
 
+  // GREED
+
+  greedName: "CHCIWOŚĆ",
+
+  greedDescriptionCommon: "Zwiększa wszystkie wygrane o 10% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.1.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
+  greedDescriptionUncommon: "Zwiększa wszystkie wygrane o 15% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.2.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
+  greedDescriptionRare: "Zwiększa wszystkie wygrane o 20% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.3.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
+  greedDescriptionEpic: "Zwiększa wszystkie wygrane o 25% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.4.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
+  greedDescriptionLegendary: "Zwiększa wszystkie wygrane o 30% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.5.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
+
 
   // PERKS GAME UI
 

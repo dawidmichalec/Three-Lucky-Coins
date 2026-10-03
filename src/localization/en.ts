@@ -767,6 +767,16 @@ export default {
   onARollDescriptionEpic: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
   onARollDescriptionLegendary: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
 
+  // GREED
+
+  greedName: "GREED",
+
+  greedDescriptionCommon: "Increases all winnings by 10% until the end of the run.\n\nStreak multiplier growth is reduced by 0.1.\n\nThe base multiplier value remains unchanged.",
+  greedDescriptionUncommon: "Increases all winnings by 15% until the end of the run.\n\nStreak multiplier growth is reduced by 0.2.\n\nThe base multiplier value remains unchanged.",
+  greedDescriptionRare: "Increases all winnings by 20% until the end of the run.\n\nStreak multiplier growth is reduced by 0.3.\n\nThe base multiplier value remains unchanged.",
+  greedDescriptionEpic: "Increases all winnings by 25% until the end of the run.\n\nStreak multiplier growth is reduced by 0.4.\n\nThe base multiplier value remains unchanged.",
+  greedDescriptionLegendary: "Increases all winnings by 30% until the end of the run.\n\nStreak multiplier growth is reduced by 0.5.\n\nThe base multiplier value remains unchanged.",
+
 
 
   // PERKS GAME UI

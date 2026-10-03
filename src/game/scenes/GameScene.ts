@@ -1363,6 +1363,7 @@ export class GameScene extends BaseScene {
         luckyHandResult,
         hotStreakResult,
         onARollResult,
+        greedResult,
         underdogBonusAmount,
         finalWinAmount
       } = payoutResult;
@@ -1400,6 +1401,13 @@ export class GameScene extends BaseScene {
         await this.view.gameUI.animateBonusIntoWon(
           onARollResult.bonusAmount,
           onARollResult.finalWinAmount,
+        );
+      }
+
+      if (greedResult.bonusAmount > 0) {
+        await this.view.gameUI.animateBonusIntoWon(
+          greedResult.bonusAmount,
+          greedResult.finalWinAmount,
         );
       }
 

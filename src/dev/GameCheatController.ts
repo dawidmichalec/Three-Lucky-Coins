@@ -313,6 +313,29 @@ export class GameCheatController {
       this.forcePerkReward("on_a_roll", PerkRarity.LEGENDARY);
     });
 
+    // GREED
+
+    this.cheatManager.register(CheatCode.FORCE_GREED_COMMON, () => {
+      this.forcePerkReward("greed", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GREED_UNCOMMON, () => {
+      this.forcePerkReward("greed", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GREED_RARE, () => {
+      this.forcePerkReward("greed", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GREED_EPIC, () => {
+      this.forcePerkReward("greed", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GREED_LEGENDARY, () => {
+      this.forcePerkReward("greed", PerkRarity.LEGENDARY);
+    });
+
+
   }
 
   consumeForcedResult(): CoinSide[] | undefined {

@@ -108,7 +108,15 @@ export enum CheatCode {
   FORCE_ON_A_ROLL_UNCOMMON = "perk_on_a_roll_uncommon",
   FORCE_ON_A_ROLL_RARE = "perk_on_a_roll_rare",
   FORCE_ON_A_ROLL_EPIC = "perk_on_a_roll_epic",
-  FORCE_ON_A_ROLL_LEGENDARY = "perk_on_a_roll_legendary"
+  FORCE_ON_A_ROLL_LEGENDARY = "perk_on_a_roll_legendary",
+
+  // GREED
+
+  FORCE_GREED_COMMON = "perk_greed_common",
+  FORCE_GREED_UNCOMMON = "perk_greed_uncommon",
+  FORCE_GREED_RARE = "perk_greed_rare",
+  FORCE_GREED_EPIC = "perk_greed_epic",
+  FORCE_GREED_LEGENDARY = "perk_greed_legendary"
 
 
 }

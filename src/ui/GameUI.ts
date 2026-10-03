@@ -943,7 +943,7 @@ export class GameUI extends Container {
 
     this.currentMultiplier = multiplier;
 
-    this.multiplierValue.text = `x${multiplier}`;
+    this.multiplierValue.text = `x${Math.round(multiplier * 100) / 100}`;
 
     if (multiplier > previousMultiplier) {
       this.animateMultiplierIncrease();

@@ -17,6 +17,7 @@ import { SafetyNetEffect } from "./effects/SafetyNetEffect";
 import { UnderdogEffect } from "./effects/UnderdogEffect";
 import { HotStreakEffect, HotStreakResult } from "./effects/HotStreakEffect";
 import { OnARollActivationResult, OnARollEffect, OnARollResult } from "./effects/OnARollEffect";
+import { GreedEffect, GreedResult } from "./effects/GreedEffect";
 
 
 export class PerkEffectApplier {
@@ -33,6 +34,7 @@ export class PerkEffectApplier {
   private readonly underdogEffect: UnderdogEffect;
   private readonly hotStreakEffect: HotStreakEffect;
   private readonly onARollEffect: OnARollEffect;
+  private readonly greedEffect: GreedEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -40,45 +42,25 @@ export class PerkEffectApplier {
     private readonly streakMultiplierManager: StreakMultiplierManager,
   ) {
 
-    this.coinSenseEffect = new CoinSenseEffect(
-      this.runPerkManager,
-    );
+    this.coinSenseEffect = new CoinSenseEffect(this.runPerkManager,);
 
-    this.riskTakerEffect = new RiskTakerEffect(
-      this.runPerkManager,
-    );
+    this.riskTakerEffect = new RiskTakerEffect(this.runPerkManager,);
 
-    this.gamblerEffect = new GamblerEffect(
-      this.runPerkManager,
-    );
+    this.gamblerEffect = new GamblerEffect(this.runPerkManager,);
 
-    this.insuranceEffect = new InsuranceEffect(
-      this.runPerkManager,
-    );
+    this.insuranceEffect = new InsuranceEffect(this.runPerkManager,);
 
-    this.luckyHandEffect = new LuckyHandEffect(
-      this.runPerkManager,
-    );
+    this.luckyHandEffect = new LuckyHandEffect(this.runPerkManager,);
 
-    this.doubleDownEffect = new DoubleDownEffect(
-      this.runPerkManager,
-    );
+    this.doubleDownEffect = new DoubleDownEffect(this.runPerkManager,);
 
-    this.piggyBankEffect = new PiggyBankEffect(
-      this.runPerkManager,
-    );
+    this.piggyBankEffect = new PiggyBankEffect(this.runPerkManager,);
 
-    this.casinoBonusEffect = new CasinoBonusEffect(
-      this.runPerkManager,
-    );
+    this.casinoBonusEffect = new CasinoBonusEffect(this.runPerkManager,);
 
-    this.decisivenessEffect = new DecisivenessEffect(
-      this.runPerkManager,
-    );
+    this.decisivenessEffect = new DecisivenessEffect(this.runPerkManager,);
 
-    this.safetyNetEffect = new SafetyNetEffect(
-      this.runPerkManager,
-    );
+    this.safetyNetEffect = new SafetyNetEffect(this.runPerkManager,);
 
     this.underdogEffect = new UnderdogEffect(this.runPerkManager);
 
@@ -86,13 +68,15 @@ export class PerkEffectApplier {
 
     this.onARollEffect = new OnARollEffect(this.runPerkManager);
 
+    this.greedEffect = new GreedEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
     switch (reward.perk.id) {
       case "multiplier_booster":
-        this.applyMultiplierBooster(reward);
-
+      case "greed":
+        this.refreshStreakMultiplierSettings();
         break;
     }
   }
@@ -119,15 +103,23 @@ export class PerkEffectApplier {
     this.onARollEffect.resetFight();
   }
 
-  private applyMultiplierBooster(reward: PerkReward): void {
-    const config = reward.variant.config as MultiplierBoosterConfig;
+  private refreshStreakMultiplierSettings(): void {
+    let baseValue = 1;
+    let growthPerWin = 1;
 
-    const increase = config.streakMultiplierIncrease;
+    const multiplierBooster = this.runPerkManager.getPerk("multiplier_booster");
 
-    this.streakMultiplierManager.setBaseValue(1 + increase);
+    if (multiplierBooster) {
+      const config = multiplierBooster.variant.config as MultiplierBoosterConfig;
 
-    this.streakMultiplierManager.setGrowthPerWin(1 + increase);
+      baseValue += config.streakMultiplierIncrease;
+      growthPerWin += config.streakMultiplierIncrease;
+    }
 
+    growthPerWin -= this.greedEffect.getMultiplierGrowthReduction();
+
+    this.streakMultiplierManager.setBaseValue(baseValue);
+    this.streakMultiplierManager.setGrowthPerWin(growthPerWin);
     this.streakMultiplierManager.reset();
   }
 
@@ -296,5 +288,13 @@ export class PerkEffectApplier {
 
   applyOnARoll(winAmount: number): OnARollResult {
     return this.onARollEffect.apply(winAmount);
+  }
+
+  applyGreed(winAmount: number): GreedResult {
+    return this.greedEffect.apply(winAmount);
+  }
+
+  getGreedMultiplierGrowthReduction(): number {
+    return this.greedEffect.getMultiplierGrowthReduction();
   }
 }
