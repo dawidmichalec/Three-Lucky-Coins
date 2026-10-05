@@ -2,6 +2,11 @@ import { BET_LEVELS } from "./data/BetLevels";
 import { DealerData } from "./dealers/DealerData";
 import { DealerSkillId } from "./dealers/DealerSkill";
 
+export enum BetLimitationMode {
+  LOW = "low",
+  HIGH = "high",
+}
+
 export class BetRestrictionManager {
   private blockedBets = new Set<number>();
   private currentDealer: DealerData | null = null;
@@ -16,6 +21,9 @@ export class BetRestrictionManager {
   private betSlotMalfunctionBlockedBet: number | null = null;
   private dynamicBetLockBet: number | null = null;
   private static readonly HIGH_STAKES_MIN_BET = 25;
+  private betLimitationMode: BetLimitationMode | null = null;
+  private static readonly LOW_STAKES_MAX_BET = 1;
+  private betLimitationRoundsRemaining = 0;
 
   setDealer(
     dealer: DealerData,
@@ -23,6 +31,10 @@ export class BetRestrictionManager {
   ): void {
     this.currentDealer = dealer;
     this.reset();
+
+    if (this.hasSkill(DealerSkillId.BET_LIMITATION)) {
+      this.startBetLimitationPhase(playerBalance);
+    }
 
     if (this.hasSkill(DealerSkillId.FIXED_BET_LOCK)) {
       this.applyFixedBetLock(playerBalance);
@@ -43,6 +55,42 @@ export class BetRestrictionManager {
     ) {
       this.startBetDecreaseNormalPhase();
     }
+  }
+
+  advanceBetLimitation(): boolean {
+    if (!this.hasSkill(DealerSkillId.BET_LIMITATION)) {
+      return false;
+    }
+
+    this.betLimitationRoundsRemaining--;
+
+    if (this.betLimitationRoundsRemaining > 0) {
+      return false;
+    }
+
+    this.betLimitationMode = this.betLimitationMode === BetLimitationMode.LOW
+      ? BetLimitationMode.HIGH
+      : BetLimitationMode.LOW;
+
+    this.betLimitationRoundsRemaining = this.rollBetLimitationPhaseDuration();
+
+    return true;
+  }
+
+  private startBetLimitationPhase(playerBalance: number): void {
+    if (playerBalance < BetRestrictionManager.HIGH_STAKES_MIN_BET) {
+      this.betLimitationMode = BetLimitationMode.LOW;
+    } else {
+      this.betLimitationMode = Math.random() < 0.5
+        ? BetLimitationMode.LOW
+        : BetLimitationMode.HIGH;
+    }
+
+    this.betLimitationRoundsRemaining = this.rollBetLimitationPhaseDuration();
+  }
+
+  private rollBetLimitationPhaseDuration(): number {
+    return Math.floor(Math.random() * 3) + 2;
   }
 
   private startBetDecreaseNormalPhase(): void {
@@ -262,6 +310,22 @@ export class BetRestrictionManager {
       return false;
     }
 
+    if (
+      this.hasSkill(DealerSkillId.BET_LIMITATION) &&
+      this.betLimitationMode === BetLimitationMode.LOW &&
+      bet > BetRestrictionManager.LOW_STAKES_MAX_BET
+    ) {
+      return false;
+    }
+
+    if (
+      this.hasSkill(DealerSkillId.BET_LIMITATION) &&
+      this.betLimitationMode === BetLimitationMode.HIGH &&
+      bet < BetRestrictionManager.HIGH_STAKES_MIN_BET
+    ) {
+      return false;
+    }
+
     if (this.blockedBets.has(bet)) {
       return false;
     }
@@ -278,7 +342,7 @@ export class BetRestrictionManager {
     }
 
     return true;
-  }
+}
 
   getAvailableBets(): number[] {
     return BET_LEVELS.filter(
@@ -317,6 +381,8 @@ export class BetRestrictionManager {
     this.betDecreaseLockRoundsRemaining = 0;
     this.betSlotMalfunctionBlockedBet = null;
     this.dynamicBetLockBet = null;
+    this.betLimitationMode = null;
+    this.betLimitationRoundsRemaining = 0;
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {

@@ -1920,6 +1920,7 @@ export class GameScene extends BaseScene {
     if (this.currentDealer.id !== "tlcm-proto") {
       this.betRestrictionManager.advanceBetIncreaseLock();
       this.betRestrictionManager.advanceBetDecreaseLock();
+      this.betRestrictionManager.advanceBetLimitation();
       this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
       this.betRestrictionManager.applyDynamicBetLock(this.player.balance);
     }
@@ -2113,25 +2114,23 @@ export class GameScene extends BaseScene {
     );
   }
 
-  private applyStreakResolution(
-    resolution: StreakResolution,
-  ): void {
+  private applyStreakResolution(resolution: StreakResolution): void {
     if (
-      this.dealerFightManager
-        .isMultiplierDecayActive()
+      this.dealerFightManager.isMultiplierLocked() &&
+      resolution.action === StreakAction.INCREASE
     ) {
       return;
     }
 
-    if (
-      this.dealerFightManager
-        .isMultiplierSystemMalfunctionActive()
-    ) {
+    if (this.dealerFightManager.isMultiplierDecayActive()) {
       return;
     }
 
-    this.streakMultiplierManager
-      .applyResolution(resolution);
+    if (this.dealerFightManager.isMultiplierSystemMalfunctionActive()) {
+      return;
+    }
+
+    this.streakMultiplierManager.applyResolution(resolution);
   }
 
   private applyMultiplierDecay(): void {

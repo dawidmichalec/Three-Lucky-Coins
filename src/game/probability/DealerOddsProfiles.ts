@@ -520,3 +520,12 @@ export const LIONEL_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.12, 0.14, 0.18, 0.20, 0.24, 0.26, 0.3, 0.7, 0.74, 0.8, 0.82, 0.86, 0.88],
 };
+
+
+// LAWRENCE
+
+export const LAWRENCE_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.1, 0.14, 0.18, 0.22, 0.26, 0.3, 0.7, 0.74, 0.78, 0.82, 0.86, 0.9],
+};

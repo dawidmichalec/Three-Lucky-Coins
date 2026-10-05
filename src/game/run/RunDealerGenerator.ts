@@ -17,6 +17,7 @@ export class RunDealerGenerator {
       ...this.generateSeniorStage(),
       ...this.generateMachineFloorStage(),
       ...this.generateManagerStage(),
+      ...this.generateVicePresidentStage(),
     ];
   }
 
@@ -156,5 +157,15 @@ export class RunDealerGenerator {
     const managers = getRegularDealersByGroup(DealerGroup.MANAGER);
 
     return this.pickRandomDealers(managers, 2);
+  }
+
+  private static generateVicePresidentStage(): DealerData[] {
+    const vicePresident = getSupervisorByGroup(DealerGroup.VICE_PRESIDENT);
+
+    if (!vicePresident) {
+      throw new Error("Vice President not found.");
+    }
+
+    return [vicePresident];
   }
 }

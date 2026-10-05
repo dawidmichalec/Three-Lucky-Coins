@@ -380,6 +380,10 @@ private static readonly CASINO_POLICY_LOCK_ROUNDS = 5;
     }
   }
 
+  isMultiplierLocked(): boolean {
+    return this.hasActiveSkill(DealerSkillId.MULTIPLIER_LOCK);
+  }
+
   isCasinoPolicyLockActive(): boolean {
     if (!this.hasActiveSkill(DealerSkillId.CASINO_POLICY)) {
       return false;

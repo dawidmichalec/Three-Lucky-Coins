@@ -129,6 +129,9 @@ export default {
   victorStackOfCasinoChipsDescription: "Now that's what Victor calls a proper bet.",
   lionelSecurityCard: "Security ID Card",
   lionelSecurityCardDescription: "Nothing leaves the casino without Lionel's approval.",
+  lawrenceExecutiveFountainPen: "Executive Fountain Pen",
+  lawrenceExecutiveFountainPenDescription: "Power isn't won at the tables. It's signed into existence.",
+
 
 
 
@@ -405,6 +408,12 @@ export default {
   lionelDescription: "Lionel runs casino security with absolute authority.\n\nEvery win looks suspicious to him until proven otherwise.\n\nIf money is leaving the casino, he wants to know why.",
   lionelSaying: "Don’t try to trick me with your cheap shots!",
 
+  // VICE PRESIDENT
+
+  lawrenceDescription: "Obsessed with money and power. He dreams of taking the casino owner's place one day.\n\nLooks down on players and considers himself above everyone else.",
+  lawrenceSaying: "One day this casino will be mine.",
+
+
 
 
 // SKILLS
@@ -583,6 +592,11 @@ export default {
   securityCheckSkillName: "Security Check",
   securityCheckSkillDescription: "Every win is frozen for three rounds and may or may not be paid out.",
 
+  betLimitationSkillName: "Bet Limitation",
+  betLimitationSkillDescription: "Randomly restricts available bets to either low stakes (0.10–1.00) or high stakes (25.00 and above).",
+
+  multiplierLockSkillName: "Multiplier Lock",
+  multiplierLockSkillDescription: "Prevents the streak multiplier from growing.\n\nIgnores all perks that increase multiplier growth.",
 
 
   // PERKS

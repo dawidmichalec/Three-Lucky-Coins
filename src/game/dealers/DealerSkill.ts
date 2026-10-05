@@ -109,7 +109,11 @@ export enum DealerSkillId {
 
   HIGH_STAKES = "high_stakes",
 
-  SECURITY_CHECK = "security_check"
+  SECURITY_CHECK = "security_check",
+
+  BET_LIMITATION = "bet_limitation",
+
+  MULTIPLIER_LOCK = "multiplier_lock"
 
   // Kolejne skille w przyszłości...
 }

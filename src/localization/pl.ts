@@ -128,6 +128,9 @@ export default {
   victorStackOfCasinoChipsDescription: "To Victor nazywa porządnym zakładem.",
   lionelSecurityCard: "Karta ochrony Lionela",
   lionelSecurityCardDescription: "Nic nie opuszcza kasyna bez zgody Lionela.",
+  lawrenceExecutiveFountainPen: "Wieczne pióro dyrektora",
+  lawrenceExecutiveFountainPenDescription: "Władzy nie zdobywa się przy stołach. Władzę przypieczętowuje się podpisem.",
+
 
 
 
@@ -387,6 +390,11 @@ export default {
   lionelDescription: "Lionel zarządza ochroną kasyna z absolutną stanowczością.\n\nKażda wygrana jest dla niego podejrzana, dopóki nie udowodnisz, że jest inaczej.\n\nJeśli pieniądze mają opuścić kasyno, chce wiedzieć dlaczego.",
   lionelSaying: "Nie próbuj mnie nabrać na swoje tanie sztuczki!",
 
+  // VICE PRESIDENT
+
+  lawrenceDescription: "Ma obsesję na punkcie pieniędzy i władzy. Marzy o tym, by pewnego dnia zająć miejsce właściciela kasyna.\n\nPatrzy na graczy z góry i uważa się za lepszego od wszystkich.",
+  lawrenceSaying: "Pewnego dnia to kasyno będzie moje.",
+
 
   // SKILL
 
@@ -570,6 +578,11 @@ export default {
   securityCheckSkillName: "Kontrola bezpieczeństwa",
   securityCheckSkillDescription: "Każda wygrana zostaje zamrożona na trzy rundy i może zostać wypłacona lub odrzucona.",
 
+  betLimitationSkillName: "Ograniczenie stawek",
+  betLimitationSkillDescription: "Losowo ogranicza dostępne stawki do niskich (0.10–1.00) lub wysokich (25.00 i więcej).",
+
+  multiplierLockSkillName: "Blokada mnożnika",
+  multiplierLockSkillDescription: "Uniemożliwia wzrost mnożnika serii.\n\nIgnoruje wszystkie perki zwiększające wzrost mnożnika.",
 
 
   // PERKS
