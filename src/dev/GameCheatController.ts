@@ -335,6 +335,72 @@ export class GameCheatController {
       this.forcePerkReward("greed", PerkRarity.LEGENDARY);
     });
 
+    // DAMAGE CONTROL
+
+    this.cheatManager.register(CheatCode.FORCE_DAMAGE_CONTROL_COMMON, () => {
+      this.forcePerkReward("damage_control", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_DAMAGE_CONTROL_UNCOMMON, () => {
+      this.forcePerkReward("damage_control", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_DAMAGE_CONTROL_RARE, () => {
+      this.forcePerkReward("damage_control", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_DAMAGE_CONTROL_EPIC, () => {
+      this.forcePerkReward("damage_control", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_DAMAGE_CONTROL_LEGENDARY, () => {
+      this.forcePerkReward("damage_control", PerkRarity.LEGENDARY);
+    });
+
+    // LOTTERY LOVER
+
+    this.cheatManager.register(CheatCode.FORCE_LOTTERY_LOVER_COMMON, () => {
+      this.forcePerkReward("lottery_lover", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LOTTERY_LOVER_UNCOMMON, () => {
+      this.forcePerkReward("lottery_lover", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LOTTERY_LOVER_RARE, () => {
+      this.forcePerkReward("lottery_lover", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LOTTERY_LOVER_EPIC, () => {
+      this.forcePerkReward("lottery_lover", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LOTTERY_LOVER_LEGENDARY, () => {
+      this.forcePerkReward("lottery_lover", PerkRarity.LEGENDARY);
+    });
+
+    // RISKY GAINS
+
+    this.cheatManager.register(CheatCode.FORCE_RISKY_GAINS_COMMON, () => {
+      this.forcePerkReward("risky_gains", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISKY_GAINS_UNCOMMON, () => {
+      this.forcePerkReward("risky_gains", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISKY_GAINS_RARE, () => {
+      this.forcePerkReward("risky_gains", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISKY_GAINS_EPIC, () => {
+      this.forcePerkReward("risky_gains", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_RISKY_GAINS_LEGENDARY, () => {
+      this.forcePerkReward("risky_gains", PerkRarity.LEGENDARY);
+    });
+
 
   }
 

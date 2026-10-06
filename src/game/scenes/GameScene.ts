@@ -52,6 +52,7 @@ import { CoinOdds, DealerOddsProfile, OddsTable } from "../probability/OddsTypes
 import { getMachineFloorSkill } from "../dealers/MachineFloorSkillRegistry";
 import { DealerGroup } from "../dealers/DealerGroup";
 import { SecurityCheckManager } from "../SecurityCheckManager";
+import { roundMoney } from "../util/MoneyUtils";
 
 export class GameScene extends BaseScene {
   private player: Player;
@@ -1303,7 +1304,12 @@ export class GameScene extends BaseScene {
         */
 
     if (win && winAmount !== undefined) {
-      const resolvedWinAmount = outcome.wonAmount;
+      let resolvedWinAmount = outcome.wonAmount;
+
+      if (outcome.triggeredSkills.includes(DealerSkillId.WINNING_TAX)) {
+        const winningTax = this.perkEffectApplier.reducePenaltyPercentage(0.2);
+        resolvedWinAmount = roundMoney(resolvedWinAmount * (1 - winningTax));
+      }
 
       const payoutPenaltySkill =
         outcome.triggeredSkills.find(
@@ -1555,21 +1561,18 @@ export class GameScene extends BaseScene {
       );
     }
 
-    const houseCut =
-    this.dealerFightManager.resolveHouseCut(bet);
+    const houseCut = this.dealerFightManager.resolveHouseCut(bet);
+    const reducedHouseCutAmount = this.perkEffectApplier.reducePenalty(houseCut.amount, bet);
 
-    if (
-      houseCut.amount > 0 &&
-      houseCut.skillId
-    ) {
+    if (reducedHouseCutAmount > 0 && houseCut.skillId) {
       await this.dealerSkillFeedbackHandler.handle([
         houseCut.skillId,
       ]);
 
-      this.player.balance -= houseCut.amount;
+      this.player.balance -= reducedHouseCutAmount;
 
       await this.view.gameUI.animatePenaltyIntoBalance(
-        houseCut.amount,
+        reducedHouseCutAmount,
         this.player.balance,
       );
 

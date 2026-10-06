@@ -116,7 +116,31 @@ export enum CheatCode {
   FORCE_GREED_UNCOMMON = "perk_greed_uncommon",
   FORCE_GREED_RARE = "perk_greed_rare",
   FORCE_GREED_EPIC = "perk_greed_epic",
-  FORCE_GREED_LEGENDARY = "perk_greed_legendary"
+  FORCE_GREED_LEGENDARY = "perk_greed_legendary",
+
+  // DAMAGE CONTROL
+
+  FORCE_DAMAGE_CONTROL_COMMON = "perk_damage_control_common",
+  FORCE_DAMAGE_CONTROL_UNCOMMON = "perk_damage_control_uncommon",
+  FORCE_DAMAGE_CONTROL_RARE = "perk_damage_control_rare",
+  FORCE_DAMAGE_CONTROL_EPIC = "perk_damage_control_epic",
+  FORCE_DAMAGE_CONTROL_LEGENDARY = "perk_damage_control_legendary",
+
+  // LOTTERY LOVER
+
+  FORCE_LOTTERY_LOVER_COMMON = "perk_lottery_lover_common",
+  FORCE_LOTTERY_LOVER_UNCOMMON = "perk_lottery_lover_uncommon",
+  FORCE_LOTTERY_LOVER_RARE = "perk_lottery_lover_rare",
+  FORCE_LOTTERY_LOVER_EPIC = "perk_lottery_lover_epic",
+  FORCE_LOTTERY_LOVER_LEGENDARY = "perk_lottery_lover_legendary",
+
+  // RISKY GAINS
+
+  FORCE_RISKY_GAINS_COMMON = "perk_risky_gains_common",
+  FORCE_RISKY_GAINS_UNCOMMON = "perk_risky_gains_uncommon",
+  FORCE_RISKY_GAINS_RARE = "perk_risky_gains_rare",
+  FORCE_RISKY_GAINS_EPIC = "perk_risky_gains_epic",
+  FORCE_RISKY_GAINS_LEGENDARY = "perk_risky_gains_legendary"
 
 
 }

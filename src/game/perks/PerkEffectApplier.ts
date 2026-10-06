@@ -18,6 +18,7 @@ import { UnderdogEffect } from "./effects/UnderdogEffect";
 import { HotStreakEffect, HotStreakResult } from "./effects/HotStreakEffect";
 import { OnARollActivationResult, OnARollEffect, OnARollResult } from "./effects/OnARollEffect";
 import { GreedEffect, GreedResult } from "./effects/GreedEffect";
+import { DamageControlEffect } from "./effects/DamageControlEffect";
 
 
 export class PerkEffectApplier {
@@ -35,6 +36,7 @@ export class PerkEffectApplier {
   private readonly hotStreakEffect: HotStreakEffect;
   private readonly onARollEffect: OnARollEffect;
   private readonly greedEffect: GreedEffect;
+  private readonly damageControlEffect: DamageControlEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -69,6 +71,8 @@ export class PerkEffectApplier {
     this.onARollEffect = new OnARollEffect(this.runPerkManager);
 
     this.greedEffect = new GreedEffect(this.runPerkManager);
+
+    this.damageControlEffect = new DamageControlEffect(this.runPerkManager);
 
   }
 
@@ -296,5 +300,13 @@ export class PerkEffectApplier {
 
   getGreedMultiplierGrowthReduction(): number {
     return this.greedEffect.getMultiplierGrowthReduction();
+  }
+
+  reducePenalty(penalty: number, bet: number): number {
+    return this.damageControlEffect.reducePenalty(penalty, bet);
+  }
+
+  reducePenaltyPercentage(penaltyPercentage: number): number {
+    return this.damageControlEffect.reducePenaltyPercentage(penaltyPercentage);
   }
 }

@@ -312,8 +312,6 @@ export class RoundOutcomeHandler {
     );
 
     if (winningTaxSkill) {
-      finalWinAmount = roundMoney(finalWinAmount * 0.8);
-
       triggeredSkills.push(DealerSkillId.WINNING_TAX);
     }
 
