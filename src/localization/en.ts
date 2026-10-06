@@ -791,6 +791,35 @@ export default {
   greedDescriptionEpic: "Increases all winnings by 25% until the end of the run.\n\nStreak multiplier growth is reduced by 0.4.\n\nThe base multiplier value remains unchanged.",
   greedDescriptionLegendary: "Increases all winnings by 30% until the end of the run.\n\nStreak multiplier growth is reduced by 0.5.\n\nThe base multiplier value remains unchanged.",
 
+  // DAMAGE CONTROL
+
+  damageControlName: "DAMAGE CONTROL",
+
+  damageControlDescriptionCommon: "Negative effects from penalties are decreased by 2.5%.",
+  damageControlDescriptionUncommon: "Negative effects from penalties are decreased by 5%.",
+  damageControlDescriptionRare: "Negative effects from penalties are decreased by 7.5%.",
+  damageControlDescriptionEpic: "Negative effects from penalties are decreased by 10%.",
+  damageControlDescriptionLegendary: "Negative effects from penalties are decreased by 12.5%.",
+
+  // LOTTERY LOVER
+
+  lotteryLoverName: "LOTTERY LOVER",
+
+  lotteryLoverDescriptionCommon: "Win Gamble For More 5 times to increase winnings by 5% for the rest of the fight.",
+  lotteryLoverDescriptionUncommon: "Win Gamble For More 5 times to increase winnings by 10% for the rest of the fight.",
+  lotteryLoverDescriptionRare: "Win Gamble For More 5 times to increase winnings by 15% for the rest of the fight.",
+  lotteryLoverDescriptionEpic: "Win Gamble For More 5 times to increase winnings by 20% for the rest of the fight.",
+  lotteryLoverDescriptionLegendary: "Win Gamble For More 5 times to increase winnings by 25% for the rest of the fight.",
+
+  // RISKY GAINS
+
+  riskyGainsName: "RISKY GAINS",
+
+  riskyGainsDescriptionCommon: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +2.5% winnings\n5 times → +5%\n7 times → +7.5%\n10 times → +10%",
+  riskyGainsDescriptionUncommon: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +5% winnings\n5 times → +10%\n7 times → +15%\n10 times → +20%",
+  riskyGainsDescriptionRare: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +7.5% winnings\n5 times → +15%\n7 times → +22.5%\n10 times → +30%",
+  riskyGainsDescriptionEpic: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +10% winnings\n5 times → +20%\n7 times → +30%\n10 times → +40%",
+  riskyGainsDescriptionLegendary: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +12.5% winnings\n5 times → +25%\n7 times → +37.5%\n10 times → +50%",
 
 
   // PERKS GAME UI

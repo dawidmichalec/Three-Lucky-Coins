@@ -777,6 +777,36 @@ export default {
   greedDescriptionEpic: "Zwiększa wszystkie wygrane o 25% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.4.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
   greedDescriptionLegendary: "Zwiększa wszystkie wygrane o 30% do końca podejścia.\n\nWzrost mnożnika serii zostaje zmniejszony o 0.5.\n\nBazowa wartość mnożnika pozostaje bez zmian.",
 
+  // DAMAGE CONTROL
+
+  damageControlName: "KONTROLA SZKÓD",
+
+  damageControlDescriptionCommon: "Negatywne skutki kar są zmniejszone o 2,5%.",
+  damageControlDescriptionUncommon: "Negatywne skutki kar są zmniejszone o 5%.",
+  damageControlDescriptionRare: "Negatywne skutki kar są zmniejszone o 7,5%.",
+  damageControlDescriptionEpic: "Negatywne skutki kar są zmniejszone o 10%.",
+  damageControlDescriptionLegendary: "Negatywne skutki kar są zmniejszone o 12,5%.",
+
+  // LOTTERY LOVER
+
+  lotteryLoverName: "MIŁOŚNIK LOTERII",
+
+  lotteryLoverDescriptionCommon: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 5% do końca walki.",
+  lotteryLoverDescriptionUncommon: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 10% do końca walki.",
+  lotteryLoverDescriptionRare: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 15% do końca walki.",
+  lotteryLoverDescriptionEpic: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 20% do końca walki.",
+  lotteryLoverDescriptionLegendary: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 25% do końca walki.",
+
+  // RISKY GAINS
+
+  riskyGainsName: "RYZYKOWNE ZYSKI",
+
+  riskyGainsDescriptionCommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +2,5% do wygranych\n5 razy → +5%\n7 razy → +7,5%\n10 razy → +10%",
+  riskyGainsDescriptionUncommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +5% do wygranych\n5 razy → +10%\n7 razy → +15%\n10 razy → +20%",
+  riskyGainsDescriptionRare: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +7,5% do wygranych\n5 razy → +15%\n7 razy → +22,5%\n10 razy → +30%",
+  riskyGainsDescriptionEpic: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +10% do wygranych\n5 razy → +20%\n7 razy → +30%\n10 razy → +40%",
+  riskyGainsDescriptionLegendary: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +12,5% do wygranych\n5 razy → +25%\n7 razy → +37,5%\n10 razy → +50%",
+
 
   // PERKS GAME UI
 
