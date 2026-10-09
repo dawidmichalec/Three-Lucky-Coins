@@ -19,6 +19,7 @@ import { HotStreakEffect, HotStreakResult } from "./effects/HotStreakEffect";
 import { OnARollActivationResult, OnARollEffect, OnARollResult } from "./effects/OnARollEffect";
 import { GreedEffect, GreedResult } from "./effects/GreedEffect";
 import { DamageControlEffect } from "./effects/DamageControlEffect";
+import { LotteryLoverEffect, LotteryLoverResult } from "./effects/LotteryLoverEffect";
 
 
 export class PerkEffectApplier {
@@ -37,6 +38,7 @@ export class PerkEffectApplier {
   private readonly onARollEffect: OnARollEffect;
   private readonly greedEffect: GreedEffect;
   private readonly damageControlEffect: DamageControlEffect;
+  private readonly lotteryLoverEffect: LotteryLoverEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -74,6 +76,8 @@ export class PerkEffectApplier {
 
     this.damageControlEffect = new DamageControlEffect(this.runPerkManager);
 
+    this.lotteryLoverEffect = new LotteryLoverEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -105,6 +109,8 @@ export class PerkEffectApplier {
     this.hotStreakEffect.resetFight();
 
     this.onARollEffect.resetFight();
+
+    this.lotteryLoverEffect.resetFight();
   }
 
   private refreshStreakMultiplierSettings(): void {
@@ -308,5 +314,13 @@ export class PerkEffectApplier {
 
   reducePenaltyPercentage(penaltyPercentage: number): number {
     return this.damageControlEffect.reducePenaltyPercentage(penaltyPercentage);
+  }
+
+  recordGambleForMoreWin(): boolean {
+    return this.lotteryLoverEffect.recordGambleForMoreWin();
+  }
+
+  applyLotteryLover(winAmount: number): LotteryLoverResult {
+    return this.lotteryLoverEffect.apply(winAmount);
   }
 }

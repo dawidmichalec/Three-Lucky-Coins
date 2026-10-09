@@ -805,11 +805,11 @@ export default {
 
   lotteryLoverName: "LOTTERY LOVER",
 
-  lotteryLoverDescriptionCommon: "Win Gamble For More 5 times to increase winnings by 5% for the rest of the fight.",
-  lotteryLoverDescriptionUncommon: "Win Gamble For More 5 times to increase winnings by 10% for the rest of the fight.",
-  lotteryLoverDescriptionRare: "Win Gamble For More 5 times to increase winnings by 15% for the rest of the fight.",
-  lotteryLoverDescriptionEpic: "Win Gamble For More 5 times to increase winnings by 20% for the rest of the fight.",
-  lotteryLoverDescriptionLegendary: "Win Gamble For More 5 times to increase winnings by 25% for the rest of the fight.",
+  lotteryLoverDescriptionCommon: "Win Gamble For More 3 times to increase winnings by 5% for the rest of the fight.",
+  lotteryLoverDescriptionUncommon: "Win Gamble For More 3 times to increase winnings by 10% for the rest of the fight.",
+  lotteryLoverDescriptionRare: "Win Gamble For More 3 times to increase winnings by 15% for the rest of the fight.",
+  lotteryLoverDescriptionEpic: "Win Gamble For More 3 times to increase winnings by 20% for the rest of the fight.",
+  lotteryLoverDescriptionLegendary: "Win Gamble For More 3 times to increase winnings by 25% for the rest of the fight.",
 
   // RISKY GAINS
 

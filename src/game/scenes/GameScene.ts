@@ -1516,10 +1516,19 @@ export class GameScene extends BaseScene {
         );
       }
 
+      const lotteryLoverResult = this.roundPayoutResolver.resolveLotteryLover(finalRoundWinAmount,);
+
+      if (lotteryLoverResult.bonusAmount > 0) {
+          await this.view.gameUI.animateBonusIntoWon(
+              lotteryLoverResult.bonusAmount,
+              lotteryLoverResult.finalWinAmount,
+          );
+      }
+
       const habitBreakerWinAmount =
         await this.applyHabitBreaker(
-          finalRoundWinAmount,
-          habitBreakerTriggered,
+            lotteryLoverResult.finalWinAmount,
+            habitBreakerTriggered,
         );
 
       this.runStatsRecorder.finishRound({
@@ -1700,6 +1709,8 @@ export class GameScene extends BaseScene {
 
     this.view.gambleForMoreOverlay.hide();
 
+    this.view.gameUI.updateWon(result.winAmount);
+
     const mandatoryTipTriggered =
       this.dealerFightManager.recordMandatoryTipWin();
 
@@ -1714,19 +1725,24 @@ export class GameScene extends BaseScene {
         DealerSkillId.MANDATORY_TIP,
       ]);
 
-      await this.view.perkEffectMessageOverlay.play(
-        // dokładnie ten sam call co Coin Sense
-      );
-
       await this.view.gameUI.animatePenaltyIntoWon(
         result.winAmount - finalRoundWinAmount,
         finalRoundWinAmount,
       );
     }
 
+    const lotteryLoverResult = this.roundPayoutResolver.resolveLotteryLover(finalRoundWinAmount,);
+
+    if (lotteryLoverResult.bonusAmount > 0) {
+      await this.view.gameUI.animateBonusIntoWon(
+        lotteryLoverResult.bonusAmount,
+        lotteryLoverResult.finalWinAmount,
+      );
+    }
+
     const habitBreakerWinAmount =
       await this.applyHabitBreaker(
-        finalRoundWinAmount,
+        lotteryLoverResult.finalWinAmount,
         this.pendingHabitBreakerTriggered,
       );
 
@@ -1812,6 +1828,8 @@ export class GameScene extends BaseScene {
 
     if (result.won) {
       this.dealerFightManager.recordGambleForMoreWin();
+
+      this.perkEffectApplier.recordGambleForMoreWin();
 
       if (
         this.currentDealer.objectiveType ===

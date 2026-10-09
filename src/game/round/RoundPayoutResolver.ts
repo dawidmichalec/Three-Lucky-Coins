@@ -7,6 +7,7 @@ import { roundMoney } from "../util/MoneyUtils";
 import { HotStreakResult } from "../perks/effects/HotStreakEffect";
 import { OnARollResult } from "../perks/effects/OnARollEffect";
 import { GreedResult } from "../perks/effects/GreedEffect";
+import { LotteryLoverResult } from "../perks/effects/LotteryLoverEffect";
 
 
 export interface RoundPayoutInput {
@@ -115,17 +116,19 @@ export class RoundPayoutResolver {
                     onARollResult.finalWinAmount
                 );
 
+
+
         const underdogBonus = this.perkEffectApplier.getUnderdogWinningsBonus(
             input.currentBalance,
             input.fightStartingBalance,
         );
 
         const underdogBonusAmount = roundMoney(
-            greedResult.finalWinAmount * underdogBonus
+            greedResult.finalWinAmount * underdogBonus,
         );
 
         const finalWinAmount = roundMoney(
-            greedResult.finalWinAmount + underdogBonusAmount
+            greedResult.finalWinAmount + underdogBonusAmount,
         );
 
         return {
@@ -139,5 +142,9 @@ export class RoundPayoutResolver {
             underdogBonusAmount,
             finalWinAmount
         };
+    }
+
+    resolveLotteryLover(winAmount: number): LotteryLoverResult {
+        return this.perkEffectApplier.applyLotteryLover(winAmount);
     }
 }

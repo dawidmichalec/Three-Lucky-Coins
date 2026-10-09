@@ -16,6 +16,7 @@ import { HOT_STREAK_DATA } from "./data/HotStreak";
 import { ON_A_ROLL_DATA } from "./data/OnARoll";
 import { GREED_DATA } from "./data/Greed";
 import { DAMAGE_CONTROL_DATA } from "./data/DamageControl";
+import { LOTTERY_LOVER_DATA } from "./data/LotteryLover";
 
 export const PERKS: readonly PerkData[] = [
   MULTIPLIER_BOOSTER_DATA,
@@ -33,7 +34,8 @@ export const PERKS: readonly PerkData[] = [
   HOT_STREAK_DATA,
   ON_A_ROLL_DATA,
   GREED_DATA,
-  DAMAGE_CONTROL_DATA
+  DAMAGE_CONTROL_DATA,
+  LOTTERY_LOVER_DATA
 ];
 
 export function getPerkById(perkId: string): PerkData | undefined {

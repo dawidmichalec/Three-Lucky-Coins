@@ -791,11 +791,11 @@ export default {
 
   lotteryLoverName: "MIŁOŚNIK LOTERII",
 
-  lotteryLoverDescriptionCommon: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 5% do końca walki.",
-  lotteryLoverDescriptionUncommon: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 10% do końca walki.",
-  lotteryLoverDescriptionRare: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 15% do końca walki.",
-  lotteryLoverDescriptionEpic: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 20% do końca walki.",
-  lotteryLoverDescriptionLegendary: "Zagraj o więcej i wygraj 5 razy, aby zwiększyć wygrane o 25% do końca walki.",
+  lotteryLoverDescriptionCommon: "Zagraj o więcej i wygraj 3 razy, aby zwiększyć wygrane o 5% do końca walki.",
+  lotteryLoverDescriptionUncommon: "Zagraj o więcej i wygraj 3 razy, aby zwiększyć wygrane o 10% do końca walki.",
+  lotteryLoverDescriptionRare: "Zagraj o więcej i wygraj 3 razy, aby zwiększyć wygrane o 15% do końca walki.",
+  lotteryLoverDescriptionEpic: "Zagraj o więcej i wygraj 3 razy, aby zwiększyć wygrane o 20% do końca walki.",
+  lotteryLoverDescriptionLegendary: "Zagraj o więcej i wygraj 3 razy, aby zwiększyć wygrane o 25% do końca walki.",
 
   // RISKY GAINS
 
