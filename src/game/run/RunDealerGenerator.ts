@@ -18,6 +18,7 @@ export class RunDealerGenerator {
       ...this.generateMachineFloorStage(),
       ...this.generateManagerStage(),
       ...this.generateVicePresidentStage(),
+      ...this.generateOwnerStage(),
     ];
   }
 
@@ -167,5 +168,13 @@ export class RunDealerGenerator {
     }
 
     return [vicePresident];
+  }
+
+  private static generateOwnerStage(): DealerData[] {
+    const owners = getRegularDealersByGroup(DealerGroup.OWNER);
+
+    const randomOwner = this.pickRandomDealer(owners);
+
+    return [randomOwner];
   }
 }

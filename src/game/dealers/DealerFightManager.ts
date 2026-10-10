@@ -127,7 +127,15 @@ export class DealerFightManager {
   private casinoPolicyCombination?: string;
   private casinoPolicyLockedUntilRound = 0;
 
-private static readonly CASINO_POLICY_LOCK_ROUNDS = 5;
+  private static readonly CASINO_POLICY_LOCK_ROUNDS = 5;
+
+  private mirrorRecovering = false;
+  private mirrorEligibleRounds = 0;
+  private mirrorCooldownRounds = 0;
+
+  private static readonly MIRROR_CHANCE_INCREASE = 0.05;
+  private static readonly MIRROR_MAX_CHANCE = 0.40;
+  private static readonly MIRROR_COOLDOWN_ROUNDS = 3;
 
   constructor(
     private readonly dealerOrder: readonly DealerData[],
@@ -233,6 +241,10 @@ private static readonly CASINO_POLICY_LOCK_ROUNDS = 5;
 
     this.casinoPolicyCombination = undefined;
     this.casinoPolicyLockedUntilRound = 0;
+
+    this.mirrorRecovering = false;
+    this.mirrorEligibleRounds = 0;
+    this.mirrorCooldownRounds = 0;
 
     if (this.isProtoFight()) {
       this.rollProtoPermanentMalfunction();
@@ -378,6 +390,65 @@ private static readonly CASINO_POLICY_LOCK_ROUNDS = 5;
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  rollMirror(
+    currentMultiplier: number,
+    baseMultiplier: number,
+  ): boolean {
+    const skill = this.getCurrentDealer().skills.find(
+      (skill) => skill.id === DealerSkillId.MIRROR,
+    );
+
+    if (!skill || this.mirrorRecovering) {
+      return false;
+    }
+
+    if (this.mirrorCooldownRounds > 0) {
+      this.mirrorCooldownRounds--;
+      return false;
+    }
+
+    if (currentMultiplier <= 0 || currentMultiplier < baseMultiplier) {
+      this.mirrorEligibleRounds = 0;
+      return false;
+    }
+
+    this.mirrorEligibleRounds++;
+
+    const triggerChance = Math.min(
+      (skill.triggerChance ?? 0.05) +
+        (this.mirrorEligibleRounds - 1) *
+          DealerFightManager.MIRROR_CHANCE_INCREASE,
+      DealerFightManager.MIRROR_MAX_CHANCE,
+    );
+
+    if (Math.random() >= triggerChance) {
+      return false;
+    }
+
+    this.mirrorRecovering = true;
+    this.mirrorEligibleRounds = 0;
+
+    return true;
+  }
+
+  isMirrorRecovering(): boolean {
+    return this.mirrorRecovering;
+  }
+
+  recordMirrorRecovery(
+    currentMultiplier: number,
+    baseMultiplier: number,
+  ): void {
+    if (!this.mirrorRecovering || currentMultiplier < baseMultiplier) {
+      return;
+    }
+
+    this.mirrorRecovering = false;
+    this.mirrorCooldownRounds =
+      DealerFightManager.MIRROR_COOLDOWN_ROUNDS;
+    this.mirrorEligibleRounds = 0;
   }
 
   isMultiplierLocked(): boolean {

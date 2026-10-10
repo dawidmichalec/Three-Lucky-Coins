@@ -42,9 +42,19 @@ export class MultiplierEffect extends Container {
     const currentMilestone = Math.floor(currentMultiplier / 5);
 
     /*
-            Nie przekroczyliśmy nowego
-            progu x5 / x10 / x15 / ...
-        */
+      Pierwszy milestone to x5.
+      Nie uruchamiamy efektu dla wartości poniżej x5,
+      w tym mnożników ujemnych.
+    */
+
+    if (currentMilestone < 1) {
+      return;
+    }
+
+    /*
+      Nie przekroczyliśmy nowego progu
+      x5 / x10 / x15 / ...
+    */
 
     if (currentMilestone <= previousMilestone) {
       return;

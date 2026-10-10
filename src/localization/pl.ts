@@ -130,6 +130,8 @@ export default {
   lionelSecurityCardDescription: "Nic nie opuszcza kasyna bez zgody Lionela.",
   lawrenceExecutiveFountainPen: "Wieczne pióro dyrektora",
   lawrenceExecutiveFountainPenDescription: "Władzy nie zdobywa się przy stołach. Władzę przypieczętowuje się podpisem.",
+  tommyGoldenRing: "Złoty pierścień",
+  tommyGoldenRingDescription: "Złoty pierścień Tommy'ego. Każde kasyno do kogoś należy.",
 
 
 
@@ -395,6 +397,12 @@ export default {
   lawrenceDescription: "Ma obsesję na punkcie pieniędzy i władzy. Marzy o tym, by pewnego dnia zająć miejsce właściciela kasyna.\n\nPatrzy na graczy z góry i uważa się za lepszego od wszystkich.",
   lawrenceSaying: "Pewnego dnia to kasyno będzie moje.",
 
+  // OWNERS
+
+  tommySaying: "Myślisz, że możesz wejść do mojego kasyna i zabrać moje pieniądze?!",
+  tommyDescription: "W przeciwieństwie do swojego ojca Tommy nie grzeszy cierpliwością i łatwo wpada w gniew.\n\nAgresywny, bezwzględny i porywczy, każdą porażkę traktuje osobiście.\n\nPodpadnij mu przy stole, a szybko przekonasz się, że jego temperament jest równie niebezpieczny jak jego gry.",
+
+
 
   // SKILL
 
@@ -583,6 +591,12 @@ export default {
 
   multiplierLockSkillName: "Blokada mnożnika",
   multiplierLockSkillDescription: "Uniemożliwia wzrost mnożnika serii.\n\nIgnoruje wszystkie perki zwiększające wzrost mnożnika.",
+
+  multiplierCollapseSkillName: "Załamanie mnożnika",
+  multiplierCollapseSkillDescription: "Pierwsza przegrana resetuje mnożnik do wartości bazowej. Każda kolejna przegrana z rzędu zmniejsza go o 1. Mnożnik może spaść poniżej zera.",
+
+  mirrorSkillName: "Ujemne odbicie mnożnika",
+  mirrorSkillDescription: "Odwraca dodatni mnożnik gracza na ujemny. Wygrywaj rundy, aby odbudować go do wartości bazowej. Przegrane dodatkowo obniżają mnożnik zamiast go resetować.",
 
 
   // PERKS

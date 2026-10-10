@@ -130,6 +130,10 @@ export class DealerSkillFeedbackHandler {
         case DealerSkillId.WINNING_TAX:
           await this.gameMessageOverlay.play("winningTaxSkillName");
           break;
+
+        case DealerSkillId.MIRROR:
+          await this.gameMessageOverlay.play("mirrorSkillName");
+          break;
       }
     }
   }

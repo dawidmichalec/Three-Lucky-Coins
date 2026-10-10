@@ -607,7 +607,12 @@ export class GameScene extends BaseScene {
       defeatedDealer.group === DealerGroup.MANAGER &&
       (!nextDealer || nextDealer.group !== DealerGroup.MANAGER);
 
-    const shouldShowPerkReward = defeatedSupervisor || defeatedSecondManager;
+    const defeatedOwner = defeatedDealer.group === DealerGroup.OWNER;
+
+    const shouldShowPerkReward =
+      defeatedSupervisor ||
+      defeatedSecondManager ||
+      defeatedOwner;
 
     if (!shouldShowPerkReward) {
       await this.continueToNextDealer();
@@ -1055,6 +1060,25 @@ export class GameScene extends BaseScene {
     this.roundState = "spinning";
 
     this.lockControls();
+
+    const mirrorTriggered = this.dealerFightManager.rollMirror(
+      this.streakMultiplierManager.getValue(),
+      this.streakMultiplierManager.getBaseValue(),
+    );
+
+    if (mirrorTriggered) {
+      await this.dealerSkillFeedbackHandler.handle([
+        DealerSkillId.MIRROR,
+      ]);
+
+      this.streakMultiplierManager.setValue(
+        -this.streakMultiplierManager.getValue(),
+      );
+
+      this.view.gameUI.updateMultiplier(
+        this.streakMultiplierManager.getValue(),
+      );
+    }
 
     if (betManipulation.manipulated) {
       await this.dealerSkillFeedbackHandler.handle([
@@ -1562,14 +1586,17 @@ export class GameScene extends BaseScene {
 
     const finalStreakResolution = await this.perkGameplayController.handleLoss(streakResolution);
 
-    const hardMultiplierDecrease =this.dealerFightManager.recordHardMultiplierResetLoss();
-
-    if (hardMultiplierDecrease) {
+    if (this.dealerFightManager.isMirrorRecovering()) {
       this.streakMultiplierManager.decay(1);
     } else {
-      this.applyStreakResolution(
-        finalStreakResolution,
-      );
+      const hardMultiplierDecrease =
+        this.dealerFightManager.recordHardMultiplierResetLoss();
+
+      if (hardMultiplierDecrease) {
+        this.streakMultiplierManager.decay(1);
+      } else {
+        this.applyStreakResolution(finalStreakResolution);
+      }
     }
 
     this.view.gameUI.updateMultiplier(this.streakMultiplierManager.getValue());
@@ -1890,7 +1917,23 @@ export class GameScene extends BaseScene {
   private async handleGambleForMoreLoss() {
     this.gambleForMoreController.lose();
 
-    const finalStreakResolution = await this.perkGameplayController.handleLoss({action: StreakAction.RESET,});
+    const finalStreakResolution =
+      await this.perkGameplayController.handleLoss({
+        action: StreakAction.RESET,
+      });
+
+    if (this.dealerFightManager.isMirrorRecovering()) {
+      this.streakMultiplierManager.decay(1);
+    } else {
+      const hardMultiplierDecrease =
+        this.dealerFightManager.recordHardMultiplierResetLoss();
+
+      if (hardMultiplierDecrease) {
+        this.streakMultiplierManager.decay(1);
+      } else {
+        this.applyStreakResolution(finalStreakResolution);
+      }
+    }
 
     this.applyStreakResolution(finalStreakResolution,);
 
@@ -2174,6 +2217,11 @@ export class GameScene extends BaseScene {
     }
 
     this.streakMultiplierManager.applyResolution(resolution);
+
+    this.dealerFightManager.recordMirrorRecovery(
+      this.streakMultiplierManager.getValue(),
+      this.streakMultiplierManager.getBaseValue(),
+    );
   }
 
   private applyMultiplierDecay(): void {

@@ -113,7 +113,9 @@ export enum DealerSkillId {
 
   BET_LIMITATION = "bet_limitation",
 
-  MULTIPLIER_LOCK = "multiplier_lock"
+  MULTIPLIER_LOCK = "multiplier_lock",
+
+  MIRROR = "mirror"
 
   // Kolejne skille w przyszłości...
 }

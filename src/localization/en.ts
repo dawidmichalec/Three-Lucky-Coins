@@ -131,6 +131,9 @@ export default {
   lionelSecurityCardDescription: "Nothing leaves the casino without Lionel's approval.",
   lawrenceExecutiveFountainPen: "Executive Fountain Pen",
   lawrenceExecutiveFountainPenDescription: "Power isn't won at the tables. It's signed into existence.",
+  tommyGoldenRing: "Golden Ring",
+  tommyGoldenRingDescription: "Tommy's Golden Ring. Every casino belongs to someone.",
+
 
 
 
@@ -413,7 +416,10 @@ export default {
   lawrenceDescription: "Obsessed with money and power. He dreams of taking the casino owner's place one day.\n\nLooks down on players and considers himself above everyone else.",
   lawrenceSaying: "One day this casino will be mine.",
 
+  // OWNERS
 
+  tommySaying: "You think you can come into my casino and take my money?!",
+  tommyDescription: "Unlike his father, Tommy has little patience and an explosive temper.\n\nAggressive, ruthless, and quick to anger, he takes every loss personally.\n\nCross him at the table, and you'll quickly learn that his temper is as dangerous as his games.",
 
 
 // SKILLS
@@ -597,6 +603,12 @@ export default {
 
   multiplierLockSkillName: "Multiplier Lock",
   multiplierLockSkillDescription: "Prevents the streak multiplier from growing.\n\nIgnores all perks that increase multiplier growth.",
+
+  multiplierCollapseSkillName: "Multiplier Collapse",
+  multiplierCollapseSkillDescription: "The first loss resets the multiplier to its base value. Each consecutive loss decreases it by 1. The multiplier can drop below 0.",
+
+  mirrorSkillName: "Mirror",
+  mirrorSkillDescription: "Reverses the player's positive multiplier, turning it negative. Win rounds to rebuild it to its base value. Losses further decrease the multiplier instead of resetting it.",
 
 
   // PERKS
