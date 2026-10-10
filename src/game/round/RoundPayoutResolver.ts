@@ -8,6 +8,7 @@ import { HotStreakResult } from "../perks/effects/HotStreakEffect";
 import { OnARollResult } from "../perks/effects/OnARollEffect";
 import { GreedResult } from "../perks/effects/GreedEffect";
 import { LotteryLoverResult } from "../perks/effects/LotteryLoverEffect";
+import { RiskyGainsResult } from "../perks/effects/RiskyGainsEffect";
 
 
 export interface RoundPayoutInput {
@@ -146,5 +147,9 @@ export class RoundPayoutResolver {
 
     resolveLotteryLover(winAmount: number): LotteryLoverResult {
         return this.perkEffectApplier.applyLotteryLover(winAmount);
+    }
+
+    resolveRiskyGains(winAmount: number): RiskyGainsResult {
+        return this.perkEffectApplier.applyRiskyGains(winAmount);
     }
 }

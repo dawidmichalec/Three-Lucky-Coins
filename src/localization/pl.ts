@@ -801,11 +801,11 @@ export default {
 
   riskyGainsName: "RYZYKOWNE ZYSKI",
 
-  riskyGainsDescriptionCommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +2,5% do wygranych\n5 razy → +5%\n7 razy → +7,5%\n10 razy → +10%",
-  riskyGainsDescriptionUncommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +5% do wygranych\n5 razy → +10%\n7 razy → +15%\n10 razy → +20%",
-  riskyGainsDescriptionRare: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +7,5% do wygranych\n5 razy → +15%\n7 razy → +22,5%\n10 razy → +30%",
-  riskyGainsDescriptionEpic: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +10% do wygranych\n5 razy → +20%\n7 razy → +30%\n10 razy → +40%",
-  riskyGainsDescriptionLegendary: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n3 razy → +12,5% do wygranych\n5 razy → +25%\n7 razy → +37,5%\n10 razy → +50%",
+  riskyGainsDescriptionCommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +2,5%\n3 razy → +5%\n5 razy → +7,5%\n7 razy → +10%\n10 razy → +12.5%",
+  riskyGainsDescriptionUncommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +5%\n3 razy → +10%\n5 razy → +15%\n7 razy → +20%\n10 razy → +25%",
+  riskyGainsDescriptionRare: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +7,5%\n3 razy → +15%\n5 razy → +22,5%\n7 razy → +30%\n10 razy → +37.5%",
+  riskyGainsDescriptionEpic: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +10%\n3 razy → +20%\n5 razy → +30%\n7 razy → +40%\n10 razy → +50%",
+  riskyGainsDescriptionLegendary: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +12,5%\n3 razy → +25%\n5 razy → +37,5%\n7 razy → +50%\n10 razy → +62.5%",
 
 
   // PERKS GAME UI

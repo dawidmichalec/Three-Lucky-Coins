@@ -815,11 +815,11 @@ export default {
 
   riskyGainsName: "RISKY GAINS",
 
-  riskyGainsDescriptionCommon: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +2.5% winnings\n5 times → +5%\n7 times → +7.5%\n10 times → +10%",
-  riskyGainsDescriptionUncommon: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +5% winnings\n5 times → +10%\n7 times → +15%\n10 times → +20%",
-  riskyGainsDescriptionRare: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +7.5% winnings\n5 times → +15%\n7 times → +22.5%\n10 times → +30%",
-  riskyGainsDescriptionEpic: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +10% winnings\n5 times → +20%\n7 times → +30%\n10 times → +40%",
-  riskyGainsDescriptionLegendary: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n3 times → +12.5% winnings\n5 times → +25%\n7 times → +37.5%\n10 times → +50%",
+  riskyGainsDescriptionCommon: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +2.5%\n3 times → +5%\n5 times → +7.5%\n7 times → +10%\n10 times → +12.5%",
+  riskyGainsDescriptionUncommon: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +5%\n3 times → +10%\n5 times → +15%\n7 times → +20%\n10 times → +25%",
+  riskyGainsDescriptionRare: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +7.5%\n3 times → +15%\n5 times → +22.5%\n7 times → +30%\n10 times → +37.5%",
+  riskyGainsDescriptionEpic: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +10%\n3 times → +20%\n5 times → +30%\n7 times → +40%\n10 times → +50%",
+  riskyGainsDescriptionLegendary: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +12.5%\n3 times → +25%\n5 times → +37.5%\n7 times → +50%\n10 times → +62.5%",
 
 
   // PERKS GAME UI

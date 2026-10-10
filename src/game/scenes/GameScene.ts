@@ -1525,11 +1525,21 @@ export class GameScene extends BaseScene {
           );
       }
 
-      const habitBreakerWinAmount =
-        await this.applyHabitBreaker(
-            lotteryLoverResult.finalWinAmount,
-            habitBreakerTriggered,
+      const riskyGainsResult = this.roundPayoutResolver.resolveRiskyGains(
+        lotteryLoverResult.finalWinAmount,
+      );
+
+      if (riskyGainsResult.bonusAmount > 0) {
+        await this.view.gameUI.animateBonusIntoWon(
+          riskyGainsResult.bonusAmount,
+          riskyGainsResult.finalWinAmount,
         );
+      }
+
+      const habitBreakerWinAmount = await this.applyHabitBreaker(
+        riskyGainsResult.finalWinAmount,
+        habitBreakerTriggered,
+      );
 
       this.runStatsRecorder.finishRound({
         win: true,
@@ -1740,11 +1750,21 @@ export class GameScene extends BaseScene {
       );
     }
 
-    const habitBreakerWinAmount =
-      await this.applyHabitBreaker(
-        lotteryLoverResult.finalWinAmount,
-        this.pendingHabitBreakerTriggered,
+    const riskyGainsResult = this.roundPayoutResolver.resolveRiskyGains(
+      lotteryLoverResult.finalWinAmount,
+    );
+
+    if (riskyGainsResult.bonusAmount > 0) {
+      await this.view.gameUI.animateBonusIntoWon(
+        riskyGainsResult.bonusAmount,
+        riskyGainsResult.finalWinAmount,
       );
+    }
+
+    const habitBreakerWinAmount = await this.applyHabitBreaker(
+      riskyGainsResult.finalWinAmount,
+      this.pendingHabitBreakerTriggered,
+    );
 
     await this.commitOrFreezeWin(habitBreakerWinAmount,);
 
@@ -1830,6 +1850,8 @@ export class GameScene extends BaseScene {
       this.dealerFightManager.recordGambleForMoreWin();
 
       this.perkEffectApplier.recordGambleForMoreWin();
+
+      this.perkEffectApplier.recordRiskyGainsGambleForMoreWin();
 
       if (
         this.currentDealer.objectiveType ===

@@ -20,7 +20,7 @@ import { OnARollActivationResult, OnARollEffect, OnARollResult } from "./effects
 import { GreedEffect, GreedResult } from "./effects/GreedEffect";
 import { DamageControlEffect } from "./effects/DamageControlEffect";
 import { LotteryLoverEffect, LotteryLoverResult } from "./effects/LotteryLoverEffect";
-
+import { RiskyGainsEffect, RiskyGainsResult } from "./effects/RiskyGainsEffect";
 
 export class PerkEffectApplier {
   private readonly coinSenseEffect: CoinSenseEffect;
@@ -39,6 +39,7 @@ export class PerkEffectApplier {
   private readonly greedEffect: GreedEffect;
   private readonly damageControlEffect: DamageControlEffect;
   private readonly lotteryLoverEffect: LotteryLoverEffect;
+  private readonly riskyGainsEffect: RiskyGainsEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -78,6 +79,8 @@ export class PerkEffectApplier {
 
     this.lotteryLoverEffect = new LotteryLoverEffect(this.runPerkManager);
 
+    this.riskyGainsEffect = new RiskyGainsEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -111,6 +114,8 @@ export class PerkEffectApplier {
     this.onARollEffect.resetFight();
 
     this.lotteryLoverEffect.resetFight();
+
+    this.riskyGainsEffect.resetFight();
   }
 
   private refreshStreakMultiplierSettings(): void {
@@ -322,5 +327,13 @@ export class PerkEffectApplier {
 
   applyLotteryLover(winAmount: number): LotteryLoverResult {
     return this.lotteryLoverEffect.apply(winAmount);
+  }
+
+  recordRiskyGainsGambleForMoreWin(): void {
+    this.riskyGainsEffect.recordGambleForMoreWin();
+  }
+
+  applyRiskyGains(winAmount: number): RiskyGainsResult {
+    return this.riskyGainsEffect.apply(winAmount);
   }
 }
