@@ -133,7 +133,8 @@ export default {
   lawrenceExecutiveFountainPenDescription: "Power isn't won at the tables. It's signed into existence.",
   tommyGoldenRing: "Golden Ring",
   tommyGoldenRingDescription: "Tommy's Golden Ring. Every casino belongs to someone.",
-
+  leonPipe: "Pipe",
+  leonPipeDescription: "An old wooden pipe that has accompanied Leon for decades. A reminder that patience is often worth more than luck.",
 
 
 
@@ -204,6 +205,7 @@ export default {
   headsSelector: "Heads",
   tailsSelector: "Tails",
   decayIn: "DECAY\nIN:",
+  round: "ROUND",
   combinationWontScore: "COMBINATION WON'T SCORE",
   combinationBlocked: "COMBINATION BLOCKED",
   betValueChangedTo: "BET CHANGED TO",
@@ -420,6 +422,8 @@ export default {
 
   tommySaying: "You think you can come into my casino and take my money?!",
   tommyDescription: "Unlike his father, Tommy has little patience and an explosive temper.\n\nAggressive, ruthless, and quick to anger, he takes every loss personally.\n\nCross him at the table, and you'll quickly learn that his temper is as dangerous as his games.",
+  leonSaying: "You have ten rounds. After that, I stop being patient.",
+  leonDescription: "A seasoned gambling veteran who clawed his way to the top through patience, discipline, and ruthless calculation.\n\nUnlike his hot-headed son, Leon never lets emotions dictate his decisions.\n\nHe's seen every trick in the book, and probably invented a few himself.",
 
 
 // SKILLS
@@ -609,6 +613,9 @@ export default {
 
   mirrorSkillName: "Mirror",
   mirrorSkillDescription: "Reverses the player's positive multiplier, turning it negative. Win rounds to rebuild it to its base value. Losses further decrease the multiplier instead of resetting it.",
+
+  deadlineSkillName: "Deadline",
+  deadlineSkillDescription: "You have 10 rounds to meet the objective. Once the deadline passes, the game is over.",
 
 
   // PERKS

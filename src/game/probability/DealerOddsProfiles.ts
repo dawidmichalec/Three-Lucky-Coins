@@ -535,3 +535,12 @@ export const TOMMY_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.1, 0.15, 0.2, 0.45, 0.55, 0.8, 0.85, 0.9],
 };
+
+
+// LEON
+
+export const LEON_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88],
+};

@@ -137,6 +137,8 @@ export class DealerFightManager {
   private static readonly MIRROR_MAX_CHANCE = 0.40;
   private static readonly MIRROR_COOLDOWN_ROUNDS = 3;
 
+  private static readonly DEADLINE_ROUND_LIMIT = 10;
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -390,6 +392,13 @@ export class DealerFightManager {
           `Unsupported objective type: ${dealer.objectiveType}`,
         );
     }
+  }
+
+  isDeadlineExpired(): boolean {
+    return (
+      this.hasActiveSkill(DealerSkillId.DEADLINE) &&
+      this.fightRounds >= DealerFightManager.DEADLINE_ROUND_LIMIT
+    );
   }
 
   rollMirror(

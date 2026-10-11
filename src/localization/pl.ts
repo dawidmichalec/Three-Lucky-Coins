@@ -132,7 +132,8 @@ export default {
   lawrenceExecutiveFountainPenDescription: "Władzy nie zdobywa się przy stołach. Władzę przypieczętowuje się podpisem.",
   tommyGoldenRing: "Złoty pierścień",
   tommyGoldenRingDescription: "Złoty pierścień Tommy'ego. Każde kasyno do kogoś należy.",
-
+  leonPipe: "Fajka",
+  leonPipeDescription: "Stara drewniana fajka, która towarzyszy Leonowi od dziesięcioleci. Przypomina, że cierpliwość bywa cenniejsza niż szczęście.",
 
 
 
@@ -199,6 +200,7 @@ export default {
   headsSelector: "Orzeł",
   tailsSelector: "Reszka",
   decayIn: "ROZPAD\nZA:",
+  round: "RUNDA",
   combinationWontScore: "BRAK WYGRANEJ",
   combinationBlocked: "KOMBINACJA ZABLOKOWANA",
   betValueChangedTo: "STAWKA ZMIENIONA NA",
@@ -401,6 +403,8 @@ export default {
 
   tommySaying: "Myślisz, że możesz wejść do mojego kasyna i zabrać moje pieniądze?!",
   tommyDescription: "W przeciwieństwie do swojego ojca Tommy nie grzeszy cierpliwością i łatwo wpada w gniew.\n\nAgresywny, bezwzględny i porywczy, każdą porażkę traktuje osobiście.\n\nPodpadnij mu przy stole, a szybko przekonasz się, że jego temperament jest równie niebezpieczny jak jego gry.",
+  leonSaying: "Masz dziesięć rund. Potem kończy mi się cierpliwość.",
+  leonDescription: "Stary hazardowy wyga, który dzięki cierpliwości, dyscyplinie i bezwzględnej kalkulacji wspiął się na sam szczyt. W przeciwieństwie do porywczego syna Leon nigdy nie pozwala, by emocje kierowały jego decyzjami. Zna wszystkie hazardowe sztuczki, a kilka z nich prawdopodobnie sam wymyślił.",
 
 
 
@@ -597,6 +601,9 @@ export default {
 
   mirrorSkillName: "Ujemne odbicie mnożnika",
   mirrorSkillDescription: "Odwraca dodatni mnożnik gracza na ujemny. Wygrywaj rundy, aby odbudować go do wartości bazowej. Przegrane dodatkowo obniżają mnożnik zamiast go resetować.",
+
+  deadlineSkillName: "Ultimatum",
+  deadlineSkillDescription: "Masz 10 rund, żeby spełnić cel. Jeśli Ci się nie uda, gra się kończy.",
 
 
   // PERKS

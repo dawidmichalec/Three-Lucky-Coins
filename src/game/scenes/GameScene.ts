@@ -519,6 +519,13 @@ export class GameScene extends BaseScene {
 
     const fight = this.dealerFightManager.startFight(this.player.balance);
 
+    this.view.gameUI.hideRoundLabel();
+
+    if (this.dealerFightManager.hasActiveSkill(DealerSkillId.DEADLINE)) {
+      this.view.gameUI.updateRoundValue(1);
+      this.view.gameUI.showRoundLabel();
+    }
+
     this.dealerFightManager.prepareProtoRound();
 
     const protoPermanentMalfunction = this.dealerFightManager.getProtoPermanentMalfunction();
@@ -719,6 +726,8 @@ export class GameScene extends BaseScene {
     this.view.gameUI.hideDecayTimer();
 
     this.view.gameUI.hideIvyRules();
+
+    this.view.gameUI.hideRoundLabel();
 
     this.dealerCollectionManager.discoverDealer(dealer.id);
 
@@ -1935,8 +1944,6 @@ export class GameScene extends BaseScene {
       }
     }
 
-    this.applyStreakResolution(finalStreakResolution,);
-
     this.view.gameUI.updateWon(0);
 
     this.runStatsRecorder.finishRound({
@@ -1997,6 +2004,17 @@ export class GameScene extends BaseScene {
       this.roundState = "result";
 
       await this.handleDealerDefeated();
+
+      return;
+    }
+
+    if (this.dealerFightManager.isDeadlineExpired()) {
+      this.roundState = "result";
+
+      this.stopRoundTimer();
+      this.lockControls();
+
+      this.triggerGameOver();
 
       return;
     }
@@ -2095,6 +2113,12 @@ export class GameScene extends BaseScene {
     }
 
     this.roundState = "ready";
+
+    if (this.dealerFightManager.hasActiveSkill(DealerSkillId.DEADLINE)) {
+      this.view.gameUI.updateRoundValue(
+        this.dealerFightManager.getFightRounds() + 1,
+      );
+    }
 
     this.startRoundTimerIfNeeded();
 

@@ -115,7 +115,9 @@ export enum DealerSkillId {
 
   MULTIPLIER_LOCK = "multiplier_lock",
 
-  MIRROR = "mirror"
+  MIRROR = "mirror",
+
+  DEADLINE = "deadline"
 
   // Kolejne skille w przyszłości...
 }

@@ -49,6 +49,9 @@ export class GameUI extends Container {
 
   public securityCheckPanel!: SecurityCheckPanel;
 
+  public roundLabel!: LocalizedText;
+  public roundValue!: Text;
+
 
   constructor(private currentDealer: DealerData) {
     super();
@@ -329,6 +332,35 @@ export class GameUI extends Container {
     this.securityCheckPanel.position.set(125, 20);
     this.securityCheckPanel.visible = false;
 
+    // ROUND LABEL
+
+    this.roundLabel = new LocalizedText(
+      "round",
+      {
+        font: "Open Sans",
+        fontSize: 44,
+        fontWeight: "bold",
+        fill: 0xff3131,
+        align: "center"
+      }
+    );
+
+    this.roundLabel.position.set(62.4, 345.6);
+    this.roundLabel.visible = false;
+
+    this.roundValue = new Text({
+      text: "1",
+      style: {
+        font: "Open Sans",
+        fontSize: 72,
+        fontWeight: "bold",
+        fill: 0xff3131,
+      }
+    });
+
+    this.roundValue.position.set(130, 457.6);
+    this.roundValue.anchor.set(0.5, 0);
+    this.roundValue.visible = false;
 
     // ADD
 
@@ -350,7 +382,9 @@ export class GameUI extends Container {
       this.combinationStatusLabel,
       this.ivyRuleLabel,
       this.ivyRuleContent,
-      this.securityCheckPanel
+      this.securityCheckPanel,
+      this.roundLabel,
+      this.roundValue
     );
   }
 
@@ -447,6 +481,21 @@ export class GameUI extends Container {
 
   hideSecurityCheck() {
     this.securityCheckPanel.visible = false;
+  }
+
+  showRoundLabel() {
+    this.roundLabel.visible = true;
+    this.roundValue.visible = true;
+  }
+
+  hideRoundLabel() {
+    this.roundLabel.visible = false;
+    this.roundValue.visible = false;
+  }
+
+  updateRoundValue(rounds: number): void {
+    this.roundValue.text =
+      rounds.toString();
   }
 
   async animatePenaltyIntoWon(
