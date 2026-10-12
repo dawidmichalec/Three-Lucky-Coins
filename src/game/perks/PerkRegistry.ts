@@ -18,6 +18,7 @@ import { GREED_DATA } from "./data/Greed";
 import { DAMAGE_CONTROL_DATA } from "./data/DamageControl";
 import { LOTTERY_LOVER_DATA } from "./data/LotteryLover";
 import { RISKY_GAINS_DATA } from "./data/RiskyGains";
+import { LUCKY_PRIZE_DATA } from "./data/LuckyPrize";
 
 export const PERKS: readonly PerkData[] = [
   MULTIPLIER_BOOSTER_DATA,
@@ -37,7 +38,8 @@ export const PERKS: readonly PerkData[] = [
   GREED_DATA,
   DAMAGE_CONTROL_DATA,
   LOTTERY_LOVER_DATA,
-  RISKY_GAINS_DATA
+  RISKY_GAINS_DATA,
+  LUCKY_PRIZE_DATA
 ];
 
 export function getPerkById(perkId: string): PerkData | undefined {

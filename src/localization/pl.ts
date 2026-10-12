@@ -830,7 +830,7 @@ export default {
 
   // LUCKY PRIZE
 
-  luckyPrizeName: "LUCKY PRIZE",
+  luckyPrizeName: "SZCZĘŚLIWA NAGRODA",
 
   luckyPrizeDescriptionCommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.1\n3 razy → +0.2\n5 razy → +0.3\n7 razy → +0.4\n10 razy → +0.5",
   luckyPrizeDescriptionUncommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.15\n3 razy → +0.3\n5 razy → +0.45\n7 razy → +0.6\n10 razy → +0.75",

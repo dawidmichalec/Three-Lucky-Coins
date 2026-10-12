@@ -401,6 +401,72 @@ export class GameCheatController {
       this.forcePerkReward("risky_gains", PerkRarity.LEGENDARY);
     });
 
+    // LUCKY PRIZE
+
+    this.cheatManager.register(CheatCode.FORCE_LUCKY_PRIZE_COMMON, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LUCKY_PRIZE_UNCOMMON, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LUCKY_PRIZE_RARE, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LUCKY_PRIZE_EPIC, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_LUCKY_PRIZE_LEGENDARY, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.LEGENDARY);
+    });
+
+    // GOLDEN BOY
+
+    this.cheatManager.register(CheatCode.FORCE_GOLDEN_BOY_COMMON, () => {
+      this.forcePerkReward("golden_boy", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GOLDEN_BOY_UNCOMMON, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GOLDEN_BOY_RARE, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GOLDEN_BOY_EPIC, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_GOLDEN_BOY_LEGENDARY, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.LEGENDARY);
+    });
+
+    // BOUNCE BACK
+
+    this.cheatManager.register(CheatCode.FORCE_BOUNCE_BACK_COMMON, () => {
+      this.forcePerkReward("bounce_back", PerkRarity.COMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_BOUNCE_BACK_UNCOMMON, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.UNCOMMON);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_BOUNCE_BACK_RARE, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.RARE);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_BOUNCE_BACK_EPIC, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.EPIC);
+    });
+
+    this.cheatManager.register(CheatCode.FORCE_BOUNCE_BACK_LEGENDARY, () => {
+      this.forcePerkReward("lucky_prize", PerkRarity.LEGENDARY);
+    });
+
 
   }
 

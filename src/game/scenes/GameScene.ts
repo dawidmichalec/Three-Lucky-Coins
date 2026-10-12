@@ -1889,6 +1889,8 @@ export class GameScene extends BaseScene {
 
       this.perkEffectApplier.recordRiskyGainsGambleForMoreWin();
 
+      this.perkEffectApplier.recordLuckyPrizeGambleForMoreWin();
+
       if (
         this.currentDealer.objectiveType ===
         ObjectiveType.WIN_GAMBLE_FOR_MORE

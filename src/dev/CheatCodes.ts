@@ -140,7 +140,31 @@ export enum CheatCode {
   FORCE_RISKY_GAINS_UNCOMMON = "perk_risky_gains_uncommon",
   FORCE_RISKY_GAINS_RARE = "perk_risky_gains_rare",
   FORCE_RISKY_GAINS_EPIC = "perk_risky_gains_epic",
-  FORCE_RISKY_GAINS_LEGENDARY = "perk_risky_gains_legendary"
+  FORCE_RISKY_GAINS_LEGENDARY = "perk_risky_gains_legendary",
+
+  // LUCKY PRIZE
+
+  FORCE_LUCKY_PRIZE_COMMON = "perk_lucky_prize_common",
+  FORCE_LUCKY_PRIZE_UNCOMMON = "perk_lucky_prize_uncommon",
+  FORCE_LUCKY_PRIZE_RARE = "perk_lucky_prize_rare",
+  FORCE_LUCKY_PRIZE_EPIC = "perk_lucky_prize_epic",
+  FORCE_LUCKY_PRIZE_LEGENDARY = "perk_lucky_prize_legendary",
+
+  // GOLDEN BOY
+
+  FORCE_GOLDEN_BOY_COMMON = "perk_golden_boy_common",
+  FORCE_GOLDEN_BOY_UNCOMMON = "perk_golden_boy_uncommon",
+  FORCE_GOLDEN_BOY_RARE = "perk_golden_boy_rare",
+  FORCE_GOLDEN_BOY_EPIC = "perk_golden_boy_epic",
+  FORCE_GOLDEN_BOY_LEGENDARY = "perk_golden_boy_legendary",
+
+  // BOUNCE BACK
+
+  FORCE_BOUNCE_BACK_COMMON = "perk_bounce_back_common",
+  FORCE_BOUNCE_BACK_UNCOMMON = "perk_bounce_back_uncommon",
+  FORCE_BOUNCE_BACK_RARE = "perk_bounce_back_rare",
+  FORCE_BOUNCE_BACK_EPIC = "perk_bounce_back_epic",
+  FORCE_BOUNCE_BACK_LEGENDARY = "perk_bounce_back_legendary"
 
 
 }

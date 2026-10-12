@@ -21,6 +21,7 @@ import { GreedEffect, GreedResult } from "./effects/GreedEffect";
 import { DamageControlEffect } from "./effects/DamageControlEffect";
 import { LotteryLoverEffect, LotteryLoverResult } from "./effects/LotteryLoverEffect";
 import { RiskyGainsEffect, RiskyGainsResult } from "./effects/RiskyGainsEffect";
+import { LuckyPrizeEffect } from "./effects/LuckyPrizeEffect";
 
 export class PerkEffectApplier {
   private readonly coinSenseEffect: CoinSenseEffect;
@@ -40,6 +41,7 @@ export class PerkEffectApplier {
   private readonly damageControlEffect: DamageControlEffect;
   private readonly lotteryLoverEffect: LotteryLoverEffect;
   private readonly riskyGainsEffect: RiskyGainsEffect;
+  private readonly luckyPrizeEffect: LuckyPrizeEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -81,6 +83,8 @@ export class PerkEffectApplier {
 
     this.riskyGainsEffect = new RiskyGainsEffect(this.runPerkManager);
 
+    this.luckyPrizeEffect = new LuckyPrizeEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -116,26 +120,54 @@ export class PerkEffectApplier {
     this.lotteryLoverEffect.resetFight();
 
     this.riskyGainsEffect.resetFight();
+
+    this.luckyPrizeEffect.resetFight();
+
+    this.refreshStreakMultiplierGrowth();
   }
 
   private refreshStreakMultiplierSettings(): void {
     let baseValue = 1;
-    let growthPerWin = 1;
 
-    const multiplierBooster = this.runPerkManager.getPerk("multiplier_booster");
+    const multiplierBooster =
+      this.runPerkManager.getPerk("multiplier_booster");
 
     if (multiplierBooster) {
-      const config = multiplierBooster.variant.config as MultiplierBoosterConfig;
+      const config =
+        multiplierBooster.variant.config as MultiplierBoosterConfig;
 
       baseValue += config.streakMultiplierIncrease;
+    }
+
+    this.streakMultiplierManager.setBaseValue(baseValue);
+
+    this.refreshStreakMultiplierGrowth();
+
+    this.streakMultiplierManager.reset();
+  }
+
+  private refreshStreakMultiplierGrowth(): void {
+    let growthPerWin = 1;
+
+    const multiplierBooster =
+      this.runPerkManager.getPerk("multiplier_booster");
+
+    if (multiplierBooster) {
+      const config =
+        multiplierBooster.variant.config as MultiplierBoosterConfig;
+
       growthPerWin += config.streakMultiplierIncrease;
     }
 
-    growthPerWin -= this.greedEffect.getMultiplierGrowthReduction();
+    growthPerWin -=
+      this.greedEffect.getMultiplierGrowthReduction();
 
-    this.streakMultiplierManager.setBaseValue(baseValue);
-    this.streakMultiplierManager.setGrowthPerWin(growthPerWin);
-    this.streakMultiplierManager.reset();
+    growthPerWin +=
+      this.luckyPrizeEffect.getMultiplierGrowthBonus();
+
+    this.streakMultiplierManager.setGrowthPerWin(
+      Math.round(growthPerWin * 100) / 100,
+    );
   }
 
   getRiskTakerPayoutMultiplier(
@@ -335,5 +367,20 @@ export class PerkEffectApplier {
 
   applyRiskyGains(winAmount: number): RiskyGainsResult {
     return this.riskyGainsEffect.apply(winAmount);
+  }
+
+  recordLuckyPrizeGambleForMoreWin(): void {
+    const bonusChanged =
+      this.luckyPrizeEffect.recordGambleForMoreWin();
+
+    if (!bonusChanged) {
+      return;
+    }
+
+    this.refreshStreakMultiplierGrowth();
+  }
+
+  getLuckyPrizeMultiplierGrowthBonus(): number {
+    return this.luckyPrizeEffect.getMultiplierGrowthBonus();
   }
 }
