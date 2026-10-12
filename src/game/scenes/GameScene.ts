@@ -1232,6 +1232,8 @@ export class GameScene extends BaseScene {
 
     this.dealerFightManager.recordGoldenCoins(goldenCoinsCollected);
 
+    this.perkEffectApplier.recordGoldenBoyGoldenCoins(goldenCoinsCollected,);
+
     if (
       goldenCoinsCollected > 0 &&
       this.currentDealer.objectiveType ===
@@ -1569,8 +1571,19 @@ export class GameScene extends BaseScene {
         );
       }
 
-      const habitBreakerWinAmount = await this.applyHabitBreaker(
+      const goldenBoyResult = this.perkEffectApplier.applyGoldenBoy(
         riskyGainsResult.finalWinAmount,
+      );
+
+      if (goldenBoyResult.bonusAmount > 0) {
+        await this.view.gameUI.animateBonusIntoWon(
+          goldenBoyResult.bonusAmount,
+          goldenBoyResult.finalWinAmount,
+        );
+      }
+
+      const habitBreakerWinAmount = await this.applyHabitBreaker(
+        goldenBoyResult.finalWinAmount,
         habitBreakerTriggered,
       );
 
@@ -1797,8 +1810,19 @@ export class GameScene extends BaseScene {
       );
     }
 
-    const habitBreakerWinAmount = await this.applyHabitBreaker(
+    const goldenBoyResult = this.perkEffectApplier.applyGoldenBoy(
       riskyGainsResult.finalWinAmount,
+    );
+
+    if (goldenBoyResult.bonusAmount > 0) {
+      await this.view.gameUI.animateBonusIntoWon(
+        goldenBoyResult.bonusAmount,
+        goldenBoyResult.finalWinAmount,
+      );
+    }
+
+    const habitBreakerWinAmount = await this.applyHabitBreaker(
+      goldenBoyResult.finalWinAmount,
       this.pendingHabitBreakerTriggered,
     );
 

@@ -854,11 +854,11 @@ export default {
 
   goldenBoyName: "GOLDEN BOY",
 
-  goldenBoyDescriptionCommon: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +50%\n2 Golden Coins → 100%\n3 Golden Coins → +150%",
-  goldenBoyDescriptionUncommon: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +100%\n2 Golden Coins → 200%\n3 Golden Coins → +300%",
-  goldenBoyDescriptionRare: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +150%\n2 Golden Coins → 300%\n3 Golden Coins → +450%",
-  goldenBoyDescriptionEpic: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +200%\n2 Golden Coins → 400%\n3 Golden Coins → +600%",
-  goldenBoyDescriptionLegendary: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +250%\n2 Golden Coins → 500%\n3 Golden Coins → +750%",
+  goldenBoyDescriptionCommon: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +50%\n2 Golden Coins → +100%\n3 Golden Coins → +150%",
+  goldenBoyDescriptionUncommon: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +100%\n2 Golden Coins → +200%\n3 Golden Coins → +300%",
+  goldenBoyDescriptionRare: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +150%\n2 Golden Coins → +300%\n3 Golden Coins → +450%",
+  goldenBoyDescriptionEpic: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +200%\n2 Golden Coins → +400%\n3 Golden Coins → +600%",
+  goldenBoyDescriptionLegendary: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +250%\n2 Golden Coins → +500%\n3 Golden Coins → +750%",
 
   // BOUNCE BACK
 

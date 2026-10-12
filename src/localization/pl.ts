@@ -842,11 +842,11 @@ export default {
 
   goldenBoyName: "ZŁOTY CHŁOPAK",
 
-  goldenBoyDescriptionCommon: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +50%\n2 złote monety → 100%\n3 złote monety → +150%",
-  goldenBoyDescriptionUncommon: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +100%\n2 złote monety → 200%\n3 złote monety → +300%",
-  goldenBoyDescriptionRare: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +150%\n2 złote monety → 300%\n3 złote monety → +450%",
-  goldenBoyDescriptionEpic: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +200%\n2 złote monety → 400%\n3 złote monety → +600%",
-  goldenBoyDescriptionLegendary: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +250%\n2 złote monety → 500%\n3 złote monety → +750%",
+  goldenBoyDescriptionCommon: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +50%\n2 złote monety → +100%\n3 złote monety → +150%",
+  goldenBoyDescriptionUncommon: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +100%\n2 złote monety → +200%\n3 złote monety → +300%",
+  goldenBoyDescriptionRare: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +150%\n2 złote monety → +300%\n3 złote monety → +450%",
+  goldenBoyDescriptionEpic: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +200%\n2 złote monety → +400%\n3 złote monety → +600%",
+  goldenBoyDescriptionLegendary: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +250%\n2 złote monety → +500%\n3 złote monety → +750%",
 
 
   // BOUNCE BACK

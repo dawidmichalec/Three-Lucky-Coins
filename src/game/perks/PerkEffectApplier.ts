@@ -22,6 +22,7 @@ import { DamageControlEffect } from "./effects/DamageControlEffect";
 import { LotteryLoverEffect, LotteryLoverResult } from "./effects/LotteryLoverEffect";
 import { RiskyGainsEffect, RiskyGainsResult } from "./effects/RiskyGainsEffect";
 import { LuckyPrizeEffect } from "./effects/LuckyPrizeEffect";
+import { GoldenBoyEffect, GoldenBoyResult, } from "./effects/GoldenBoyEffect";
 
 export class PerkEffectApplier {
   private readonly coinSenseEffect: CoinSenseEffect;
@@ -42,6 +43,7 @@ export class PerkEffectApplier {
   private readonly lotteryLoverEffect: LotteryLoverEffect;
   private readonly riskyGainsEffect: RiskyGainsEffect;
   private readonly luckyPrizeEffect: LuckyPrizeEffect;
+  private readonly goldenBoyEffect: GoldenBoyEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -85,6 +87,8 @@ export class PerkEffectApplier {
 
     this.luckyPrizeEffect = new LuckyPrizeEffect(this.runPerkManager);
 
+    this.goldenBoyEffect = new GoldenBoyEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -124,6 +128,8 @@ export class PerkEffectApplier {
     this.luckyPrizeEffect.resetFight();
 
     this.refreshStreakMultiplierGrowth();
+
+    this.goldenBoyEffect.resetFight();
   }
 
   private refreshStreakMultiplierSettings(): void {
@@ -382,5 +388,13 @@ export class PerkEffectApplier {
 
   getLuckyPrizeMultiplierGrowthBonus(): number {
     return this.luckyPrizeEffect.getMultiplierGrowthBonus();
+  }
+
+  recordGoldenBoyGoldenCoins(amount: number): void {
+    this.goldenBoyEffect.recordGoldenCoins(amount);
+  }
+
+  applyGoldenBoy(winAmount: number): GoldenBoyResult {
+    return this.goldenBoyEffect.apply(winAmount);
   }
 }
