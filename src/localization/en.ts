@@ -840,6 +840,36 @@ export default {
   riskyGainsDescriptionEpic: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +10%\n3 times → +20%\n5 times → +30%\n7 times → +40%\n10 times → +50%",
   riskyGainsDescriptionLegendary: "Win Gamble For More to unlock bonus winnings for the rest of the fight:\n\n2 times → +12.5%\n3 times → +25%\n5 times → +37.5%\n7 times → +50%\n10 times → +62.5%",
 
+  // LUCKY PRIZE
+
+  luckyPrizeName: "LUCKY PRIZE",
+
+  luckyPrizeDescriptionCommon: "Win Gamble For More to unlock bonus multiplier growth for the rest of the fight (the base multiplier value remains unchanged):\n\n2 times → +0.1\n3 times → +0.2\n5 times → +0.3\n7 times → +0.4\n10 times → +0.5",
+  luckyPrizeDescriptionUncommon: "Win Gamble For More to unlock bonus multiplier growth for the rest of the fight (the base multiplier value remains unchanged):\n\n2 times → +0.15\n3 times → +0.3\n5 times → +0.45\n7 times → +0.6\n10 times → +0.75",
+  luckyPrizeDescriptionRare: "Win Gamble For More to unlock bonus multiplier growth for the rest of the fight (the base multiplier value remains unchanged):\n\n2 times → +0.2\n3 times → +0.4\n5 times → +0.6\n7 times → +0.8\n10 times → +1",
+  luckyPrizeDescriptionEpic: "Win Gamble For More to unlock bonus multiplier growth for the rest of the fight (the base multiplier value remains unchanged):\n\n2 times → +0.25\n3 times → +0.5\n5 times → +0.75\n7 times → +1\n10 times → +1.25",
+  luckyPrizeDescriptionLegendary: "Win Gamble For More to unlock bonus multiplier growth for the rest of the fight (the base multiplier value remains unchanged):\n\n2 times → +0.3\n3 times → +0.6\n5 times → +0.9\n7 times → +1.2\n10 times → +1.5",
+
+  // GOLDEN BOY
+
+  goldenBoyName: "GOLDEN BOY",
+
+  goldenBoyDescriptionCommon: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +50%\n2 Golden Coins → 100%\n3 Golden Coins → +150%",
+  goldenBoyDescriptionUncommon: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +100%\n2 Golden Coins → 200%\n3 Golden Coins → +300%",
+  goldenBoyDescriptionRare: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +150%\n2 Golden Coins → 300%\n3 Golden Coins → +450%",
+  goldenBoyDescriptionEpic: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +200%\n2 Golden Coins → 400%\n3 Golden Coins → +600%",
+  goldenBoyDescriptionLegendary: "Gather Golden Coins to unlock bonus winnings for the rest of the fight.\n\n1 Golden Coin → +250%\n2 Golden Coins → 500%\n3 Golden Coins → +750%",
+
+  // BOUNCE BACK
+
+  bounceBackName: "BOUNCE BACK",
+
+  bounceBackDescriptionCommon: "After a loss, your next win increases the multiplier by additional 0.25.\n\nThe effect is removed after triggering.",
+  bounceBackDescriptionUncommon: "After a loss, your next win increases the multiplier by additional 0.5.\n\nThe effect is removed after triggering.",
+  bounceBackDescriptionRare: "After a loss, your next win increases the multiplier by additional 0.75.\n\nThe effect is removed after triggering.",
+  bounceBackDescriptionEpic: "After a loss, your next win increases the multiplier by additional 1.\n\nThe effect is removed after triggering.",
+  bounceBackDescriptionLegendary: "After a loss, your next win increases the multiplier by additional 1.25.\n\nThe effect is removed after triggering.",
+
 
   // PERKS GAME UI
 

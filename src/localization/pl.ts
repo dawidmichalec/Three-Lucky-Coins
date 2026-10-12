@@ -828,6 +828,36 @@ export default {
   riskyGainsDescriptionEpic: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +10%\n3 razy → +20%\n5 razy → +30%\n7 razy → +40%\n10 razy → +50%",
   riskyGainsDescriptionLegendary: "Zagraj o więcej i wygraj, aby odblokować dodatkowe wygrane do końca walki:\n\n2 razy → +12,5%\n3 razy → +25%\n5 razy → +37,5%\n7 razy → +50%\n10 razy → +62.5%",
 
+  // LUCKY PRIZE
+
+  luckyPrizeName: "LUCKY PRIZE",
+
+  luckyPrizeDescriptionCommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.1\n3 razy → +0.2\n5 razy → +0.3\n7 razy → +0.4\n10 razy → +0.5",
+  luckyPrizeDescriptionUncommon: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.15\n3 razy → +0.3\n5 razy → +0.45\n7 razy → +0.6\n10 razy → +0.75",
+  luckyPrizeDescriptionRare: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.2\n3 razy → +0.4\n5 razy → +0.6\n7 razy → +0.8\n10 razy → +1",
+  luckyPrizeDescriptionEpic: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.25\n3 razy → +0.5\n5 razy → +0.75\n7 razy → +1\n10 razy → +1.25",
+  luckyPrizeDescriptionLegendary: "Zagraj o więcej i wygraj, aby odblokować dodatkowy wzrost mnożnika do końca walki (bazowa wartość mnożnika pozostaje bez zmian):\n\n2 razy → +0.3\n3 razy → +0.6\n5 razy → +0.9\n7 razy → +1.2\n10 razy → +1.5",
+
+  // GOLDEN BOY
+
+  goldenBoyName: "ZŁOTY CHŁOPAK",
+
+  goldenBoyDescriptionCommon: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +50%\n2 złote monety → 100%\n3 złote monety → +150%",
+  goldenBoyDescriptionUncommon: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +100%\n2 złote monety → 200%\n3 złote monety → +300%",
+  goldenBoyDescriptionRare: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +150%\n2 złote monety → 300%\n3 złote monety → +450%",
+  goldenBoyDescriptionEpic: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +200%\n2 złote monety → 400%\n3 złote monety → +600%",
+  goldenBoyDescriptionLegendary: "Zbierz złote monety, aby odblokować dodatkowe wygrane do końca walki.\n\n1 złota moneta → +250%\n2 złote monety → 500%\n3 złote monety → +750%",
+
+
+  // BOUNCE BACK
+
+  bounceBackName: "WAŃKA-WSTAŃKA",
+
+  bounceBackDescriptionCommon: "Po przegranej Twoja następna wygrana zwiększa mnożnik o dodatkowe 0.25.\n\nEfekt znika po aktywacji.",
+  bounceBackDescriptionUncommon: "Po przegranej Twoja następna wygrana zwiększa mnożnik o dodatkowe 0.5.\n\nEfekt znika po aktywacji.",
+  bounceBackDescriptionRare: "Po przegranej Twoja następna wygrana zwiększa mnożnik o dodatkowe 0.75.\n\nEfekt znika po aktywacji.",
+  bounceBackDescriptionEpic: "Po przegranej Twoja następna wygrana zwiększa mnożnik o dodatkowe 1.\n\nEfekt znika po aktywacji.",
+  bounceBackDescriptionLegendary: "Po przegranej Twoja następna wygrana zwiększa mnożnik o dodatkowe 1.25.\n\nEfekt znika po aktywacji.",
 
   // PERKS GAME UI
 
