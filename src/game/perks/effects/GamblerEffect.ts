@@ -73,4 +73,8 @@ export class GamblerEffect {
       payoutMultiplier: config.payoutMultiplier,
     };
   }
+
+  resetFight(): void {
+    this.bonusActive = false;
+  }
 }

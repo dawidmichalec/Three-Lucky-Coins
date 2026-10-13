@@ -2250,7 +2250,9 @@ export class GameScene extends BaseScene {
     );
   }
 
-  private applyStreakResolution(resolution: StreakResolution): void {
+  private applyStreakResolution(
+    resolution: StreakResolution,
+  ): void {
     if (
       this.dealerFightManager.isMultiplierLocked() &&
       resolution.action === StreakAction.INCREASE
@@ -2266,7 +2268,15 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.streakMultiplierManager.applyResolution(resolution);
+    const additionalGrowth =
+      resolution.action === StreakAction.INCREASE
+        ? this.perkEffectApplier.consumeBounceBackGrowthBonus()
+        : 0;
+
+    this.streakMultiplierManager.applyResolution(
+      resolution,
+      additionalGrowth,
+    );
 
     this.dealerFightManager.recordMirrorRecovery(
       this.streakMultiplierManager.getValue(),

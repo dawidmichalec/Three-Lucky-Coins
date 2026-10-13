@@ -23,6 +23,7 @@ import { LotteryLoverEffect, LotteryLoverResult } from "./effects/LotteryLoverEf
 import { RiskyGainsEffect, RiskyGainsResult } from "./effects/RiskyGainsEffect";
 import { LuckyPrizeEffect } from "./effects/LuckyPrizeEffect";
 import { GoldenBoyEffect, GoldenBoyResult, } from "./effects/GoldenBoyEffect";
+import { BounceBackEffect } from "./effects/BounceBackEffect";
 
 export class PerkEffectApplier {
   private readonly coinSenseEffect: CoinSenseEffect;
@@ -44,6 +45,7 @@ export class PerkEffectApplier {
   private readonly riskyGainsEffect: RiskyGainsEffect;
   private readonly luckyPrizeEffect: LuckyPrizeEffect;
   private readonly goldenBoyEffect: GoldenBoyEffect;
+  private readonly bounceBackEffect: BounceBackEffect;
 
   constructor(
     private readonly runPerkManager: RunPerkManager,
@@ -89,6 +91,8 @@ export class PerkEffectApplier {
 
     this.goldenBoyEffect = new GoldenBoyEffect(this.runPerkManager);
 
+    this.bounceBackEffect = new BounceBackEffect(this.runPerkManager);
+
   }
 
   applyPerk(reward: PerkReward): void {
@@ -130,6 +134,10 @@ export class PerkEffectApplier {
     this.refreshStreakMultiplierGrowth();
 
     this.goldenBoyEffect.resetFight();
+
+    this.bounceBackEffect.resetFight();
+
+    this.gamblerEffect.resetFight();
   }
 
   private refreshStreakMultiplierSettings(): void {
@@ -396,5 +404,13 @@ export class PerkEffectApplier {
 
   applyGoldenBoy(winAmount: number): GoldenBoyResult {
     return this.goldenBoyEffect.apply(winAmount);
+  }
+
+  activateBounceBackAfterLoss(): void {
+    this.bounceBackEffect.activateAfterLoss();
+  }
+
+  consumeBounceBackGrowthBonus(): number {
+    return this.bounceBackEffect.consumeOnMultiplierIncrease();
   }
 }

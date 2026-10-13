@@ -8,21 +8,24 @@ export class StreakMultiplierManager {
 
   private growthPerWin = DEFAULT_STREAK_MULTIPLIER_SETTINGS.growthPerWin;
 
-  applyResolution(resolution: StreakResolution) {
+  applyResolution(
+    resolution: StreakResolution,
+    additionalGrowth = 0,
+  ): void {
     switch (resolution.action) {
       case StreakAction.INCREASE:
-        this.increase(resolution.growthModifier ?? 1);
-
+        this.increase(
+          resolution.growthModifier ?? 1,
+          additionalGrowth,
+        );
         break;
 
       case StreakAction.DECREASE:
         this.decrease(resolution.value ?? 0);
-
         break;
 
       case StreakAction.RESET:
         this.reset();
-
         break;
 
       case StreakAction.NONE:
@@ -54,8 +57,12 @@ export class StreakMultiplierManager {
     this.growthPerWin = value;
   }
 
-  increase(growthModifier = 1) {
-    this.currentValue += this.growthPerWin * growthModifier;
+  increase(
+    growthModifier = 1,
+    additionalGrowth = 0,
+  ): void {
+    this.currentValue +=
+      this.growthPerWin * growthModifier + additionalGrowth;
   }
 
   decrease(amount: number) {

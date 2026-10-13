@@ -117,8 +117,7 @@ export class PerkGameplayController {
       );
     }
 
-    const gamblerMultiplier =
-      this.perkEffectApplier.activateGamblerAfterLoss();
+    const gamblerMultiplier = this.perkEffectApplier.activateGamblerAfterLoss();
 
     if (gamblerMultiplier !== undefined) {
       const increasePercentage = roundMoney(
@@ -131,6 +130,8 @@ export class PerkGameplayController {
         PerkEffectMessageType.POSITIVE,
       );
     }
+
+    this.perkEffectApplier.activateBounceBackAfterLoss();
 
     return insuranceResult.streakResolution;
   }
