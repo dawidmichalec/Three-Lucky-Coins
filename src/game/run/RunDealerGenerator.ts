@@ -4,6 +4,7 @@ import { DealerGroup } from "../dealers/DealerGroup";
 
 import {
   BEN_DATA,
+  getDealersByGroup,
   getRegularDealersByGroup,
   getSupervisorByGroup,
 } from "../dealers/DealerRegistry";
@@ -19,6 +20,7 @@ export class RunDealerGenerator {
       ...this.generateManagerStage(),
       ...this.generateVicePresidentStage(),
       ...this.generateOwnerStage(),
+      ...this.generateTheHouseStage(),
     ];
   }
 
@@ -176,5 +178,15 @@ export class RunDealerGenerator {
     const randomOwner = this.pickRandomDealer(owners);
 
     return [randomOwner];
+  }
+  
+  private static generateTheHouseStage(): DealerData[] {
+    const theHouse = getDealersByGroup(DealerGroup.THE_HOUSE)[0];
+
+    if (!theHouse) {
+      throw new Error("The House not found.");
+    }
+
+    return [theHouse];
   }
 }

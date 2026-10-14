@@ -134,7 +134,8 @@ export default {
   tommyGoldenRingDescription: "Złoty pierścień Tommy'ego. Każde kasyno do kogoś należy.",
   leonPipe: "Fajka",
   leonPipeDescription: "Stara drewniana fajka, która towarzyszy Leonowi od dziesięcioleci. Przypomina, że cierpliwość bywa cenniejsza niż szczęście.",
-
+  theHouseBrokenNeon: "Rozbity neon",
+  theHouseBrokenNeonDescription: "Nawet kasyno kiedyś upadnie.",
 
 
 
@@ -210,6 +211,8 @@ export default {
   noTailsMajority: "Bez przewagi reszek",
   accepted: "ZAAKCEPTOWANA",
   declined: "ODRZUCONA",
+  changeOfRules: "ZMIANA ZASAD", 
+
 
   // GAMBLE FOR MORE
 
@@ -406,6 +409,10 @@ export default {
   leonSaying: "Masz dziesięć rund. Potem kończy mi się cierpliwość.",
   leonDescription: "Stary hazardowy wyga, który dzięki cierpliwości, dyscyplinie i bezwzględnej kalkulacji wspiął się na sam szczyt. W przeciwieństwie do porywczego syna Leon nigdy nie pozwala, by emocje kierowały jego decyzjami. Zna wszystkie hazardowe sztuczki, a kilka z nich prawdopodobnie sam wymyślił.",
 
+  // THE HOUSE
+
+  theHouseSaying: "Powodzenia.",
+  theHouseDescription: "Założone w 1956 roku kasyno Three Lucky Coins zaczynało jako niewielki salon gier pod rozświetlonym neonowym szyldem. Przez dekady rozbudowy, zmian właścicieli oraz niezliczonych wygranych i przegranych fortun stało się instytucją, którą znamy dzisiaj.\n\nKrupierzy przychodzą i odchodzą. Właściciele wspinają się na szczyt i upadają. Ale kasyno trwa.",
 
 
   // SKILL
@@ -604,6 +611,10 @@ export default {
 
   deadlineSkillName: "Ultimatum",
   deadlineSkillDescription: "Masz 10 rund, żeby spełnić cel. Jeśli Ci się nie uda, gra się kończy.",
+
+  casinoArsenalSkillName: "Arsenał kasyna",
+  casinoArsenalSkillDescription: "Korzysta z umiejętności znanych z całego kasyna. Umiejętność pasywna pozostaje stała przez całą fazę, a aktywna zmienia się co rundę.",
+
 
 
   // PERKS

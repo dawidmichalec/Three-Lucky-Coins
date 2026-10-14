@@ -135,6 +135,8 @@ export default {
   tommyGoldenRingDescription: "Tommy's Golden Ring. Every casino belongs to someone.",
   leonPipe: "Pipe",
   leonPipeDescription: "An old wooden pipe that has accompanied Leon for decades. A reminder that patience is often worth more than luck.",
+  theHouseBrokenNeon: "Broken Neon",
+  theHouseBrokenNeonDescription: "Even the House eventually falls.",
 
 
 
@@ -215,6 +217,8 @@ export default {
   noTailsMajority: "No Tails Majority",
   accepted: "ACCEPTED",
   declined: "DECLINED",
+  changeOfRules: "CHANGE OF RULES", 
+
 
 
   // GAMBLE FOR MORE
@@ -425,6 +429,11 @@ export default {
   leonSaying: "You have ten rounds. After that, I stop being patient.",
   leonDescription: "A seasoned gambling veteran who clawed his way to the top through patience, discipline, and ruthless calculation.\n\nUnlike his hot-headed son, Leon never lets emotions dictate his decisions.\n\nHe's seen every trick in the book, and probably invented a few himself.",
 
+  // THE HOUSE
+
+  theHouseSaying: "Good luck.",
+  theHouseDescription: "Founded in 1956, the Three Lucky Coins Casino began as a modest gambling hall beneath a glowing neon sign. Through decades of expansion, changing owners, and countless fortunes won and lost, it became the institution it is today.\n\nDealers come and go. Owners rise and fall. But the House remains.",
+
 
 // SKILLS
 
@@ -616,6 +625,10 @@ export default {
 
   deadlineSkillName: "Deadline",
   deadlineSkillDescription: "You have 10 rounds to meet the objective. Once the deadline passes, the game is over.",
+
+  casinoArsenalSkillName: "Casino Arsenal",
+  casinoArsenalSkillDescription: "Draws on skills used throughout the casino. A passive skill remains in effect for each phase, while an active skill changes every round.",
+
 
 
   // PERKS

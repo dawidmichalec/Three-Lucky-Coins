@@ -117,7 +117,9 @@ export enum DealerSkillId {
 
   MIRROR = "mirror",
 
-  DEADLINE = "deadline"
+  DEADLINE = "deadline",
+
+  CASINO_ARSENAL = "casino_arsenal"
 
   // Kolejne skille w przyszłości...
 }
