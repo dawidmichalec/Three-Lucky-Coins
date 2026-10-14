@@ -1,9 +1,12 @@
 import { DealerData } from "./DealerData";
 import { ObjectiveType } from "../objectives/ObjectiveTypes";
-import { DealerSkillId } from "./DealerSkill";
+import { DealerSkillData, DealerSkillId } from "./DealerSkill";
+import { DealerGroup } from "./DealerGroup";
 import { IvyCombinationRule } from "./rules/IvyCombinationRule";
 import { CoinSide } from "../../ui/Coin";
 import { CoinCombination } from "../data/CoinCombinations";
+import { HousePhaseManager } from "./data/the_house/HousePhaseManager";
+import { DealerOddsProfile } from "../probability/OddsTypes";
 
 export interface DealerFightState {
   targetBalance?: number;
@@ -101,6 +104,8 @@ export class DealerFightManager {
   private static readonly UNSTABLE_PROBABILITY_DISPLAY_MIN_DELAY = 2;
   private static readonly UNSTABLE_PROBABILITY_DISPLAY_MAX_DELAY = 5;
 
+  private houseRuntimeSkills?: DealerSkillData[];
+
   private static readonly PROTO_PERMANENT_MALFUNCTIONS: readonly DealerSkillId[] = [
     DealerSkillId.NO_SAME_BETS,
     DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
@@ -139,6 +144,8 @@ export class DealerFightManager {
 
   private static readonly DEADLINE_ROUND_LIMIT = 10;
 
+  private housePhaseManager = new HousePhaseManager();
+
   constructor(
     private readonly dealerOrder: readonly DealerData[],
   ) {
@@ -149,14 +156,25 @@ export class DealerFightManager {
     }
   }
 
+  
   getCurrentDealer(): DealerData {
-    return (
+    const dealer =
       this.forcedDealer ??
-      this.dealerOrder[
-        this.currentDealerIndex
-      ]
-    );
+      this.dealerOrder[this.currentDealerIndex];
+
+    if (
+      dealer.group === DealerGroup.THE_HOUSE &&
+      this.houseRuntimeSkills
+    ) {
+      return {
+        ...dealer,
+        skills: [...this.houseRuntimeSkills],
+      };
+    }
+
+    return dealer;
   }
+
 
   getNextDealer(): DealerData | null {
     const nextIndex = this.currentDealerIndex + 1;
@@ -169,6 +187,19 @@ export class DealerFightManager {
   }
 
   startFight(playerBalance: number): DealerFightState {
+
+    this.houseRuntimeSkills = undefined;
+
+    const baseDealer = this.getCurrentDealer();
+
+    if (baseDealer.group === DealerGroup.THE_HOUSE) {
+      this.housePhaseManager.startPhaseOne();
+
+      this.houseRuntimeSkills = [
+        ...this.housePhaseManager.getCurrentSkills(),
+      ];
+    }
+
     const dealer = this.getCurrentDealer();
 
     this.fightStartingBalance = playerBalance;
@@ -393,6 +424,23 @@ export class DealerFightManager {
         );
     }
   }
+
+  
+  setHouseRuntimeSkills(
+    skills: readonly DealerSkillData[],
+  ): void {
+    if (
+      this.getCurrentDealer().group !==
+      DealerGroup.THE_HOUSE
+    ) {
+      throw new Error(
+        "Cannot assign House skills to another dealer.",
+      );
+    }
+
+    this.houseRuntimeSkills = [...skills];
+  }
+
 
   isDeadlineExpired(): boolean {
     return (
@@ -1972,4 +2020,31 @@ export class DealerFightManager {
   getFightTargetGoldenCoins(): number {
     return this.fightTargetGoldenCoins;
   }
+
+  
+  prepareHouseNextRound(): void {
+    if (
+      this.getCurrentDealer().group !==
+      DealerGroup.THE_HOUSE
+    ) {
+      return;
+    }
+
+    this.housePhaseManager.prepareNextRound();
+
+    this.houseRuntimeSkills = [
+      ...this.housePhaseManager.getCurrentSkills(),
+    ];
+  }
+
+  
+  getHouseCurrentSkills(): DealerSkillData[] {
+    return [...this.housePhaseManager.getCurrentSkills()];
+  }
+
+  getHouseCurrentOddsProfile(): DealerOddsProfile {
+    return this.housePhaseManager.getCurrentOddsProfile();
+  }
+
+
 }

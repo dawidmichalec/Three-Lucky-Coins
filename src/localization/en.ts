@@ -447,7 +447,7 @@ export default {
 
   slowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
 
-  slowerMultiplierGrowthSkillDescription: "Every win increases the streak multiplier by 0.5.",
+  slowerMultiplierGrowthSkillDescription: "Reduces the streak multiplier's regular growth per win by 50%, including bonuses from perks that modify growth per win.",
 
   mandatoryTipSkillName: "Mandatory Tip",
 

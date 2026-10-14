@@ -544,3 +544,56 @@ export const LEON_PROFILE: DealerOddsProfile = {
 
   headsProbabilities: [0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.78, 0.8, 0.82, 0.84, 0.86, 0.88],
 };
+
+
+/*
+ * THE HOUSE - PHASE I
+ */
+
+export const THE_HOUSE_PROFILE_PHASE_1: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [
+    0.12, 0.16, 0.20, 0.24, 0.28,
+    0.72, 0.76, 0.80, 0.84, 0.88,
+  ],
+};
+
+/*
+ * THE HOUSE - PHASE II
+ */
+
+export const THE_HOUSE_PROFILE_PHASE_2: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [
+    0.16, 0.20, 0.24, 0.28, 0.32,
+    0.68, 0.72, 0.76, 0.80, 0.84,
+  ],
+};
+
+/*
+ * THE HOUSE - PHASE III
+ */
+
+export const THE_HOUSE_PROFILE_PHASE_3: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [
+    0.20, 0.23, 0.26, 0.29, 0.32, 0.34,
+    0.66, 0.68, 0.71, 0.74, 0.77, 0.80,
+  ],
+};
+
+/*
+ * THE HOUSE - PHASE IV
+ */
+
+export const THE_HOUSE_PROFILE_PHASE_4: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [
+    0.25, 0.27, 0.29, 0.31, 0.33, 0.35,
+    0.65, 0.67, 0.69, 0.71, 0.73, 0.75,
+  ],
+};

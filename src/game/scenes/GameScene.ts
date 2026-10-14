@@ -103,7 +103,6 @@ export class GameScene extends BaseScene {
   private static readonly UNSTABLE_PROBABILITY_INTERVAL = 700;
   private currentDealer: DealerData;
   private securityCheckManager = new SecurityCheckManager();
-  
 
   constructor(
     private app: Application,
@@ -436,7 +435,9 @@ export class GameScene extends BaseScene {
   private prepareNextRound() {
     const profile = this.dealerFightManager.shouldForceRandomToss()
       ? FORCED_RANDOM_TOSS_PROFILE
-      : this.currentDealer.oddsProfile;
+      : this.currentDealer.group === DealerGroup.THE_HOUSE
+        ? this.dealerFightManager.getHouseCurrentOddsProfile()
+        : this.currentDealer.oddsProfile;
 
     const odds = this.oddsManager.rollOdds(profile);
 
@@ -474,45 +475,85 @@ export class GameScene extends BaseScene {
     );
   }
 
+  
   private async prepareNextRoundWithPerks(): Promise<void> {
-    this.dealerFightManager.prepareProtoRound();
 
-    const protoPermanentMalfunction =
-      this.dealerFightManager.getProtoPermanentMalfunction();
+    if (this.currentDealer.group === DealerGroup.THE_HOUSE) {
 
-    const protoActiveMalfunction =
-      this.dealerFightManager.getProtoActiveMalfunction();
+      this.dealerFightManager.prepareHouseNextRound();
 
-    this.betRestrictionManager.setRuntimeSkills(
-      [protoPermanentMalfunction, protoActiveMalfunction].filter(
-        (skill): skill is DealerSkillId => skill !== undefined,
-      ),
-    );
+      this.applyHouseRoundSkills();
 
-    if (protoActiveMalfunction) {
+      const skills = this.dealerFightManager.getHouseCurrentSkills();
+
       await this.view.gameUI.dealerCard.replaceActiveSkill(
-        getMachineFloorSkill(protoActiveMalfunction),
+        skills[1],
       );
-    }
 
-    if (protoActiveMalfunction === DealerSkillId.FIXED_COMBINATION_LOCK) {
-      const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
+    } else {
 
-      if (fixedCombination && this.perkGameplayController.shouldApplyFixedCombinationLock()) {
-        this.controller.setCombinationSide(0, fixedCombination[0] as CoinSide);
-        this.controller.setCombinationSide(1, fixedCombination[1] as CoinSide);
-        this.controller.setCombinationSide(2, fixedCombination[2] as CoinSide);
+      this.dealerFightManager.prepareProtoRound();
 
-        this.view.controls.setCombination(fixedCombination);
+      const protoPermanentMalfunction =
+        this.dealerFightManager.getProtoPermanentMalfunction();
+
+      const protoActiveMalfunction =
+        this.dealerFightManager.getProtoActiveMalfunction();
+
+      this.betRestrictionManager.setRuntimeSkills(
+        [protoPermanentMalfunction, protoActiveMalfunction].filter(
+          (skill): skill is DealerSkillId =>
+            skill !== undefined,
+        ),
+      );
+
+      if (protoActiveMalfunction) {
+        await this.view.gameUI.dealerCard.replaceActiveSkill(
+          getMachineFloorSkill(protoActiveMalfunction),
+        );
+      }
+
+      if (protoActiveMalfunction === DealerSkillId.FIXED_COMBINATION_LOCK) {
+        const fixedCombination =
+          this.dealerFightManager.getFixedCombinationLock();
+
+        if (
+          fixedCombination &&
+          this.perkGameplayController.shouldApplyFixedCombinationLock()
+        ) {
+          this.controller.setCombinationSide(
+            0,
+            fixedCombination[0] as CoinSide,
+          );
+
+          this.controller.setCombinationSide(
+            1,
+            fixedCombination[1] as CoinSide,
+          );
+
+          this.controller.setCombinationSide(
+            2,
+            fixedCombination[2] as CoinSide,
+          );
+
+          this.view.controls.setCombination(fixedCombination);
+        }
       }
     }
 
-    this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
-    this.betRestrictionManager.applyDynamicBetLock(this.player.balance);
+    this.betRestrictionManager.applyBetSlotMalfunction(
+      this.player.balance,
+    );
+
+    this.betRestrictionManager.applyDynamicBetLock(
+      this.player.balance,
+    );
 
     this.prepareNextRound();
+
     this.perkGameplayController.prepareNextRound();
   }
+
 
   private startDealerFight() {
     this.perkGameplayController.resetSafetyNet();
@@ -526,20 +567,35 @@ export class GameScene extends BaseScene {
       this.view.gameUI.showRoundLabel();
     }
 
-    this.dealerFightManager.prepareProtoRound();
+    
+    if (this.currentDealer.group === DealerGroup.THE_HOUSE) {
 
-    const protoPermanentMalfunction = this.dealerFightManager.getProtoPermanentMalfunction();
+      this.applyHouseRoundSkills();
 
-    const protoActiveMalfunction = this.dealerFightManager.getProtoActiveMalfunction();
+      void this.view.gameUI.dealerCard.updateSkills(
+        this.dealerFightManager.getHouseCurrentSkills(),
+      );
 
-    this.betRestrictionManager.setRuntimeSkills(
-      [protoPermanentMalfunction, protoActiveMalfunction].filter(
-        (skill): skill is DealerSkillId => skill !== undefined,
-      ),
-    );
+    } else {
 
-    if (protoPermanentMalfunction && protoActiveMalfunction) {
-      void this.updateProtoSkills();
+      this.dealerFightManager.prepareProtoRound();
+
+      const protoPermanentMalfunction =
+        this.dealerFightManager.getProtoPermanentMalfunction();
+
+      const protoActiveMalfunction =
+        this.dealerFightManager.getProtoActiveMalfunction();
+
+      this.betRestrictionManager.setRuntimeSkills(
+        [protoPermanentMalfunction, protoActiveMalfunction].filter(
+          (skill): skill is DealerSkillId =>
+            skill !== undefined,
+        ),
+      );
+
+      if (protoPermanentMalfunction && protoActiveMalfunction) {
+        void this.updateProtoSkills();
+      }
     }
 
     this.prepareNextRound();
@@ -939,6 +995,36 @@ export class GameScene extends BaseScene {
 
     this.view.controls.setTossDisabled(this.roundState !== "ready");
   }
+
+  // THE HOUSE RULES
+
+  
+  
+  private applyHouseRoundSkills(): void {
+    const skills =
+      this.dealerFightManager.getHouseCurrentSkills();
+
+    this.currentDealer =
+      this.dealerFightManager.getCurrentDealer();
+
+    this.betRestrictionManager.setRuntimeSkills(
+      skills.map((skill) => skill.id),
+      this.player.balance,
+    );
+
+    this.controller.setReversedBetChoice(
+      this.dealerFightManager.hasActiveSkill(
+        DealerSkillId.REVERSED_BET_CHOICE,
+      ),
+    );
+
+    console.log(
+      "THE HOUSE SKILLS:",
+      skills.map((skill) => skill.id),
+    );
+  }
+
+
 
 
   // START ROUND - FUNCTION RESPONSIBLE FOR THE GAME LOOP
@@ -1539,9 +1625,13 @@ export class GameScene extends BaseScene {
           DealerSkillId.MANDATORY_TIP,
         ]);
 
+        const penaltyPercentage = this.perkEffectApplier.reducePenaltyPercentage(0.5);
+
+        const displayedPercentage = Math.round(penaltyPercentage * 1000) / 10;
+
         await this.view.perkEffectMessageOverlay.play(
           "winningsReducedBy",
-          "-50%",
+          `-${displayedPercentage}%`,
           PerkEffectMessageType.NEGATIVE,
         );
 
@@ -1779,16 +1869,30 @@ export class GameScene extends BaseScene {
         mandatoryTipTriggered,
       );
 
+    
     if (mandatoryTipTriggered) {
       await this.dealerSkillFeedbackHandler.handle([
         DealerSkillId.MANDATORY_TIP,
       ]);
+
+      const penaltyPercentage =
+        this.perkEffectApplier.reducePenaltyPercentage(0.5);
+
+      const displayedPercentage =
+        Math.round(penaltyPercentage * 1000) / 10;
+
+      await this.view.perkEffectMessageOverlay.play(
+        "winningsReducedBy",
+        `-${displayedPercentage}%`,
+        PerkEffectMessageType.NEGATIVE,
+      );
 
       await this.view.gameUI.animatePenaltyIntoWon(
         result.winAmount - finalRoundWinAmount,
         finalRoundWinAmount,
       );
     }
+
 
     const lotteryLoverResult = this.roundPayoutResolver.resolveLotteryLover(finalRoundWinAmount,);
 
@@ -2462,17 +2566,27 @@ export class GameScene extends BaseScene {
     await this.finishRound(true);
   }
 
+  
   private updateBetControlRestrictions(): void {
-    const dynamicBetLocked = this.betRestrictionManager.isDynamicBetLocked();
+    const dynamicBetLocked =
+      this.betRestrictionManager.isDynamicBetLocked();
+
+    const fixedBetLocked =
+      this.betRestrictionManager.getFixedBet() !== null;
 
     this.view.controls.setBetUpDisabled(
-      dynamicBetLocked || this.betRestrictionManager.isBetIncreaseLocked(),
+      dynamicBetLocked ||
+      fixedBetLocked ||
+      this.betRestrictionManager.isBetIncreaseLocked(),
     );
 
     this.view.controls.setBetDownDisabled(
-      dynamicBetLocked || this.betRestrictionManager.isBetDecreaseLocked(),
+      dynamicBetLocked ||
+      fixedBetLocked ||
+      this.betRestrictionManager.isBetDecreaseLocked(),
     );
   }
+
 
   // TICKER
 

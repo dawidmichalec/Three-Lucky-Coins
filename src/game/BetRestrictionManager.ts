@@ -107,14 +107,32 @@ export class BetRestrictionManager {
       this.rollBetControlPhaseDuration();
   }
 
-  setRuntimeSkills(skillIds: readonly DealerSkillId[]): void {
-    const hadRuntimeBetIncreaseLock = this.runtimeSkills.has(DealerSkillId.BET_INCREASE_LOCK);
-    const hadRuntimeBetDecreaseLock = this.runtimeSkills.has(DealerSkillId.BET_DECREASE_LOCK);
+  
+  setRuntimeSkills(
+    skillIds: readonly DealerSkillId[],
+    playerBalance?: number,
+  ): void {
+    const hadRuntimeBetIncreaseLock =
+      this.runtimeSkills.has(DealerSkillId.BET_INCREASE_LOCK);
+
+    const hadRuntimeBetDecreaseLock =
+      this.runtimeSkills.has(DealerSkillId.BET_DECREASE_LOCK);
+
+    const hadRuntimeFixedBetLock =
+      this.runtimeSkills.has(DealerSkillId.FIXED_BET_LOCK);
 
     this.runtimeSkills = new Set(skillIds);
 
-    const hasRuntimeBetIncreaseLock = this.runtimeSkills.has(DealerSkillId.BET_INCREASE_LOCK);
-    const hasRuntimeBetDecreaseLock = this.runtimeSkills.has(DealerSkillId.BET_DECREASE_LOCK);
+    const hasRuntimeBetIncreaseLock =
+      this.runtimeSkills.has(DealerSkillId.BET_INCREASE_LOCK);
+
+    const hasRuntimeBetDecreaseLock =
+      this.runtimeSkills.has(DealerSkillId.BET_DECREASE_LOCK);
+
+    const hasRuntimeFixedBetLock =
+      this.runtimeSkills.has(DealerSkillId.FIXED_BET_LOCK);
+
+    // BET INCREASE LOCK
 
     if (hasRuntimeBetIncreaseLock && !hadRuntimeBetIncreaseLock) {
       this.betIncreaseLocked = true;
@@ -124,6 +142,8 @@ export class BetRestrictionManager {
       this.betIncreaseLockRoundsRemaining = 0;
     }
 
+    // BET DECREASE LOCK
+
     if (hasRuntimeBetDecreaseLock && !hadRuntimeBetDecreaseLock) {
       this.betDecreaseLocked = true;
       this.betDecreaseLockRoundsRemaining = 0;
@@ -131,7 +151,22 @@ export class BetRestrictionManager {
       this.betDecreaseLocked = false;
       this.betDecreaseLockRoundsRemaining = 0;
     }
+
+    // FIXED BET LOCK
+
+    if (hasRuntimeFixedBetLock && !hadRuntimeFixedBetLock) {
+      if (playerBalance === undefined) {
+        throw new Error(
+          "Player balance is required to activate Fixed Bet Lock.",
+        );
+      }
+
+      this.applyFixedBetLock(playerBalance);
+    } else if (!this.hasSkill(DealerSkillId.FIXED_BET_LOCK)) {
+      this.fixedBet = null;
+    }
   }
+
 
   advanceBetDecreaseLock(): void {
     if (
@@ -265,6 +300,7 @@ export class BetRestrictionManager {
     this.lastBetSlotMalfunctionBet = blockedBet;
   }
 
+  
   private applyFixedBetLock(
     playerBalance: number,
   ): void {
@@ -273,22 +309,15 @@ export class BetRestrictionManager {
     );
 
     if (affordableBets.length === 0) {
+      this.fixedBet = null;
       return;
     }
 
-    this.fixedBet =
-      affordableBets[
-        Math.floor(
-          Math.random() * affordableBets.length,
-        )
-      ];
-
-    BET_LEVELS.forEach((bet) => {
-      if (bet !== this.fixedBet) {
-        this.blockBet(bet);
-      }
-    });
+    this.fixedBet = affordableBets[
+      Math.floor(Math.random() * affordableBets.length)
+    ];
   }
+
 
   getFixedBet(): number | null {
     return this.fixedBet;
@@ -303,6 +332,10 @@ export class BetRestrictionManager {
   }
 
   isBetAvailable(bet: number): boolean {
+    if (this.fixedBet !== null && bet !== this.fixedBet) {
+      return false;
+    }
+
     if (
       this.hasSkill(DealerSkillId.HIGH_STAKES) &&
       bet < BetRestrictionManager.HIGH_STAKES_MIN_BET
@@ -383,6 +416,7 @@ export class BetRestrictionManager {
     this.dynamicBetLockBet = null;
     this.betLimitationMode = null;
     this.betLimitationRoundsRemaining = 0;
+    this.runtimeSkills.clear();
   }
 
   private hasSkill(skillId: DealerSkillId): boolean {

@@ -427,8 +427,7 @@ export default {
 
   slowerMultiplierGrowthSkillName: "Wolniejszy wzrost mnożnika",
 
-  slowerMultiplierGrowthSkillDescription:
-    "Każda wygrana zwiększa mnożnik serii o 0,5.",
+  slowerMultiplierGrowthSkillDescription: "Zmniejsza o 50% standardowy przyrost mnożnika serii za każdą wygraną, uwzględniając bonusy z perków modyfikujących ten przyrost.",
 
   mandatoryTipSkillName: "Obowiązkowy napiwek",
 

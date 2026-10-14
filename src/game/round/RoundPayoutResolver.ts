@@ -43,18 +43,23 @@ export class RoundPayoutResolver {
             PerkEffectApplier
     ) { }
 
+    
     resolveFinalWin(
         winAmount: number,
         mandatoryTipTriggered: boolean,
     ): number {
-        if (!mandatoryTipTriggered) {
-            return winAmount;
-        }
+    if (!mandatoryTipTriggered) {
+        return winAmount;
+    }
+
+        const penaltyPercentage =
+            this.perkEffectApplier.reducePenaltyPercentage(0.5);
 
         return roundMoney(
-            winAmount * 0.5,
+            winAmount * (1 - penaltyPercentage),
         );
     }
+
 
 
     resolve(
