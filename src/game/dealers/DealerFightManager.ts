@@ -1307,22 +1307,25 @@ export class DealerFightManager {
     return false;
   }
 
+  
   shouldForceRandomToss(): boolean {
     const dealer = this.getCurrentDealer();
 
-    const hasForcedRandomToss =
-      dealer.skills.some(
-        (skill) =>
-          skill.id ===
-          DealerSkillId.FORCED_RANDOM_TOSS,
-      );
+    const hasForcedRandomToss = dealer.skills.some(
+      (skill) => skill.id === DealerSkillId.FORCED_RANDOM_TOSS,
+    );
 
     if (!hasForcedRandomToss) {
       return false;
     }
 
-    const nextRound =
-      this.fightRounds + 1;
+    // The House: effect applies whenever the skill is active.
+    if (dealer.group === DealerGroup.THE_HOUSE) {
+      return true;
+    }
+
+    // Original behavior: every third round.
+    const nextRound = this.fightRounds + 1;
 
     return nextRound % 3 === 0;
   }
@@ -1921,6 +1924,13 @@ export class DealerFightManager {
   ): boolean {
     const dealer = this.getCurrentDealer();
 
+    if (
+      dealer.group === DealerGroup.THE_HOUSE &&
+      this.housePhaseManager.getCurrentPhase() === 1
+    ) {
+      return false;
+    }
+
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         return (
@@ -2022,10 +2032,10 @@ export class DealerFightManager {
   }
 
   
+  
   prepareHouseNextRound(): void {
     if (
-      this.getCurrentDealer().group !==
-      DealerGroup.THE_HOUSE
+      this.getCurrentDealer().group !== DealerGroup.THE_HOUSE
     ) {
       return;
     }
@@ -2035,8 +2045,9 @@ export class DealerFightManager {
     this.houseRuntimeSkills = [
       ...this.housePhaseManager.getCurrentSkills(),
     ];
-  }
 
+    this.prepareHouseActiveSkillState();
+  }
   
   getHouseCurrentSkills(): DealerSkillData[] {
     return [...this.housePhaseManager.getCurrentSkills()];
@@ -2045,6 +2056,67 @@ export class DealerFightManager {
   getHouseCurrentOddsProfile(): DealerOddsProfile {
     return this.housePhaseManager.getCurrentOddsProfile();
   }
+  
+  tryAdvanceHousePhase(playerBalance: number): boolean {
+    if (
+      this.getCurrentDealer().group !== DealerGroup.THE_HOUSE ||
+      this.housePhaseManager.getCurrentPhase() !== 1
+    ) {
+      return false;
+    }
 
+    const phaseTwoThreshold =
+      this.fightStartingBalance +
+      (this.fightTargetBalance - this.fightStartingBalance) * 0.25;
 
+    if (playerBalance < phaseTwoThreshold) {
+      return false;
+    }
+
+    this.housePhaseManager.startPhaseTwo();
+
+    this.houseRuntimeSkills = [
+      ...this.housePhaseManager.getCurrentSkills(),
+    ];
+
+    this.multiplierKnockoutBlockedRounds = 3;
+
+    this.previousKirkCombination = null;
+    this.previousCharlieBet = null;
+    this.previousCharlieCombination = null;
+
+    this.prepareHouseActiveSkillState();
+
+    console.log(
+      "THE HOUSE: PHASE II STARTED",
+      "BALANCE:",
+      playerBalance,
+      "THRESHOLD:",
+      phaseTwoThreshold,
+    );
+
+    return true;
+  }
+
+  private prepareHouseActiveSkillState(): void {
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
+      )
+    ) {
+      this.rollIvyCombinationRule();
+    } else {
+      this.ivyCombinationRule = undefined;
+    }
+
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.RANDOM_COMBINATION_BLOCK,
+      )
+    ) {
+      this.rollRandomBlockedCombination();
+    } else {
+      this.randomBlockedCombination = undefined;
+    }
+  }
 }

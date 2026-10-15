@@ -479,17 +479,33 @@ export class GameScene extends BaseScene {
   private async prepareNextRoundWithPerks(): Promise<void> {
 
     if (this.currentDealer.group === DealerGroup.THE_HOUSE) {
+      const phaseChanged =
+        this.dealerFightManager.tryAdvanceHousePhase(
+          this.player.balance,
+        );
 
-      this.dealerFightManager.prepareHouseNextRound();
+      if (phaseChanged) {
+        await this.view.gameMessageOverlay.play(
+          "changeOfRules",
+        );
+      } else {
+        this.dealerFightManager.prepareHouseNextRound();
+      }
 
       this.applyHouseRoundSkills();
 
-      const skills = this.dealerFightManager.getHouseCurrentSkills();
+      const skills =
+        this.dealerFightManager.getHouseCurrentSkills();
 
-      await this.view.gameUI.dealerCard.replaceActiveSkill(
-        skills[1],
-      );
-
+      if (phaseChanged) {
+        await this.view.gameUI.dealerCard.updateSkills(
+          skills,
+        );
+      } else {
+        await this.view.gameUI.dealerCard.replaceActiveSkill(
+          skills[1],
+        );
+      }
     } else {
 
       this.dealerFightManager.prepareProtoRound();
@@ -915,11 +931,12 @@ export class GameScene extends BaseScene {
 
   private updateIvyRule(): void {
     if (
-      !this.perkGameplayController
-        .shouldShowCombinationBlockingRule()
+      !this.dealerFightManager.hasActiveSkill(
+        DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
+      ) ||
+      !this.perkGameplayController.shouldShowCombinationBlockingRule()
     ) {
       this.view.gameUI.hideIvyRules();
-
       return;
     }
 
@@ -1148,6 +1165,8 @@ export class GameScene extends BaseScene {
       }
 
       this.unlockControls();
+
+      this.startRoundTimerIfNeeded();
 
       return;
     }
@@ -2111,11 +2130,6 @@ export class GameScene extends BaseScene {
 
     await this.advanceSecurityCheck();
 
-    this.updateIvyRule();
-
-    this.updateCombinationSelectorBlock();
-    this.updateCombinationStatus();
-
     if (
       this.currentDealer.objectiveType ===
       ObjectiveType.SURVIVE_ROUNDS
@@ -2198,6 +2212,10 @@ export class GameScene extends BaseScene {
     }
 
     await this.prepareNextRoundWithPerks();
+
+    this.updateIvyRule();
+    this.updateCombinationSelectorBlock();
+    this.updateCombinationStatus();
 
     this.controller.adjustBetToRestrictions();
 

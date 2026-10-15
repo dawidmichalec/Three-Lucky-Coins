@@ -1,77 +1,112 @@
+
 import { DealerSkillData, DealerSkillId } from "../../DealerSkill";
 import { DEALERS } from "../../DealerRegistry";
-import { HOUSE_PHASE_ONE } from "./HousePhaseConfig";
+import {
+  HousePhaseConfig,
+  HOUSE_PHASE_ONE,
+  HOUSE_PHASE_TWO,
+} from "./HousePhaseConfig";
 import { DealerOddsProfile } from "../../../probability/OddsTypes";
 
+type HousePhase = 1 | 2;
+
 export class HousePhaseManager {
-    private passiveSkill?: DealerSkillData;
-    private activeSkill?: DealerSkillData;
+  private currentPhase: HousePhase = 1;
 
+  private passiveSkill?: DealerSkillData;
+  private activeSkill?: DealerSkillData;
 
-    startPhaseOne(): void {
-        this.passiveSkill = this.pickSkill(
-            HOUSE_PHASE_ONE.passiveSkills,
-        );
+  startPhaseOne(): void {
+    this.startPhase(1);
+  }
 
-        console.log("THE HOUSE PASSIVE:", this.passiveSkill.id);
+  startPhaseTwo(): void {
+    this.startPhase(2);
+  }
 
-        this.activeSkill = undefined;
+  getCurrentPhase(): HousePhase {
+    return this.currentPhase;
+  }
 
-        this.prepareNextRound();
+  private startPhase(phase: HousePhase): void {
+    this.currentPhase = phase;
+
+    const config = this.getCurrentPhaseConfig();
+
+    this.passiveSkill = this.pickSkill(
+      config.passiveSkills,
+    );
+
+    console.log(
+      `THE HOUSE PHASE ${phase} PASSIVE:`,
+      this.passiveSkill.id,
+    );
+
+    this.activeSkill = undefined;
+
+    this.prepareNextRound();
+  }
+
+  prepareNextRound(): void {
+    if (!this.passiveSkill) {
+      throw new Error("The House phase has not started.");
     }
 
+    const config = this.getCurrentPhaseConfig();
 
+    const availableSkills = config.activeSkills.filter(
+      (skillId) => skillId !== this.activeSkill?.id,
+    );
 
-    prepareNextRound(): void {
-        if (!this.passiveSkill) {
-            throw new Error("The House phase has not started.");
-        }
+    this.activeSkill = this.pickSkill(availableSkills);
 
-        const availableSkills = HOUSE_PHASE_ONE.activeSkills.filter(
-            (skillId) => skillId !== this.activeSkill?.id,
-        );
+    console.log(
+      `THE HOUSE PHASE ${this.currentPhase} ACTIVE:`,
+      this.activeSkill.id,
+    );
+  }
 
-        this.activeSkill = this.pickSkill(availableSkills);
-
-        console.log("THE HOUSE ACTIVE:", this.activeSkill.id);
+  getCurrentSkills(): [DealerSkillData, DealerSkillData] {
+    if (!this.passiveSkill || !this.activeSkill) {
+      throw new Error(
+        "The House skills have not been initialized.",
+      );
     }
 
+    return [this.passiveSkill, this.activeSkill];
+  }
 
-    getCurrentSkills(): [DealerSkillData, DealerSkillData] {
-        if (!this.passiveSkill || !this.activeSkill) {
-            throw new Error("The House skills have not been initialized.");
-        }
+  getCurrentOddsProfile(): DealerOddsProfile {
+    return this.getCurrentPhaseConfig().oddsProfile;
+  }
 
-        return [this.passiveSkill, this.activeSkill];
+  private getCurrentPhaseConfig(): HousePhaseConfig {
+    return this.currentPhase === 1
+      ? HOUSE_PHASE_ONE
+      : HOUSE_PHASE_TWO;
+  }
+
+  private pickSkill(
+    pool: readonly DealerSkillId[],
+  ): DealerSkillData {
+    if (pool.length === 0) {
+      throw new Error("The House skill pool is empty.");
     }
 
-    getCurrentOddsProfile(): DealerOddsProfile {
-        return HOUSE_PHASE_ONE.oddsProfile;
+    const randomIndex = Math.floor(
+      Math.random() * pool.length,
+    );
+
+    const skillId = pool[randomIndex];
+
+    const skill = DEALERS
+      .flatMap((dealer) => dealer.skills)
+      .find((skill) => skill.id === skillId);
+
+    if (!skill) {
+      throw new Error(`Dealer skill not found: ${skillId}`);
     }
 
-    private pickSkill(
-        pool: readonly DealerSkillId[],
-    ): DealerSkillData {
-        if (pool.length === 0) {
-            throw new Error("The House skill pool is empty.");
-        }
-
-        const randomIndex = Math.floor(
-            Math.random() * pool.length,
-        );
-
-        const skillId = pool[randomIndex];
-
-        const skill = DEALERS
-            .flatMap((dealer) => dealer.skills)
-            .find((skill) => skill.id === skillId);
-
-        if (!skill) {
-            throw new Error(
-                `Dealer skill not found: ${skillId}`,
-            );
-        }
-
-        return skill;
-    }
+    return skill;
+  }
 }
