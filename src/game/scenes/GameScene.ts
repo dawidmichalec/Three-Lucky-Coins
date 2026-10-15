@@ -71,7 +71,6 @@ export class GameScene extends BaseScene {
   private runStatsRecorder!: RunStatsRecorder;
   private runEndController!: RunEndController;
   private dealerPresentationController!: DealerPresentationController;
-  private roundOutcomeHandler = new RoundOutcomeHandler();
   private view: GameSceneView;
   private gambleForMoreManager = new GambleForMoreManager();
   private gambleForMoreController = new GambleForMoreController(this.gambleForMoreManager,);
@@ -83,6 +82,7 @@ export class GameScene extends BaseScene {
   private runPerkRewardState = new RunPerkRewardState();
   private runPerkManager = new RunPerkManager();
   private perkEffectApplier = new PerkEffectApplier(this.runPerkManager, this.streakMultiplierManager,);
+  private roundOutcomeHandler = new RoundOutcomeHandler(this.perkEffectApplier,);
   private roundPayoutResolver = new RoundPayoutResolver(this.perkEffectApplier);
   private roundBetResolver = new RoundBetResolver(this.perkEffectApplier,);
   private roundPayoutPresentationController!: RoundPayoutPresentationController;
@@ -1750,25 +1750,7 @@ export class GameScene extends BaseScene {
       );
     }
 
-    const houseCut = this.dealerFightManager.resolveHouseCut(bet);
-    const reducedHouseCutAmount = this.perkEffectApplier.reducePenalty(houseCut.amount, bet);
-
-    if (reducedHouseCutAmount > 0 && houseCut.skillId) {
-      await this.dealerSkillFeedbackHandler.handle([
-        houseCut.skillId,
-      ]);
-
-      this.player.balance -= reducedHouseCutAmount;
-
-      await this.view.gameUI.animatePenaltyIntoBalance(
-        reducedHouseCutAmount,
-        this.player.balance,
-      );
-
-      this.view.gameUI.updateBalance(
-        this.player.balance,
-      );
-    }
+    await this.applyHouseCut(bet);
 
     this.runStatsRecorder.finishRound({
       win: false,
@@ -2068,6 +2050,14 @@ export class GameScene extends BaseScene {
       return;
     }
 
+    // GFM LOSS
+
+    // Close GFM before resolving penalties.
+    this.view.gambleForMoreOverlay.hide();
+
+    // Small pause to separate GFM result from penalty animations.
+    await this.wait(150);
+
     await this.handleGambleForMoreLoss();
 
     this.view.gameUI.updateMultiplier(
@@ -2085,7 +2075,7 @@ export class GameScene extends BaseScene {
 
 
   private async handleGambleForMoreLoss() {
-    this.gambleForMoreController.lose();
+    const { bet } = this.gambleForMoreController.lose();
 
     const finalStreakResolution =
       await this.perkGameplayController.handleLoss({
@@ -2106,6 +2096,8 @@ export class GameScene extends BaseScene {
     }
 
     this.view.gameUI.updateWon(0);
+
+    await this.applyHouseCut(bet);
 
     this.runStatsRecorder.finishRound({
       win: false,
@@ -2305,6 +2297,7 @@ export class GameScene extends BaseScene {
     this.view.gameUI.updateWon(amount);
   }
 
+  
   private async applyHabitBreaker(
     winAmount: number,
     triggered: boolean,
@@ -2313,8 +2306,12 @@ export class GameScene extends BaseScene {
       return winAmount;
     }
 
-    const finalWinAmount =
-      winAmount * 0.5;
+    const penaltyPercentage =
+      this.perkEffectApplier.reducePenaltyPercentage(0.5);
+
+    const finalWinAmount = roundMoney(
+      winAmount * (1 - penaltyPercentage),
+    );
 
     await this.dealerSkillFeedbackHandler.handle([
       DealerSkillId.HABIT_BREAKER,
@@ -2381,6 +2378,40 @@ export class GameScene extends BaseScene {
 
         await this.startRound();
       },
+    );
+  }
+
+  
+  private async applyHouseCut(bet: number): Promise<void> {
+    const houseCut =
+      this.dealerFightManager.resolveHouseCut(bet);
+
+    const reducedHouseCutAmount =
+      this.perkEffectApplier.reducePenalty(
+        houseCut.amount,
+        bet,
+      );
+
+    if (
+      reducedHouseCutAmount <= 0 ||
+      !houseCut.skillId
+    ) {
+      return;
+    }
+
+    await this.dealerSkillFeedbackHandler.handle([
+      houseCut.skillId,
+    ]);
+
+    this.player.balance -= reducedHouseCutAmount;
+
+    await this.view.gameUI.animatePenaltyIntoBalance(
+      reducedHouseCutAmount,
+      this.player.balance,
+    );
+
+    this.view.gameUI.updateBalance(
+      this.player.balance,
     );
   }
 

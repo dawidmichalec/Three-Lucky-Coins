@@ -10,6 +10,7 @@ export interface GambleForMoreDeclineResult {
 
 export interface GambleForMoreLossResult {
   lostAmount: number;
+  bet: number;
 }
 
 export class GambleForMoreController {
@@ -88,6 +89,7 @@ export class GambleForMoreController {
         }
     }
 
+    
     lose(): GambleForMoreLossResult {
         const offer = this.pendingOffer;
 
@@ -99,10 +101,12 @@ export class GambleForMoreController {
 
         const result = {
             lostAmount: offer.potentialWin,
+            bet: offer.bet,
         };
 
         this.pendingOffer = undefined;
 
         return result;
     }
+
 }

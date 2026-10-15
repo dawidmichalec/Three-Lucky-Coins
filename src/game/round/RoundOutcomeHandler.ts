@@ -4,6 +4,7 @@ import { DealerData } from "../dealers/DealerData";
 import { DealerSkillId } from "../dealers/DealerSkill";
 import { roundMoney } from "../util/MoneyUtils";
 import { StreakAction, StreakResolution } from "../streak/StreakResolution";
+import { PerkEffectApplier } from "../perks/PerkEffectApplier";
 
 export interface RoundOutcomeData {
   win: boolean;
@@ -35,6 +36,10 @@ export class RoundOutcomeHandler {
   private audioManager = AudioManager.getInstance();
   private varietyPaysWinningPairs = new Set<string>();
   private milestoneBonusPending = false;
+
+  constructor(
+    private readonly perkEffectApplier: PerkEffectApplier,
+  ) {}
 
   apply(data: RoundOutcomeData): RoundOutcomeResult {
     if (!data.win) {
@@ -262,8 +267,13 @@ export class RoundOutcomeHandler {
         reduction = 0.2;
       }
 
+      const penaltyPercentage =
+        this.perkEffectApplier.reducePenaltyPercentage(
+          reduction,
+        );
+
       finalWinAmount = roundMoney(
-        finalWinAmount * (1 - reduction),
+        finalWinAmount * (1 - penaltyPercentage),
       );
 
       triggeredSkills.push(
@@ -298,8 +308,13 @@ export class RoundOutcomeHandler {
         reduction = 0.2;
       }
 
+      const penaltyPercentage =
+        this.perkEffectApplier.reducePenaltyPercentage(
+          reduction,
+        );
+
       finalWinAmount = roundMoney(
-        finalWinAmount * (1 - reduction),
+        finalWinAmount * (1 - penaltyPercentage),
       );
 
       triggeredSkills.push(

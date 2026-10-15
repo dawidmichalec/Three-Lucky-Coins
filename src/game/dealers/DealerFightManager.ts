@@ -1981,14 +1981,11 @@ export class DealerFightManager {
 
     if (
       dealer.group === DealerGroup.THE_HOUSE &&
-      (
-        this.housePhaseCheatActive ||
-        this.housePhaseManager.getCurrentPhase() === 1
-      )
+      this.housePhaseCheatActive
     ) {
       return false;
     }
-
+    
     switch (dealer.objectiveType) {
       case ObjectiveType.INCREASE_BALANCE:
         return (
