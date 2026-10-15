@@ -106,6 +106,8 @@ export class DealerFightManager {
 
   private houseRuntimeSkills?: DealerSkillData[];
 
+  private housePhaseCheatActive = false;
+
   private static readonly PROTO_PERMANENT_MALFUNCTIONS: readonly DealerSkillId[] = [
     DealerSkillId.NO_SAME_BETS,
     DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
@@ -279,6 +281,8 @@ export class DealerFightManager {
     this.mirrorEligibleRounds = 0;
     this.mirrorCooldownRounds = 0;
 
+    this.housePhaseCheatActive = false;
+
     if (this.isProtoFight()) {
       this.rollProtoPermanentMalfunction();
     }
@@ -424,6 +428,57 @@ export class DealerFightManager {
         );
     }
   }
+
+  
+  forceHousePhase(
+    phase: 1 | 2,
+    passiveSkillId: DealerSkillId,
+    activeSkillId?: DealerSkillId,
+  ): boolean {
+    if (
+      this.getCurrentDealer().group !== DealerGroup.THE_HOUSE ||
+      !this.houseRuntimeSkills
+    ) {
+      return false;
+    }
+
+    this.housePhaseManager.forcePhase(
+      phase,
+      passiveSkillId,
+      activeSkillId,
+    );
+
+    this.houseRuntimeSkills = [
+      ...this.housePhaseManager.getCurrentSkills(),
+    ];
+
+    this.housePhaseCheatActive = true;
+
+    // Reset phase-specific counters and history.
+    this.multiplierKnockoutBlockedRounds = 3;
+    this.mandatoryTipWinCounter = 0;
+
+    this.previousKirkCombination = null;
+    this.previousCharlieBet = null;
+    this.previousCharlieCombination = null;
+
+    this.ivyCombinationRule = undefined;
+    this.randomBlockedCombination = undefined;
+
+    this.prepareHouseActiveSkillState();
+
+    console.log(
+      "THE HOUSE CHEAT:",
+      `Phase ${phase}`,
+      "Passive:",
+      passiveSkillId,
+      "Active:",
+      activeSkillId ?? "RANDOM",
+    );
+
+    return true;
+  }
+
 
   
   setHouseRuntimeSkills(
@@ -1926,7 +1981,10 @@ export class DealerFightManager {
 
     if (
       dealer.group === DealerGroup.THE_HOUSE &&
-      this.housePhaseManager.getCurrentPhase() === 1
+      (
+        this.housePhaseCheatActive ||
+        this.housePhaseManager.getCurrentPhase() === 1
+      )
     ) {
       return false;
     }
@@ -2040,13 +2098,15 @@ export class DealerFightManager {
       return;
     }
 
+    const previousActiveSkillId = this.housePhaseManager.getCurrentSkills()[1].id;
+
     this.housePhaseManager.prepareNextRound();
 
     this.houseRuntimeSkills = [
       ...this.housePhaseManager.getCurrentSkills(),
     ];
 
-    this.prepareHouseActiveSkillState();
+    this.prepareHouseActiveSkillState(previousActiveSkillId);
   }
   
   getHouseCurrentSkills(): DealerSkillData[] {
@@ -2059,6 +2119,7 @@ export class DealerFightManager {
   
   tryAdvanceHousePhase(playerBalance: number): boolean {
     if (
+      this.housePhaseCheatActive ||
       this.getCurrentDealer().group !== DealerGroup.THE_HOUSE ||
       this.housePhaseManager.getCurrentPhase() !== 1
     ) {
@@ -2098,13 +2159,21 @@ export class DealerFightManager {
     return true;
   }
 
-  private prepareHouseActiveSkillState(): void {
+  
+  private prepareHouseActiveSkillState(
+    previousActiveSkillId?: DealerSkillId,
+  ): void {
     if (
       this.hasActiveSkill(
         DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
       )
     ) {
-      this.rollIvyCombinationRule();
+      if (
+        previousActiveSkillId !==
+        DealerSkillId.MY_WAY_OR_THE_HIGHWAY
+      ) {
+        this.rollIvyCombinationRule();
+      }
     } else {
       this.ivyCombinationRule = undefined;
     }
@@ -2114,9 +2183,15 @@ export class DealerFightManager {
         DealerSkillId.RANDOM_COMBINATION_BLOCK,
       )
     ) {
-      this.rollRandomBlockedCombination();
+      if (
+        previousActiveSkillId !==
+        DealerSkillId.RANDOM_COMBINATION_BLOCK
+      ) {
+        this.rollRandomBlockedCombination();
+      }
     } else {
       this.randomBlockedCombination = undefined;
     }
   }
+
 }

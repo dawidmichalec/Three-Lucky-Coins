@@ -6,6 +6,8 @@ import { GameController } from "../game/GameController";
 import { GoldenCoinManager } from "../game/goldenCoins/GoldenCoinManager";
 import { PerkRewardGenerator } from "../game/perks/reward/PerkRewardGenerator";
 import { PerkRarity } from "../game/perks/PerkRarity";
+import { DealerSkillId } from "../game/dealers/DealerSkill";
+import { HOUSE_PHASE_ONE, HOUSE_PHASE_TWO, } from "../game/dealers/data/the_house/HousePhaseConfig";
 
 interface GameCheatControllerOptions {
   onDealerWin: () => void;
@@ -15,6 +17,12 @@ interface GameCheatControllerOptions {
   onNextDealer: () => void;
 
   onDealer: (dealerId: string) => void;
+
+  onHousePhase: (
+    phase: 1 | 2,
+    passiveSkillId: DealerSkillId,
+    activeSkillId?: DealerSkillId,
+  ) => void;
 }
 
 export class GameCheatController {
@@ -80,6 +88,53 @@ export class GameCheatController {
         this.options.onDealer(dealerId);
       },
     );
+
+    
+    // THE HOUSE PHASE CHEATS
+
+    const housePhases = [
+      {
+        phase: 1 as const,
+        name: "one",
+        config: HOUSE_PHASE_ONE,
+      },
+      {
+        phase: 2 as const,
+        name: "two",
+        config: HOUSE_PHASE_TWO,
+      },
+    ];
+
+    for (const { phase, name, config } of housePhases) {
+      for (const passiveSkillId of config.passiveSkills) {
+        // Force the phase and passive skill.
+        // Active skill continues rotating normally.
+        this.cheatManager.register(
+          `phase_${name}_${passiveSkillId}`,
+          () => {
+            this.options.onHousePhase(
+              phase,
+              passiveSkillId,
+            );
+          },
+        );
+
+        // Force an entire skill pair for QA.
+        for (const activeSkillId of config.activeSkills) {
+          this.cheatManager.register(
+            `phase_${name}_${passiveSkillId}__${activeSkillId}`,
+            () => {
+              this.options.onHousePhase(
+                phase,
+                passiveSkillId,
+                activeSkillId,
+              );
+            },
+          );
+        }
+      }
+    }
+
 
     // ===================================================
     // CHEATS FOR PERKS

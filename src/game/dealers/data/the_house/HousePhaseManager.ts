@@ -15,6 +15,7 @@ export class HousePhaseManager {
 
   private passiveSkill?: DealerSkillData;
   private activeSkill?: DealerSkillData;
+  private forcedActiveSkillId?: DealerSkillId;
 
   startPhaseOne(): void {
     this.startPhase(1);
@@ -24,17 +25,54 @@ export class HousePhaseManager {
     this.startPhase(2);
   }
 
+  
+  forcePhase(
+    phase: HousePhase,
+    passiveSkillId: DealerSkillId,
+    activeSkillId?: DealerSkillId,
+  ): void {
+    const config =
+      phase === 1 ? HOUSE_PHASE_ONE : HOUSE_PHASE_TWO;
+
+    if (!config.passiveSkills.includes(passiveSkillId)) {
+      throw new Error(
+        `Invalid passive skill for House Phase ${phase}: ${passiveSkillId}`,
+      );
+    }
+
+    if (
+      activeSkillId !== undefined &&
+      !config.activeSkills.includes(activeSkillId)
+    ) {
+      throw new Error(
+        `Invalid active skill for House Phase ${phase}: ${activeSkillId}`,
+      );
+    }
+
+    this.startPhase(phase, passiveSkillId, activeSkillId);
+  }
+
+
   getCurrentPhase(): HousePhase {
     return this.currentPhase;
   }
 
-  private startPhase(phase: HousePhase): void {
+  
+  private startPhase(
+    phase: HousePhase,
+    forcedPassiveSkillId?: DealerSkillId,
+    forcedActiveSkillId?: DealerSkillId,
+  ): void {
     this.currentPhase = phase;
 
     const config = this.getCurrentPhaseConfig();
 
+    this.forcedActiveSkillId = forcedActiveSkillId;
+
     this.passiveSkill = this.pickSkill(
-      config.passiveSkills,
+      forcedPassiveSkillId === undefined
+        ? config.passiveSkills
+        : [forcedPassiveSkillId],
     );
 
     console.log(
@@ -47,6 +85,7 @@ export class HousePhaseManager {
     this.prepareNextRound();
   }
 
+
   prepareNextRound(): void {
     if (!this.passiveSkill) {
       throw new Error("The House phase has not started.");
@@ -58,7 +97,10 @@ export class HousePhaseManager {
       (skillId) => skillId !== this.activeSkill?.id,
     );
 
-    this.activeSkill = this.pickSkill(availableSkills);
+    this.activeSkill =
+      this.forcedActiveSkillId === undefined
+        ? this.pickSkill(availableSkills)
+        : this.pickSkill([this.forcedActiveSkillId]);
 
     console.log(
       `THE HOUSE PHASE ${this.currentPhase} ACTIVE:`,

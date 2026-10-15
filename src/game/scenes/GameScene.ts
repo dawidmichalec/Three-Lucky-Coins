@@ -268,6 +268,18 @@ export class GameScene extends BaseScene {
         onDealer: (dealerId) => {
           void this.cheatDealer(dealerId);
         },
+
+        onHousePhase: (
+          phase,
+          passiveSkillId,
+          activeSkillId,
+        ) => {
+          void this.cheatHousePhase(
+            phase,
+            passiveSkillId,
+            activeSkillId,
+          );
+        },
       },
     );
 
@@ -2659,6 +2671,100 @@ export class GameScene extends BaseScene {
 
   private async showDealerVictory() {
     await this.runEndController.showDealerVictory();
+  }
+
+  // THE HOUSE PHASE CHEAT
+
+  
+  private async cheatHousePhase(
+    phase: 1 | 2,
+    passiveSkillId: DealerSkillId,
+    activeSkillId?: DealerSkillId,
+  ): Promise<void> {
+    if (
+      this.roundState !== "ready" ||
+      this.isChangingDealer ||
+      this.currentDealer.group !== DealerGroup.THE_HOUSE
+    ) {
+      console.warn(
+        "House phase cheat is only available during a ready round against The House.",
+      );
+      return;
+    }
+
+    this.isChangingDealer = true;
+
+    this.stopRoundTimer();
+    this.lockControls();
+
+    try {
+      const applied =
+        this.dealerFightManager.forceHousePhase(
+          phase,
+          passiveSkillId,
+          activeSkillId,
+        );
+
+      if (!applied) {
+        console.warn("The House fight has not started.");
+        return;
+      }
+
+      // Synchronize runtime dealer and bet restrictions.
+      this.applyHouseRoundSkills();
+
+      // Update passive and active skill icons.
+      await this.view.gameUI.dealerCard.updateSkills(
+        this.dealerFightManager.getHouseCurrentSkills(),
+      );
+
+      // Prepare restrictions for the forced active skill.
+      this.betRestrictionManager.applyBetSlotMalfunction(
+        this.player.balance,
+      );
+
+      this.betRestrictionManager.applyDynamicBetLock(
+        this.player.balance,
+      );
+
+      // Rebuild round odds and perk state.
+      this.prepareNextRound();
+      this.perkGameplayController.prepareNextRound();
+
+      // Make sure the selected bet is valid.
+      this.controller.adjustBetToRestrictions();
+
+      this.controller.adjustBetToBalance(
+        (bet) => this.isBetAffordable(bet),
+      );
+
+      this.updateBetControlRestrictions();
+      this.updateIvyRule();
+      this.updateCombinationSelectorBlock();
+      this.updateCombinationStatus();
+
+      if (!this.canPlay()) {
+        this.roundState = "result";
+        this.triggerGameOver();
+        return;
+      }
+
+      console.log(
+        "CHEAT APPLIED:",
+        `PHASE ${phase}`,
+        passiveSkillId,
+        activeSkillId ?? "RANDOM ACTIVE",
+      );
+    } catch (error) {
+      console.error("HOUSE PHASE CHEAT FAILED:", error);
+    } finally {
+      this.isChangingDealer = false;
+
+      if (this.roundState === "ready") {
+        this.unlockControls();
+        this.startRoundTimerIfNeeded();
+      }
+    }
   }
 
   // NEXT DEALER CHEAT
