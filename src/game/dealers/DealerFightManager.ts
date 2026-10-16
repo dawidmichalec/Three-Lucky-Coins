@@ -431,7 +431,7 @@ export class DealerFightManager {
 
   
   forceHousePhase(
-    phase: 1 | 2,
+    phase: 1 | 2 | 3,
     passiveSkillId: DealerSkillId,
     activeSkillId?: DealerSkillId,
   ): boolean {
@@ -454,16 +454,7 @@ export class DealerFightManager {
 
     this.housePhaseCheatActive = true;
 
-    // Reset phase-specific counters and history.
-    this.multiplierKnockoutBlockedRounds = 3;
-    this.mandatoryTipWinCounter = 0;
-
-    this.previousKirkCombination = null;
-    this.previousCharlieBet = null;
-    this.previousCharlieCombination = null;
-
-    this.ivyCombinationRule = undefined;
-    this.randomBlockedCombination = undefined;
+    this.resetHousePhaseState();
 
     this.prepareHouseActiveSkillState();
 
@@ -2114,48 +2105,67 @@ export class DealerFightManager {
     return this.housePhaseManager.getCurrentOddsProfile();
   }
   
+  
   tryAdvanceHousePhase(playerBalance: number): boolean {
     if (
       this.housePhaseCheatActive ||
-      this.getCurrentDealer().group !== DealerGroup.THE_HOUSE ||
-      this.housePhaseManager.getCurrentPhase() !== 1
+      this.getCurrentDealer().group !== DealerGroup.THE_HOUSE
     ) {
       return false;
     }
 
-    const phaseTwoThreshold =
-      this.fightStartingBalance +
-      (this.fightTargetBalance - this.fightStartingBalance) * 0.25;
+    const requiredIncrease =
+      this.fightTargetBalance - this.fightStartingBalance;
 
-    if (playerBalance < phaseTwoThreshold) {
+    if (requiredIncrease <= 0) {
       return false;
     }
 
-    this.housePhaseManager.startPhaseTwo();
+    const progress =
+      (playerBalance - this.fightStartingBalance) /
+      requiredIncrease;
+
+    const currentPhase =
+      this.housePhaseManager.getCurrentPhase();
+
+    // Select the highest implemented phase reached
+    // by the player. Do not enter intermediate phases.
+    const targetPhase: 1 | 2 | 3 =
+      progress >= 0.5
+        ? 3
+        : progress >= 0.25
+          ? 2
+          : 1;
+
+    if (targetPhase <= currentPhase) {
+      return false;
+    }
+
+    if (targetPhase === 3) {
+      this.housePhaseManager.startPhaseThree();
+    } else {
+      this.housePhaseManager.startPhaseTwo();
+    }
 
     this.houseRuntimeSkills = [
       ...this.housePhaseManager.getCurrentSkills(),
     ];
 
-    this.multiplierKnockoutBlockedRounds = 3;
-
-    this.previousKirkCombination = null;
-    this.previousCharlieBet = null;
-    this.previousCharlieCombination = null;
-
+    this.resetHousePhaseState();
     this.prepareHouseActiveSkillState();
 
     console.log(
-      "THE HOUSE: PHASE II STARTED",
+      `THE HOUSE: PHASE ${targetPhase} STARTED`,
+      "FROM PHASE:",
+      currentPhase,
       "BALANCE:",
       playerBalance,
-      "THRESHOLD:",
-      phaseTwoThreshold,
+      "PROGRESS:",
+      `${(progress * 100).toFixed(2)}%`,
     );
 
     return true;
   }
-
   
   private prepareHouseActiveSkillState(
     previousActiveSkillId?: DealerSkillId,
@@ -2189,6 +2199,106 @@ export class DealerFightManager {
     } else {
       this.randomBlockedCombination = undefined;
     }
+
+    // FIXED COMBINATION LOCK
+    // Select a new valid combination for the active round.
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.FIXED_COMBINATION_LOCK,
+      )
+    ) {
+      this.rollHouseFixedCombinationLock();
+    } else {
+      this.fixedCombinationLock = undefined;
+    }
+
+    // BROKEN PROBABILITY DISPLAY
+    // recordCompletedRound() already rolls the next
+    // error position when the skill remains active.
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.BROKEN_PROBABILITY_DISPLAY,
+      )
+    ) {
+      if (
+        previousActiveSkillId !==
+        DealerSkillId.BROKEN_PROBABILITY_DISPLAY
+      ) {
+        this.rollBrokenProbabilityDisplay();
+      }
+    } else {
+      this.brokenProbabilityDisplayIndex = undefined;
+    }
   }
 
+  private resetHousePhaseState(): void {
+    this.multiplierKnockoutBlockedRounds = 3;
+    this.mandatoryTipWinCounter = 0;
+
+    this.previousKirkCombination = null;
+    this.previousCharlieBet = null;
+    this.previousCharlieCombination = null;
+
+    this.henryBlockedCombinations.clear();
+
+    this.ivyCombinationRule = undefined;
+    this.randomBlockedCombination = undefined;
+    this.fixedCombinationLock = undefined;
+    this.brokenProbabilityDisplayIndex = undefined;
+
+    this.multiplierSystemMalfunctionActive = false;
+    this.multiplierSystemMalfunctionRoundsRemaining = 0;
+
+    // Initialize the cooldown if Phase III selected
+    // Multiplier System Malfunction.
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+      )
+    ) {
+      this.startMultiplierSystemNormalPhase();
+    }
+  }
+
+  
+  private rollHouseFixedCombinationLock(): void {
+    const sides = ["H", "T"] as const;
+
+    const combinations = sides.flatMap((first) =>
+      sides.flatMap((second) =>
+        sides.map(
+          (third) => `${first}-${second}-${third}`,
+        ),
+      ),
+    );
+
+    const nextRound = this.fightRounds + 1;
+
+    const availableCombinations = combinations.filter(
+      (combinationKey) => {
+        const blockedUntilRound =
+          this.henryBlockedCombinations.get(
+            combinationKey,
+          );
+
+        return (
+          blockedUntilRound === undefined ||
+          nextRound > blockedUntilRound
+        );
+      },
+    );
+
+    if (availableCombinations.length === 0) {
+      throw new Error(
+        "No available combination for House Fixed Combination Lock.",
+      );
+    }
+
+    this.fixedCombinationLock =
+      availableCombinations[
+        Math.floor(
+          Math.random() * availableCombinations.length,
+        )
+      ];
+  }
 }

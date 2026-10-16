@@ -1,7 +1,7 @@
 
 import { DealerSkillId } from "../../DealerSkill";
 import { DealerOddsProfile } from "../../../probability/OddsTypes";
-import { THE_HOUSE_PROFILE_PHASE_1, THE_HOUSE_PROFILE_PHASE_2, } from "../../../probability/DealerOddsProfiles";
+import { THE_HOUSE_PROFILE_PHASE_1, THE_HOUSE_PROFILE_PHASE_2, THE_HOUSE_PROFILE_PHASE_3,} from "../../../probability/DealerOddsProfiles";
 
 export interface HousePhaseConfig {
   oddsProfile: DealerOddsProfile;
@@ -47,6 +47,26 @@ export const HOUSE_PHASE_TWO: HousePhaseConfig = {
     DealerSkillId.DYNAMIC_BET_LOCK,
     DealerSkillId.RANDOM_COMBINATION_BLOCK,
     DealerSkillId.MY_WAY_OR_THE_HIGHWAY,
+  ],
+};
+
+
+export const HOUSE_PHASE_THREE: HousePhaseConfig = {
+  oddsProfile: THE_HOUSE_PROFILE_PHASE_3,
+
+  passiveSkills: [
+    DealerSkillId.NO_SAME_BETS,
+    DealerSkillId.MULTIPLIER_SYSTEM_MALFUNCTION,
+    DealerSkillId.BALANCE_MODULE_MALFUNCTION,
+    DealerSkillId.KEEP_IT_MOVING,
+  ],
+
+  activeSkills: [
+    DealerSkillId.HEADS_CURSE,
+    DealerSkillId.TAILS_CURSE,
+    DealerSkillId.BROKEN_PROBABILITY_DISPLAY,
+    DealerSkillId.FIXED_COMBINATION_LOCK,
+    DealerSkillId.BET_VALUE_MANIPULATION,
   ],
 };
 

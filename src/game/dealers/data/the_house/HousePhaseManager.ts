@@ -5,10 +5,11 @@ import {
   HousePhaseConfig,
   HOUSE_PHASE_ONE,
   HOUSE_PHASE_TWO,
+  HOUSE_PHASE_THREE,
 } from "./HousePhaseConfig";
 import { DealerOddsProfile } from "../../../probability/OddsTypes";
 
-type HousePhase = 1 | 2;
+type HousePhase = 1 | 2 | 3;
 
 export class HousePhaseManager {
   private currentPhase: HousePhase = 1;
@@ -25,6 +26,10 @@ export class HousePhaseManager {
     this.startPhase(2);
   }
 
+  startPhaseThree(): void {
+    this.startPhase(3);
+  }
+
   
   forcePhase(
     phase: HousePhase,
@@ -32,7 +37,11 @@ export class HousePhaseManager {
     activeSkillId?: DealerSkillId,
   ): void {
     const config =
-      phase === 1 ? HOUSE_PHASE_ONE : HOUSE_PHASE_TWO;
+      phase === 1
+        ? HOUSE_PHASE_ONE
+        : phase === 2
+          ? HOUSE_PHASE_TWO
+          : HOUSE_PHASE_THREE;
 
     if (!config.passiveSkills.includes(passiveSkillId)) {
       throw new Error(
@@ -123,9 +132,16 @@ export class HousePhaseManager {
   }
 
   private getCurrentPhaseConfig(): HousePhaseConfig {
-    return this.currentPhase === 1
-      ? HOUSE_PHASE_ONE
-      : HOUSE_PHASE_TWO;
+    switch (this.currentPhase) {
+      case 1:
+        return HOUSE_PHASE_ONE;
+
+      case 2:
+        return HOUSE_PHASE_TWO;
+
+      case 3:
+        return HOUSE_PHASE_THREE;
+    }
   }
 
   private pickSkill(

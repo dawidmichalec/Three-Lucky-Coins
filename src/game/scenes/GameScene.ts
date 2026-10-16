@@ -497,6 +497,10 @@ export class GameScene extends BaseScene {
         );
 
       if (phaseChanged) {
+        this.betRestrictionManager.resetNoSameBetsCycle();
+      }
+
+      if (phaseChanged) {
         await this.view.gameMessageOverlay.play(
           "changeOfRules",
         );
@@ -505,6 +509,8 @@ export class GameScene extends BaseScene {
       }
 
       this.applyHouseRoundSkills();
+
+      this.syncHouseFixedCombinationLock();
 
       const skills =
         this.dealerFightManager.getHouseCurrentSkills();
@@ -1026,8 +1032,49 @@ export class GameScene extends BaseScene {
   }
 
   // THE HOUSE RULES
-
   
+  private syncHouseFixedCombinationLock(): void {
+    if (
+      !this.dealerFightManager.hasActiveSkill(
+        DealerSkillId.FIXED_COMBINATION_LOCK,
+      )
+    ) {
+      return;
+    }
+
+    if (
+      !this.perkGameplayController
+        .shouldApplyFixedCombinationLock()
+    ) {
+      return;
+    }
+
+    const fixedCombination =
+      this.dealerFightManager.getFixedCombinationLock();
+
+    if (!fixedCombination) {
+      return;
+    }
+
+    this.controller.setCombinationSide(
+      0,
+      fixedCombination[0] as CoinSide,
+    );
+
+    this.controller.setCombinationSide(
+      1,
+      fixedCombination[1] as CoinSide,
+    );
+
+    this.controller.setCombinationSide(
+      2,
+      fixedCombination[2] as CoinSide,
+    );
+
+    this.view.controls.setCombination(
+      fixedCombination,
+    );
+  }  
   
   private applyHouseRoundSkills(): void {
     const skills =
@@ -2708,7 +2755,7 @@ export class GameScene extends BaseScene {
 
   
   private async cheatHousePhase(
-    phase: 1 | 2,
+    phase: 1 | 2 | 3,
     passiveSkillId: DealerSkillId,
     activeSkillId?: DealerSkillId,
   ): Promise<void> {
@@ -2741,8 +2788,12 @@ export class GameScene extends BaseScene {
         return;
       }
 
+      this.betRestrictionManager.resetNoSameBetsCycle();
+
       // Synchronize runtime dealer and bet restrictions.
       this.applyHouseRoundSkills();
+
+      this.syncHouseFixedCombinationLock();
 
       // Update passive and active skill icons.
       await this.view.gameUI.dealerCard.updateSkills(
