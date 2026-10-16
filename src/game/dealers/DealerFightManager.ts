@@ -431,7 +431,7 @@ export class DealerFightManager {
 
   
   forceHousePhase(
-    phase: 1 | 2 | 3,
+    phase: 1 | 2 | 3 | 4,
     passiveSkillId: DealerSkillId,
     activeSkillId?: DealerSkillId,
   ): boolean {
@@ -2130,18 +2130,22 @@ export class DealerFightManager {
 
     // Select the highest implemented phase reached
     // by the player. Do not enter intermediate phases.
-    const targetPhase: 1 | 2 | 3 =
-      progress >= 0.5
-        ? 3
-        : progress >= 0.25
-          ? 2
-          : 1;
+    const targetPhase: 1 | 2 | 3 | 4 =
+      progress >= 0.75
+        ? 4
+        : progress >= 0.5
+          ? 3
+          : progress >= 0.25
+            ? 2
+            : 1;
 
     if (targetPhase <= currentPhase) {
       return false;
     }
 
-    if (targetPhase === 3) {
+    if (targetPhase === 4) {
+      this.housePhaseManager.startPhaseFour();
+    } else if (targetPhase === 3) {
       this.housePhaseManager.startPhaseThree();
     } else {
       this.housePhaseManager.startPhaseTwo();
@@ -2200,6 +2204,31 @@ export class DealerFightManager {
       this.randomBlockedCombination = undefined;
     }
 
+    // Phase IV: initialize rotating malfunctions on activation,
+    // without resetting their counters every round while they remain active.
+    if (
+      this.hasActiveSkill(DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION)
+    ) {
+      if (previousActiveSkillId !== DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION) {
+        this.betDeductionMalfunctionRoundsRemaining =
+          this.rollBetDeductionMalfunctionDelay();
+      }
+    } else {
+      this.betDeductionMalfunctionRoundsRemaining = 0;
+    }
+
+    if (
+      this.hasActiveSkill(DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY)
+    ) {
+      if (previousActiveSkillId !== DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY) {
+        this.unstableProbabilityDisplayRoundsRemaining =
+          this.rollUnstableProbabilityDisplayDelay();
+      }
+    } else {
+      this.unstableProbabilityDisplayIndex = undefined;
+      this.unstableProbabilityDisplayRoundsRemaining = 0;
+    }
+
     // FIXED COMBINATION LOCK
     // Select a new valid combination for the active round.
     if (
@@ -2245,6 +2274,14 @@ export class DealerFightManager {
     this.randomBlockedCombination = undefined;
     this.fixedCombinationLock = undefined;
     this.brokenProbabilityDisplayIndex = undefined;
+    this.unstableProbabilityDisplayIndex = undefined;
+    this.unstableProbabilityDisplayRoundsRemaining = 0;
+    this.betDeductionMalfunctionRoundsRemaining = 0;
+    this.casinoPolicyCombination = undefined;
+    this.casinoPolicyLockedUntilRound = 0;
+    this.mirrorRecovering = false;
+    this.mirrorEligibleRounds = 0;
+    this.mirrorCooldownRounds = 0;
 
     this.multiplierSystemMalfunctionActive = false;
     this.multiplierSystemMalfunctionRoundsRemaining = 0;
