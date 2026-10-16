@@ -1903,7 +1903,7 @@ export class GameScene extends BaseScene {
       );
     }
 
-    this.updateSecurityCheckUI();
+    this.updateSecurityCheckVisibility();
   }
 
   private startGambleForMore(
