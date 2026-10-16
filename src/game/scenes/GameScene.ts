@@ -509,6 +509,7 @@ export class GameScene extends BaseScene {
       }
 
       this.applyHouseRoundSkills();
+      this.updateSecurityCheckVisibility();
 
       this.syncHouseFixedCombinationLock();
 
@@ -1808,6 +1809,18 @@ export class GameScene extends BaseScene {
     await this.finishRound(false);
   }
 
+  private updateSecurityCheckVisibility(): void {
+    if (
+      this.dealerFightManager.hasActiveSkill(DealerSkillId.SECURITY_CHECK) ||
+      this.securityCheckManager.hasFrozenWins()
+    ) {
+      this.view.gameUI.showSecurityCheck();
+    } else {
+      this.view.gameUI.hideSecurityCheck();
+    }
+    this.updateSecurityCheckUI();
+  }
+
   private updateSecurityCheckUI(): void {
       this.view.gameUI.updateSecurityCheckWins(this.securityCheckManager.getFrozenWins(),);
   }
@@ -1845,11 +1858,11 @@ export class GameScene extends BaseScene {
       (skill) => skill.id === DealerSkillId.SECURITY_CHECK,
     );
 
-    if (!securityCheckSkill) {
+    if (!securityCheckSkill && !this.securityCheckManager.hasFrozenWins()) {
       return;
     }
 
-    const acceptChance = securityCheckSkill.triggerChance ?? 0.7;
+    const acceptChance = securityCheckSkill?.triggerChance ?? 0.7;
 
     const resolutions = this.securityCheckManager.advanceRound(
       acceptChance,
@@ -2219,7 +2232,9 @@ export class GameScene extends BaseScene {
     if (this.currentDealer.id !== "tlcm-proto") {
       this.betRestrictionManager.advanceBetIncreaseLock();
       this.betRestrictionManager.advanceBetDecreaseLock();
-      this.betRestrictionManager.advanceBetLimitation();
+      this.betRestrictionManager.advanceBetLimitation(
+        this.currentDealer.group === DealerGroup.THE_HOUSE ? this.player.balance : undefined,
+      );
       this.betRestrictionManager.applyBetSlotMalfunction(this.player.balance);
       this.betRestrictionManager.applyDynamicBetLock(this.player.balance);
     }
@@ -2769,7 +2784,7 @@ export class GameScene extends BaseScene {
 
   
   private async cheatHousePhase(
-    phase: 1 | 2 | 3,
+    phase: 1 | 2 | 3 | 4,
     passiveSkillId: DealerSkillId,
     activeSkillId?: DealerSkillId,
   ): Promise<void> {
@@ -2806,6 +2821,7 @@ export class GameScene extends BaseScene {
 
       // Synchronize runtime dealer and bet restrictions.
       this.applyHouseRoundSkills();
+      this.updateSecurityCheckVisibility();
 
       this.syncHouseFixedCombinationLock();
 
