@@ -57,9 +57,20 @@ export class BetRestrictionManager {
     }
   }
 
-  advanceBetLimitation(): boolean {
+  advanceBetLimitation(playerBalance?: number): boolean {
     if (!this.hasSkill(DealerSkillId.BET_LIMITATION)) {
       return false;
+    }
+
+    // Do not trap House's rotating high-bet mode below its minimum stake.
+    if (
+      playerBalance !== undefined &&
+      playerBalance < BetRestrictionManager.HIGH_STAKES_MIN_BET &&
+      this.betLimitationMode === BetLimitationMode.HIGH
+    ) {
+      this.betLimitationMode = BetLimitationMode.LOW;
+      this.betLimitationRoundsRemaining = this.rollBetLimitationPhaseDuration();
+      return true;
     }
 
     this.betLimitationRoundsRemaining--;
@@ -68,7 +79,8 @@ export class BetRestrictionManager {
       return false;
     }
 
-    this.betLimitationMode = this.betLimitationMode === BetLimitationMode.LOW
+    this.betLimitationMode = this.betLimitationMode === BetLimitationMode.LOW &&
+      (playerBalance === undefined || playerBalance >= BetRestrictionManager.HIGH_STAKES_MIN_BET)
       ? BetLimitationMode.HIGH
       : BetLimitationMode.LOW;
 
@@ -121,6 +133,9 @@ export class BetRestrictionManager {
     const hadRuntimeFixedBetLock =
       this.runtimeSkills.has(DealerSkillId.FIXED_BET_LOCK);
 
+    const hadRuntimeBetLimitation =
+      this.runtimeSkills.has(DealerSkillId.BET_LIMITATION);
+
     this.runtimeSkills = new Set(skillIds);
 
     const hasRuntimeBetIncreaseLock =
@@ -131,6 +146,20 @@ export class BetRestrictionManager {
 
     const hasRuntimeFixedBetLock =
       this.runtimeSkills.has(DealerSkillId.FIXED_BET_LOCK);
+
+    const hasRuntimeBetLimitation =
+      this.runtimeSkills.has(DealerSkillId.BET_LIMITATION);
+
+    // BET LIMITATION — initialize when a rotating House skill becomes active.
+    if (hasRuntimeBetLimitation && !hadRuntimeBetLimitation) {
+      if (playerBalance === undefined) {
+        throw new Error("Player balance is required for Bet Limitation.");
+      }
+      this.startBetLimitationPhase(playerBalance);
+    } else if (!this.hasSkill(DealerSkillId.BET_LIMITATION)) {
+      this.betLimitationMode = null;
+      this.betLimitationRoundsRemaining = 0;
+    }
 
     // BET INCREASE LOCK
 

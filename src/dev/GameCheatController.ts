@@ -7,7 +7,7 @@ import { GoldenCoinManager } from "../game/goldenCoins/GoldenCoinManager";
 import { PerkRewardGenerator } from "../game/perks/reward/PerkRewardGenerator";
 import { PerkRarity } from "../game/perks/PerkRarity";
 import { DealerSkillId } from "../game/dealers/DealerSkill";
-import { HOUSE_PHASE_ONE, HOUSE_PHASE_TWO, HOUSE_PHASE_THREE} from "../game/dealers/data/the_house/HousePhaseConfig";
+import { HOUSE_PHASE_ONE, HOUSE_PHASE_TWO, HOUSE_PHASE_THREE, HOUSE_PHASE_FOUR } from "../game/dealers/data/the_house/HousePhaseConfig";
 
 interface GameCheatControllerOptions {
   onDealerWin: () => void;
@@ -19,7 +19,7 @@ interface GameCheatControllerOptions {
   onDealer: (dealerId: string) => void;
 
   onHousePhase: (
-    phase: 1 | 2 | 3,
+    phase: 1 | 2 | 3 | 4,
     passiveSkillId: DealerSkillId,
     activeSkillId?: DealerSkillId,
   ) => void;
@@ -107,6 +107,11 @@ export class GameCheatController {
         phase: 3 as const,
         name: "three",
         config: HOUSE_PHASE_THREE,
+      },
+      {
+        phase: 4 as const,
+        name: "four",
+        config: HOUSE_PHASE_FOUR,
       },
     ];
 
