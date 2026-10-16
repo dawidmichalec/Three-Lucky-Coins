@@ -1645,7 +1645,7 @@ export class GameScene extends BaseScene {
 
         this.startGambleForMore(
           finalWinAmount,
-          bet,
+          effectiveBet,
           mandatoryGambleForMoreTriggered,
         );
 
@@ -1797,7 +1797,7 @@ export class GameScene extends BaseScene {
       );
     }
 
-    await this.applyHouseCut(bet);
+    await this.applyHouseCut(effectiveBet);
 
     this.runStatsRecorder.finishRound({
       win: false,
@@ -2465,6 +2465,20 @@ export class GameScene extends BaseScene {
   private applyStreakResolution(
     resolution: StreakResolution,
   ): void {
+
+    console.log("STREAK DEBUG:", {
+      skills: this.currentDealer.skills.map(
+        (skill) => skill.id,
+      ),
+      action: resolution.action,
+      growthModifier: resolution.growthModifier ?? 1,
+      currentValue: this.streakMultiplierManager.getValue(),
+      baseValue: this.streakMultiplierManager.getBaseValue(),
+      growthPerWin: this.streakMultiplierManager.getGrowthPerWin(),
+      malfunctionActive:
+        this.dealerFightManager.isMultiplierSystemMalfunctionActive(),
+    });
+
     if (
       this.dealerFightManager.isMultiplierLocked() &&
       resolution.action === StreakAction.INCREASE
