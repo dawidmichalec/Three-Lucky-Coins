@@ -2209,24 +2209,21 @@ export class DealerFightManager {
     if (
       this.hasActiveSkill(DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION)
     ) {
-      if (previousActiveSkillId !== DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION) {
+      if (this.betDeductionMalfunctionRoundsRemaining <= 0) {
         this.betDeductionMalfunctionRoundsRemaining =
           this.rollBetDeductionMalfunctionDelay();
       }
-    } else {
-      this.betDeductionMalfunctionRoundsRemaining = 0;
     }
 
     if (
       this.hasActiveSkill(DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY)
     ) {
-      if (previousActiveSkillId !== DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY) {
+      if (this.unstableProbabilityDisplayRoundsRemaining <= 0) {
         this.unstableProbabilityDisplayRoundsRemaining =
           this.rollUnstableProbabilityDisplayDelay();
       }
     } else {
       this.unstableProbabilityDisplayIndex = undefined;
-      this.unstableProbabilityDisplayRoundsRemaining = 0;
     }
 
     // FIXED COMBINATION LOCK
