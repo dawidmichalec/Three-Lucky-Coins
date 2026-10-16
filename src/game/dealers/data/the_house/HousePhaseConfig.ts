@@ -1,7 +1,12 @@
 
 import { DealerSkillId } from "../../DealerSkill";
 import { DealerOddsProfile } from "../../../probability/OddsTypes";
-import { THE_HOUSE_PROFILE_PHASE_1, THE_HOUSE_PROFILE_PHASE_2, THE_HOUSE_PROFILE_PHASE_3,} from "../../../probability/DealerOddsProfiles";
+import {
+  THE_HOUSE_PROFILE_PHASE_1,
+  THE_HOUSE_PROFILE_PHASE_2,
+  THE_HOUSE_PROFILE_PHASE_3,
+  THE_HOUSE_PROFILE_PHASE_4,
+} from "../../../probability/DealerOddsProfiles";
 
 export interface HousePhaseConfig {
   oddsProfile: DealerOddsProfile;
@@ -70,3 +75,22 @@ export const HOUSE_PHASE_THREE: HousePhaseConfig = {
   ],
 };
 
+
+export const HOUSE_PHASE_FOUR: HousePhaseConfig = {
+  oddsProfile: THE_HOUSE_PROFILE_PHASE_4,
+
+  passiveSkills: [
+    DealerSkillId.THE_HOUSE_ALWAYS_WINS,
+    DealerSkillId.SECURITY_CHECK,
+    DealerSkillId.MIRROR,
+    DealerSkillId.CASINO_POLICY,
+  ],
+
+  activeSkills: [
+    DealerSkillId.ADDITIONAL_COIN_TOSS,
+    DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
+    DealerSkillId.BET_LIMITATION,
+    DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY,
+    DealerSkillId.TIME_IS_UP,
+  ],
+};
