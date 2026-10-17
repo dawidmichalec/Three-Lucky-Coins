@@ -1,6 +1,7 @@
 import { BET_LEVELS } from "./data/BetLevels";
 import { DealerData } from "./dealers/DealerData";
 import { DealerSkillId } from "./dealers/DealerSkill";
+import { DealerGroup } from "./dealers/DealerGroup";
 
 export enum BetLimitationMode {
   LOW = "low",
@@ -57,9 +58,40 @@ export class BetRestrictionManager {
     }
   }
 
-  advanceBetLimitation(): boolean {
+  
+  advanceBetLimitation(playerBalance?: number): boolean {
     if (!this.hasSkill(DealerSkillId.BET_LIMITATION)) {
       return false;
+    }
+
+    // THE HOUSE: roll a new restriction for each
+    // subsequent round while the skill remains active.
+
+    if (this.currentDealer?.group === DealerGroup.THE_HOUSE) {
+      if (playerBalance === undefined) {
+        throw new Error(
+          "Player balance is required for The House Bet Limitation.",
+        );
+      }
+
+      this.startBetLimitationPhase(playerBalance);
+
+      return true;
+    }
+
+    // Prevent unaffordable HIGH mode when balance is too low.
+
+    if (
+      playerBalance !== undefined &&
+      playerBalance < BetRestrictionManager.HIGH_STAKES_MIN_BET &&
+      this.betLimitationMode === BetLimitationMode.HIGH
+    ) {
+      this.betLimitationMode = BetLimitationMode.LOW;
+
+      this.betLimitationRoundsRemaining =
+        this.rollBetLimitationPhaseDuration();
+
+      return true;
     }
 
     this.betLimitationRoundsRemaining--;
@@ -68,14 +100,22 @@ export class BetRestrictionManager {
       return false;
     }
 
-    this.betLimitationMode = this.betLimitationMode === BetLimitationMode.LOW
-      ? BetLimitationMode.HIGH
-      : BetLimitationMode.LOW;
+    const canUseHighBets =
+      playerBalance === undefined ||
+      playerBalance >= BetRestrictionManager.HIGH_STAKES_MIN_BET;
 
-    this.betLimitationRoundsRemaining = this.rollBetLimitationPhaseDuration();
+    this.betLimitationMode =
+      this.betLimitationMode === BetLimitationMode.LOW &&
+      canUseHighBets
+        ? BetLimitationMode.HIGH
+        : BetLimitationMode.LOW;
+
+    this.betLimitationRoundsRemaining =
+      this.rollBetLimitationPhaseDuration();
 
     return true;
   }
+
 
   private startBetLimitationPhase(playerBalance: number): void {
     if (playerBalance < BetRestrictionManager.HIGH_STAKES_MIN_BET) {
@@ -131,6 +171,32 @@ export class BetRestrictionManager {
 
     const hasRuntimeFixedBetLock =
       this.runtimeSkills.has(DealerSkillId.FIXED_BET_LOCK);
+
+    const hadRuntimeBetLimitation =
+      this.runtimeSkills.has(DealerSkillId.BET_LIMITATION);
+
+    const hasRuntimeBetLimitation =
+      this.runtimeSkills.has(DealerSkillId.BET_LIMITATION);
+    
+    // BET LIMITATION
+
+    if (hasRuntimeBetLimitation) {
+      if (playerBalance === undefined) {
+        throw new Error(
+          "Player balance is required to activate Bet Limitation.",
+        );
+      }
+
+      if (
+        !hadRuntimeBetLimitation ||
+        this.betLimitationMode === null
+      ) {
+        this.startBetLimitationPhase(playerBalance);
+      }
+    } else if (!this.hasSkill(DealerSkillId.BET_LIMITATION)) {
+      this.betLimitationMode = null;
+      this.betLimitationRoundsRemaining = 0;
+    }
 
     // BET INCREASE LOCK
 

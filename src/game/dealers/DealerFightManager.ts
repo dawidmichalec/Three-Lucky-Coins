@@ -431,7 +431,7 @@ export class DealerFightManager {
 
   
   forceHousePhase(
-    phase: 1 | 2 | 3,
+    phase: 1 | 2 | 3 | 4,
     passiveSkillId: DealerSkillId,
     activeSkillId?: DealerSkillId,
   ): boolean {
@@ -977,10 +977,12 @@ export class DealerFightManager {
     );
   }
 
+  
   shouldTriggerBetDeductionMalfunction(): boolean {
     if (
       this.isProtoFight() &&
-      this.protoActiveMalfunction === DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION
+      this.protoActiveMalfunction ===
+        DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION
     ) {
       return true;
     }
@@ -988,13 +990,23 @@ export class DealerFightManager {
     const dealer = this.getCurrentDealer();
 
     const hasSkill = dealer.skills.some(
-      (skill) => skill.id === DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
+      (skill) =>
+        skill.id === DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
     );
 
     if (!hasSkill) {
       return false;
     }
 
+    // THE HOUSE:
+    // Apply the malfunction in every round
+    // where the skill is active.
+    if (dealer.group === DealerGroup.THE_HOUSE) {
+      return true;
+    }
+
+    // Original dealer:
+    // Trigger the malfunction every few rounds.
     this.betDeductionMalfunctionRoundsRemaining--;
 
     if (this.betDeductionMalfunctionRoundsRemaining > 0) {
@@ -1201,22 +1213,27 @@ export class DealerFightManager {
     );
   }
 
+  
   shouldTriggerAdditionalCoinToss(): boolean {
     const dealer = this.getCurrentDealer();
 
-    const hasAdditionalCoinToss =
-      dealer.skills.some(
-        (skill) =>
-          skill.id ===
-          DealerSkillId.ADDITIONAL_COIN_TOSS,
-      );
+    const hasAdditionalCoinToss = dealer.skills.some(
+      (skill) =>
+        skill.id === DealerSkillId.ADDITIONAL_COIN_TOSS,
+    );
 
     if (!hasAdditionalCoinToss) {
       return false;
     }
 
-    const nextRound =
-      this.fightRounds + 1;
+    // The House: trigger in every round
+    // where Additional Coin Toss is active.
+    if (dealer.group === DealerGroup.THE_HOUSE) {
+      return true;
+    }
+
+    // Original dealer: trigger every third round.
+    const nextRound = this.fightRounds + 1;
 
     return nextRound % 3 === 0;
   }
@@ -2130,18 +2147,22 @@ export class DealerFightManager {
 
     // Select the highest implemented phase reached
     // by the player. Do not enter intermediate phases.
-    const targetPhase: 1 | 2 | 3 =
-      progress >= 0.5
-        ? 3
-        : progress >= 0.25
-          ? 2
-          : 1;
+    const targetPhase: 1 | 2 | 3 | 4 =
+      progress >= 0.75
+        ? 4
+        : progress >= 0.5
+          ? 3
+          : progress >= 0.25
+            ? 2
+            : 1;
 
     if (targetPhase <= currentPhase) {
       return false;
     }
 
-    if (targetPhase === 3) {
+    if (targetPhase === 4) {
+      this.housePhaseManager.startPhaseFour();
+    } else if (targetPhase === 3) {
       this.housePhaseManager.startPhaseThree();
     } else {
       this.housePhaseManager.startPhaseTwo();
@@ -2211,6 +2232,34 @@ export class DealerFightManager {
     } else {
       this.fixedCombinationLock = undefined;
     }
+    
+    // BET DEDUCTION SYSTEM MALFUNCTION
+
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
+      )
+    ) {
+      if (this.betDeductionMalfunctionRoundsRemaining <= 0) {
+        this.betDeductionMalfunctionRoundsRemaining =
+          this.rollBetDeductionMalfunctionDelay();
+      }
+    }
+    
+    // UNSTABLE PROBABILITY DISPLAY
+
+    if (
+      this.hasActiveSkill(
+        DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY,
+      )
+    ) {
+      if (this.unstableProbabilityDisplayRoundsRemaining <= 0) {
+        this.unstableProbabilityDisplayRoundsRemaining =
+          this.rollUnstableProbabilityDisplayDelay();
+      }
+    } else {
+      this.unstableProbabilityDisplayIndex = undefined;
+    }
 
     // BROKEN PROBABILITY DISPLAY
     // recordCompletedRound() already rolls the next
@@ -2245,6 +2294,22 @@ export class DealerFightManager {
     this.randomBlockedCombination = undefined;
     this.fixedCombinationLock = undefined;
     this.brokenProbabilityDisplayIndex = undefined;
+
+    // PHASE IV - ACTIVE SKILLS
+
+    this.betDeductionMalfunctionRoundsRemaining = 0;
+
+    this.unstableProbabilityDisplayIndex = undefined;
+    this.unstableProbabilityDisplayRoundsRemaining = 0;
+
+    // PHASE IV - PASSIVE SKILLS
+
+    this.casinoPolicyCombination = undefined;
+    this.casinoPolicyLockedUntilRound = 0;
+
+    this.mirrorRecovering = false;
+    this.mirrorEligibleRounds = 0;
+    this.mirrorCooldownRounds = 0;
 
     this.multiplierSystemMalfunctionActive = false;
     this.multiplierSystemMalfunctionRoundsRemaining = 0;
