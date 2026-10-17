@@ -90,7 +90,6 @@ export const HOUSE_PHASE_FOUR: HousePhaseConfig = {
     DealerSkillId.BET_DEDUCTION_SYSTEM_MALFUNCTION,
     DealerSkillId.BET_LIMITATION,
     DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY,
-    DealerSkillId.TIME_IS_UP,
   ],
 };
 
