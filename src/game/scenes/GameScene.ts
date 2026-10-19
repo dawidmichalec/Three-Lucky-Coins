@@ -460,6 +460,10 @@ export class GameScene extends BaseScene {
       this.perkGameplayController.prepareSafetyNetResult(safetyNetResult);
     }
 
+    const coinSenseAvailable = this.perkEffectApplier.isCoinSenseAvailable();
+
+    const revealedResultActive = safetyNetReady || coinSenseAvailable;
+
     const houseUnstable =
       this.currentDealer.group === DealerGroup.THE_HOUSE &&
       this.dealerFightManager.hasActiveSkill(
@@ -479,7 +483,7 @@ export class GameScene extends BaseScene {
       this.dealerFightManager.getProtoActiveMalfunction() ===
       DealerSkillId.UNSTABLE_PROBABILITY_DISPLAY;
 
-    if ((protoUnstable || houseUnstable) && !safetyNetReady) {
+    if ((protoUnstable || houseUnstable) && !revealedResultActive) {
       this.startUnstableProbabilityDisplay(
         [0, 1, 2],
         profile,
@@ -489,7 +493,7 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    if (unstableIndex !== undefined && !safetyNetReady) {
+    if (unstableIndex !== undefined && !revealedResultActive) {
       this.startUnstableProbabilityDisplay([unstableIndex], profile, odds);
       return;
     }
@@ -648,6 +652,8 @@ export class GameScene extends BaseScene {
     }
 
     this.prepareNextRound();
+
+    this.perkGameplayController.prepareNextRound();
 
     const fixedCombination = this.dealerFightManager.getFixedCombinationLock();
 
