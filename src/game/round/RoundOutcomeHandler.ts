@@ -388,15 +388,12 @@ export class RoundOutcomeHandler {
   }
 
   private getStreakMultiplierGrowth(dealer: DealerData): number {
-    const hasSlowerMultiplierGrowth = dealer.skills.some(
-      (skill) => skill.id === DealerSkillId.SLOWER_MULTIPLIER_GROWTH,
+    const skillWithGrowthModifier = dealer.skills.find(
+      (skill) =>
+        skill.streakGrowthModifier !== undefined,
     );
 
-    if (hasSlowerMultiplierGrowth) {
-      return 0.5;
-    }
-
-    return 1;
+    return skillWithGrowthModifier?.streakGrowthModifier ?? 1;
   }
 
   resetDealerState(): void {

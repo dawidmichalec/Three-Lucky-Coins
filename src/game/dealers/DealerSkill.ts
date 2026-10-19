@@ -5,6 +5,8 @@ export enum DealerSkillId {
 
   ALMOST = "almost",
 
+  DARRYL_SLOWER_MULTIPLIER_GROWTH = "darryl_slower_multiplier_growth",
+
   SLOWER_MULTIPLIER_GROWTH = "slower_multiplier_growth",
 
   MANDATORY_TIP = "mandatory_tip",
@@ -131,4 +133,5 @@ export interface DealerSkillData {
   icon?: string;
   triggerChance?: number;
   timeLimit?: number;
+  streakGrowthModifier?: number;
 }

@@ -136,6 +136,9 @@ export default {
   leonPipeDescription: "Stara drewniana fajka, która towarzyszy Leonowi od dziesięcioleci. Przypomina, że cierpliwość bywa cenniejsza niż szczęście.",
   theHouseBrokenNeon: "Rozbity neon",
   theHouseBrokenNeonDescription: "Nawet kasyno kiedyś upadnie.",
+  darrylGoldenTurtle: "Złoty żółw",
+  darrylGoldenTurtleDescription: "Mały złoty żółw, który przypomina Darrylowi, żeby się nie spieszyć. Spokojne tempo, stabilne zyski.",
+
 
 
 
@@ -291,6 +294,8 @@ export default {
   frankSaying: "Skoro wygrywasz, to po co przestawać?",
   kevinDescription: "Ambitny młody krupier, który jest zdeterminowany, by piąć się po szczeblach kasynowej hierarchii. Kevin traktuje swoją pracę znacznie poważniej niż większość Młodszych Krupierów i rzadko przepuszcza okazję, żeby się wykazać.",
   kevinSaying: "Każdy musi od czegoś zacząć.",
+  darrylDescription: "Swobodne podejście Darryla i jego pewny siebie uśmiech sprawiają, że łatwo go zlekceważyć.\n\nNie przerwie Twojej zwycięskiej serii, ale zadba o to, żebyś nie rozpędził się za bardzo.",
+  darrylSaying: "Po co ten pośpiech? Dopiero się rozkręcamy.",
 
   // MID DEALERS
 
@@ -428,6 +433,9 @@ export default {
   slowerMultiplierGrowthSkillName: "Wolniejszy wzrost mnożnika",
 
   slowerMultiplierGrowthSkillDescription: "Zmniejsza o 50% standardowy przyrost mnożnika serii za każdą wygraną, uwzględniając bonusy z perków modyfikujących ten przyrost.",
+
+  darrylSlowerMultiplierGrowthSkillName: "Wolniejszy wzrost mnożnika",
+  darrylSlowerMultiplierGrowthSkillDescription: "Zmniejsza o 25% standardowy przyrost mnożnika serii za każdą wygraną, uwzględniając bonusy z perków modyfikujących ten przyrost.",
 
   mandatoryTipSkillName: "Obowiązkowy napiwek",
 

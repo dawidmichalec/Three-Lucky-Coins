@@ -137,6 +137,8 @@ export default {
   leonPipeDescription: "An old wooden pipe that has accompanied Leon for decades. A reminder that patience is often worth more than luck.",
   theHouseBrokenNeon: "Broken Neon",
   theHouseBrokenNeonDescription: "Even the House eventually falls.",
+  darrylGoldenTurtle: "Golden Turtle",
+  darrylGoldenTurtleDescription: "A small golden turtle that reminds Darryl to take things slow. Steady pace, steady profit.",
 
 
 
@@ -294,6 +296,8 @@ export default {
   frankSaying: "If you're winning, why stop?",
   kevinDescription: "An ambitious young dealer determined to move up the casino hierarchy. Kevin takes his job far more seriously than most Junior Dealers and rarely misses an opportunity to prove himself.",
   kevinSaying: "Everyone starts somewhere.",
+  darrylDescription: "Darryl's laid-back attitude and confident smile make him an easy guy to underestimate.\n\nHe won't stop your winning streak, but he'll make sure you don't get ahead of yourself.",
+  darrylSaying: "What's the rush? We're just getting started.",  
 
   // MID DEALERS
 
@@ -448,6 +452,9 @@ export default {
   slowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
 
   slowerMultiplierGrowthSkillDescription: "Reduces the streak multiplier's regular growth per win by 50%, including bonuses from perks that modify growth per win.",
+
+  darrylSlowerMultiplierGrowthSkillName: "Slower Multiplier Growth",
+  darrylSlowerMultiplierGrowthSkillDescription: "Reduces the streak multiplier's regular growth per win by 25%, including bonuses from perks that modify growth per win.",
 
   mandatoryTipSkillName: "Mandatory Tip",
 

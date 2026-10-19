@@ -30,7 +30,7 @@ export const THE_HOUSE_DATA: DealerData = {
 
   objectiveType: ObjectiveType.INCREASE_BALANCE,
 
-  objectiveValue: 100,
+  objectiveValue: 1000,
 
   goldenCoinSettings: {
     baseChance: 0.0075,

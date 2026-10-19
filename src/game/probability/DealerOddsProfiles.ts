@@ -88,6 +88,14 @@ export const KEVIN_PROFILE: DealerOddsProfile = {
   headsProbabilities: [0.09, 0.12, 0.16, 0.2, 0.22, 0.78, 0.8, 0.84, 0.88, 0.91],
 };
 
+// DARRYL
+
+export const DARRYL_PROFILE: DealerOddsProfile = {
+  visibility: OddsVisibility.EXACT,
+
+  headsProbabilities: [0.09, 0.11, 0.15, 0.19, 0.2, 0.22, 0.78, 0.8, 0.81, 0.85, 0.89, 0.91],
+};
+
 // JACOB
 
 export const JACOB_PROFILE: DealerOddsProfile = {

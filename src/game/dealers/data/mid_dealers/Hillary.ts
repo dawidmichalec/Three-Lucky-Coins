@@ -51,7 +51,9 @@ export const HILLARY_DATA: DealerData = {
 
       description: "slowerMultiplierGrowthSkillDescription",
 
-      icon: "/assets/main/icons/dealer_skill_icons/mid_dealers/hillary/slower_multiplier_growth.png"
+      icon: "/assets/main/icons/dealer_skill_icons/mid_dealers/hillary/slower_multiplier_growth.png",
+
+      streakGrowthModifier: 0.5,
     },
   ],
 

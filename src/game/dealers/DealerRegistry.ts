@@ -67,6 +67,7 @@ import { LAWRENCE_DATA } from "./data/vice_president/Lawrence";
 import { TOMMY_DATA } from "./data/owners/Tommy";
 import { LEON_DATA } from "./data/owners/Leon";
 import { THE_HOUSE_DATA } from "./data/the_house/TheHouse";
+import { DARRYL_DATA } from "./data/junior_dealers/Darryl";
 import { DealerGroup } from "./DealerGroup";
 import { DealerRole } from "./DealerRole";
 
@@ -78,6 +79,7 @@ export const DEALERS: readonly DealerData[] = [
   JOHNNY_DATA,
   ANDY_DATA, 
   TRACY_DATA,
+  DARRYL_DATA,
   MELANIE_DATA,
   DEBRA_DATA,
   COLIN_DATA,
@@ -149,6 +151,7 @@ export {
   JOHNNY_DATA,
   ANDY_DATA,
   TRACY_DATA,
+  DARRYL_DATA,
   MELANIE_DATA,
   DEBRA_DATA,
   COLIN_DATA,
