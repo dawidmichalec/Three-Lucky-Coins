@@ -1,5 +1,7 @@
+
 import { PERKS } from "../PerkRegistry";
 import { PerkRarity } from "../PerkRarity";
+import { PERK_RARITY_WEIGHTS } from "../PerkRarityConfig";
 import { PerkReward } from "./PerkReward";
 import { RunPerkRewardState } from "./RunPerkRewardState";
 
@@ -11,12 +13,10 @@ interface ForcedPerkReward {
 export class PerkRewardGenerator {
   private forcedPerkReward?: ForcedPerkReward;
 
-  
   generate(
     state: RunPerkRewardState,
     count = 3,
   ): readonly PerkReward[] {
-
     const availableRewards = this.getAvailableRewards(state);
 
     const availableFamilies = new Set(
@@ -58,18 +58,14 @@ export class PerkRewardGenerator {
       this.forcedPerkReward = undefined;
     }
 
-    // RANDOM REWARDS - ONE VARIANT PER FAMILY
+    // WEIGHTED RANDOM REWARDS
 
-    const shuffledRewards = this.shuffle(availableRewards);
+    while (selectedRewards.length < count) {
+      const eligibleRewards = availableRewards.filter(
+        (reward) => !selectedFamilies.has(reward.perk.id),
+      );
 
-    for (const reward of shuffledRewards) {
-      if (selectedRewards.length >= count) {
-        break;
-      }
-
-      if (selectedFamilies.has(reward.perk.id)) {
-        continue;
-      }
+      const reward = this.pickWeightedReward(eligibleRewards);
 
       selectedRewards.push(reward);
       selectedFamilies.add(reward.perk.id);
@@ -85,6 +81,51 @@ export class PerkRewardGenerator {
     }
 
     return selectedRewards;
+  }
+
+  private pickWeightedReward(
+    rewards: readonly PerkReward[],
+  ): PerkReward {
+    const availableRarities = Object.values(PerkRarity).filter(
+      (rarity) =>
+        PERK_RARITY_WEIGHTS[rarity] > 0 &&
+        rewards.some(
+          (reward) => reward.variant.rarity === rarity,
+        ),
+    );
+
+    if (availableRarities.length === 0) {
+      throw new Error(
+        "No perk rewards with positive rarity weights available.",
+      );
+    }
+
+    const totalWeight = availableRarities.reduce(
+      (sum, rarity) => sum + PERK_RARITY_WEIGHTS[rarity],
+      0,
+    );
+
+    let roll = Math.random() * totalWeight;
+
+    let selectedRarity =
+      availableRarities[availableRarities.length - 1];
+
+    for (const rarity of availableRarities) {
+      roll -= PERK_RARITY_WEIGHTS[rarity];
+
+      if (roll < 0) {
+        selectedRarity = rarity;
+        break;
+      }
+    }
+
+    const rarityPool = rewards.filter(
+      (reward) => reward.variant.rarity === selectedRarity,
+    );
+
+    return rarityPool[
+      Math.floor(Math.random() * rarityPool.length)
+    ];
   }
 
   private getAvailableRewards(
@@ -117,19 +158,10 @@ export class PerkRewardGenerator {
     return rewards;
   }
 
-  private shuffle<T>(items: readonly T[]): T[] {
-    const result = [...items];
-
-    for (let i = result.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-
-      [result[i], result[randomIndex]] = [result[randomIndex], result[i]];
-    }
-
-    return result;
-  }
-
-  forceNextPerk(perkId: string, rarity?: PerkRarity): void {
+  forceNextPerk(
+    perkId: string,
+    rarity?: PerkRarity,
+  ): void {
     this.forcedPerkReward = {
       perkId,
       rarity,
