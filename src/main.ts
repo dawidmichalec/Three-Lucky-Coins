@@ -48,7 +48,7 @@ import { loadFonts } from "./core/FontLoader";
   // BACKGROUND
 
   const backgroundImage = await Assets.load(
-    "/assets/main/background image.png",
+    "/assets/main/background_image.png",
   );
   const background = new Sprite(backgroundImage);
   background.width = layout.DESIGN_WIDTH;

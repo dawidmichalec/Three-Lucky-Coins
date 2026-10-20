@@ -214,14 +214,10 @@ export class GameScene extends BaseScene {
 
     // CONTROLLER
     this.controller = new GameController({
-      onBetChange: (bet, source) => {
+      onBetChange: (bet) => {
           this.view.gameUI.updateBet(bet);
 
           this.perkGameplayController.refreshBetState();
-
-          if (source === BetChangeSource.PLAYER) {
-            this.perkGameplayController.onBetChanged(bet);
-          }
         },
       },
       this.betRestrictionManager,
@@ -1172,9 +1168,11 @@ export class GameScene extends BaseScene {
 
     this.dealerFightManager.recordCasinoPolicyCombination(selected);
 
-    const highestAffordableBet = this.controller.getHighestAffordableBet(
-      this.player.balance,
-    );
+    const highestAffordableBet = availableBets[availableBets.length - 1];
+
+    if (highestAffordableBet === undefined) {
+      return;
+    }
 
     const betResult = this.roundBetResolver.resolve({bet: effectiveBet,});
 

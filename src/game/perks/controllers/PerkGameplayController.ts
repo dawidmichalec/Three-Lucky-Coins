@@ -67,34 +67,6 @@ export class PerkGameplayController {
     };
   }
 
-  onBetChanged(bet: number): void {
-    
-    const highestAffordableBet =
-      this.gameController.getHighestAffordableBet(
-        this.player.balance,
-      );
-
-    const payoutMultiplier =
-      this.perkEffectApplier.getRiskTakerPayoutMultiplier(
-        bet,
-        highestAffordableBet,
-      );
-
-    if (payoutMultiplier === undefined) {
-      return;
-    }
-
-    const increasePercentage = roundMoney(
-      (payoutMultiplier - 1) * 100,
-    );
-
-    void this.perkEffectMessageOverlay.play(
-      "winningsIncreasedBy",
-      `${increasePercentage}%`,
-      PerkEffectMessageType.POSITIVE,
-    );
-  }
-
 
   async handleLoss(
     streakResolution: StreakResolution,
