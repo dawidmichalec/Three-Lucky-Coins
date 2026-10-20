@@ -49,9 +49,9 @@ export class PerkRewardCard extends Container {
   private async init(): Promise<void> {
     await this.createPerkIcon();
 
-    this.createPerkName();
+    const perkName = this.createPerkName();
 
-    this.createDescription();
+    this.createDescription(perkName);
   }
 
   private async createPerkIcon(): Promise<void> {
@@ -70,7 +70,7 @@ export class PerkRewardCard extends Container {
     this.addChild(perkIcon);
   }
 
-  private createPerkName(): void {
+  private createPerkName(): LocalizedText {
     const perkName = new LocalizedText(this.reward.perk.name, {
       font: "JackCondensed",
       fontWeight: "bold",
@@ -79,7 +79,7 @@ export class PerkRewardCard extends Container {
 
       wordWrap: true,
       wordWrapWidth: this.contentWidth,
-
+      lineHeight: 40,
       align: "center",
     });
 
@@ -88,16 +88,26 @@ export class PerkRewardCard extends Container {
     perkName.position.set(this.cardWidth / 2, 220);
 
     this.addChild(perkName);
+
+    return perkName;
   }
 
-  private createDescription(): void {
-    const descriptionViewportHeight = 210;
+  private createDescription(perkName: LocalizedText): void {
+    const descriptionY = Math.max(
+      300,
+      perkName.y + perkName.height + 24,
+    );
+
+    const descriptionViewportHeight = Math.max(
+      0,
+      this.cardHeight - descriptionY - 20,
+    );
 
     const descriptionContainer = new Container();
 
     descriptionContainer.position.set(
       (this.cardWidth - this.contentWidth) / 2,
-      300,
+      descriptionY,
     );
 
     const description = new LocalizedText(this.reward.variant.description, {

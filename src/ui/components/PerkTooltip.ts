@@ -1,5 +1,4 @@
 import { Container, Graphics } from "pixi.js";
-
 import { LocalizedText } from "../../localization/LocalizedText";
 import { PerkReward } from "../../game/perks/reward/PerkReward";
 import { PerkTooltipCloseButton } from "../buttons/PerkTooltipCloseButton";
@@ -35,7 +34,9 @@ export class PerkTooltip extends Container {
 
       wordWrap: true,
 
-      wordWrapWidth: this.contentWidth,
+      wordWrapWidth: this.tooltipWidth - 120,
+
+      lineHeight: 36,
 
       align: "center",
     });
@@ -64,7 +65,15 @@ export class PerkTooltip extends Container {
       align: "left",
     });
 
-    description.position.set((this.tooltipWidth - this.contentWidth) / 2, 90);
+    const descriptionY = Math.max(
+      90,
+      perkName.y + perkName.height + 24,
+    );
+
+    description.position.set(
+      (this.tooltipWidth - this.contentWidth) / 2,
+      descriptionY,
+    );
 
     /*
             HEIGHT CALCULATED FROM CONTENT

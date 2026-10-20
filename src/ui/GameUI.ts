@@ -32,6 +32,8 @@ export class GameUI extends Container {
 
   private audioManager = AudioManager.getInstance();
   private activePerkTooltip?: PerkTooltip;
+  private perkTooltipsEnabled = true;
+  private perkTooltipVersion = 0;
 
   private freeBetLabel: LocalizedText;
 
@@ -822,7 +824,14 @@ export class GameUI extends Container {
     reward: PerkReward,
     icon: Sprite,
   ): Promise<void> {
+
+    if (!this.perkTooltipsEnabled) {
+      return;
+    }
+
     this.hidePerkTooltip();
+
+    const requestVersion = this.perkTooltipVersion;
 
     const tooltip = new PerkTooltip(
       reward,
@@ -832,6 +841,14 @@ export class GameUI extends Container {
     );
 
     await tooltip.init();
+
+    if (
+      !this.perkTooltipsEnabled ||
+      requestVersion !== this.perkTooltipVersion
+    ) {
+      tooltip.destroy({ children: true });
+      return;
+    }
 
     /*
       Pozycja ikony w globalnym układzie.
@@ -850,9 +867,14 @@ export class GameUI extends Container {
         iconGlobalPosition,
       );
 
+    const tooltipY = Math.max(
+      20,
+      iconLocalPosition.y - tooltip.height - 20,
+    );
+
     tooltip.position.set(
       iconLocalPosition.x - 20,
-      iconLocalPosition.y - 260,
+      tooltipY,
     );
 
     tooltip.zIndex = 5000;
@@ -862,8 +884,10 @@ export class GameUI extends Container {
 
     this.addChild(tooltip);
   }
+  
+  public hidePerkTooltip(): void {
+    this.perkTooltipVersion++;
 
-  private hidePerkTooltip(): void {
     if (!this.activePerkTooltip) {
       return;
     }
@@ -932,6 +956,9 @@ export class GameUI extends Container {
   async setDealer(
     dealer: DealerData,
   ): Promise<void> {
+
+    this.hidePerkTooltip();
+
     this.currentDealer = dealer;
 
     this.dealerSkillsPanel.hide();
@@ -962,6 +989,13 @@ export class GameUI extends Container {
   setDisabled(
     value: boolean,
   ): void {
+
+    this.perkTooltipsEnabled = !value;
+
+    if (value) {
+      this.hidePerkTooltip();
+    }
+
     if (this.dealerCard) {
       this.dealerCard.setDisabled(
         value,

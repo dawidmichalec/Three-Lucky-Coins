@@ -1,6 +1,6 @@
 import { Application, Ticker } from "pixi.js";
 import { Player } from "../Player";
-import { GameController, BetChangeSource } from "../GameController";
+import { GameController } from "../GameController";
 import { CoinRow } from "../../ui/CoinRow";
 import { CoinSide } from "../../ui/Coin";
 import { CheatPanel } from "../../dev/CheatPanel";

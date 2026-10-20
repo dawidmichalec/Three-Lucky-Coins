@@ -279,6 +279,7 @@ export class GameSceneView extends Container {
   }
 
   private async openInGameMenu(){
+    this.gameUI.hidePerkTooltip();
     this.inGameMenu.visible = true;
   }
 
