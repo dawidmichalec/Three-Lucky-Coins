@@ -11,16 +11,28 @@ interface ForcedPerkReward {
 export class PerkRewardGenerator {
   private forcedPerkReward?: ForcedPerkReward;
 
-  generate(state: RunPerkRewardState, count = 3): readonly PerkReward[] {
+  
+  generate(
+    state: RunPerkRewardState,
+    count = 3,
+  ): readonly PerkReward[] {
+
     const availableRewards = this.getAvailableRewards(state);
 
-    if (availableRewards.length < count) {
+    const availableFamilies = new Set(
+      availableRewards.map((reward) => reward.perk.id),
+    );
+
+    if (availableFamilies.size < count) {
       throw new Error(
-        `Not enough unshown perk rewards. Requested: ${count}, available: ${availableRewards.length}.`,
+        `Not enough distinct perk families. Requested: ${count}, available: ${availableFamilies.size}.`,
       );
     }
 
     const selectedRewards: PerkReward[] = [];
+    const selectedFamilies = new Set<string>();
+
+    // FORCED PERK REWARD (QA / CHEATS)
 
     if (this.forcedPerkReward) {
       const { perkId, rarity } = this.forcedPerkReward;
@@ -28,7 +40,10 @@ export class PerkRewardGenerator {
       const forcedReward = availableRewards.find(
         (reward) =>
           reward.perk.id === perkId &&
-          (rarity === undefined || reward.variant.rarity === rarity),
+          (
+            rarity === undefined ||
+            reward.variant.rarity === rarity
+          ),
       );
 
       if (!forcedReward) {
@@ -37,23 +52,36 @@ export class PerkRewardGenerator {
         );
       } else {
         selectedRewards.push(forcedReward);
+        selectedFamilies.add(forcedReward.perk.id);
       }
 
       this.forcedPerkReward = undefined;
     }
 
-    const remainingRewards = availableRewards.filter(
-      (reward) => !selectedRewards.includes(reward),
-    );
+    // RANDOM REWARDS - ONE VARIANT PER FAMILY
 
-    const shuffledRewards = this.shuffle(remainingRewards);
+    const shuffledRewards = this.shuffle(availableRewards);
 
-    selectedRewards.push(
-      ...shuffledRewards.slice(0, count - selectedRewards.length),
-    );
+    for (const reward of shuffledRewards) {
+      if (selectedRewards.length >= count) {
+        break;
+      }
+
+      if (selectedFamilies.has(reward.perk.id)) {
+        continue;
+      }
+
+      selectedRewards.push(reward);
+      selectedFamilies.add(reward.perk.id);
+    }
+
+    // RECORD SHOWN VARIANTS
 
     for (const reward of selectedRewards) {
-      state.markAsShown(reward.perk.id, reward.variant.rarity);
+      state.markAsShown(
+        reward.perk.id,
+        reward.variant.rarity,
+      );
     }
 
     return selectedRewards;
