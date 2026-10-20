@@ -8,6 +8,8 @@ export const DECISIVENESS_DATA: PerkData<DecisivenessConfig> = {
 
   name: "decisivenessName",
 
+  isStackable: false,
+
   variants: [
     {
       rarity: PerkRarity.EPIC,

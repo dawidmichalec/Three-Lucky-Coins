@@ -10,6 +10,8 @@ export const MULTIPLIER_BOOSTER_DATA: PerkData<MultiplierBoosterConfig> = {
 
   name: "multiplierBoosterName",
 
+  isStackable: true,
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

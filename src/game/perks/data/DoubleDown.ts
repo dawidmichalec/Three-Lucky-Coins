@@ -11,6 +11,8 @@ export const DOUBLE_DOWN_DATA: PerkData<DoubleDownConfig> = {
 
   name: "doubleDownName",
 
+  isStackable: false,
+
   variants: [
     {
       rarity: PerkRarity.RARE,

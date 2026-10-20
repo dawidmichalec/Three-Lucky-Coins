@@ -9,6 +9,8 @@ export const INSURANCE_DATA: PerkData<InsuranceConfig> = {
   id: "insurance",
 
   name: "insuranceName",
+  
+  isStackable: false,
 
   variants: [
     {

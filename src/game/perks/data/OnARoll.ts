@@ -15,6 +15,8 @@ export const ON_A_ROLL_DATA: PerkData<OnARollConfig> = {
 
   name: "onARollName",
 
+  isStackable: true,
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

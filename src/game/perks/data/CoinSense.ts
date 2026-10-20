@@ -11,6 +11,8 @@ export const COIN_SENSE_DATA: PerkData<CoinSenseConfig> = {
 
   name: "coinSenseName",
 
+  isStackable: false,
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

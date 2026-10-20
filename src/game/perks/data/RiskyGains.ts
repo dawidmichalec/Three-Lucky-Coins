@@ -10,6 +10,7 @@ export interface RiskyGainsConfig {
 export const RISKY_GAINS_DATA: PerkData<RiskyGainsConfig> = {
   id: "risky_gains",
   name: "riskyGainsName",
+  isStackable: true,
 
   variants: [
     {

@@ -11,6 +11,8 @@ export const CASINO_BONUS_DATA: PerkData<CasinoBonusConfig> = {
 
   name: "casinoBonusName",
 
+  isStackable: true,
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

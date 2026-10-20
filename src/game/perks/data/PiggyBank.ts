@@ -10,6 +10,8 @@ export const PIGGY_BANK_DATA: PerkData<PiggyBankConfig> = {
 
   name: "piggyBankName",
 
+  isStackable: false,
+
   variants: [
     {
       rarity: PerkRarity.EPIC,

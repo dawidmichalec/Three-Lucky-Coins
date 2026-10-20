@@ -10,6 +10,8 @@ export const GAMBLER_DATA: PerkData<GamblerConfig> = {
 
   name: "gamblerName",
 
+  isStackable: true,
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

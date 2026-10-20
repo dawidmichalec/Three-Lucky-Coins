@@ -8,6 +8,7 @@ export interface GoldenBoyConfig {
 export const GOLDEN_BOY_DATA: PerkData<GoldenBoyConfig> = {
   id: "golden_boy",
   name: "goldenBoyName",
+  isStackable: false,
 
   variants: [
     {

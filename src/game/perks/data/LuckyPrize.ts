@@ -10,6 +10,7 @@ export interface LuckyPrizeConfig {
 export const LUCKY_PRIZE_DATA: PerkData<LuckyPrizeConfig> = {
   id: "lucky_prize",
   name: "luckyPrizeName",
+  isStackable: true,
 
   variants: [
     {

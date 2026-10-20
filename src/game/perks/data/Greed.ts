@@ -9,6 +9,7 @@ export interface GreedConfig {
 export const GREED_DATA: PerkData<GreedConfig> = {
   id: "greed",
   name: "greedName",
+  isStackable: true,
   variants: [
     {
       rarity: PerkRarity.COMMON,

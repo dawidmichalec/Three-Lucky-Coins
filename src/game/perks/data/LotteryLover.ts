@@ -11,6 +11,8 @@ export const LOTTERY_LOVER_DATA: PerkData<LotteryLoverConfig> = {
 
   name: "lotteryLoverName",
 
+  isStackable: true,
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

@@ -8,6 +8,8 @@ export const SAFETY_NET_DATA: PerkData<SafetyNetConfig> = {
 
   name: "safetyNetName",
 
+  isStackable: false,
+
   variants: [
     {
       rarity: PerkRarity.EPIC,

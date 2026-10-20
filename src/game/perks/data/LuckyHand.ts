@@ -11,6 +11,8 @@ export const LUCKY_HAND_DATA: PerkData<LuckyHandConfig> = {
 
   name: "luckyHandName",
 
+  isStackable: false,
+
   variants: [
     {
       rarity: PerkRarity.RARE,

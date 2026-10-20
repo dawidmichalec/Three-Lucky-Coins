@@ -9,6 +9,7 @@ export type UnderdogConfig = {
 export const UNDERDOG_DATA: PerkData<UnderdogConfig> = {
   id: "underdog",
   name: "underdogName",
+  isStackable: true,
   variants: [
     {
       rarity: PerkRarity.COMMON,
