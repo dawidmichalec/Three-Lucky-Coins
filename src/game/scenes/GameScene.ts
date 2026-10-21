@@ -752,20 +752,34 @@ export class GameScene extends BaseScene {
     this.view.perkRewardOverlay.show(perkRewards);
   }
 
-  private async handlePerkRewardConfirm(reward: PerkReward): Promise<void> {
+  
+  private async handlePerkRewardConfirm(
+    reward: PerkReward,
+  ): Promise<void> {
     const added = this.runPerkManager.addPerk(reward);
 
     if (!added) {
-      console.warn("PERK ALREADY OWNED:", reward.perk.id);
+      console.warn(
+        "PERK ALREADY OWNED OR VARIANT UNAVAILABLE:",
+        reward.perk.id,
+        reward.variant.rarity,
+      );
 
       return;
     }
 
-    this.runPerkRewardState.markAsAcquired(
-      reward.perk.id,
-    );
+    this.runPerkRewardState.markAsAcquired({
+      instanceId: added.instanceId,
+      perkId: added.perk.id,
+      rarity: added.variant.rarity,
+    });
 
-    console.log("PERK ACQUIRED:", reward.perk.id, reward.variant.rarity);
+    console.log(
+      "PERK ACQUIRED:",
+      added.instanceId,
+      added.perk.id,
+      added.variant.rarity,
+    );
 
     this.perkEffectApplier.applyPerk(reward);
 
