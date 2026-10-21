@@ -2,6 +2,8 @@ import { Container, Graphics } from "pixi.js";
 import { LocalizedText } from "../../localization/LocalizedText";
 import { PerkReward } from "../../game/perks/reward/PerkReward";
 import { PerkTooltipCloseButton } from "../buttons/PerkTooltipCloseButton";
+import { PerkStackabilityBadge } from "./PerkStackabilityBadge";
+import { PerkData } from "../../game/perks/PerkData";
 
 export class PerkTooltip extends Container {
   private readonly tooltipWidth = 380;
@@ -12,7 +14,10 @@ export class PerkTooltip extends Container {
 
   private readonly onClose: () => void;
 
-  constructor(reward: PerkReward, onClose: () => void) {
+  constructor(
+    reward: PerkReward, 
+    onClose: () => void,
+    onStackingHelpRequested: (perk: PerkData) => void,) {
     super();
 
     this.onClose = onClose;
@@ -76,13 +81,32 @@ export class PerkTooltip extends Container {
     );
 
     /*
+    STACKABILITY BADGE
+    */
+
+    const stackingBadge = new PerkStackabilityBadge(
+      reward.perk,
+      this.contentWidth,
+      onStackingHelpRequested,
+    );
+
+    const badgeY =
+      description.y +
+      description.height +
+      20;
+
+    stackingBadge.position.set(
+      (this.tooltipWidth - this.contentWidth) / 2,
+      badgeY,
+    );
+
+    /*
             HEIGHT CALCULATED FROM CONTENT
         */
 
     const tooltipHeight = Math.max(
       this.minimumHeight,
-
-      description.y + description.height + 30,
+      badgeY + PerkStackabilityBadge.HEIGHT + 25,
     );
 
     /*
@@ -111,7 +135,12 @@ export class PerkTooltip extends Container {
       event.stopPropagation();
     });
 
-    this.addChild(bg, perkName, description);
+    this.addChild(
+      bg,
+      perkName,
+      description,
+      stackingBadge,
+    );
   }
 
   async init(): Promise<void> {

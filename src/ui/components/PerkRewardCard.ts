@@ -1,7 +1,8 @@
 import { Assets, Container, Graphics, Sprite } from "pixi.js";
-
+import { PerkStackabilityBadge } from "./PerkStackabilityBadge";
 import { LocalizedText } from "../../localization/LocalizedText";
 import { PerkReward } from "../../game/perks/reward/PerkReward";
+import { PerkData } from "../../game/perks/PerkData";
 
 export class PerkRewardCard extends Container {
   private readonly selectionBorder: Graphics;
@@ -15,6 +16,7 @@ export class PerkRewardCard extends Container {
     private readonly cardWidth: number,
     private readonly cardHeight: number,
     private readonly onSelect: () => void,
+    private readonly onStackingHelpRequested: (perk: PerkData) => void,
   ) {
     super();
 
@@ -52,6 +54,23 @@ export class PerkRewardCard extends Container {
     const perkName = this.createPerkName();
 
     this.createDescription(perkName);
+
+    this.createStackabilityBadge();
+  }
+
+  private createStackabilityBadge(): void {
+    const badge = new PerkStackabilityBadge(
+      this.reward.perk,
+      this.contentWidth,
+      this.onStackingHelpRequested,
+    );
+
+    badge.position.set(
+      (this.cardWidth - this.contentWidth) / 2,
+      this.cardHeight - PerkStackabilityBadge.HEIGHT - 18,
+    );
+
+    this.addChild(badge);
   }
 
   private async createPerkIcon(): Promise<void> {
@@ -98,9 +117,14 @@ export class PerkRewardCard extends Container {
       perkName.y + perkName.height + 24,
     );
 
+    const badgeY =
+      this.cardHeight -
+      PerkStackabilityBadge.HEIGHT -
+      18;
+
     const descriptionViewportHeight = Math.max(
       0,
-      this.cardHeight - descriptionY - 20,
+      badgeY - descriptionY - 12,
     );
 
     const descriptionContainer = new Container();

@@ -1,3 +1,4 @@
+
 import { RunPerkManager } from "../RunPerkManager";
 import { CasinoBonusConfig } from "../data/CasinoBonus";
 
@@ -8,16 +9,41 @@ export class CasinoBonusEffect {
     private readonly runPerkManager: RunPerkManager,
   ) {}
 
-  isCurrentBetFree(bet: number): boolean {
-    const casinoBonus =
-      this.runPerkManager.getPerk("casino_bonus");
+  private getStackedConfig():
+    CasinoBonusConfig | undefined {
+    const instances =
+      this.runPerkManager.getPerkInstances("casino_bonus");
 
-    if (!casinoBonus) {
-      return false;
+    if (instances.length === 0) {
+      return undefined;
     }
 
-    const config =
-      casinoBonus.variant.config as CasinoBonusConfig;
+    const configs = instances.map(
+      (instance) =>
+        instance.variant.config as CasinoBonusConfig,
+    );
+
+    return {
+      freeBetsPerFight: configs.reduce(
+        (total, config) =>
+          total + config.freeBetsPerFight,
+        0,
+      ),
+
+      maximumFreeBet: Math.min(
+        ...configs.map(
+          (config) => config.maximumFreeBet,
+        ),
+      ),
+    };
+  }
+
+  isCurrentBetFree(bet: number): boolean {
+    const config = this.getStackedConfig();
+
+    if (!config) {
+      return false;
+    }
 
     return (
       this.betsPlacedThisFight <
@@ -27,18 +53,11 @@ export class CasinoBonusEffect {
   }
 
   resolveBetCost(bet: number): number {
-    if (this.isCurrentBetFree(bet)) {
-      return 0;
-    }
-
-    return bet;
+    return this.isCurrentBetFree(bet) ? 0 : bet;
   }
 
   recordBet(): void {
-    const casinoBonus =
-      this.runPerkManager.getPerk("casino_bonus");
-
-    if (!casinoBonus) {
+    if (!this.runPerkManager.hasPerk("casino_bonus")) {
       return;
     }
 

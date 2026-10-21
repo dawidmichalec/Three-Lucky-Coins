@@ -13,6 +13,7 @@ import { PerkReward } from "../game/perks/reward/PerkReward";
 import { PerkTooltip } from "./components/PerkTooltip";
 import { LayoutManager } from "../core/LayoutManager";
 import { SecurityCheckPanel } from "./panels/SecurityCheckPanel";
+import { PerkData } from "../game/perks/PerkData";
 
 export class GameUI extends Container {
   private balanceValue: Text;
@@ -55,7 +56,9 @@ export class GameUI extends Container {
   public roundValue!: Text;
 
 
-  constructor(private currentDealer: DealerData) {
+  constructor(
+    private currentDealer: DealerData,
+    private readonly onStackingHelpRequested: (perk: PerkData) => void,) {
     super();
 
     // BALANCE TEXT
@@ -838,6 +841,7 @@ export class GameUI extends Container {
       () => {
         this.hidePerkTooltip();
       },
+      this.onStackingHelpRequested,
     );
 
     await tooltip.init();

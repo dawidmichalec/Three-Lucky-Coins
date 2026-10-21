@@ -54,6 +54,8 @@ import { DealerGroup } from "../dealers/DealerGroup";
 import { SecurityCheckManager } from "../SecurityCheckManager";
 import { roundMoney } from "../util/MoneyUtils";
 
+const REWARDS_AFTER_EVERY_DEALER = false;
+
 export class GameScene extends BaseScene {
   private player: Player;
   private controller: GameController;
@@ -696,34 +698,49 @@ export class GameScene extends BaseScene {
     );
   }
 
+  
   private async handleDealerDefeated(): Promise<void> {
     if (this.isChangingDealer) {
       return;
     }
 
     this.isChangingDealer = true;
-
     this.lockControls();
 
     const defeatedDealer = this.currentDealer;
 
-    this.dealerCollectionManager.unlockSignatureToken(defeatedDealer.id);
+    this.dealerCollectionManager.unlockSignatureToken(
+      defeatedDealer.id,
+    );
 
-    console.log("SIGNATURE TOKEN UNLOCKED:", defeatedDealer.name);
+    console.log(
+      "SIGNATURE TOKEN UNLOCKED:",
+      defeatedDealer.name,
+    );
 
     await this.view.gameMessageOverlay.play("youWon");
 
     const nextDealer = this.dealerFightManager.getNextDealer();
 
-    const defeatedSupervisor = defeatedDealer.role === DealerRole.SUPERVISOR;
+    // Final victory after The House.
+    // No reward screen is needed after the last dealer.
+    if (!nextDealer) {
+      await this.continueToNextDealer();
+      return;
+    }
+
+    const defeatedSupervisor =
+      defeatedDealer.role === DealerRole.SUPERVISOR;
 
     const defeatedSecondManager =
       defeatedDealer.group === DealerGroup.MANAGER &&
-      (!nextDealer || nextDealer.group !== DealerGroup.MANAGER);
+      nextDealer.group !== DealerGroup.MANAGER;
 
-    const defeatedOwner = defeatedDealer.group === DealerGroup.OWNER;
+    const defeatedOwner =
+      defeatedDealer.group === DealerGroup.OWNER;
 
     const shouldShowPerkReward =
+      REWARDS_AFTER_EVERY_DEALER ||
       defeatedSupervisor ||
       defeatedSecondManager ||
       defeatedOwner;
@@ -735,10 +752,13 @@ export class GameScene extends BaseScene {
 
     const perkRewards = this.perkRewardGenerator.generate(
       this.runPerkRewardState,
+      this.runPerkManager,
       3,
     );
 
-    console.group(`PERK REWARDS - ${defeatedDealer.name}`);
+    console.group(
+      `PERK REWARDS - ${defeatedDealer.name}`,
+    );
 
     console.table(
       perkRewards.map((reward) => ({

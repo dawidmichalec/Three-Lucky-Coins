@@ -636,6 +636,21 @@ export default {
   casinoArsenalSkillName: "Casino Arsenal",
   casinoArsenalSkillDescription: "Draws on skills used throughout the casino. A passive skill remains in effect for each phase, while an active skill changes every round.",
 
+  // PERK STACKABILITY
+
+    stackableLabel: "STACKABLE",
+    nonStackableLabel: "NON-STACKABLE",
+
+    stackableHelp:
+      "You can acquire multiple copies of this perk during a run. Their effects stack.",
+
+    nonStackableHelp:
+      "You can acquire only one copy of this perk per run, even if it is later consumed.",
+
+    stackabilityScrollHint: "Scroll to read more",
+
+    casinoBonusStackingHelp:
+      "Free bets from your Casino Bonus copies add together. The maximum eligible bet remains 10.00.",
 
 
   // PERKS

@@ -1,5 +1,5 @@
 import { Container, Graphics } from "pixi.js";
-
+import { PerkData } from "../../game/perks/PerkData";
 import { LocalizedText } from "../../localization/LocalizedText";
 import { LayoutManager } from "../../core/LayoutManager";
 import { RoundedButton } from "../buttons/RoundedButton";
@@ -25,6 +25,7 @@ export class PerkRewardOverlay extends Container {
     height: number,
     private onConfirm: (reward: PerkReward) => void,
     private onSkip: () => void,
+    private onStackingHelpRequested: (perk: PerkData) => void,
   ) {
     super();
 
@@ -162,9 +163,15 @@ export class PerkRewardOverlay extends Container {
     const cardSpacing = 100;
 
     rewards.forEach((reward, index) => {
-      const card = new PerkRewardCard(reward, cardWidth, cardHeight, () => {
-        this.selectCard(card);
-      });
+      const card = new PerkRewardCard(
+        reward,
+        cardWidth,
+        cardHeight,
+        () => {
+          this.selectCard(card);
+        },
+        this.onStackingHelpRequested,
+      );
 
       card.position.set(index * (cardWidth + cardSpacing), 0);
 

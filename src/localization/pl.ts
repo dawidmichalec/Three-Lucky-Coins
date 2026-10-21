@@ -622,7 +622,21 @@ export default {
   casinoArsenalSkillName: "Arsenał kasyna",
   casinoArsenalSkillDescription: "Korzysta z umiejętności znanych z całego kasyna. Umiejętność pasywna pozostaje stała przez całą fazę, a aktywna zmienia się co rundę.",
 
+  // KUMULOWANIE PERKÓW
 
+  stackableLabel: "KUMULOWALNY",
+  nonStackableLabel: "NIEKUMULOWALNY",
+
+  stackableHelp:
+    "Możesz zdobyć kilka egzemplarzy tego perka podczas jednego podejścia. Ich efekty się kumulują.",
+
+  nonStackableHelp:
+    "Podczas jednego podejścia możesz zdobyć tylko jeden egzemplarz tego perka, nawet jeśli później zostanie zużyty.",
+
+  stackabilityScrollHint: "Przewiń, aby przeczytać więcej",
+
+  casinoBonusStackingHelp:
+    "Darmowe zakłady z posiadanych egzemplarzy Casino Bonus sumują się. Maksymalna darmowa stawka nadal wynosi 10.00.",
 
   // PERKS
 

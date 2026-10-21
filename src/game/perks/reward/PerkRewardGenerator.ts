@@ -4,6 +4,8 @@ import { PerkRarity } from "../PerkRarity";
 import { PERK_RARITY_WEIGHTS } from "../PerkRarityConfig";
 import { PerkReward } from "./PerkReward";
 import { RunPerkRewardState } from "./RunPerkRewardState";
+import { RunPerkManager } from "../RunPerkManager";
+import { isStackingEnabledFor } from "../StackingRollout";
 
 interface ForcedPerkReward {
   perkId: string;
@@ -15,9 +17,13 @@ export class PerkRewardGenerator {
 
   generate(
     state: RunPerkRewardState,
+    runPerkManager: RunPerkManager,
     count = 3,
   ): readonly PerkReward[] {
-    const availableRewards = this.getAvailableRewards(state);
+    const availableRewards = this.getAvailableRewards(
+      state,
+      runPerkManager,
+    );
 
     const availableFamilies = new Set(
       availableRewards.map((reward) => reward.perk.id),
@@ -128,23 +134,44 @@ export class PerkRewardGenerator {
     ];
   }
 
+  
   private getAvailableRewards(
     state: RunPerkRewardState,
+    runPerkManager: RunPerkManager,
   ): PerkReward[] {
     const rewards: PerkReward[] = [];
 
     for (const perk of PERKS) {
-      if (state.hasBeenAcquired(perk.id)) {
+      const familyAlreadyAcquired =
+        state.hasBeenAcquired(perk.id);
+
+      if (
+        familyAlreadyAcquired &&
+        !isStackingEnabledFor(perk)
+      ) {
         continue;
       }
 
+      const activeRarities = new Set(
+        runPerkManager
+          .getPerkInstances(perk.id)
+          .map((instance) => instance.variant.rarity),
+      );
+
       for (const variant of perk.variants) {
+        // Once offered, a variant never returns.
         if (
           state.hasBeenShown(
             perk.id,
             variant.rarity,
           )
         ) {
+          continue;
+        }
+
+        // Do not offer a rarity already active,
+        // including one obtained through an upgrade.
+        if (activeRarities.has(variant.rarity)) {
           continue;
         }
 

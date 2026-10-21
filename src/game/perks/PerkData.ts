@@ -24,5 +24,7 @@ export interface PerkData<TConfig = unknown> {
 
   isStackable: boolean;
 
+  stackingDescription?: TranslationKey;
+
   variants: readonly PerkVariant<TConfig>[];
 }

@@ -18,6 +18,8 @@ import { PerkEffectMessageOverlay } from "./overlays/PerkEffectOverlay";
 import { SettingsButton } from "./buttons/SettingsButton";
 import { InGameMenu } from "./menus/InGameMenu";
 import { CoinSide } from "./Coin";
+import { PerkData } from "../game/perks/PerkData";
+import { PerkStackabilityHelpOverlay } from "./overlays/PerkStackabilityHelpOverlay";
 
 interface GameSceneViewOptions {
   onBetDown: () => void;
@@ -71,6 +73,8 @@ export class GameSceneView extends Container {
 
   private settingsButton!: SettingsButton;
 
+  readonly stackabilityHelpOverlay: PerkStackabilityHelpOverlay;
+
   constructor(
     dealer: DealerData,
 
@@ -86,9 +90,16 @@ export class GameSceneView extends Container {
 
     const layout = LayoutManager.getInstance();
 
+    const showStackabilityHelp = (perk: PerkData): void => {
+      this.stackabilityHelpOverlay.show(perk);
+    };
+
     // GAME UI
 
-    this.gameUI = new GameUI(dealer);
+    this.gameUI = new GameUI(
+      dealer,
+      showStackabilityHelp,
+    );
 
     this.gameUI.zIndex = 1000;
 
@@ -232,9 +243,22 @@ export class GameSceneView extends Container {
       layout.DESIGN_HEIGHT,
       options.onPerkRewardConfirm,
       options.onPerkRewardSkip,
+      showStackabilityHelp,
     );
     this.perkRewardOverlay.zIndex = 4000;
     this.addChild(this.perkRewardOverlay);
+
+    // SHARED PERK STACKABILITY HELP OVERLAY
+
+    this.stackabilityHelpOverlay =
+      new PerkStackabilityHelpOverlay(
+        layout.DESIGN_WIDTH,
+        layout.DESIGN_HEIGHT,
+      );
+
+    this.stackabilityHelpOverlay.zIndex = 7000;
+
+    this.addChild(this.stackabilityHelpOverlay);
 
   }
 
