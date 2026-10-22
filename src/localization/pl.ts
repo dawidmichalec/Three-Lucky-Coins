@@ -638,6 +638,9 @@ export default {
   casinoBonusStackingHelp:
     "Darmowe zakłady z posiadanych egzemplarzy Casino Bonus sumują się. Maksymalna darmowa stawka nadal wynosi 10.00.",
 
+  multiplierBoosterStackingHelp:
+    "Bonusy ze wszystkich egzemplarzy Wzrostu Mnożnika sumują się, zwiększając podstawowy mnożnik passy oraz jego przyrost przy wygranej. Łączny przyrost naliczany jest jednorazowo.",
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

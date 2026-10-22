@@ -12,6 +12,8 @@ export const MULTIPLIER_BOOSTER_DATA: PerkData<MultiplierBoosterConfig> = {
 
   isStackable: true,
 
+  stackingDescription: "multiplierBoosterStackingHelp",
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

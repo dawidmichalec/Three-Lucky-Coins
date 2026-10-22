@@ -4,6 +4,7 @@ import { PerkData } from "./PerkData";
 const STACKING_ENABLED_PERK_IDS: ReadonlySet<string> =
   new Set([
     "casino_bonus",
+    "multiplier_booster",
   ]);
 
 export function isStackingEnabledFor(

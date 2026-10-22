@@ -139,19 +139,29 @@ export class PerkEffectApplier {
 
     this.gamblerEffect.resetFight();
   }
+  
+  private getMultiplierBoosterBonus(): number {
+    const instances =
+      this.runPerkManager.getPerkInstances(
+        "multiplier_booster",
+      );
+
+    const totalBonus = instances.reduce(
+      (total, instance) => {
+        const config =
+          instance.variant.config as MultiplierBoosterConfig;
+
+        return total + config.streakMultiplierIncrease;
+      },
+      0,
+    );
+
+    return Math.round(totalBonus * 100) / 100;
+  }
 
   private refreshStreakMultiplierSettings(): void {
-    let baseValue = 1;
-
-    const multiplierBooster =
-      this.runPerkManager.getPerk("multiplier_booster");
-
-    if (multiplierBooster) {
-      const config =
-        multiplierBooster.variant.config as MultiplierBoosterConfig;
-
-      baseValue += config.streakMultiplierIncrease;
-    }
+    const baseValue =
+      1 + this.getMultiplierBoosterBonus();
 
     this.streakMultiplierManager.setBaseValue(baseValue);
 
@@ -161,17 +171,10 @@ export class PerkEffectApplier {
   }
 
   private refreshStreakMultiplierGrowth(): void {
-    let growthPerWin = 1;
+    let growthPerWin =
+      1 + this.getMultiplierBoosterBonus();
 
-    const multiplierBooster =
-      this.runPerkManager.getPerk("multiplier_booster");
-
-    if (multiplierBooster) {
-      const config =
-        multiplierBooster.variant.config as MultiplierBoosterConfig;
-
-      growthPerWin += config.streakMultiplierIncrease;
-    }
+    // Other perk modifiers remain unchanged.
 
     growthPerWin -=
       this.greedEffect.getMultiplierGrowthReduction();

@@ -638,19 +638,23 @@ export default {
 
   // PERK STACKABILITY
 
-    stackableLabel: "STACKABLE",
-    nonStackableLabel: "NON-STACKABLE",
+  stackableLabel: "STACKABLE",
+  nonStackableLabel: "NON-STACKABLE",
 
-    stackableHelp:
-      "You can acquire multiple copies of this perk during a run. Their effects stack.",
+  stackableHelp:
+    "You can acquire multiple copies of this perk during a run. Their effects stack.",
 
-    nonStackableHelp:
-      "You can acquire only one copy of this perk per run, even if it is later consumed.",
+  nonStackableHelp:
+    "You can acquire only one copy of this perk per run, even if it is later consumed.",
 
-    stackabilityScrollHint: "Scroll to read more",
+  stackabilityScrollHint: "Scroll to read more",
 
-    casinoBonusStackingHelp:
-      "Free bets from your Casino Bonus copies add together. The maximum eligible bet remains 10.00.",
+  casinoBonusStackingHelp:
+    "Free bets from your Casino Bonus copies add together. The maximum eligible bet remains 10.00.",
+
+  multiplierBoosterStackingHelp:
+    "Bonuses from all Multiplier Booster copies add together, increasing both your base streak multiplier and its growth per win. The combined growth is applied in a single step.",
+    
 
 
   // PERKS
