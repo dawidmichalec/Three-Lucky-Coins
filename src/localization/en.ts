@@ -661,7 +661,10 @@ export default {
   riskTakerStackingHelp:
     "When you place the highest affordable bet, bonuses from all your Risk Taker copies are added together. Each bonus is calculated from the same original winnings amount and displayed separately.",
 
-  // PERKS
+  damageControlStackingHelp:
+    "Penalty reductions from all Damage Control copies add together. The total reduction is subtracted from the penalty percentage, and penalties cannot fall below zero. No separate animations are triggered.",
+  
+    // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
   theLongerYouAreInTheCasino:

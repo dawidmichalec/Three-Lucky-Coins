@@ -1,32 +1,68 @@
+
 import { RunPerkManager } from "../RunPerkManager";
 import { DamageControlConfig } from "../data/DamageControl";
 import { roundMoney } from "../../util/MoneyUtils";
 
 export class DamageControlEffect {
-    constructor(private readonly runPerkManager: RunPerkManager) { }
+  constructor(
+    private readonly runPerkManager: RunPerkManager,
+  ) {}
 
-    reducePenalty(penalty: number, bet: number): number {
-        const damageControl = this.runPerkManager.getPerk("damage_control");
+  private getTotalPenaltyReduction(): number {
+    const instances =
+      this.runPerkManager.getPerkInstances(
+        "damage_control",
+      );
 
-        if (!damageControl) {
-            return penalty;
-        }
+    const totalReduction = instances.reduce(
+      (total, instance) => {
+        const config =
+          instance.variant.config as DamageControlConfig;
 
-        const config = damageControl.variant.config as DamageControlConfig;
-        const reductionAmount = bet * config.penaltyReduction;
+        return total + config.penaltyReduction;
+      },
+      0,
+    );
 
-        return roundMoney(Math.max(0, penalty - reductionAmount));
+    return Number(totalReduction.toFixed(6));
+  }
+
+  reducePenalty(
+    penalty: number,
+    bet: number,
+  ): number {
+    const totalReduction =
+      this.getTotalPenaltyReduction();
+
+    if (totalReduction === 0) {
+      return penalty;
     }
 
-    reducePenaltyPercentage(penaltyPercentage: number): number {
-        const damageControl = this.runPerkManager.getPerk("damage_control");
+    const reductionAmount =
+      bet * totalReduction;
 
-        if (!damageControl) {
-            return penaltyPercentage;
-        }
+    return roundMoney(
+      Math.max(0, penalty - reductionAmount),
+    );
+  }
 
-        const config = damageControl.variant.config as DamageControlConfig;
+  reducePenaltyPercentage(
+    penaltyPercentage: number,
+  ): number {
+    const totalReduction =
+      this.getTotalPenaltyReduction();
 
-        return Math.max(0, penaltyPercentage - config.penaltyReduction);
+    if (totalReduction === 0) {
+      return penaltyPercentage;
     }
+
+    return Math.max(
+      0,
+      Number(
+        (
+          penaltyPercentage - totalReduction
+        ).toFixed(6),
+      ),
+    );
+  }
 }

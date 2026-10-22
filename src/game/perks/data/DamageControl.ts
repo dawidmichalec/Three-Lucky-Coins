@@ -9,6 +9,7 @@ export const DAMAGE_CONTROL_DATA: PerkData<DamageControlConfig> = {
   id: "damage_control",
   name: "damageControlName",
   isStackable: true,
+  stackingDescription: "damageControlStackingHelp",
   variants: [
     {
       rarity: PerkRarity.COMMON,

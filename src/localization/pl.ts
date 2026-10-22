@@ -646,7 +646,11 @@ export default {
 
   riskTakerStackingHelp:
     "Gdy postawisz najwyższą dostępną stawkę, bonusy ze wszystkich egzemplarzy Ryzykanta sumują się. Każdy bonus jest liczony od tej samej początkowej kwoty wygranej i wyświetlany osobno.",
-  // PERKS
+  
+  damageControlStackingHelp:
+    "Redukcje kar ze wszystkich egzemplarzy Kontroli Szkód sumują się. Łączna redukcja jest odejmowana od procentowej wysokości kary, która nie może spaść poniżej zera. Efekt nie uruchamia osobnych animacji.",
+  
+    // PERKS
 
   chooseAPerk: "WYBIERZ PERK",
   theLongerYouAreInTheCasino:
