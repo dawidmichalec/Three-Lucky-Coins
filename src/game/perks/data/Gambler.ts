@@ -12,6 +12,8 @@ export const GAMBLER_DATA: PerkData<GamblerConfig> = {
 
   isStackable: true,
 
+  stackingDescription: "gamblerStackingHelp",
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

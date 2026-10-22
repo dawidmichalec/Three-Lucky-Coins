@@ -5,6 +5,7 @@ const STACKING_ENABLED_PERK_IDS: ReadonlySet<string> =
   new Set([
     "casino_bonus",
     "multiplier_booster",
+    "gambler",
   ]);
 
 export function isStackingEnabledFor(

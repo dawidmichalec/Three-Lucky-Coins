@@ -641,6 +641,9 @@ export default {
   multiplierBoosterStackingHelp:
     "Bonusy ze wszystkich egzemplarzy Wzrostu Mnożnika sumują się, zwiększając podstawowy mnożnik passy oraz jego przyrost przy wygranej. Łączny przyrost naliczany jest jednorazowo.",
 
+  gamblerStackingHelp:
+    "Po przegranej każdy egzemplarz Hazardzisty zwiększa Twoją następną wygraną o własny procent. Wszystkie bonusy są liczone od tej samej kwoty wygranej i sumowane, a nie mnożone. Każdy bonus jest pokazywany osobno.",
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

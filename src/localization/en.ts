@@ -655,6 +655,8 @@ export default {
   multiplierBoosterStackingHelp:
     "Bonuses from all Multiplier Booster copies add together, increasing both your base streak multiplier and its growth per win. The combined growth is applied in a single step.",
     
+  gamblerStackingHelp:
+    "After a loss, each Gambler copy adds its own percentage to your next win. All bonuses are calculated from the same winnings amount and added together, not multiplied. Each bonus is shown separately.",
 
 
   // PERKS

@@ -557,9 +557,13 @@ export class GameUI extends Container {
   async animateBonusIntoWon(
     bonusAmount: number,
     finalAmount: number,
+    bonusPercentage?: number,
   ): Promise<void> {
     const bonusText = new Text({
-      text: `+${bonusAmount.toFixed(2)}`,
+      text: 
+        bonusPercentage === undefined
+          ? `+${bonusAmount.toFixed(2)}`
+          : `+${bonusAmount.toFixed(2)} (${bonusPercentage}%)`,
 
       style: {
         fontFamily: "Anek-Kannada Bold",

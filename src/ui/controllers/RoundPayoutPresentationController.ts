@@ -62,11 +62,22 @@ export class RoundPayoutPresentationController {
         GAMBLER
     */
 
-    if (gamblerResult.triggered && gamblerResult.bonusAmount > 0) {
-      await this.gameUI.animateBonusIntoWon(
-        gamblerResult.bonusAmount,
-        gamblerResult.finalWinAmount,
-      );
+    /*
+    GAMBLER
+
+        Animate each acquired instance separately,
+        but use the amounts already resolved by
+        GamblerEffect.
+    */
+
+    if (gamblerResult.triggered) {
+      for (const step of gamblerResult.bonusSteps) {
+        await this.gameUI.animateBonusIntoWon(
+          step.bonusAmount,
+          step.finalWinAmount,
+          step.percentage,
+        );
+      }
     }
 
     /*
