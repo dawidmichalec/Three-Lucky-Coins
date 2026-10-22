@@ -533,6 +533,10 @@ export class DealerFightManager {
     this.mirrorRecovering = true;
     this.mirrorEligibleRounds = 0;
 
+    // Mirror starts a separate multiplier-loss phase.
+    // Previous Collapse losses must not carry over.
+    this.hardMultiplierResetConsecutiveLosses = 0;
+
     return true;
   }
 
@@ -549,9 +553,13 @@ export class DealerFightManager {
     }
 
     this.mirrorRecovering = false;
-    this.mirrorCooldownRounds =
-      DealerFightManager.MIRROR_COOLDOWN_ROUNDS;
+
+    this.mirrorCooldownRounds = DealerFightManager.MIRROR_COOLDOWN_ROUNDS;
+
     this.mirrorEligibleRounds = 0;
+
+// Collapse starts fresh after Mirror recovery.
+this.hardMultiplierResetConsecutiveLosses = 0;
   }
 
   isMultiplierLocked(): boolean {

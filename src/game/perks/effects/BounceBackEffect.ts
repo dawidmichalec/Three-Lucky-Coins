@@ -1,3 +1,4 @@
+
 import { RunPerkManager } from "../RunPerkManager";
 import { BounceBackConfig } from "../data/BounceBack";
 
@@ -9,30 +10,48 @@ export class BounceBackEffect {
   ) {}
 
   activateAfterLoss(): void {
-    const bounceBack =
-      this.runPerkManager.getPerk("bounce_back");
+    const instances =
+      this.runPerkManager.getPerkInstances("bounce_back");
 
-    if (!bounceBack) {
+    if (instances.length === 0) {
       return;
     }
+
+    // All Bounce Back instances become active
+    // after the same loss.
 
     this.bonusActive = true;
   }
 
   consumeOnMultiplierIncrease(): number {
-    const bounceBack =
-      this.runPerkManager.getPerk("bounce_back");
-
-    if (!bounceBack || !this.bonusActive) {
+    if (!this.bonusActive) {
       return 0;
     }
 
-    const config =
-      bounceBack.variant.config as BounceBackConfig;
+    const instances =
+      this.runPerkManager.getPerkInstances("bounce_back");
+
+    if (instances.length === 0) {
+      this.bonusActive = false;
+      return 0;
+    }
+
+    const totalBonus = instances.reduce(
+      (total, instance) => {
+        const config =
+          instance.variant.config as BounceBackConfig;
+
+        return total + config.multiplierGrowthBonus;
+      },
+      0,
+    );
+
+    // Consume the entire stacked bonus at once.
+    // Perk instances themselves remain active.
 
     this.bonusActive = false;
 
-    return config.multiplierGrowthBonus;
+    return Math.round(totalBonus * 100) / 100;
   }
 
   resetFight(): void {

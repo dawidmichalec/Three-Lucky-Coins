@@ -650,7 +650,10 @@ export default {
   damageControlStackingHelp:
     "Redukcje kar ze wszystkich egzemplarzy Kontroli Szkód sumują się. Łączna redukcja jest odejmowana od procentowej wysokości kary, która nie może spaść poniżej zera. Efekt nie uruchamia osobnych animacji.",
   
-    // PERKS
+  bounceBackStackingHelp:
+    "Po przegranej bonusy ze wszystkich egzemplarzy Wańki-Wstańki sumują się. Łączny bonus zostaje dodany do następnego wzrostu mnożnika i wykorzystany jednorazowo. Posiadane perki pozostają aktywne i mogą uruchomić się ponownie po kolejnej przegranej.",
+  
+  // PERKS
 
   chooseAPerk: "WYBIERZ PERK",
   theLongerYouAreInTheCasino:

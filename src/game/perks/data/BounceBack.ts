@@ -9,7 +9,7 @@ export const BOUNCE_BACK_DATA: PerkData<BounceBackConfig> = {
   id: "bounce_back",
   name: "bounceBackName",
   isStackable: true,
-
+  stackingDescription: "bounceBackStackingHelp",
   variants: [
     {
       rarity: PerkRarity.COMMON,

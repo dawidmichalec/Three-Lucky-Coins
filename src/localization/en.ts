@@ -664,7 +664,10 @@ export default {
   damageControlStackingHelp:
     "Penalty reductions from all Damage Control copies add together. The total reduction is subtracted from the penalty percentage, and penalties cannot fall below zero. No separate animations are triggered.",
   
-    // PERKS
+  bounceBackStackingHelp:
+    "After a loss, bonuses from all Bounce Back copies add together. The combined bonus is added to the next multiplier increase and consumed in a single step. Your Bounce Back perks remain active for future losses.",
+      
+  // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
   theLongerYouAreInTheCasino:

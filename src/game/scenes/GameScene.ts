@@ -1719,8 +1719,6 @@ export class GameScene extends BaseScene {
       const previousMultiplier =
         this.streakMultiplierManager.getValue();
 
-      this.dealerFightManager.recordHardMultiplierResetWin();
-
       this.applyStreakResolution(
         streakResolution,
       );
