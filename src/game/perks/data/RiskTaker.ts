@@ -12,6 +12,8 @@ export const RISK_TAKER_DATA: PerkData<RiskTakerConfig> = {
 
   isStackable: true,
 
+  stackingDescription: "riskTakerStackingHelp",
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

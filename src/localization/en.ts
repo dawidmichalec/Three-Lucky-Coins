@@ -658,6 +658,8 @@ export default {
   gamblerStackingHelp:
     "After a loss, each Gambler copy adds its own percentage to your next win. All bonuses are calculated from the same winnings amount and added together, not multiplied. Each bonus is shown separately.",
 
+  riskTakerStackingHelp:
+    "When you place the highest affordable bet, bonuses from all your Risk Taker copies are added together. Each bonus is calculated from the same original winnings amount and displayed separately.",
 
   // PERKS
 

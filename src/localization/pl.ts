@@ -644,6 +644,8 @@ export default {
   gamblerStackingHelp:
     "Po przegranej każdy egzemplarz Hazardzisty zwiększa Twoją następną wygraną o własny procent. Wszystkie bonusy są liczone od tej samej kwoty wygranej i sumowane, a nie mnożone. Każdy bonus jest pokazywany osobno.",
 
+  riskTakerStackingHelp:
+    "Gdy postawisz najwyższą dostępną stawkę, bonusy ze wszystkich egzemplarzy Ryzykanta sumują się. Każdy bonus jest liczony od tej samej początkowej kwoty wygranej i wyświetlany osobno.",
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

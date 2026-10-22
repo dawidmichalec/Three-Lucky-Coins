@@ -48,16 +48,25 @@ export class RoundPayoutPresentationController {
     }
 
     /*
-        RISK TAKER
+    RISK TAKER
+
+    Each perk instance contributes a separate
+    animated bonus.
+
+    All bonus amounts were calculated from
+    the same original win amount.
     */
 
-    if (riskTakerResult.triggered && riskTakerResult.bonusAmount > 0) {
-      await this.gameUI.animateBonusIntoWon(
-        riskTakerResult.bonusAmount,
-        riskTakerResult.finalWinAmount,
-      );
+    if (riskTakerResult.triggered) {
+      for (const step of riskTakerResult.bonusSteps) {
+        await this.gameUI.animateBonusIntoWon(
+          step.bonusAmount,
+          step.finalWinAmount,
+          step.percentage,
+        );
+      }
     }
-
+    
     /*
         GAMBLER
     */
