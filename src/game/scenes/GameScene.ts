@@ -1659,12 +1659,27 @@ export class GameScene extends BaseScene {
         luckyHandResult,
       );
 
-      if (hotStreakResult.bonusAmount > 0) {
-          await this.view.gameUI.animateBonusIntoWon(
-              hotStreakResult.bonusAmount,
-              hotStreakResult.finalWinAmount,
-          );
+      /*
+    HOT STREAK
+
+        Animate every acquired instance separately.
+        All bonuses were calculated from the same
+        initial win amount.
+    */
+
+    if (hotStreakResult.triggered) {
+      for (const step of hotStreakResult.bonusSteps) {
+        if (step.bonusAmount <= 0) {
+          continue;
+        }
+
+        await this.view.gameUI.animateBonusIntoWon(
+          step.bonusAmount,
+          step.finalWinAmount,
+          step.percentage,
+        );
       }
+    }
 
       if (onARollResult.bonusAmount > 0) {
         await this.view.gameUI.animateBonusIntoWon(

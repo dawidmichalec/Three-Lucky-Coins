@@ -1,6 +1,15 @@
 import { RunPerkManager } from "../RunPerkManager";
 import { HotStreakConfig } from "../data/HotStreak";
+import { PerkRarity } from "../PerkRarity";
 import { roundMoney } from "../../util/MoneyUtils";
+
+export interface HotStreakBonusStep {
+  instanceId: string;
+  rarity: PerkRarity;
+  percentage: number;
+  bonusAmount: number;
+  finalWinAmount: number;
+}
 
 export interface HotStreakResult {
   triggered: boolean;
@@ -8,27 +17,41 @@ export interface HotStreakResult {
   bonusAmount: number;
   finalWinAmount: number;
   payoutMultiplier: number;
+  bonusSteps: readonly HotStreakBonusStep[];
 }
 
 export class HotStreakEffect {
   private activeThisFight = false;
 
-  constructor(private readonly runPerkManager: RunPerkManager) {}
+  constructor(
+    private readonly runPerkManager: RunPerkManager,
+  ) {}
 
   tryActivate(multiplier: number): boolean {
     if (this.activeThisFight) {
       return false;
     }
 
-    const hotStreak = this.runPerkManager.getPerk("hot_streak");
+    const instances =
+      this.runPerkManager.getPerkInstances("hot_streak");
 
-    if (!hotStreak) {
+    if (instances.length === 0) {
       return false;
     }
 
-    const config = hotStreak.variant.config as HotStreakConfig;
+    // All variants currently require x5.
+    // Activate the entire family at once.
 
-    if (multiplier < config.requiredMultiplier) {
+    const requirementsMet = instances.every(
+      (instance) => {
+        const config =
+          instance.variant.config as HotStreakConfig;
+
+        return multiplier >= config.requiredMultiplier;
+      },
+    );
+
+    if (!requirementsMet) {
       return false;
     }
 
@@ -38,29 +61,72 @@ export class HotStreakEffect {
   }
 
   apply(winAmount: number): HotStreakResult {
-    const hotStreak = this.runPerkManager.getPerk("hot_streak");
+    const instances =
+      this.runPerkManager.getPerkInstances("hot_streak");
 
-    if (!hotStreak || !this.activeThisFight) {
+    if (
+      !this.activeThisFight ||
+      instances.length === 0
+    ) {
       return {
         triggered: false,
         baseWinAmount: winAmount,
         bonusAmount: 0,
         finalWinAmount: winAmount,
         payoutMultiplier: 1,
+        bonusSteps: [],
       };
     }
 
-    const config = hotStreak.variant.config as HotStreakConfig;
-    const payoutMultiplier = 1 + config.winningsBonus;
-    const finalWinAmount = roundMoney(winAmount * payoutMultiplier);
-    const bonusAmount = roundMoney(finalWinAmount - winAmount);
+    let accumulatedBonus = 0;
+    let previousAmount = winAmount;
+
+    const bonusSteps: HotStreakBonusStep[] =
+      instances.map((instance) => {
+        const config =
+          instance.variant.config as HotStreakConfig;
+
+        const bonusRate = config.winningsBonus;
+
+        accumulatedBonus += bonusRate;
+
+        // All bonuses use the same original
+        // win amount. No compound percentages.
+
+        const finalWinAmount = roundMoney(
+          winAmount * (1 + accumulatedBonus),
+        );
+
+        const bonusAmount = roundMoney(
+          finalWinAmount - previousAmount,
+        );
+
+        previousAmount = finalWinAmount;
+
+        return {
+          instanceId: instance.instanceId,
+          rarity: instance.variant.rarity,
+          percentage: Number(
+            (bonusRate * 100).toFixed(4),
+          ),
+          bonusAmount,
+          finalWinAmount,
+        };
+      });
+
+    const finalWinAmount = previousAmount;
 
     return {
       triggered: true,
       baseWinAmount: winAmount,
-      bonusAmount,
+      bonusAmount: roundMoney(
+        finalWinAmount - winAmount,
+      ),
       finalWinAmount,
-      payoutMultiplier,
+      payoutMultiplier: Number(
+        (1 + accumulatedBonus).toFixed(6),
+      ),
+      bonusSteps,
     };
   }
 

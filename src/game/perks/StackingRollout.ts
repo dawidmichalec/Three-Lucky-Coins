@@ -9,6 +9,7 @@ const STACKING_ENABLED_PERK_IDS: ReadonlySet<string> =
     "risk_taker",
     "damage_control",
     "bounce_back",
+    "hot_streak",
   ]);
 
 export function isStackingEnabledFor(

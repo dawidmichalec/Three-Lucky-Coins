@@ -653,6 +653,10 @@ export default {
   bounceBackStackingHelp:
     "Po przegranej bonusy ze wszystkich egzemplarzy Wańki-Wstańki sumują się. Łączny bonus zostaje dodany do następnego wzrostu mnożnika i wykorzystany jednorazowo. Posiadane perki pozostają aktywne i mogą uruchomić się ponownie po kolejnej przegranej.",
   
+  hotStreakStackingHelp:
+    "Wszystkie egzemplarze Gorącej Passy aktywują się jednocześnie po osiągnięciu mnożnika x5. Od następnej wygranej ich bonusy procentowe sumują się aż do końca walki. Każdy bonus jest liczony od tej samej kwoty wygranej i animowany osobno. Aktywacja resetuje się na początku każdej walki.",
+
+
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",

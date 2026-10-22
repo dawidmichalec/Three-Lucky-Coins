@@ -13,6 +13,8 @@ export const HOT_STREAK_DATA: PerkData<HotStreakConfig> = {
 
   isStackable: true,
 
+  stackingDescription: "hotStreakStackingHelp",
+
   variants: [
     {
       rarity: PerkRarity.COMMON,

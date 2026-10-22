@@ -667,6 +667,10 @@ export default {
   bounceBackStackingHelp:
     "After a loss, bonuses from all Bounce Back copies add together. The combined bonus is added to the next multiplier increase and consumed in a single step. Your Bounce Back perks remain active for future losses.",
       
+  hotStreakStackingHelp:
+    "All Hot Streak copies activate together when your streak multiplier reaches x5. Starting with your next win, their percentage bonuses add together for the rest of the fight. Each bonus is calculated from the same winnings amount and animated separately. Activation resets at the start of each fight.",
+
+
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
