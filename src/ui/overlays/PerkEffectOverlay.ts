@@ -368,7 +368,7 @@ export class PerkEffectMessageOverlay extends Container {
 
     try {
       await this.fadeIn(250);
-      await this.delay(1100);
+      await this.delay(1500);
       await this.fadeOut(300);
     } finally {
       summaryText.destroy();

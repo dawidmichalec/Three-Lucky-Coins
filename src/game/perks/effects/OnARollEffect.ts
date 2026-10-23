@@ -156,7 +156,7 @@ export class OnARollEffect {
 
       const milestone = config.milestones.find(
         (item) =>
-          item.multiplier === this.unlockedMultiplier,
+          item.multiplier === effectiveTier,
       );
 
       if (!milestone) {
