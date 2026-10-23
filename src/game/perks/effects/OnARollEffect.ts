@@ -96,13 +96,44 @@ export class OnARollEffect {
     };
   }
 
-  apply(winAmount: number): OnARollResult {
+  apply(
+    winAmount: number,
+    projectedMultiplier?: number,): OnARollResult {
     const instances =
       this.runPerkManager.getPerkInstances("on_a_roll");
 
+    
+    // Determine the highest milestone eligible
+    // for the current winning round, without
+    // committing it as permanently unlocked.
+
+    const firstConfig =
+      instances[0]?.variant.config as
+        | OnARollConfig
+        | undefined;
+
+    const projectedTier =
+      projectedMultiplier === undefined
+        ? 0
+        : (firstConfig?.milestones ?? []).reduce(
+            (highest, milestone) =>
+              projectedMultiplier >= milestone.multiplier
+                ? Math.max(highest, milestone.multiplier)
+                : highest,
+            0,
+          );
+
+    // Previously unlocked tiers remain available,
+    // even if the multiplier later decreases.
+
+    const effectiveTier = Math.max(
+      this.unlockedMultiplier,
+      projectedTier,
+    );
+
     if (
       instances.length === 0 ||
-      this.unlockedMultiplier === 0
+      effectiveTier === 0
     ) {
       return {
         triggered: false,
@@ -188,4 +219,39 @@ export class OnARollEffect {
   resetFight(): void {
     this.unlockedMultiplier = 0;
   }
+
+  
+  getUnlockedMilestone(): OnARollMilestone | undefined {
+    if (this.unlockedMultiplier === 0) {
+      return undefined;
+    }
+
+    const instances =
+      this.runPerkManager.getPerkInstances("on_a_roll");
+
+    if (instances.length === 0) {
+      return undefined;
+    }
+
+    const total = instances.reduce(
+      (sum, instance) => {
+        const config =
+          instance.variant.config as OnARollConfig;
+
+        const milestone = config.milestones.find(
+          (item) =>
+            item.multiplier === this.unlockedMultiplier,
+        );
+
+        return sum + (milestone?.winningsBonus ?? 0);
+      },
+      0,
+    );
+
+    return {
+      multiplier: this.unlockedMultiplier,
+      winningsBonus: Number(total.toFixed(6)),
+    };
+  }
+
 }

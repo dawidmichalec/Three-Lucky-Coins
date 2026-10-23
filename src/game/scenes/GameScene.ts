@@ -1613,6 +1613,11 @@ export class GameScene extends BaseScene {
           );
       }
 
+      const projectedMultiplier =
+        this.getProjectedMultiplierAfterWin(
+          streakResolution,
+        );
+
       const payoutResult =
         this.roundPayoutResolver.resolve({
           winAmount: resolvedWinAmount,
@@ -1622,7 +1627,9 @@ export class GameScene extends BaseScene {
           luckyHandTriggered:
             perkRoundResult.luckyHandTriggered,
           currentBalance: this.player.balance,
-          fightStartingBalance: this.dealerFightManager.getFightStartingBalance(),
+          fightStartingBalance:
+            this.dealerFightManager.getFightStartingBalance(),
+          onARollMultiplier: projectedMultiplier,
         });
 
       const {
@@ -2578,6 +2585,35 @@ export class GameScene extends BaseScene {
 
     this.view.gameUI.updateBalance(
       this.player.balance,
+    );
+  }
+
+  
+  private getProjectedMultiplierAfterWin(
+    resolution: StreakResolution,
+  ): number {
+    const currentMultiplier =
+      this.streakMultiplierManager.getValue();
+
+    if (resolution.action !== StreakAction.INCREASE) {
+      return currentMultiplier;
+    }
+
+    // Match the conditions in applyStreakResolution().
+    // If multiplier growth is blocked, there is no
+    // projected increase.
+
+    if (
+      this.dealerFightManager.isMultiplierLocked() ||
+      this.dealerFightManager.isMultiplierDecayActive() ||
+      this.dealerFightManager.isMultiplierSystemMalfunctionActive()
+    ) {
+      return currentMultiplier;
+    }
+
+    return this.streakMultiplierManager.previewIncrease(
+      resolution.growthModifier ?? 1,
+      this.perkEffectApplier.peekBounceBackGrowthBonus(),
     );
   }
 

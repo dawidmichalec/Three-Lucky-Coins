@@ -61,8 +61,10 @@ export class StreakMultiplierManager {
     growthModifier = 1,
     additionalGrowth = 0,
   ): void {
-    this.currentValue +=
-      this.growthPerWin * growthModifier + additionalGrowth;
+    this.currentValue = this.previewIncrease(
+      growthModifier,
+      additionalGrowth,
+    );
   }
 
   decrease(amount: number) {
@@ -92,4 +94,17 @@ export class StreakMultiplierManager {
 
     this.reset();
   }
+
+  
+  previewIncrease(
+    growthModifier = 1,
+    additionalGrowth = 0,
+  ): number {
+    return (
+      this.currentValue +
+      this.growthPerWin * growthModifier +
+      additionalGrowth
+    );
+  }
+
 }

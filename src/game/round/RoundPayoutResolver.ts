@@ -20,6 +20,7 @@ export interface RoundPayoutInput {
     luckyHandTriggered: boolean;
     currentBalance: number;
     fightStartingBalance: number;
+    onARollMultiplier?: number;
 }
 
 
@@ -111,11 +112,11 @@ export class RoundPayoutResolver {
                 );
 
         const onARollResult =
-            this.perkEffectApplier
-                .applyOnARoll(
-                    hotStreakResult.finalWinAmount
-                );
-
+            this.perkEffectApplier.applyOnARoll(
+                hotStreakResult.finalWinAmount,
+                input.onARollMultiplier,
+            );
+            
         const greedResult =
             this.perkEffectApplier
                 .applyGreed(

@@ -4,6 +4,15 @@ import { LocalizedText } from "../../localization/LocalizedText";
 
 import { TranslationKey } from "../../core/LocalizationManager";
 
+import { LocalizationManager } from "../../core/LocalizationManager";
+
+export interface PerkMilestoneMessage {
+  name: TranslationKey;
+  multiplier: number;
+  bonusPercentage: number;
+  appliesFrom: "current" | "next";
+}
+
 export enum PerkEffectMessageType {
   POSITIVE = "positive",
   NEGATIVE = "negative",
@@ -299,4 +308,80 @@ export class PerkEffectMessageOverlay extends Container {
       setTimeout(resolve, milliseconds);
     });
   }
+
+  
+  async playMilestoneSummary(
+    entries: readonly PerkMilestoneMessage[],
+  ): Promise<void> {
+    if (entries.length === 0 || this.isAnimating) {
+      return;
+    }
+
+    const localization =
+      LocalizationManager.getInstance();
+
+    const heading = localization.t(
+      "perkBonusesUpdated",
+    );
+
+    const rows = entries.map((entry) => {
+      const timingKey =
+        entry.appliesFrom === "current"
+          ? "perkBonusCurrentWin"
+          : "perkBonusNextWin";
+
+      const timing = localization.t(timingKey);
+
+      return (
+        `${localization.t(entry.name)} ` +
+        `x${entry.multiplier} ` +
+        `+${entry.bonusPercentage}% ` +
+        `(${timing})`
+      );
+    });
+
+    const summaryText = new Text({
+      text: [heading, ...rows].join("\n"),
+      style: {
+        fontFamily: "Anek-Kannada Bold",
+        fontSize: 40,
+        lineHeight: 54,
+        fontWeight: "bold",
+        fill: 0x39ff14,
+        align: "center",
+      },
+    });
+
+    summaryText.anchor.set(0.5);
+
+    this.isAnimating = true;
+
+    this.messageLabel.visible = false;
+    this.valueLabel.visible = false;
+    this.suffixLabel.visible = false;
+
+    this.messageContainer.addChild(summaryText);
+
+    this.visible = true;
+    this.alpha = 0;
+    this.messageContainer.scale.set(0.88);
+
+    try {
+      await this.fadeIn(250);
+      await this.delay(1100);
+      await this.fadeOut(300);
+    } finally {
+      summaryText.destroy();
+
+      this.visible = false;
+      this.alpha = 0;
+      this.messageContainer.scale.set(1);
+
+      this.messageLabel.visible = true;
+      this.valueLabel.visible = true;
+
+      this.isAnimating = false;
+    }
+  }
+
 }

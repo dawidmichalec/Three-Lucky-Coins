@@ -640,6 +640,9 @@ export default {
 
   stackableLabel: "STACKABLE",
   nonStackableLabel: "NON-STACKABLE",
+  perkBonusesUpdated: "PERK BONUSES UPDATED",
+  perkBonusCurrentWin: "THIS WIN",
+  perkBonusNextWin: "NEXT WIN",
 
   stackableHelp:
     "You can acquire multiple copies of this perk during a run. Their effects stack.",
@@ -671,8 +674,8 @@ export default {
     "All Hot Streak copies activate together when your streak multiplier reaches x5. Starting with your next win, their percentage bonuses add together for the rest of the fight. Each bonus is calculated from the same winnings amount and animated separately. Activation resets at the start of each fight.",
 
   onARollStackingHelp:
-    "All On A Roll copies share the same multiplier milestones: x3, x5, x7 and x10. At each milestone, their percentage bonuses add together and increase every subsequent win for the rest of the fight. Each bonus is calculated from the same winnings amount and animated separately. Higher milestones replace lower bonus levels.",
-
+    "All On A Roll copies share the same multiplier milestones: x3, x5, x7 and x10. When a winning round raises your multiplier to a new milestone, that milestone's combined bonus applies to the same win. Each copy contributes a separate, additive percentage bonus with its own animation. Higher milestones replace lower bonus levels, and unlocked bonuses remain active until the end of the fight.",
+    
   // PERKS
 
   chooseAPerk: "CHOOSE A PERK",
@@ -849,11 +852,11 @@ export default {
 
   onARollName: "ON A ROLL",
 
-  onARollDescriptionCommon: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +2.5%\nx5 → +5%\nx7 → +7.5%\nx10 → +10%",
-  onARollDescriptionUncommon: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +5%\nx5 → +10%\nx7 → +15%\nx10 → +25%",
-  onARollDescriptionRare: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +7.5%\nx5 → +15%\nx7 → +22.5%\nx10 → +30%",
-  onARollDescriptionEpic: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
-  onARollDescriptionLegendary: "Reach multiplier milestones to increase winnings for the rest of the fight:\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
+  onARollDescriptionCommon: "Reach multiplier milestones to increase winnings for the rest of the fight. The bonus applies from the moment you hit a milestone.\n\nx3 → +2.5%\nx5 → +5%\nx7 → +7.5%\nx10 → +10%",
+  onARollDescriptionUncommon: "Reach multiplier milestones to increase winnings for the rest of the fight. The bonus applies from the moment hit a milestone.\n\nx3 → +5%\nx5 → +10%\nx7 → +15%\nx10 → +25%",
+  onARollDescriptionRare: "Reach multiplier milestones to increase winnings for the rest of the fight. The bonus applies from the moment you hit a milestone.\n\nx3 → +7.5%\nx5 → +15%\nx7 → +22.5%\nx10 → +30%",
+  onARollDescriptionEpic: "Reach multiplier milestones to increase winnings for the rest of the fight. The bonus applies from the moment you hit a milestone.\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
+  onARollDescriptionLegendary: "Reach multiplier milestones to increase winnings for the rest of the fight. The bonus applies from the moment you hit a milestone.\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
 
   // GREED
 

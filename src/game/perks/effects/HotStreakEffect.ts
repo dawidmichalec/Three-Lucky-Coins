@@ -137,4 +137,27 @@ export class HotStreakEffect {
   resetFight(): void {
     this.activeThisFight = false;
   }
+
+  
+  getTotalWinningsBonus(): number {
+    if (!this.activeThisFight) {
+      return 0;
+    }
+
+    const instances =
+      this.runPerkManager.getPerkInstances("hot_streak");
+
+    const total = instances.reduce(
+      (sum, instance) => {
+        const config =
+          instance.variant.config as HotStreakConfig;
+
+        return sum + config.winningsBonus;
+      },
+      0,
+    );
+
+    return Number(total.toFixed(6));
+  }
+
 }

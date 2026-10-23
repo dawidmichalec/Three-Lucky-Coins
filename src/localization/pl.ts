@@ -626,6 +626,9 @@ export default {
 
   stackableLabel: "KUMULOWALNY",
   nonStackableLabel: "NIEKUMULOWALNY",
+  perkBonusesUpdated: "BONUSY PERKÓW ZAKTUALIZOWANE",
+  perkBonusCurrentWin: "TA WYGRANA",
+  perkBonusNextWin: "NASTĘPNA WYGRANA",
 
   stackableHelp:
     "Możesz zdobyć kilka egzemplarzy tego perka podczas jednego podejścia. Ich efekty się kumulują.",
@@ -657,8 +660,8 @@ export default {
     "Wszystkie egzemplarze Gorącej Passy aktywują się jednocześnie po osiągnięciu mnożnika x5. Od następnej wygranej ich bonusy procentowe sumują się aż do końca walki. Każdy bonus jest liczony od tej samej kwoty wygranej i animowany osobno. Aktywacja resetuje się na początku każdej walki.",
 
   onARollStackingHelp:
-    "Wszystkie egzemplarze Na Fali mają wspólne progi mnożnika: x3, x5, x7 i x10. Po osiągnięciu każdego progu ich bonusy procentowe sumują się i zwiększają kolejne wygrane do końca walki. Każdy bonus jest liczony od tej samej kwoty i animowany osobno. Wyższe progi zastępują poprzednie poziomy bonusu.",
-
+    "Wszystkie egzemplarze Na Fali mają wspólne progi mnożnika: x3, x5, x7 i x10. Gdy zwycięska runda zwiększy mnożnik do nowego progu, łączny bonus tego poziomu jest naliczany już do bieżącej wygranej. Każdy egzemplarz dodaje osobny bonus procentowy z własną animacją. Wyższe progi zastępują poprzednie poziomy bonusu, a odblokowane premie działają do końca walki.",
+    
   // PERKS
 
   chooseAPerk: "WYBIERZ PERK",
@@ -835,11 +838,11 @@ export default {
 
   onARollName: "NA FALI",
 
-  onARollDescriptionCommon: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +2.5%\nx5 → +5%\nx7 → +7.5%\nx10 → +10%",
-  onARollDescriptionUncommon: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +5%\nx5 → +10%\nx7 → +15%\nx10 → +25%",
-  onARollDescriptionRare: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +7.5%\nx5 → +15%\nx7 → +22.5%\nx10 → +30%",
-  onARollDescriptionEpic: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
-  onARollDescriptionLegendary: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki:\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
+  onARollDescriptionCommon: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki. Bonus obowiązuje od momentu osiągnięcia danego progu.\n\nx3 → +2.5%\nx5 → +5%\nx7 → +7.5%\nx10 → +10%",
+  onARollDescriptionUncommon: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki. Bonus obowiązuje od momentu osiągnięcia danego progu.\n\nx3 → +5%\nx5 → +10%\nx7 → +15%\nx10 → +25%",
+  onARollDescriptionRare: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki. Bonus obowiązuje od momentu osiągnięcia danego progu.\n\nx3 → +7.5%\nx5 → +15%\nx7 → +22.5%\nx10 → +30%",
+  onARollDescriptionEpic: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki. Bonus obowiązuje od momentu osiągnięcia danego progu.\n\nx3 → +10%\nx5 → +20%\nx7 → +30%\nx10 → +40%",
+  onARollDescriptionLegendary: "Osiągaj kolejne progi mnożnika, aby zwiększyć wygrane do końca walki. Bonus obowiązuje od momentu osiągnięcia danego progu.\n\nx3 → +12.5%\nx5 → +25%\nx7 → +37.5%\nx10 → +50%",
 
   // GREED
 

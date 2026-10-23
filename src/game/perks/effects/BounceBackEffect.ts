@@ -24,17 +24,25 @@ export class BounceBackEffect {
   }
 
   consumeOnMultiplierIncrease(): number {
+    const bonus = this.peekOnMultiplierIncrease();
+
+    this.bonusActive = false;
+
+    return bonus;
+  }
+
+  resetFight(): void {
+    this.bonusActive = false;
+  }
+
+  
+  peekOnMultiplierIncrease(): number {
     if (!this.bonusActive) {
       return 0;
     }
 
     const instances =
       this.runPerkManager.getPerkInstances("bounce_back");
-
-    if (instances.length === 0) {
-      this.bonusActive = false;
-      return 0;
-    }
 
     const totalBonus = instances.reduce(
       (total, instance) => {
@@ -46,15 +54,7 @@ export class BounceBackEffect {
       0,
     );
 
-    // Consume the entire stacked bonus at once.
-    // Perk instances themselves remain active.
-
-    this.bonusActive = false;
-
     return Math.round(totalBonus * 100) / 100;
   }
 
-  resetFight(): void {
-    this.bonusActive = false;
-  }
 }

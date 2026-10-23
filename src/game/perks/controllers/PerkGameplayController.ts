@@ -3,7 +3,7 @@ import { GameUI } from "../../../ui/GameUI";
 import { OddsManager } from "../../probability/OddsManager";
 import { OddsTable } from "../../probability/OddsTypes";
 import { PerkEffectApplier } from "../PerkEffectApplier";
-import { PerkEffectMessageOverlay, PerkEffectMessageType, } from "../../../ui/overlays/PerkEffectOverlay";
+import { PerkEffectMessageOverlay, PerkEffectMessageType, PerkMilestoneMessage } from "../../../ui/overlays/PerkEffectOverlay";
 import { roundMoney } from "../../util/MoneyUtils";
 import { GameController } from "../../GameController";
 import { Player } from "../../Player";
@@ -273,31 +273,66 @@ export class PerkGameplayController {
     return this.perkEffectApplier.getUnderdogWinningsBonus(currentBalance, startingBalance);
   }
 
-  async handleMultiplierChanged(multiplier: number): Promise<void> {
-    const hotStreakActivated = this.perkEffectApplier.tryActivateHotStreak(multiplier);
-
-    if (hotStreakActivated) {
-      await this.perkEffectMessageOverlay.play(
-        "hotStreakName",
-        "",
-        PerkEffectMessageType.POSITIVE,
+  async handleMultiplierChanged(
+    multiplier: number,
+  ): Promise<void> {
+    const hotStreakActivated =
+      this.perkEffectApplier.tryActivateHotStreak(
+        multiplier,
       );
-    }
 
-    const onARollActivation = this.perkEffectApplier.tryActivateOnARoll(multiplier);
+    const onARollActivation =
+      this.perkEffectApplier.tryActivateOnARoll(
+        multiplier,
+      );
 
-    if (!onARollActivation.triggered || !onARollActivation.milestone) {
+    // Display a summary only when at least
+    // one new activation or milestone occurred.
+
+    if (
+      !hotStreakActivated &&
+      !onARollActivation.triggered
+    ) {
       return;
     }
 
-    const increasePercentage = roundMoney(
-      onARollActivation.milestone.winningsBonus * 100,
-    );
+    const messages: PerkMilestoneMessage[] = [];
 
-    await this.perkEffectMessageOverlay.play(
-      "winningsIncreasedBy",
-      `+${increasePercentage}%`,
-      PerkEffectMessageType.POSITIVE,
-    );
+    const hotStreakBonus =
+      this.perkEffectApplier
+        .getHotStreakTotalWinningsBonus();
+
+    if (hotStreakBonus > 0) {
+      messages.push({
+        name: "hotStreakName",
+        multiplier: 5,
+        bonusPercentage: Number(
+          (hotStreakBonus * 100).toFixed(4),
+        ),
+        appliesFrom: hotStreakActivated
+          ? "next"
+          : "current",
+      });
+    }
+
+    const onARollMilestone =
+      this.perkEffectApplier
+        .getOnARollUnlockedMilestone();
+
+    if (onARollMilestone) {
+      messages.push({
+        name: "onARollName",
+        multiplier: onARollMilestone.multiplier,
+        bonusPercentage: Number(
+          (
+            onARollMilestone.winningsBonus * 100
+          ).toFixed(4),
+        ),
+        appliesFrom: "current",
+      });
+    }
+
+    await this.perkEffectMessageOverlay
+      .playMilestoneSummary(messages);
   }
 }

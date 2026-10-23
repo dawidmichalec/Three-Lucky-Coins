@@ -24,6 +24,7 @@ import { RiskyGainsEffect, RiskyGainsResult } from "./effects/RiskyGainsEffect";
 import { LuckyPrizeEffect } from "./effects/LuckyPrizeEffect";
 import { GoldenBoyEffect, GoldenBoyResult, } from "./effects/GoldenBoyEffect";
 import { BounceBackEffect } from "./effects/BounceBackEffect";
+import type { OnARollMilestone } from "./data/OnARoll";
 
 export class PerkEffectApplier {
   private readonly coinSenseEffect: CoinSenseEffect;
@@ -350,8 +351,14 @@ export class PerkEffectApplier {
     return this.onARollEffect.tryActivate(multiplier);
   }
 
-  applyOnARoll(winAmount: number): OnARollResult {
-    return this.onARollEffect.apply(winAmount);
+  applyOnARoll(
+    winAmount: number,
+    projectedMultiplier?: number,
+  ): OnARollResult {
+    return this.onARollEffect.apply(
+      winAmount,
+      projectedMultiplier,
+    );
   }
 
   applyGreed(winAmount: number): GreedResult {
@@ -415,5 +422,17 @@ export class PerkEffectApplier {
 
   consumeBounceBackGrowthBonus(): number {
     return this.bounceBackEffect.consumeOnMultiplierIncrease();
+  }
+
+  peekBounceBackGrowthBonus(): number {
+    return this.bounceBackEffect.peekOnMultiplierIncrease();
+  }
+
+  getHotStreakTotalWinningsBonus(): number {
+    return this.hotStreakEffect.getTotalWinningsBonus();
+  }
+
+  getOnARollUnlockedMilestone(): OnARollMilestone | undefined {
+    return this.onARollEffect.getUnlockedMilestone();
   }
 }
