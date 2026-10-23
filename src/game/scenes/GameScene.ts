@@ -1660,33 +1660,49 @@ export class GameScene extends BaseScene {
       );
 
       /*
-    HOT STREAK
+      HOT STREAK
 
-        Animate every acquired instance separately.
-        All bonuses were calculated from the same
-        initial win amount.
-    */
+          Animate every acquired instance separately.
+          All bonuses were calculated from the same
+          initial win amount.
+      */
 
-    if (hotStreakResult.triggered) {
-      for (const step of hotStreakResult.bonusSteps) {
-        if (step.bonusAmount <= 0) {
-          continue;
+      if (hotStreakResult.triggered) {
+        for (const step of hotStreakResult.bonusSteps) {
+          if (step.bonusAmount <= 0) {
+            continue;
+          }
+
+          await this.view.gameUI.animateBonusIntoWon(
+            step.bonusAmount,
+            step.finalWinAmount,
+            step.percentage,
+          );
         }
-
-        await this.view.gameUI.animateBonusIntoWon(
-          step.bonusAmount,
-          step.finalWinAmount,
-          step.percentage,
-        );
       }
-    }
 
-      if (onARollResult.bonusAmount > 0) {
-        await this.view.gameUI.animateBonusIntoWon(
-          onARollResult.bonusAmount,
-          onARollResult.finalWinAmount,
-        );
+      
+      /*
+          ON A ROLL
+
+          Animate the bonus from each active
+          perk instance separately.
+      */
+
+      if (onARollResult.triggered) {
+        for (const step of onARollResult.bonusSteps) {
+          if (step.bonusAmount <= 0) {
+            continue;
+          }
+
+          await this.view.gameUI.animateBonusIntoWon(
+            step.bonusAmount,
+            step.finalWinAmount,
+            step.percentage,
+          );
+        }
       }
+
 
       if (greedResult.bonusAmount > 0) {
         await this.view.gameUI.animateBonusIntoWon(

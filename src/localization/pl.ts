@@ -656,6 +656,8 @@ export default {
   hotStreakStackingHelp:
     "Wszystkie egzemplarze Gorącej Passy aktywują się jednocześnie po osiągnięciu mnożnika x5. Od następnej wygranej ich bonusy procentowe sumują się aż do końca walki. Każdy bonus jest liczony od tej samej kwoty wygranej i animowany osobno. Aktywacja resetuje się na początku każdej walki.",
 
+  onARollStackingHelp:
+    "Wszystkie egzemplarze Na Fali mają wspólne progi mnożnika: x3, x5, x7 i x10. Po osiągnięciu każdego progu ich bonusy procentowe sumują się i zwiększają kolejne wygrane do końca walki. Każdy bonus jest liczony od tej samej kwoty i animowany osobno. Wyższe progi zastępują poprzednie poziomy bonusu.",
 
   // PERKS
 

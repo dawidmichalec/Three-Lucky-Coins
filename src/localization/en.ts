@@ -670,6 +670,8 @@ export default {
   hotStreakStackingHelp:
     "All Hot Streak copies activate together when your streak multiplier reaches x5. Starting with your next win, their percentage bonuses add together for the rest of the fight. Each bonus is calculated from the same winnings amount and animated separately. Activation resets at the start of each fight.",
 
+  onARollStackingHelp:
+    "All On A Roll copies share the same multiplier milestones: x3, x5, x7 and x10. At each milestone, their percentage bonuses add together and increase every subsequent win for the rest of the fight. Each bonus is calculated from the same winnings amount and animated separately. Higher milestones replace lower bonus levels.",
 
   // PERKS
 
